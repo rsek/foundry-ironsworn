@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sf-legacies">
     <legacy-track
       propKey="quests"
       :title="$t('IRONSWORN.Quests')"

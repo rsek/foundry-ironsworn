@@ -1,5 +1,5 @@
 <template>
-  <div class="flexcol">
+  <div class="sf-progresses flexcol">
     <div class="flexcol ironsworn__drop__target" data-drop-type="progress">
       <transition-group name="slide" tag="div" class="nogrow">
         <div

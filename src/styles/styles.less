@@ -460,6 +460,51 @@
       opacity: 1 !important;
     }
   }
+  .character-sheet-form-app {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    grid-template-rows: max-content max-content max-content 1fr max-content;
+    .editor {
+      grid-row: 4;
+      grid-column: 2;
+    }
+    .character-sheet {
+      display: contents;
+      .margin-left,
+      .margin-right {
+        grid-row: span 3;
+        width: min-content;
+      }
+      .margin-left {
+        grid-column: 1;
+      }
+      .margin-right {
+        grid-column: 3;
+      }
+      .stats {
+        grid-row: 2;
+      }
+      .tab-list {
+        grid-row: 3;
+      }
+      .tab-panel {
+        grid-row: 4;
+      }
+      .character-sheet-main {
+        display: contents;
+      }
+      .sheet-header,
+      .pc-impacts {
+        grid-column: span 3;
+      }
+      .character-sheet-center {
+        display: contents;
+        > * {
+          grid-column: 2;
+        }
+      }
+    }
+  }
 }
 
 hr {

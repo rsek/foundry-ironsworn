@@ -1,31 +1,9 @@
 <template>
-  <div class="flexcol">
-    <quill-editor v-model="actor.data.notes" />
+  <div class="flexcol sf-notes">
+    <!-- intentionally left as a placeholder for the native TextEditor, which is rendered on top of it -->
   </div>
 </template>
 
 <script>
-import { debounce } from 'lodash'
-
-export default {
-  props: {
-    actor: Object,
-  },
-
-  watch: {
-    'actor.data.notes'() {
-      this.debouncedSave()
-    },
-  },
-
-  created() {
-    this.debouncedSave = debounce(this.save, 500)
-  },
-
-  methods: {
-    save() {
-      this.$actor.update({ 'data.notes': this.actor.data.notes })
-    },
-  },
-}
+export default {}
 </script>

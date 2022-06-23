@@ -1,5 +1,5 @@
 <template>
-  <div class="flexcol ironsworn__drop__target" data-drop-type="asset">
+  <div class="sf-assets flexcol ironsworn__drop__target" data-drop-type="asset">
     <transition-group name="slide" tag="div" class="nogrow">
       <div class="flexrow" v-for="(asset, i) in assets" :key="asset._id">
         <order-buttons

@@ -1,5 +1,5 @@
 <template>
-  <div class="flexcol">
+  <div class="sf-connections flexcol">
     <transition-group name="slide" tag="div" class="nogrow">
       <div
         class="flexrow nogrow"

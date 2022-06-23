@@ -1,10 +1,10 @@
 <template>
-  <div class="flexcol">
+  <div class="character-sheet">
     <!-- Header row -->
     <sf-characterheader :actor="actor" />
 
     <!-- Main body row -->
-    <div class="flexrow">
+    <div class="character-sheet-main">
       <!-- Momentum on left -->
       <div class="flexcol margin-left">
         <div class="flexrow" style="flex-wrap: nowrap">
@@ -33,7 +33,7 @@
       </div>
 
       <!-- Center area -->
-      <div class="flexcol">
+      <div class="character-sheet-center">
         <!-- Attributes -->
         <div class="flexrow stats" style="margin-bottom: 10px">
           <attr-box :actor="actor" attr="edge"></attr-box>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Tabs -->
-        <div class="flexrow nogrow">
+        <div class="flexrow nogrow tab-list">
           <div
             class="tab"
             v-for="tab in tabs"
@@ -57,6 +57,7 @@
         </div>
         <keep-alive>
           <component
+            class="tab-panel"
             :is="currentTab.component"
             :actor="actor"
             style="margin: 0.5rem"
@@ -104,7 +105,7 @@
 
     <!-- Impacts -->
     <hr class="nogrow" />
-    <sf-impacts :actor="actor" class="nogrow" />
+    <sf-impacts class="pc-impacts nogrow" :actor="actor" />
   </div>
 </template>
 
