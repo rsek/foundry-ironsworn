@@ -30,7 +30,7 @@
       <h3>
         <btn-faicon
           :disabled="completedItems.length === 0"
-          class="text collapse-control"
+          class="text collapsible-toggle"
           :class="completedClass"
           :icon="completedCaret"
           @click="expandCompleted = !expandCompleted"
@@ -68,7 +68,7 @@
 
 <style lang="less">
 .progress-completed {
-  .collapse-control {
+  .collapsible-toggle {
     text-transform: uppercase;
     height: inherit;
     width: inherit;
@@ -84,6 +84,10 @@
 </style>
 
 <style lang="less" scoped>
+.collapsible {
+  // add item-row, nogrow, progress-completed
+  margin-top: 1rem;
+}
 h3 {
   margin: 5px 0;
   transition: background-color 0.2s ease;
