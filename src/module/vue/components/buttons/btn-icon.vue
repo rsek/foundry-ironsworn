@@ -6,11 +6,10 @@
     :class="classes"
     type="button"
     @click="$emit('click')"
-    :tooltip="tooltip"
+    :title="tooltip"
     :aria-label="tooltip"
     :data-tooltip="tooltip"
     :disabled="disabled"
-    :aria-disabled="disabled"
   >
     <span v-if="hasDefaultSlot" class="button-text">
       <slot name="default"></slot>
