@@ -1,8 +1,32 @@
 <template>
+  <article class="attr-box stat" :id="id()">
+    <label :id="id('title')" :for="id('spinner_input')" class="stat-title">{{
+      $t(i18nKey)
+    }}</label>
+    <btn-rollstat
+    :actor="actor"
+    :attr="attr"
+    :tooltip=""
+    >
+
+    </btn-rollstat>
+    <number-spinner
+      :aria-labelledby="id('title')"
+      :value="parseInt(actor.data[attr])"
+      :min="0"
+      :max="4"
+      :step="1"
+      :readonly="!editMode"
+      :id="id('spinner')"
+      inputClass="stat-value"
+      @input="updateValue"
+    />
+  </article>
+
+  <!--
   <div :class="classes" @click="click">
     <h4>{{ $t(i18nKey) }}</h4>
     <div class="flexrow" style="position: relative">
-      <!-- TODO: migrate to new attr box component -->
       <div v-if="!editMode" class="bg-die">
         <i class="isicon-d10-tilt"></i>
       </div>
@@ -14,10 +38,29 @@
         &plus;
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
-<style lang="less" scoped>
+<style lang="less">
+.attr-box {
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+  .stat-title,
+  .stat-value {
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 0;
+  }
+  .stat-value {
+    max-width: 3ch;
+    line-height: 1;
+  }
+  .number-spinner {
+    .spin-button {
+    }
+  }
+}
 .bg-die {
   position: absolute;
   left: 19px;
@@ -35,10 +78,9 @@
 <script>
 export default {
   props: {
-    actor: Object,
-    attr: String,
+    actor: { type: Object, required: true },
+    attr: { type: String, required: true },
   },
-
   computed: {
     classes() {
       return {
@@ -57,23 +99,26 @@ export default {
       return this.editMode ? '' : ' clickable '
     },
   },
-
   methods: {
+    /**
+     * Generates an ID with an optional affix.
+     * @param {string?} affix
+     */
+    id(affix) {
+      let newId = `${this.actor._id}_attr-box-${this.attr}`
+      if (affix) {
+        newId += `_${affix}`
+      }
+      return newId
+    },
     click() {
       if (this.editMode) return
       const actor = game.actors?.get(this.actor._id)
       CONFIG.IRONSWORN.RollDialog.show({ actor, stat: this.attr })
     },
-
-    increment() {
-      const value = parseInt(this.actor.data[this.attr]) + 1
-      const actor = game.actors?.get(this.actor._id)
-      actor?.update({ data: { [this.attr]: value } })
-    },
-    decrement() {
-      const value = parseInt(this.actor.data[this.attr]) - 1
-      const actor = game.actors?.get(this.actor._id)
-      actor?.update({ data: { [this.attr]: value } })
+    updateValue(event) {
+      console.log('attr-box updateValue', event)
+      this.$actor.update({ data: { [this.attr]: event } })
     },
   },
 }

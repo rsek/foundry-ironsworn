@@ -36,11 +36,12 @@
       <div class="flexcol">
         <!-- Attributes -->
         <div class="flexrow stats" style="margin-bottom: 10px">
-          <attr-box :actor="actor" attr="edge"></attr-box>
-          <attr-box :actor="actor" attr="heart"></attr-box>
-          <attr-box :actor="actor" attr="iron"></attr-box>
-          <attr-box :actor="actor" attr="shadow"></attr-box>
-          <attr-box :actor="actor" attr="wits"></attr-box>
+          <attr-box
+            v-for="stat in ['edge', 'heart', 'iron', 'shadow', 'wits']"
+            :actor="actor"
+            :attr="stat"
+            :key="stat"
+          />
         </div>
 
         <tabbed-panels

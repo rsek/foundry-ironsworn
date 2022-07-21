@@ -1,23 +1,21 @@
 <template>
-  <btn-isicon
+  <btn-rollaction
     @click="rollStat()"
     :tooltip="tooltip"
-    class="action-roll stat-roll"
+    class="stat-roll"
     :class="attr"
-    icon="d10-tilt"
-    aria-haspopup="dialog"
     :disabled="disabled"
   >
     <slot></slot>
-  </btn-isicon>
+  </btn-rollaction>
 </template>
 
 <script>
 export default {
   props: {
-    actor: Object,
+    actor: { type: Object, required: true },
     item: Object, // the asset. only needed if this is an asset condition meter
-    attr: String,
+    attr: { type: String, required: true },
     tooltip: String,
     disabled: Boolean,
   },

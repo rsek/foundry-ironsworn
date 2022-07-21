@@ -1,14 +1,12 @@
 <template>
-  <btn-isicon
+  <btn-rollaction
     @click="rollMove()"
+    class="move-roll"
     :tooltip="tooltip"
-    class="action-roll move-roll"
-    icon="d10-tilt"
-    aria-haspopup="dialog"
     :disabled="disabled"
   >
     <slot></slot>
-  </btn-isicon>
+  </btn-rollaction>
 </template>
 
 <script>
