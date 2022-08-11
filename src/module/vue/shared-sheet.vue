@@ -6,9 +6,9 @@
     </header>
 
     <section class="sheet-area nogrow">
-      <btn-rollstat class="text" attr="supply">
+      <BtnRollStat class="text" attr="supply">
         {{ $t('IRONSWORN.Supply') }}
-      </btn-rollstat>
+      </BtnRollStat>
 
       <boxrow
         style="line-height: 25px"
@@ -73,7 +73,7 @@ import Boxrow from './components/boxrow/boxrow.vue'
 import Bonds from './components/bonds.vue'
 import MceEditor from './components/mce-editor.vue'
 import { throttle } from 'lodash'
-import BtnRollstat from './components/buttons/btn-rollstat.vue'
+import BtnRollStat from './components/buttons/btn-roll-stat.vue'
 import ActiveCompletedProgresses from './components/active-completed-progresses.vue'
 
 const props = defineProps<{

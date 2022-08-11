@@ -1,114 +1,45 @@
 <template>
-  <div class="flexcol sf-character-sheet">
-    <!-- TODO: rm inline styles added to maintain consistent styling (required largely because of other inline styles) -->
-    <!-- Header row -->
-    <sf-characterheader />
-
-    <!-- Main body row -->
-    <div class="flexrow">
-      <!-- Momentum on left -->
-      <div class="flexcol margin-left nogrow" style="width: min-content">
-        <div
-          class="flexrow nogrow"
-          style="flex-wrap: nowrap; width: min-content"
-        >
-          <div class="flexcol stack momentum">
-            <stack
-              stat="momentum"
-              :top="10"
-              :bottom="-6"
-              :softMax="actor.data.momentumMax"
-            ></stack>
-            <hr class="nogrow" />
-            <div>
-              <btn-momentumburn class="nogrow block stack-row">
-                {{ $t('IRONSWORN.Burn') }}
-              </btn-momentumburn>
-
-              {{ $t('IRONSWORN.Reset') }}: {{ actor.data.momentumReset }}
-              {{ $t('IRONSWORN.Max') }}:
-              {{ actor.data.momentumMax }}
-            </div>
-          </div>
-
-          <h4 class="vertical-v2 nogrow" style="width: 18px">
-            {{ $t('IRONSWORN.Momentum') }}
-          </h4>
-        </div>
-      </div>
-
-      <!-- Center area -->
-      <div class="flexcol">
-        <!-- Attributes -->
-        <div class="flexrow stats" style="margin-bottom: 10px">
-          <attr-box attr="edge" />
-          <attr-box attr="heart" />
-          <attr-box attr="iron" />
-          <attr-box attr="shadow" />
-          <attr-box attr="wits" />
-        </div>
-
-        <tabs class="character-sheet-tabs" name="character-sheet-tabs">
-          <tab :title="$t('IRONSWORN.Legacies')"> <sf-legacies /> </tab>
-          <tab :title="$t('IRONSWORN.Assets')"> <sf-assets /> </tab>
-          <tab :title="$t('IRONSWORN.Progress')"> <sf-progresses /> </tab>
-          <tab :title="$t('IRONSWORN.Connections')"> <sf-connections /> </tab>
-          <tab :title="$t('IRONSWORN.Notes')"> <sf-notes /> </tab>
-        </tabs>
-      </div>
-
-      <!-- Stats on right -->
-      <div class="flexcol margin-right condition-meters">
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat
-            class="vertical-v2 nogrow text"
-            :actor="actor"
-            attr="health"
-          >
-            {{ $t('IRONSWORN.Health') }}
-          </btn-rollstat>
-          <div class="flexcol stack health">
-            <stack stat="health" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 nogrow text" attr="spirit">
-            {{ $t('IRONSWORN.Spirit') }}
-          </btn-rollstat>
-          <div class="flexcol stack spirit">
-            <stack stat="spirit" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 nogrow text" attr="supply">
-            {{ $t('IRONSWORN.Supply') }}
-          </btn-rollstat>
-          <div class="flexcol stack supply">
-            <stack stat="supply" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Impacts -->
-    <hr class="nogrow" />
-    <sf-impacts :actor="actor" class="nogrow" />
-  </div>
+  <SheetLayoutSidebars class="flexcol sf-character-sheet">
+    <template #header>
+      <DocumentImg :document="actor" size="75px" />
+      <PcVitals />
+      <textarea
+        class="pc-bio"
+        rows="4"
+        :value="actor.data.biography"
+        ref="characteristics"
+        :placeholder="$t('IRONSWORN.Characteristics')"
+        :data-tooltip="$t('IRONSWORN.Characteristics')"
+        @keyup="save"
+      />
+    </template>
+    <template #default>
+      <Tabs class="character-sheet-tabs" name="character-sheet-tabs">
+        <Tab :title="$t('IRONSWORN.Legacies')"> <SfLegacies /> </Tab>
+        <Tab :title="$t('IRONSWORN.Assets')"> <SfAssets /> </Tab>
+        <Tab :title="$t('IRONSWORN.Progress')"> <SfProgresses /> </Tab>
+        <Tab :title="$t('IRONSWORN.Connections')"> <SfConnections /> </Tab>
+        <Tab :title="$t('IRONSWORN.Notes')"> <SfNotes /> </Tab>
+      </Tabs>
+    </template>
+    <template #footer>
+      <SfImpacts :actor="actor" class="nogrow" />
+    </template>
+  </SheetLayoutSidebars>
 </template>
 
 <style lang="less">
 .sf-character-sheet {
-  .stat-roll {
-    text-transform: uppercase;
+  header {
+    input,
+    textarea {
+      border-color: rgba(0, 0, 0, 0.1);
+      border-radius: 1px;
+      resize: none;
+    }
+    textarea {
+      flex-basis: 300px;
+    }
   }
   .condition-meters {
     .icon-button {
@@ -131,23 +62,20 @@
 </style>
 
 <script lang="ts" setup>
-import { computed, inject, provide } from 'vue'
-import AttrBox from './components/attr-box.vue'
-import BtnMomentumburn from './components/buttons/btn-momentumburn.vue'
+import { computed, inject, provide, ref } from 'vue'
 import SfLegacies from './components/character-sheet-tabs/sf-legacies.vue'
 import SfConnections from './components/character-sheet-tabs/sf-connections.vue'
-import SfCharacterheader from './components/sf-characterheader.vue'
-import Stack from './components/stack/stack.vue'
 import Tabs from './components/tabs/tabs.vue'
 import Tab from './components/tabs/tab.vue'
-import btnRollstat from './components/buttons/btn-rollstat.vue'
-import btnIsicon from './components/buttons/btn-isicon.vue'
-import sfImpacts from './components/sf-impacts.vue'
+import SfImpacts from './components/sf-impacts.vue'
 import { IronswornActor } from '../actor/actor'
 import SfAssets from './components/character-sheet-tabs/sf-assets.vue'
 import SfProgresses from './components/character-sheet-tabs/sf-progresses.vue'
-import SfConnections1 from './components/character-sheet-tabs/sf-connections.vue'
 import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
+import SheetLayoutSidebars from './components/layout/SheetLayoutSidebars.vue'
+import DocumentImg from './components/document-img.vue'
+import PcVitals from './components/pc-vitals.vue'
+import { $ActorKey } from './provisions.js'
 
 const props = defineProps<{
   actor: ReturnType<typeof IronswornActor.prototype.toObject>
@@ -157,6 +85,18 @@ provide(
   'actor',
   computed(() => props.actor)
 )
+
+const $actor = inject($ActorKey)
+
+const characteristics = ref<HTMLInputElement | null>(null)
+
+const save = debounce(() => {
+  $actor?.update({
+    data: {
+      biography: characteristics.value?.value,
+    },
+  })
+}, 500)
 
 function openCompendium(name) {
   const pack = game.packs?.get(`foundry-ironsworn.${name}`)

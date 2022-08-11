@@ -50,6 +50,7 @@ const actor = inject('actor') as Ref<
 const classes = computed(() => ({
   stat: true,
   block: true,
+  'stat-roll': true,
   clickable: !editMode.value,
   'isiconbg-d10-tilt': !editMode.value,
 }))

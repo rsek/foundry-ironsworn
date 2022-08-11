@@ -1,55 +1,35 @@
 <template>
   <div class="flexcol">
     <!-- Header row -->
-    <character-header />
+    <CharacterHeader />
 
     <!-- Main body row -->
     <div class="flexrow">
       <!-- Momentum on left -->
       <div class="flexcol margin-left">
-        <div class="flexrow" style="flex-wrap: nowrap">
-          <div class="flexcol stack momentum">
-            <stack
-              :actor="actor"
-              stat="momentum"
-              :top="10"
-              :bottom="-6"
-              :softMax="actor.data.momentumMax"
-            ></stack>
-            <hr class="nogrow" />
-            <div>
-              <btn-momentumburn class="nogrow block stack-row">
-                {{ $t('IRONSWORN.Burn') }}
-              </btn-momentumburn>
-
-              {{ $t('IRONSWORN.Reset') }}: {{ actor.data.momentumReset }}
-              {{ $t('IRONSWORN.Max') }}:
-              {{ actor.data.momentumMax }}
-            </div>
-          </div>
-          <h4 class="vertical-v2">{{ $t('IRONSWORN.Momentum') }}</h4>
-        </div>
+        <MomentumMeterSlider :actor="actor" orientation="vertical">
+        </MomentumMeterSlider>
       </div>
 
       <!-- Center area -->
       <div class="flexcol">
         <!-- Attributes -->
         <div class="flexrow stats">
-          <attr-box :actor="actor" attr="edge"></attr-box>
-          <attr-box :actor="actor" attr="heart"></attr-box>
-          <attr-box :actor="actor" attr="iron"></attr-box>
-          <attr-box :actor="actor" attr="shadow"></attr-box>
-          <attr-box :actor="actor" attr="wits"></attr-box>
+          <AttrBox :actor="actor" attr="edge"></AttrBox>
+          <AttrBox :actor="actor" attr="heart"></AttrBox>
+          <AttrBox :actor="actor" attr="iron"></AttrBox>
+          <AttrBox :actor="actor" attr="shadow"></AttrBox>
+          <AttrBox :actor="actor" attr="wits"></AttrBox>
         </div>
 
-        <tabs style="margin-top: 0.5rem">
-          <tab :title="$t('IRONSWORN.Character')"><ironsworn-main /></tab>
-          <tab :title="$t('IRONSWORN.Notes')"><ironsworn-notes /></tab>
-        </tabs>
+        <Tabs style="margin-top: 0.5rem">
+          <Tab :title="$t('IRONSWORN.Character')"><IronswornMain /></Tab>
+          <Tab :title="$t('IRONSWORN.Notes')"><IronswornNotes /></Tab>
+        </Tabs>
 
         <!-- Conditions & Banes & Burdens -->
         <section class="sheet-area nogrow">
-          <conditions />
+          <Conditions />
         </section>
       </div>
 
@@ -57,15 +37,20 @@
       <div class="flexcol margin-right">
         <div class="flexrow nogrow" style="flex-wrap: nowrap">
           <!-- TODO: restyle as h4-like -->
-          <btn-rollstat
+          <BtnRollStat
             class="nogrow vertical-v2 text"
             :actor="actor"
             attr="health"
           >
             {{ $t('IRONSWORN.Health') }}
-          </btn-rollstat>
+          </BtnRollStat>
           <div class="flexcol stack health">
-            <stack :actor="actor" stat="health" :top="5" :bottom="0"></stack>
+            <ConditionMeterSlider
+              :actor="actor"
+              attr="health"
+              :max="5"
+              :min="0"
+            ></ConditionMeterSlider>
           </div>
         </div>
 
@@ -73,15 +58,20 @@
 
         <div class="flexrow nogrow" style="flex-wrap: nowrap">
           <!-- TODO: restyle as h4-like -->
-          <btn-rollstat
+          <BtnRollStat
             class="nogrow vertical-v2 text"
             :actor="actor"
             attr="spirit"
           >
             {{ $t('IRONSWORN.Spirit') }}
-          </btn-rollstat>
+          </BtnRollStat>
           <div class="flexcol stack spirit">
-            <stack :actor="actor" stat="spirit" :top="5" :bottom="0"></stack>
+            <ConditionMeterSlider
+              :actor="actor"
+              attr="spirit"
+              :max="5"
+              :min="0"
+            ></ConditionMeterSlider>
           </div>
         </div>
 
@@ -89,15 +79,20 @@
 
         <div class="flexrow nogrow" style="flex-wrap: nowrap">
           <!-- TODO: restyle as h4-like -->
-          <btn-rollstat
+          <BtnRollStat
             class="nogrow vertical-v2 text"
             :actor="actor"
             attr="supply"
           >
             {{ $t('IRONSWORN.Supply') }}
-          </btn-rollstat>
+          </BtnRollStat>
           <div class="flexcol stack supply">
-            <stack :actor="actor" stat="supply" :top="5" :bottom="0"></stack>
+            <ConditionMeterSlider
+              :actor="actor"
+              attr="supply"
+              :max="5"
+              :min="0"
+            ></ConditionMeterSlider>
           </div>
         </div>
       </div>
@@ -106,9 +101,6 @@
 </template>
 
 <style lang="less" scoped>
-.stat-roll {
-  text-transform: uppercase;
-}
 .slide-enter-active,
 .slide-leave-active {
   max-height: 83px;
@@ -118,9 +110,7 @@
 <script setup lang="ts">
 import { $ActorKey } from './provisions'
 import AttrBox from './components/attr-box.vue'
-import BtnMomentumburn from './components/buttons/btn-momentumburn.vue'
-import Stack from './components/stack/stack.vue'
-import btnRollstat from './components/buttons/btn-rollstat.vue'
+import BtnRollStat from './components/buttons/btn-roll-stat.vue'
 import { IronswornActor } from '../actor/actor'
 import { provide, computed, inject } from 'vue'
 import { RollDialog } from '../helpers/rolldialog'
@@ -130,6 +120,8 @@ import Tabs from './components/tabs/tabs.vue'
 import Tab from './components/tabs/tab.vue'
 import IronswornMain from './components/character-sheet-tabs/ironsworn-main.vue'
 import IronswornNotes from './components/character-sheet-tabs/ironsworn-notes.vue'
+import MomentumMeterSlider from './components/resource-meters/momentum-meter-slider.vue'
+import ConditionMeterSlider from './components/resource-meters/condition-meter-slider.vue'
 
 const props = defineProps<{
   actor: ReturnType<typeof IronswornActor.prototype.toObject>
@@ -142,9 +134,6 @@ provide(
 
 const $actor = inject($ActorKey)
 
-function burnMomentum() {
-  $actor?.burnMomentum()
-}
 function rollStat(stat) {
   RollDialog.show({ actor: $actor, stat })
 }

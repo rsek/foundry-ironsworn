@@ -1,18 +1,20 @@
 <template>
-  <btn-faicon
+  <BtnFaicon
     icon="fire"
     class="burn-momentum"
     @click="burnMomentum"
     :disabled="disabled"
   >
-    <slot name="default"></slot>
-  </btn-faicon>
+    <slot name="default">
+      {{ $t('IRONSWORN.Burn') }}
+    </slot>
+  </BtnFaicon>
 </template>
 
 <script lang="ts" setup>
 import { inject } from 'vue'
 import { $ActorKey } from '../../provisions'
-import btnFaicon from './btn-faicon.vue'
+import BtnFaicon from './btn-faicon.vue'
 
 defineProps<{ disabled?: boolean }>()
 const $actor = inject($ActorKey)

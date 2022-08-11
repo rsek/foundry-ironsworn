@@ -44,9 +44,9 @@
         </ul>
 
         <div class="flexcol condition-meter" v-if="asset.data.track.enabled">
-          <btn-rollstat class="juicy text flexrow" :item="asset" attr="track">
+          <BtnRollStat class="juicy text flexrow" :item="asset" attr="track">
             {{ asset.data.track.name }}
-          </btn-rollstat>
+          </BtnRollStat>
           <asset-track :actor="actor" :item="asset" />
         </div>
 
@@ -87,7 +87,7 @@ import { computed, inject, Ref } from 'vue'
 import { RollDialog } from '../../../helpers/rolldialog'
 import { AssetAbility } from '../../../item/itemtypes'
 import BtnFaicon from '../buttons/btn-faicon.vue'
-import BtnRollstat from '../buttons/btn-rollstat.vue'
+import BtnRollStat from '../buttons/btn-roll-stat.vue'
 import AssetTrack from './asset-track.vue'
 import AssetExclusiveoption from './asset-exclusiveoption.vue'
 import Clock from '../clock.vue'
