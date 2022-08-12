@@ -35,6 +35,7 @@ const hasDefaultSlot = computed(() => {
   text-align: center;
   justify-content: center;
   padding: 0.2em;
+  line-height: 1;
   &:not(:empty) {
     gap: 0.2em;
   }
@@ -42,14 +43,14 @@ const hasDefaultSlot = computed(() => {
     // restricts width + removes border if there's no text
     border: 0;
     flex-grow: 0;
-    line-height: 1;
     height: max-content;
     width: max-content;
   }
   &:before {
-    line-height: 1;
+    line-height: inherit;
     height: 1em;
     width: 1em;
+    overflow: visible;
   }
 }
 
