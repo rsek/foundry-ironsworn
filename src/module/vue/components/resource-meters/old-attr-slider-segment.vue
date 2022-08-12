@@ -2,7 +2,7 @@
   <button
     type="button"
     @click="click"
-    class="clickable block stack-row slider-segment"
+    class="clickable block attr-slider-segment"
     :aria-disabled="disabled"
     :aria-selected="selected"
     :class="classes"
@@ -24,17 +24,18 @@ const $actor = inject($ActorKey)
 const props = defineProps<{
   attr: string
   value: number
+  current: number
   softMax?: number
 }>()
 
 const valueStr = computed(() => {
   return props.value > 0 ? `+${props.value}` : props.value.toString()
 })
-const current = computed(() => {
-  return actor.value.data[props.attr]
-})
+// const current = computed(() => {
+//   return actor.value.data[props.attr]
+// })
 const selected = computed(() => {
-  return current.value === props.value
+  return props.current === props.value
 })
 const disabled = computed(() => {
   if (props.softMax === undefined) return false
@@ -50,6 +51,7 @@ const classes = computed(() => ({
 function click() {
   // TODO: do this with something more broadly applicable than string comparison
   if (disabled.value) return
+
   $actor?.update({ data: { [props.attr]: props.value } })
   if (props.attr === 'supply') {
     IronswornSettings.maybeSetGlobalSupply(props.value)

@@ -3,7 +3,9 @@
     <ConditionMeterSlider
       v-for="resource in ['Health', 'Spirit', 'Supply']"
       orientation="vertical"
+      class="nogrow"
       :attr="resource.toLowerCase()"
+      :current="actor?.data[resource.toLowerCase()]"
       :max="5"
       :min="0"
       :buttonLabel="$t(`IRONSWORN.${resource}`)"
@@ -28,5 +30,10 @@
 }
 </style>
 <script lang="ts" setup>
+import { inject, Ref } from 'vue'
+import { $ActorKey } from '../../provisions.js'
 import ConditionMeterSlider from './condition-meter-slider.vue'
+
+const actor = inject('actor') as Ref
+const $actor = inject($ActorKey)
 </script>

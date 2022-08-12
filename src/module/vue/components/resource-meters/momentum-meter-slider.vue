@@ -1,31 +1,37 @@
 <template>
-  <article class="nogrow momentum-meter-slider">
-    <!-- <label for="pc-momentum-slider" class="vertical-v2">
+  <article
+    class="momentum-meter-slider"
+    :aria-labelledby="`momentum-label-${actor._id}`"
+  >
+    <!-- <label for="momentum-slider" class="vertical-v2">
       {{ $t('IRONSWORN.Momentum') }}
     </label>
     <BtnMomentumBurn class="block" /> -->
     <BtnMomentumBurn
+      tabindex="0"
+      :id="`momentum-label-${actor._id}`"
       class="text nogrow vertical-v2"
       :tooltip="$t('IRONSWORN.Burn')"
     >
       {{ $t('IRONSWORN.Momentum') }}</BtnMomentumBurn
     >
-    <section class="pc-momentum-status flexcol">
+    <section class="momentum-status flexcol">
       <span>
-        {{ $t('IRONSWORN.Reset') }}: {{ $actor?.data.momentumReset }}
+        {{ $t('IRONSWORN.Reset') }}: {{ actor?.data.momentumReset }}
       </span>
       <span>
         {{ $t('IRONSWORN.Max') }}:
-        {{ $actor?.data.momentumMax }}
+        {{ actor?.data.momentumMax }}
       </span>
     </section>
-    <Slider
-      id="pc-momentum-slider"
+    <AttrSlider
+      :id="`momentum-slider-${actor._id}`"
       attr="momentum"
       :max="10"
       :min="-6"
-      :softMax="$actor?.data.momentumMax"
+      :softMax="actor?.data.momentumMax"
       :orientation="orientation"
+      :current="actor?.data.momentum"
     />
     <!-- <hr class="nogrow" /> -->
   </article>
@@ -44,10 +50,10 @@
   label {
     grid-column: 2;
   }
-  .slider {
+  .attr-slider {
     grid-row: 1;
   }
-  .pc-momentum-status {
+  .momentum-status {
     grid-row: 3;
     grid-column: 1;
   }
@@ -60,11 +66,11 @@
 </style>
 
 <script lang="ts" setup>
-import { computed } from '@vue/reactivity'
+import { computed, Ref } from '@vue/reactivity'
 import { inject } from 'vue'
 import { $ActorKey } from '../../provisions.js'
 import BtnMomentumBurn from '../buttons/btn-momentum-burn.vue'
-import Slider from './slider.vue'
+import AttrSlider from './attr-slider.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -72,6 +78,6 @@ const props = withDefaults(
   }>(),
   { orientation: 'vertical' }
 )
-
+const actor = inject('actor') as Ref
 const $actor = inject($ActorKey)
 </script>

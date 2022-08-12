@@ -1,5 +1,5 @@
 <template>
-  <article class="layout-sidebars">
+  <article class="layout-sidebars pc-sheet">
     <header class="sheet-header flexrow">
       <slot name="header"> </slot>
     </header>
@@ -75,5 +75,4 @@
 import MomentumMeterSlider from '../resource-meters/momentum-meter-slider.vue'
 import PcStats from '../pc-stats.vue'
 import PcConditionMeters from '../resource-meters/pc-condition-meters.vue'
-import ConditionMeterSlider from '../resource-meters/condition-meter-slider.vue'
 </script>
