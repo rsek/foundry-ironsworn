@@ -12,12 +12,14 @@
 </template>
 
 <style lang="less">
+@meter_spacing: 6px;
+
 .pc-condition-meters {
-  gap: 6px;
+  gap: @meter_spacing;
   .condition-meter-slider {
-    &:not(:last-child) {
-      padding-bottom: 6px;
-      border-bottom: 1px solid currentColor;
+    &:not(:first-child) {
+      border-top: 1px solid currentColor;
+      padding-top: @meter_spacing;
     }
   }
   button {
