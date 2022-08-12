@@ -16,7 +16,6 @@
     <section class="pc-sheet-toolbar">
       <slot name="toolbar">
         <PcStats class="flexrow" />
-        <!-- TODO: reinstate 10px margin-bottom -->
       </slot>
     </section>
     <main class="pc-sheet-main">
