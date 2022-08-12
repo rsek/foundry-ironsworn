@@ -22,6 +22,8 @@
 </template>
 
 <style lang="less" scoped>
+.classic-character-sheet {
+}
 .slide-enter-active,
 .slide-leave-active {
   max-height: 83px;
