@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import type { Plugin } from 'vue'
+import type { ComponentCustomProperties, Plugin } from 'vue'
 import { capitalize } from 'vue'
 import { $EnrichHtmlKey, $EnrichMarkdownKey } from './provisions'
 import type i18nData from '../../../system/lang/en.json'
@@ -7,7 +7,15 @@ import type { ValidLeafPaths } from '../../types/ValidPaths'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $t: (string: ValidLeafPaths<typeof i18nData>) => string
+    /**
+     * Shortcut for {@link game.i18n.format} if a data object is provided; if no object is provided, it instead uses {@link game.i18n.localize}.
+     * @see {game.i18n.localize}
+     * @see {game.i18n.format}
+     */
+    $t: (
+      stringId: ValidLeafPaths<typeof i18nData>,
+      data?: Record<string, string | number> | undefined
+    ) => string
     $capitalize: (string: string) => string
     $concat: (...args: string[]) => string
     $enrichMarkdown: (string: string) => string
@@ -38,7 +46,15 @@ export function enrichMarkdown(md: string): string {
 
 export const IronswornVuePlugin: Plugin = {
   install(app, ..._options) {
-    app.config.globalProperties.$t = (k) => game.i18n.localize(k)
+    app.config.globalProperties.$t = (
+      k: ValidLeafPaths<typeof i18nData>,
+      data: Record<string, string | number>
+    ) => {
+      if (data) {
+        return game.i18n.format(k, data)
+      }
+      return game.i18n.localize(k)
+    }
     app.config.globalProperties.$concat = (...args) => args.join('')
     app.config.globalProperties.$capitalize = function (txt) {
       const [first, ...rest] = txt
