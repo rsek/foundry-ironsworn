@@ -3,15 +3,11 @@
     class="momentum-meter-slider"
     :aria-labelledby="`momentum-label-${actor._id}`"
   >
-    <!-- <label for="momentum-slider" class="vertical-v2">
-      {{ $t('IRONSWORN.Momentum') }}
-    </label>
-    <BtnMomentumBurn class="block" /> -->
     <BtnMomentumBurn
       tabindex="0"
       :id="`momentum-label-${actor._id}`"
       class="text nogrow vertical-v2"
-      :tooltip="$t('IRONSWORN.Burn')"
+      :tooltip="$t('IRONSWORN.BurnMomentumAndResetToX')"
     >
       {{ $t('IRONSWORN.Momentum') }}</BtnMomentumBurn
     >

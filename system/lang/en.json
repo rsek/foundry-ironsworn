@@ -117,6 +117,7 @@
     "Burn": "Burn",
     "Focus": "Focus",
     "BurnForUpgrade": "Burn momentum: <strong>{type}</strong>",
+    "BurnMomentumAndResetToX": "Burn your momentum and reset it to {value}",
     "MomentumBurnt": "Momentum Burn",
     "NegativeMomentumCancel": "Negative momentum canceled action die",
     "Reset": "Reset",
