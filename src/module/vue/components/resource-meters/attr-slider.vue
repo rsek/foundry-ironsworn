@@ -1,5 +1,6 @@
 <template>
   <!-- TODO: lift up references to PC state from segment to this component, b/c this one needs to reference them no matter what for aria-valuenow -->
+  <!-- TODO: localize tooltip string -->
   <fieldset
     tabindex="0"
     class="attr-slider nowrap"
@@ -11,18 +12,25 @@
     :aria-valuemin="props.min"
     :aria-valuemax="props.max"
     :aria-valuenow="state.current"
+    :aria-valuetext="`${props.attr}: ${state.current}`"
     :aria-orientation="orientation"
+    :data-tooltip="tooltip"
+    @keydown="handleKeyDown"
   >
+    <!-- TODO: revisit the slider role? -->
+    <!-- could this be given an additional role to reflect it being settable via keyboard similar to a spinner? -->
     <label
       class="clickable block attr-slider-segment"
+      tabindex="-1"
       v-for="x in values"
       :key="x"
       :aria-selected="x == state.current"
       :aria-disabled="isDisabled(x)"
     >
-      <span>
+      <span class="attr-slider-segment-text">
         {{ segmentLabel(x) }}
       </span>
+      <!-- TODO: make it a div wrapping the radio + label, so the radio can be targeted directly? -->
       <input
         type="radio"
         v-model="state.current"
@@ -98,7 +106,11 @@
 </style>
 
 <script lang="ts" setup>
-import { max, min, rangeRight } from 'lodash'
+/**
+ * A slider that controls the value of an attribute.
+ * Under the hood, it's a `<fieldset>` with radio `<input>`s.
+ */
+import { rangeRight } from 'lodash'
 import { computed, inject, reactive, Ref, watch } from 'vue'
 import { IronswornActor } from '../../../actor/actor.js'
 import { $ActorKey } from '../../provisions.js'
@@ -117,12 +129,35 @@ const actor = inject('actor') as Ref<IronswornActor>
 const $actor = inject($ActorKey)
 
 const values = computed(() => rangeRight(props.min, props.max + 1))
+const currentMax = computed(() =>
+  props.softMax ? Math.min(props.softMax, props.max) : props.max
+)
 
 const state = reactive({
   current: props.current,
 })
 
+const tooltip = `<dl>
+<dt>UpArrow/+</dt>
+<dd>Increase ${props.attr} by 1.</dd>
+<dt>DownArrow/-</dt>
+<dd>Decrease ${props.attr} by 1.</dd>
+<dt>Home</dt>
+<dd>Set ${props.attr} to maximum (${currentMax.value}).</dd>
+<dt>End</dt>
+<dd>Set ${props.attr} to minimum (${props.min}).</dd>
+<dt>Number keys (0-9)</dt>
+<dd>Set ${props.attr} to a specific value.</dd>
+</dl>
+`
+
 watch(state, ({ current }) => {
+  if (current > currentMax.value) {
+    current = currentMax.value
+  }
+  if (current < props.min) {
+    current = props.min
+  }
   $actor?.update({ data: { [props.attr]: current } })
 })
 
@@ -150,4 +185,41 @@ function segmentLabel(value: number) {
 }
 
 // TODO: keyboard control for slider - or get the radios to work?
+
+function handleKeyDown(event: KeyboardEvent) {
+  switch (event.key) {
+    case '0' || '1' || '2' || '3' || '4' || '5' || '6' || '7' || '8' || '9':
+      state.current = parseInt(event.key)
+      break
+    // TODO: consider the best way to handle horizontal bars and directional arrows, if at all!
+    // in Ironsworn, asset bar numbers are low on the left, and high on the right
+    // in Starforged, asset bar numbers are high on the left, and low on the right
+    // currently, this module follows the Starforged convention
+    // is it more important that these be conveyed in a way that matches their appearance
+    // or that the keyboard be consistent no matter what meter someone is looking at?
+    case 'ArrowDown' || '-':
+      if (state.current > props.min) {
+        state.current--
+      }
+      break
+    case 'ArrowUp' || '+':
+      if (state.current < currentMax.value) {
+        state.current++
+      }
+      break
+    case 'Home': // to max
+      state.current = currentMax.value
+      break
+    case 'End': // to min
+      state.current = props.min
+      break
+    // TODO consider whether it's worth setting these to increment a different amount?
+    // case "PageUp":
+    //   break;
+    // case "PageDown":
+    //   break;
+    default:
+      break
+  }
+}
 </script>
