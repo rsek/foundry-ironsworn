@@ -1,3 +1,8 @@
+import type {
+  ActorDataBaseProperties,
+  ActorDataBaseSource,
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData.js'
+
 interface CharacterDataSourceData {
   biography: string
   notes: string
@@ -48,12 +53,12 @@ interface CharacterDataPropertiesData extends CharacterDataSourceData {
   momentumReset: number
 }
 
-export interface CharacterDataProperties {
+export interface CharacterDataProperties extends ActorDataBaseProperties {
   type: 'character'
   data: CharacterDataPropertiesData
 }
 
-interface CharacterDataSource {
+interface CharacterDataSource extends ActorDataBaseSource {
   type: 'character'
   data: CharacterDataSourceData
 }
@@ -65,11 +70,11 @@ interface SharedDataSourceData {
 }
 type SharedDataPropertiesData = SharedDataSourceData
 
-interface SharedDataSource {
+interface SharedDataSource extends ActorDataBaseSource {
   type: 'shared'
   data: SharedDataSourceData
 }
-export interface SharedDataProperties {
+export interface SharedDataProperties extends ActorDataBaseProperties {
   type: 'shared'
   data: SharedDataPropertiesData
 }
@@ -79,11 +84,11 @@ export interface SharedDataProperties {
 interface FoeDataSourceData {}
 type FoeDataPropertiesData = FoeDataSourceData
 
-interface FoeDataSource {
+interface FoeDataSource extends ActorDataBaseSource {
   type: 'foe'
   data: FoeDataSourceData
 }
-export interface FoeDataProperties {
+export interface FoeDataProperties extends ActorDataBaseProperties {
   type: 'foe'
   data: FoeDataPropertiesData
 }
@@ -107,11 +112,11 @@ interface SiteDataSourceData {
 }
 type SiteDataPropertiesData = SiteDataSourceData
 
-export interface SiteDataSource {
+export interface SiteDataSource extends ActorDataBaseSource {
   type: 'site'
   data: SiteDataSourceData
 }
-export interface SiteDataProperties {
+export interface SiteDataProperties extends ActorDataBaseProperties {
   type: 'site'
   data: SiteDataPropertiesData
 }
@@ -127,11 +132,11 @@ interface StarshipDataSourceData {
 }
 type StarshipDataPropertiesData = StarshipDataSourceData
 
-export interface StarshipDataSource {
+export interface StarshipDataSource extends ActorDataBaseSource {
   type: 'starship'
   data: StarshipDataSourceData
 }
-export interface StarshipDataProperties {
+export interface StarshipDataProperties extends ActorDataBaseProperties {
   type: 'starship'
   data: StarshipDataPropertiesData
 }
@@ -144,11 +149,11 @@ interface LocationDataSourceData {
 }
 type LocationDataPropertiesData = LocationDataSourceData
 
-export interface LocationDataSource {
+export interface LocationDataSource extends ActorDataBaseSource {
   type: 'location'
   data: LocationDataSourceData
 }
-export interface LocationDataProperties {
+export interface LocationDataProperties extends ActorDataBaseProperties {
   type: 'location'
   data: LocationDataPropertiesData
 }
