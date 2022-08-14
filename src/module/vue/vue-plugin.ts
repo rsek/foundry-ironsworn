@@ -1,14 +1,17 @@
 import { marked } from 'marked'
-import { capitalize, Plugin } from 'vue'
+import type { Plugin } from 'vue'
+import { capitalize } from 'vue'
 import { $EnrichHtmlKey, $EnrichMarkdownKey } from './provisions'
+import type i18nData from '../../../system/lang/en.json'
+import type { ValidLeafPaths } from '../../types/ValidPaths'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $t: (string) => string
-    $capitalize: (string) => string
-    $concat: (...args: any[]) => string
-    $enrichMarkdown: (string) => string
-    $enrichHtml: (string) => string
+    $t: (string: ValidLeafPaths<typeof i18nData>) => string
+    $capitalize: (string: string) => string
+    $concat: (...args: string[]) => string
+    $enrichMarkdown: (string: string) => string
+    $enrichHtml: (string: string) => string
   }
 }
 
