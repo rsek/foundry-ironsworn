@@ -2,6 +2,13 @@
 
 ## In progress
 
+- Fix the values for momentum max/reset for new characters
+
+## 1.16.7
+
+- Fix a v10 visual glitch around minimizing the move sheet
+- Fix a bug with a blank SF setting-truths dialog
+
 ## 1.16.6
 
 - Fix the first-start dialog save button ([#423](https://github.com/ben/foundry-ironsworn/pull/423))
