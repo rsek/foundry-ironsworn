@@ -13,32 +13,31 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject } from 'vue'
+import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
+import { inject } from 'vue'
 import { RollDialog } from '../../../helpers/rolldialog'
-import { AssetItem } from '../../../item/asset/assetitem.js'
 import { $ActorKey } from '../../provisions'
+import { pickInjectedDocument } from '../../composable/pickInjectedDocument.js'
 import btnIsicon from './btn-isicon.vue'
+import { IronswornItem } from '../../../item/item.js'
 
 const props = defineProps<{
-  assetItem?: AssetItem // the asset. only needed if this is an asset condition meter
+  documentType: DocumentType
   attr: string
   tooltip?: string
   disabled?: boolean
 }>()
 
+const { $document } = pickInjectedDocument(props.documentType)
+
 const $actor = inject($ActorKey)
-const $item = computed(() => {
-  return (
-    $actor?.items.find((x) => x.id === props.assetItem?._id) ??
-    game.items?.get(props.assetItem?._id)
-  )
-})
 
 function rollStat() {
   RollDialog.show({
     actor: $actor,
     stat: props.attr,
-    asset: props.assetItem ? $item.value : undefined,
+    asset:
+      props.documentType === 'Item' ? ($document as IronswornItem) : undefined,
   })
 }
 </script>

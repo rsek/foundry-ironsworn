@@ -43,14 +43,16 @@
           </with-rolllisteners>
         </ul>
 
-        <ConditionMeterSlider
+        <ConditionMeterSpinner
           v-if="asset.data.track.enabled"
           attr="track"
-          :asset-item="asset"
-          :buttonLabel="asset.data.track.name"
-          orientation="horizontal"
+          document-type="Item"
+          :button-label="asset.data.track.name"
+          label-position="left"
+          spinnerStyle="horizontal"
           :min="0"
           :max="asset.data.track.max"
+          :current="asset.data.track.current"
         />
         <!-- <div class="flexcol condition-meter" v-if="asset.data.track.enabled">
           <BtnRollStat class="juicy text flexrow" :item="asset" attr="track">
@@ -102,7 +104,7 @@ import AssetExclusiveoption from './asset-exclusiveoption.vue'
 import Clock from '../clock.vue'
 import WithRolllisteners from '../with-rolllisteners.vue'
 import { $ActorKey } from '../../provisions'
-import ConditionMeterSlider from '../resource-meters/condition-meter-slider.vue'
+import ConditionMeterSpinner from '../resource-meters/condition-meter-spinner.vue'
 
 const props = defineProps<{ asset: any }>()
 const actor = inject('actor') as Ref

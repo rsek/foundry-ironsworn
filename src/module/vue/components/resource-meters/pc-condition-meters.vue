@@ -1,14 +1,16 @@
 <template>
   <div class="pc-condition-meters flexcol">
-    <ConditionMeterSlider
+    <ConditionMeterSpinner
       v-for="resource in ['Health', 'Spirit', 'Supply']"
       orientation="vertical"
       class="nogrow"
+      documentType="Actor"
       :attr="resource.toLowerCase()"
       :current="actor?.data[resource.toLowerCase()]"
       :max="5"
       :min="0"
       :buttonLabel="$t(`IRONSWORN.${resource}`)"
+      :labelPosition="labelPosition"
     />
   </div>
 </template>
@@ -18,7 +20,7 @@
 
 .pc-condition-meters {
   gap: @meter_spacing;
-  .condition-meter-slider {
+  .condition-meter-spinner {
     &:not(:first-child) {
       border-top: 1px solid currentColor;
       padding-top: @meter_spacing;
@@ -32,7 +34,9 @@
 <script lang="ts" setup>
 import { inject, Ref } from 'vue'
 import { $ActorKey } from '../../provisions.js'
-import ConditionMeterSlider from './condition-meter-slider.vue'
+import ConditionMeterSpinner from './condition-meter-spinner.vue'
+
+const props = defineProps<{ labelPosition: 'left' | 'right' }>()
 
 const actor = inject('actor') as Ref
 const $actor = inject($ActorKey)

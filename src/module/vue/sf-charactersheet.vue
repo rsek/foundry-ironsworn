@@ -1,8 +1,12 @@
 <template>
   <SheetLayoutSidebars class="flexcol sf-character-sheet">
     <template #header>
-      <DocumentImg :document="actor" size="75px" />
-      <PcVitals />
+      <DocumentImg
+        :document="actor"
+        size="75px"
+        data-tooltip-direction="LEFT"
+      />
+      <PcVitals data-tooltip-direction="LEFT" />
       <textarea
         class="pc-bio"
         rows="4"
@@ -10,6 +14,7 @@
         ref="characteristics"
         :placeholder="$t('IRONSWORN.Characteristics')"
         :data-tooltip="$t('IRONSWORN.Characteristics')"
+        data-tooltip-direction="RIGHT"
         @keyup="save"
       />
     </template>

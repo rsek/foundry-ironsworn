@@ -3,17 +3,27 @@
     <header class="sheet-header flexrow">
       <slot name="header"> </slot>
     </header>
-    <section class="pc-sheet-sidebar-left">
+    <section
+      class="pc-sheet-sidebar-left flexcol"
+      data-tooltip-direction="LEFT"
+    >
       <slot name="sidebar-left">
-        <MomentumMeterSlider orientation="vertical" />
+        <MomentumMeterSpinner orientation="vertical" labelPosition="right" />
       </slot>
     </section>
-    <section class="pc-sheet-sidebar-right">
+    <section
+      class="pc-sheet-sidebar-right flexcol"
+      data-tooltip-direction="RIGHT"
+    >
       <slot name="sidebar-right">
-        <PcConditionMeters class="flexcol" />
+        <PcConditionMeters
+          class="flexcol"
+          orientation="vertical"
+          labelPosition="left"
+        />
       </slot>
     </section>
-    <section class="pc-sheet-toolbar">
+    <section class="pc-sheet-toolbar flexrow">
       <slot name="toolbar">
         <PcStats class="flexrow" />
       </slot>
@@ -72,7 +82,7 @@
 </style>
 
 <script setup lang="ts">
-import MomentumMeterSlider from '../resource-meters/momentum-meter-slider.vue'
+import MomentumMeterSpinner from '../resource-meters/momentum-meter-spinner.vue'
 import PcStats from '../pc-stats.vue'
 import PcConditionMeters from '../resource-meters/pc-condition-meters.vue'
 </script>
