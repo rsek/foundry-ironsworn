@@ -19,7 +19,7 @@
       <span style="flex-grow: 0; margin: 0 5px">{{ $t('IRONSWORN.Max') }}</span>
       <input
         type="number"
-        @blur="updateMax"
+        @change="updateMax"
         v-model.number="item.data.track.max"
       />
     </div>
