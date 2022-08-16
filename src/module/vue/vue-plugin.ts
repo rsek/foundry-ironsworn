@@ -2,8 +2,8 @@ import { marked } from 'marked'
 import type { ComponentCustomProperties, Plugin } from 'vue'
 import { capitalize } from 'vue'
 import { $EnrichHtmlKey, $EnrichMarkdownKey } from './provisions'
-import type i18nData from '../../../system/lang/en.json'
-import type { ValidLeafPaths } from '../../types/ValidPaths'
+// import type i18nData from '../../../system/lang/en.json'
+// import type { ValidLeafPaths } from '../../types/ValidPaths'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -13,7 +13,8 @@ declare module '@vue/runtime-core' {
      * @see {game.i18n.format}
      */
     $t: (
-      stringId: ValidLeafPaths<typeof i18nData>,
+      // stringId: ValidLeafPaths<typeof i18nData>,
+      stringId: string,
       data?: Record<string, string | number> | undefined
     ) => string
     $capitalize: (string: string) => string
@@ -47,7 +48,8 @@ export function enrichMarkdown(md: string): string {
 export const IronswornVuePlugin: Plugin = {
   install(app, ..._options) {
     app.config.globalProperties.$t = (
-      k: ValidLeafPaths<typeof i18nData>,
+      // k: ValidLeafPaths<typeof i18nData>,
+      k: string,
       data: Record<string, string | number>
     ) => {
       if (data) {
