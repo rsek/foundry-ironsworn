@@ -11,6 +11,7 @@
   >
     <template #label>
       <BtnRollStat
+        v-if="labelPosition != 'none'"
         tabindex="0"
         :documentType="documentType"
         class="text"
@@ -46,11 +47,12 @@ const props = withDefaults(
     softMax?: number
     initialValue: number
     spinnerStyle?: 'vertical' | 'horizontal'
-    labelPosition?: 'right' | 'left'
-    buttonLabel: string
+    labelPosition?: 'right' | 'left' | 'none'
+    buttonLabel?: string | undefined
   }>(),
   {
     spinnerStyle: 'vertical',
+    labelPosition: 'right',
   }
 )
 </script>

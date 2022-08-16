@@ -7,7 +7,11 @@
     :aria-orientation="spinnerStyle !== 'compact' ? spinnerStyle : undefined"
   >
     <!-- spinbutton role: "A form of range that expects the user to select from among discrete choices." -->
-    <section class="attr-spinner-label nogrow" :id="`${baseId}-label`">
+    <section
+      v-if="labelPosition != 'none'"
+      class="attr-spinner-label nogrow"
+      :id="`${baseId}-label`"
+    >
       <!-- TODO: should this be an heading tag? -->
       <slot name="label">
         <!-- button or static label goes here -->
@@ -46,6 +50,9 @@
     }
     .attr-spinner-bar {
       grid-row: 1;
+    }
+    &.label-none {
+      display: flex;
     }
     &.label-left {
       .attr-spinner-label {
@@ -88,9 +95,7 @@
  * A spinner that controls the value of an attribute.
  */
 import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
-import { clamp, inRange, kebabCase, rangeRight, startCase } from 'lodash'
-import { ChangeEvent } from 'rollup'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { pickInjectedDocument } from '../../composable/pickInjectedDocument.js'
 import SpinnerBar from './spinner-bar.vue'
 
@@ -111,7 +116,7 @@ const props = withDefaults(
     softMax?: number
     initialValue: number
     spinnerStyle?: 'vertical' | 'horizontal' | 'compact'
-    labelPosition?: 'right' | 'left'
+    labelPosition?: 'right' | 'left' | 'none'
   }>(),
   { spinnerStyle: 'vertical', labelPosition: 'left' }
 )

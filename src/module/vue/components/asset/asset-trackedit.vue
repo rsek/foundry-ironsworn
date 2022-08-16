@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flexcol">
     <div class="flexrow" style="align-items: center">
       <label class="flexrow" style="align-items: center">
         <input
@@ -23,14 +23,33 @@
         v-model.number="item.data.track.max"
       />
     </div>
-    <asset-track style="margin-top: 5px" :actor="$item?.parent" :item="item" />
+
+    <ConditionMeterSpinner
+      class="meter-preview"
+      tabindex="-1"
+      style="margin-top: 5px"
+      attr="track"
+      :max="item.data.track.max"
+      :initialValue="item.data.track.current"
+      spinnerStyle="horizontal"
+      labelPosition="left"
+      documentType="Item"
+      :buttonLabel="item.data.track.name"
+    >
+    </ConditionMeterSpinner>
   </div>
 </template>
+
+<style lang="less">
+.meter-preview {
+  pointer-events: none;
+}
+</style>
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { $ItemKey } from '../../provisions'
-import AssetTrack from './asset-track.vue'
+import ConditionMeterSpinner from '../resource-meters/condition-meter-spinner.vue'
 
 const item = inject('item') as Ref
 const editMode = computed(() => {

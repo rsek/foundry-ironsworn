@@ -52,14 +52,8 @@
           spinnerStyle="horizontal"
           :min="0"
           :max="asset.data.track.max"
-          :current="asset.data.track.current"
+          :initial-value="asset.data.track.current"
         />
-        <!-- <div class="flexcol condition-meter" v-if="asset.data.track.enabled">
-          <BtnRollStat class="juicy text flexrow" :item="asset" attr="track">
-            {{ asset.data.track.name }}
-          </BtnRollStat>
-          <asset-track :actor="actor" :item="asset" />
-        </div> -->
 
         <div
           class="flexcol stack nogrow"
