@@ -3,17 +3,16 @@
     class="momentum-meter-spinner"
     attr="momentum"
     documentType="Actor"
-    :spinnerStyle="orientation"
-    :max="10"
+    :spinnerStyle="props.spinnerStyle"
+    :initial-value="actor?.data.momentum"
     :min="-6"
+    :max="10"
     :softMax="actor?.data.momentumMax"
-    :orientation="orientation"
-    :current="actor?.data.momentum"
-    @keydown.enter="actor?.burnMomentum()"
   >
     <template #label>
       <BtnMomentumBurn
         class="text"
+        :class="{ 'vertical-v2': spinnerStyle === 'vertical' }"
         :tooltip="
           $t('IRONSWORN.BurnMomentumAndResetToX', {
             value: actor?.data.momentumReset,
@@ -57,9 +56,9 @@ import AttrSpinner from './attr-spinner.vue'
 
 const props = withDefaults(
   defineProps<{
-    orientation: 'horizontal' | 'vertical'
+    spinnerStyle: 'horizontal' | 'vertical'
   }>(),
-  { orientation: 'vertical' }
+  { spinnerStyle: 'vertical' }
 )
 const actor = inject('actor') as Ref
 const $actor = inject($ActorKey)

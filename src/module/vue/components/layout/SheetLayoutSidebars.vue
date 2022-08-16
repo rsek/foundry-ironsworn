@@ -1,5 +1,5 @@
 <template>
-  <article class="layout-sidebars pc-sheet">
+  <component :is="element" class="layout-sidebars pc-sheet">
     <header class="sheet-header flexrow">
       <slot name="header"> </slot>
     </header>
@@ -8,7 +8,7 @@
       data-tooltip-direction="LEFT"
     >
       <slot name="sidebar-left">
-        <MomentumMeterSpinner orientation="vertical" labelPosition="right" />
+        <MomentumMeterSpinner spinner-style="vertical" labelPosition="right" />
       </slot>
     </section>
     <section
@@ -34,7 +34,7 @@
     <footer>
       <slot name="footer"></slot>
     </footer>
-  </article>
+  </component>
 </template>
 
 <style lang="less">
@@ -85,4 +85,8 @@
 import MomentumMeterSpinner from '../resource-meters/momentum-meter-spinner.vue'
 import PcStats from '../pc-stats.vue'
 import PcConditionMeters from '../resource-meters/pc-condition-meters.vue'
+
+const props = withDefaults(defineProps<{ element?: string }>(), {
+  element: 'article',
+})
 </script>

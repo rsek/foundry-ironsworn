@@ -6,11 +6,12 @@
       class="nogrow"
       documentType="Actor"
       :attr="resource.toLowerCase()"
-      :current="actor?.data[resource.toLowerCase()]"
+      :initial-value="actor?.data[resource.toLowerCase()]"
       :max="5"
       :min="0"
       :buttonLabel="$t(`IRONSWORN.${resource}`)"
-      :labelPosition="labelPosition"
+      :labelPosition="props.labelPosition"
+      :softMax="props.softMax"
     />
   </div>
 </template>
@@ -35,8 +36,12 @@
 import { inject, Ref } from 'vue'
 import { $ActorKey } from '../../provisions.js'
 import ConditionMeterSpinner from './condition-meter-spinner.vue'
+import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 
-const props = defineProps<{ labelPosition: 'left' | 'right' }>()
+const props = defineProps<{
+  softMax?: number
+  labelPosition: 'left' | 'right'
+}>()
 
 const actor = inject('actor') as Ref
 const $actor = inject($ActorKey)

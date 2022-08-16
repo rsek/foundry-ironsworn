@@ -1,12 +1,20 @@
 <template>
-  <AttrSpinner v-bind="props" class="condition-meter-spinner">
+  <AttrSpinner
+    class="condition-meter-spinner"
+    :documentType="documentType"
+    :attr="attr"
+    :spinnerStyle="spinnerStyle"
+    :initial-value="initialValue"
+    :min="0"
+    :max="max"
+    :softMax="softMax"
+  >
     <template #label>
       <BtnRollStat
         tabindex="0"
-        :buttonPostion="labelPosition"
         :documentType="documentType"
         class="text"
-        :class="{ 'vertical-v2': spinnerStyle == 'vertical' }"
+        :class="{ 'vertical-v2': spinnerStyle === 'vertical' }"
         :attr="attr"
       >
         {{ buttonLabel }}
@@ -18,22 +26,31 @@
 <style lang="less"></style>
 
 <script setup lang="ts">
-import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 import BtnRollStat from '../buttons/btn-roll-stat.vue'
 import AttrSpinner from '../resource-meters/attr-spinner.vue'
+import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 
 const props = withDefaults(
   defineProps<{
+    /**
+     * The key of the attribute controlled by the spinner. This is the property of the injected document that will be controlled.
+     */
     attr: string
+    /**
+     * The type of injectable document to use. Currently only "Actor" and "Item" work - they'll target `$ActorKey` or `$ItemKey` as appropriate.
+     * @see {$ActorKey}
+     * @see {$ItemKey}
+     */
     documentType: DocumentType
-    buttonLabel: string
-    labelPosition: 'left' | 'right'
     max: number
-    min: number
     softMax?: number
-    current: number
-    spinnerStyle: 'horizontal' | 'vertical' | 'compact'
+    initialValue: number
+    spinnerStyle?: 'vertical' | 'horizontal'
+    labelPosition?: 'right' | 'left'
+    buttonLabel: string
   }>(),
-  { spinnerStyle: 'vertical' }
+  {
+    spinnerStyle: 'vertical',
+  }
 )
 </script>
