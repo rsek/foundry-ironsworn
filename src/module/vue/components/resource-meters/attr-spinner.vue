@@ -27,6 +27,7 @@
       :min="props.min ?? 0"
       :softMax="props.softMax"
       :initial-value="props.initialValue"
+      :segmentClass="segmentClass"
       @change="onChange"
     >
     </SpinnerBar>
@@ -117,6 +118,10 @@ const props = withDefaults(
     initialValue: number
     spinnerStyle?: 'vertical' | 'horizontal' | 'compact'
     labelPosition?: 'right' | 'left' | 'none'
+    /**
+     * @see {@link SpinnerBar} props for more info
+     */
+    segmentClass?: Record<number, any>
   }>(),
   { spinnerStyle: 'vertical', labelPosition: 'left' }
 )

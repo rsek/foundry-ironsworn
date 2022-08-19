@@ -33,11 +33,12 @@
     @keydown.9="setCurrent(9)"
   >
     <button
-      type="button"
-      class="clickable block spinner-bar-segment"
-      tabindex="-1"
       v-for="x in spinnerValues"
       :key="x"
+      type="button"
+      class="clickable block spinner-bar-segment"
+      :class="props.segmentClass?.[x]"
+      tabindex="-1"
       :ref="`spinnerBarSegment_${x}`"
       :aria-selected="x === state.value"
       :aria-disabled="!inRange(x, props.min, currentMax + 1)"
@@ -121,7 +122,7 @@
  * A bar that functions as a number spinner.
  */
 import { clamp, inRange, min, rangeRight } from 'lodash'
-import { computed, reactive } from 'vue'
+import { computed, CSSProperties, reactive } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -140,6 +141,15 @@ const props = withDefaults(
      * @default "vertical"
      */
     orientation?: 'vertical' | 'horizontal'
+    /**
+     * Classes to assign to segments, keyed by the segment's value.
+     * @example
+     * ```typescript
+     * // Assign the 'momentum-reset' class to the segment with the value of 'reset'
+     * {[reset]: 'momentum-reset'}
+     * ```
+     */
+    segmentClass?: Record<number, any>
   }>(),
   {
     orientation: 'vertical',

@@ -12,12 +12,11 @@
 </template>
 
 <script lang="ts" setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 import { $ActorKey } from '../../provisions'
 import BtnFaicon from './btn-faicon.vue'
 
 defineProps<{ disabled?: boolean }>()
 const $actor = inject($ActorKey)
-
 const burnMomentum = () => $actor?.burnMomentum()
 </script>

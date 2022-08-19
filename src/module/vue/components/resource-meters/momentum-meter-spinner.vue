@@ -8,6 +8,9 @@
     :min="-6"
     :max="10"
     :softMax="actor?.data.momentumMax"
+    :segmentClass="{
+      [actor?.data.momentumReset]: 'segment-momentum-reset',
+    }"
   >
     <template #label>
       <BtnMomentumBurn
@@ -44,6 +47,17 @@
     grid-row: 3;
     grid-column: 1;
   }
+  .attr-spinner-label:hover ~ .spinner-bar {
+    .segment-momentum-reset {
+      border: 1px solid var(--color-border-highlight-alt);
+      border-bottom: 1px solid var(--color-border-highlight);
+      box-shadow: 0 0 10px var(--color-shadow-highlight);
+
+      // color: var(--color-text-light-highlight);
+      // background: #00000055;
+      z-index: 10;
+    }
+  }
 }
 </style>
 
@@ -60,6 +74,7 @@ const props = withDefaults(
   }>(),
   { spinnerStyle: 'vertical' }
 )
+
 const actor = inject('actor') as Ref
 const $actor = inject($ActorKey)
 
