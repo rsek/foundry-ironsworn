@@ -80,7 +80,6 @@ export class IronswornChatCard {
       return (TextEditor as any)._onClickContentLink(ev)
     }
 
-    console.log(item)
     for (const actor of game.actors?.contents || []) {
       if (
         (actor.moveSheet as any)?._state >= 0 &&
@@ -89,7 +88,8 @@ export class IronswornChatCard {
         return actor.moveSheet.highlightMove(item)
       }
     }
-    item.sheet?.render(true)
+
+    // Found the item, but no move sheet open. Do nothing.
   }
 
   async _oracleNavigate(ev: JQuery.ClickEvent) {
@@ -151,8 +151,10 @@ export class IronswornChatCard {
 
     // Fetch the actor and move items
     const theActor = game.actors?.get(actor)
-    const pack = game.packs.get('foundry-ironsworn.starforgedmoves')
-    const theMove = (await pack?.getDocument(move)) as IronswornItem
+    const isPack = game.packs.get('foundry-ironsworn.ironswornmoves')
+    const sfPack = game.packs.get('foundry-ironsworn.starforgedmoves')
+    const theMove = ((await isPack?.getDocument(move)) ??
+      (await sfPack?.getDocument(move))) as IronswornItem
 
     // Get the new result
     const k = {
@@ -294,10 +296,7 @@ export class IronswornChatCard {
 
     const tableId = parent.data('table-id')
     const table = await pack?.getDocument(tableId)
-    rollAndDisplayOracleResult(
-      table as RollTable,
-      'foundry-ironsworn.starforgedoracles'
-    )
+    rollAndDisplayOracleResult(table as RollTable, packName)
   }
 
   async replaceSelectorWith(
