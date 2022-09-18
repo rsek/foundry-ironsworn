@@ -1,0 +1,25 @@
+/* ----------------------------------------- */
+/* Tabbed Containers
+/* ----------------------------------------- */
+.tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+.tabs .item {
+  text-align: center;
+}
+.tabs .item.active {
+  text-shadow: 0 0 10px var(--color-shadow-primary);
+}
+.tab[data-tab] {
+  display: none;
+}
+.tab[data-tab].active {
+  display: block;
+}
+.tab[data-tab].active.flexrow,
+.tab[data-tab].active.flexcol {
+  display: flex;
+}

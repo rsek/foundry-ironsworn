@@ -15,8 +15,8 @@
   scrollbar-width: thin;
   scrollbar-color: #444 rgba(0, 0, 0, 0.1);
 
-  --color-text-dark-primary: black;
-  --color-bg: white;
+  --color-bg: var(--color-text-light-primary);
+  --color-fg: var(--color-text-dark-primary);
   --color-highlight: palegoldenrod;
   --color-faded: #0008;
   --color-interactive: #000c;
@@ -33,6 +33,34 @@
   --ironsworn-color-success: hsl(200, 80%, 40%);
   --ironsworn-color-success-faded: hsl(200, 80%, 40%);
   --ironsworn-dice-background: #afafaf;
+
+  --border-btn: 2px groove var(--color-border-light-highlight);
+  --bg-btn: rgba(255, 255, 240, 0.8);
+  --corner-radius-md: 2px;
+}
+.chat-message,
+.chat-bubble {
+  // border-color: #6f6c66
+  border-color: var(--color-border-light-tertiary);
+  &.emote {
+    // background: #f3edde;
+    // border-color: #887c5d;
+    border-color: var(--color-border-light-highlight);
+  }
+  &.whisper {
+    // background: #e8e8ef;
+    // border-color: #545469;
+    border-color: var(--color-border-highlight);
+  }
+  &.blind {
+    // background: #f5eaf5;
+    // border-color: #6b476b;
+    border-color: var(--color-border-light-secondary);
+  }
+}
+
+button {
+  background: var(--bg-btn);
 }
 
 .grid {
@@ -86,7 +114,9 @@
     font-family: inherit;
   }
   input::placeholder {
-    color: var(--color-faded);
+    color: var(--color-text-light-primary);
+    opacity: 0.5;
+    // color: var(--color-faded);
   }
   input.highlight:focus {
     .active-invert();
@@ -95,18 +125,30 @@
   textarea,
   textarea#chat-message,
   select {
+    color: var(--color-fg);
     background: var(--color-input-bg);
   }
 
-  .chat-message {
-  }
-
-  input,
   textarea,
-  textarea#chat-message {
-    // border: 0;
+  input {
+    resize: none;
+    border-radius: 1px;
+    font-family: var(--font-primary);
+    border: 1px solid var(--color-border-light-tertiary);
   }
 
+  .fa,
+  .fab,
+  .fad,
+  .fal,
+  .far,
+  .fas {
+    color: var(--color-fg);
+  }
+  a.content-link,
+  a.inline-roll {
+    background: var(--bg-btn);
+  }
   .drag-highlight {
     background: var(--color-faded);
   }
@@ -127,7 +169,7 @@
   }
 
   .sheet-header {
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -346,7 +388,7 @@
   .clickable {
     .interactive();
     &.block {
-      background: rgba(255, 255, 240, 0.8);
+      background: var(--bg-btn);
     }
     &.text {
       background: none;

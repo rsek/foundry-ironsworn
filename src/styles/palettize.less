@@ -15,11 +15,12 @@
     .mixTo(@light, @dark, 11) [ @result],
     20
   );
-  --color-text-light-primary: mix(
-    @accentSecondary,
-    .mixTo(@light, @dark, 10) [ @result],
-    15
-  );
+  // --color-text-light-primary: mix(
+  //   @accentSecondary,
+  //   .mixTo(@light, @dark, 10) [ @result],
+  //   15
+  // );
+  --color-text-light-primary: @light;
   --color-text-dark-primary: mix(
     .mixTo(@light, @dark, 1) [ @result],
     @accentSecondary,
@@ -92,7 +93,11 @@
   --overlay-dark-5: fade(@dark, 5%);
   --overlay-dark-10: fade(@dark, 10%);
   --overlay-dark-50: fade(@dark, 50%);
+  --overlay-light-5: fade(@light, 5%);
+  --overlay-light-10: fade(@light, 10%);
+  --overlay-light-50: fade(@light, 50%);
   --overlay-input: var(--overlay-dark-5);
+
   // overlays for inputs, etc
   input[type='text'],
   input[type='number'],

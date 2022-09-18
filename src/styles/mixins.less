@@ -7,16 +7,15 @@
 }
 
 .active-invert {
-  background-color: var(--color-text-dark-primary);
+  background-color: var(--color-fg);
   color: var(--color-bg);
-  border-color: var(--color-text-dark-primary);
+  border-color: var(--color-bg);
 }
 
-.active-glow {
-  color: var(--color-text-light-highlight);
+.active-glow(@shadowSpread: 10px) {
   border: 1px solid var(--color-border-highlight-alt);
-  border-bottom: none;
-  box-shadow: 0 0 6px inset var(--color-shadow-highlight);
+  border-bottom: 1px solid var(--color-border-highlight);
+  box-shadow: 0 0 @shadowSpread var(--color-shadow-highlight);
 }
 
 .hover-glow {

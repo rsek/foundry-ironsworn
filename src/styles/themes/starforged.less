@@ -1,38 +1,17 @@
+@import './dark.less';
+@import '../palettize.less';
 @import './starforged-font.css'; // HACK to avoid import error
 
 .theme-starforged {
   --font-primary: 'Carrois Gothic SC', sans-serif;
 
-  @dark-color: #33999933;
-  @medium-color: #33999999;
-  @light-color: #55bbbb99;
-
-  @text-dark-color: #399;
-  @text-light-color: #6ff;
-
-  --color-text-dark-primary: #3dd;
-  --color-text-dark-secondary: #399;
-  --color-text-dark-heading: #399;
-
-  --color-text-light-highlight: #6ff;
-  --color-text-light-primary: #3dd;
-  --color-text-light-heading: #3dd;
-  --color-bg: black;
-  --color-faded: #3dd8;
-  --color-interactive: #6ff;
-  --color-input-bg: #3dd3;
-  --color-highlight: #11777799;
-  --color-underline-header: #3dd8;
-
-  // FVTT css var overrides
-  --color-shadow-primary: orange;
+  .palettizeFoundry(black, #3df, #0ff, #88f);
+  .dark();
 
   // ironsworn specific
   --ironsworn-color-danger: hsl(0, 80%, 50%);
   --ironsworn-color-success: hsl(290, 80%, 50%);
   --ironsworn-color-success-faded: hsl(290, 80%, 60%);
-
-  --ironsworn-dice-background: darken(@text-dark-color, 20);
 
   .window-app,
   .journal-entry .journal-entry-content {
@@ -43,137 +22,17 @@
   .window-app {
     background: #000d;
     backdrop-filter: blur(5px);
+
+    .window-content {
+      // background-color: rgba(0, 0, 0, 0.4);
+      background-image: none;
+      color: var(--color-text-light-primary);
+    }
   }
 
   .dialog-buttons {
     .dialog-button {
       color: currentColor;
-    }
-  }
-
-  .window-content {
-    // background-color: rgba(0, 0, 0, 0.4);
-    background: rgb(0, 0, 0);
-    background: @background-gradient;
-    background-image: none;
-    color: @text-medium-color;
-  }
-
-  input,
-  textarea,
-  textarea#chat-message {
-    background: @dark-color;
-    border: 0;
-    color: @text-medium-color;
-
-    &:focus {
-      box-shadow: 0 0 10px @light-color;
-      cursor: pointer;
-    }
-  }
-
-  .sheet-area {
-    border-color: @light-color;
-  }
-
-  .track-box {
-    stroke: @text-medium-color;
-  }
-
-  .clickable:not(svg):not(.svg) {
-    color: @text-dark-color;
-    &.hover,
-    &:hover,
-    &:focus {
-      &.block,
-      &.text {
-        color: @text-light-color;
-      }
-    }
-
-    &.selected,
-    &[aria-selected='true'] {
-      &.block,
-      &.text {
-        color: @text-light-color;
-        background-color: @medium-color;
-      }
-    }
-  }
-
-  .drag-highlight {
-    background: @medium-color;
-  }
-
-  .stats {
-    .stat {
-      border-color: @text-medium-color;
-    }
-  }
-
-  hr {
-    border-color: @light-color;
-  }
-
-  .entity-link,
-  .content-link {
-    background-color: @dark-color;
-    border-color: @medium-color;
-    color: @text-medium-color;
-    i {
-      color: @text-light-color;
-    }
-  }
-
-  .movesheet-row.highlighted {
-    background-color: @muted-color;
-  }
-
-  .compact {
-    .bordergroup {
-      border-color: @light-color;
-    }
-  }
-
-  .ironsworn-roll {
-    .roll {
-      // background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
-    }
-  }
-
-  button,
-  .prosemirror button,
-  .tox .tox-tbtn--bespoke {
-    background-color: @dark-color;
-    color: @text-medium-color;
-    border-color: @muted-color;
-
-    &:hover {
-      box-shadow: 0 0 5px @light-color;
-      color: @text-light-color;
-    }
-  }
-
-  select {
-    background-color: @dark-color;
-  }
-
-  input[type='checkbox'] {
-    background-color: @dark-color;
-  }
-
-  table {
-    border-color: @muted-color;
-  }
-
-  .chat-message {
-    color: var(--color-text-dark-primary);
-    background: var(--color-bg);
-    .message-header {
-      color: var(--color-faded);
-    }
-    .message-content {
-      border: 1px solid var(--color-faded);
     }
   }
 }

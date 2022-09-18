@@ -39,15 +39,7 @@
   </header>
 </template>
 
-<style lang="less" scoped>
-input,
-textarea {
-  border-color: rgba(0, 0, 0, 0.1);
-  border-radius: 1px;
-  font-family: var(--font-primary);
-  resize: none;
-}
-</style>
+<style lang="less" scoped></style>
 
 <script lang="ts" setup>
 import { debounce } from 'lodash'

@@ -145,13 +145,6 @@
     white-space: nowrap;
   }
 }
-
-textarea {
-  border-color: rgba(0, 0, 0, 0.1);
-  border-radius: 1px;
-  resize: none;
-  font-family: var(--font-primary);
-}
 </style>
 
 <script setup lang="ts">
