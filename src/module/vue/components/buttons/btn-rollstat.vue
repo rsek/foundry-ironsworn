@@ -1,7 +1,7 @@
 <template>
   <btn-isicon
     @click="rollStat"
-    :tooltip="tooltip"
+    :data-tooltip="$t('IRONSWORN.Roll +x', { stat: statLabel })"
     class="action-roll stat-roll"
     :class="attr"
     icon="d10-tilt"
@@ -13,25 +13,31 @@
 </template>
 
 <script lang="ts" setup>
-import { capitalize } from 'lodash'
-import { computed, inject, ref, useSlots } from 'vue'
+import { computed, inject, useSlots } from 'vue'
 import { RollDialog } from '../../../helpers/rolldialog'
+import { IronswornItem } from '../../../item/item.js'
 import { IronswornPrerollDialog } from '../../../rolls'
 import { $ActorKey } from '../../provisions'
 import btnIsicon from './btn-isicon.vue'
 
-const props = defineProps({
-  item: Object, // the asset. only needed if this is an asset condition meter
-  attr: String,
-  tooltip: String,
-  disabled: Boolean,
-})
+const props = defineProps<{
+  /**
+   * The asset. Only needed if this is an asset condition meter.
+   */
+  item?: IronswornItem
+  /**
+   * This string will be inserted in into the tooltip text "Roll +{x}". It should already be localized.
+   */
+  statLabel: string
+  attr: string
+  disabled?: boolean
+}>()
 
 const $actor = inject($ActorKey)
 const $item = computed(() => {
   return (
-    $actor?.items.find((x) => x.id === props.item?._id) ??
-    game.items?.get(props.item?._id)
+    $actor?.items.find((x) => x.id === (props.item as any)?._id) ??
+    game.items?.get((props.item as any)?._id)
   )
 })
 
@@ -49,9 +55,7 @@ function rollStat(): any {
       $actor
     )
   } else if ($actor) {
-    let attrName = game.i18n.localize('IRONSWORN.' + capitalize(props.attr))
-    if (attrName.startsWith('IRONSWORN.')) attrName = props.attr
-    const name = `${attrName} (${$actor?.name})`
+    const name = `${props.statLabel} (${$actor?.name})`
 
     return IronswornPrerollDialog.showForStat(
       name,

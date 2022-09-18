@@ -52,7 +52,118 @@
   }
 
   .window-content {
-    background: none;
+    // background-color: rgba(0, 0, 0, 0.4);
+    background: rgb(0, 0, 0);
+    background: @background-gradient;
+    background-image: none;
+    color: @text-medium-color;
+  }
+
+  input,
+  textarea,
+  textarea#chat-message {
+    background: @dark-color;
+    border: 0;
+    color: @text-medium-color;
+
+    &:focus {
+      box-shadow: 0 0 10px @light-color;
+      cursor: pointer;
+    }
+  }
+
+  .sheet-area {
+    border-color: @light-color;
+  }
+
+  .track-box {
+    stroke: @text-medium-color;
+  }
+
+  .clickable:not(svg):not(.svg) {
+    color: @text-dark-color;
+    &.hover,
+    &:hover,
+    &:focus {
+      &.block,
+      &.text {
+        color: @text-light-color;
+      }
+    }
+
+    &.selected,
+    &[aria-selected='true'] {
+      &.block,
+      &.text {
+        color: @text-light-color;
+        background-color: @medium-color;
+      }
+    }
+  }
+
+  .drag-highlight {
+    background: @medium-color;
+  }
+
+  .stats {
+    .stat {
+      border-color: @text-medium-color;
+    }
+  }
+
+  hr {
+    border-color: @light-color;
+  }
+
+  .entity-link,
+  .content-link {
+    background-color: @dark-color;
+    border-color: @medium-color;
+    color: @text-medium-color;
+    i {
+      color: @text-light-color;
+    }
+  }
+
+  .movesheet-row.highlighted {
+    background-color: @muted-color;
+  }
+
+  .compact {
+    .bordergroup {
+      border-color: @light-color;
+    }
+  }
+
+  .ironsworn-roll {
+    .roll {
+      // background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
+    }
+  }
+
+  button,
+  .prosemirror button,
+  .tox .tox-tbtn--bespoke {
+    background-color: @dark-color;
+    color: @text-medium-color;
+    border-color: @muted-color;
+
+    &:hover {
+      box-shadow: 0 0 5px @light-color;
+      color: @text-light-color;
+    }
+  }
+
+  select {
+    background-color: @dark-color;
+  }
+
+  input[type='checkbox'] {
+    background-color: @dark-color;
+  }
+
+  table {
+    border-color: @muted-color;
   }
 
   .chat-message {

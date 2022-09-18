@@ -22,6 +22,10 @@
   --color-interactive: #000c;
   --color-input-bg: rgba(0, 0, 0, 0.05);
 
+  --std-animation: all 0.5s ease;
+  --widget-fill-opacity-static: 1;
+  --widget-fill-opacity-preview: 0.5;
+  --widget-stroke-width: 1px;
   --ironsworn-color-danger: hsl(0, 80%, 40%);
   --ironsworn-color-danger-faded: hsl(0, 80%, 40%);
   --ironsworn-color-warning: hsl(55, 100%, 50%);
@@ -196,7 +200,7 @@
   }
 
   .asset-summary {
-    transition: all 0.5s ease;
+    transition: var(--std-animation);
     overflow: hidden;
 
     &.collapsed {
@@ -303,20 +307,9 @@
     }
   }
 
-  .rank-pip {
-    flex: 0 1 auto;
-    stroke-width: 10;
-    margin: 1px !important;
-    fill: transparent;
-    stroke: currentColor;
-    &.filled {
-      fill: var(--color-faded);
-    }
-  }
-
   // TODO: restructure this styling so that it also applies to dialog-buttons. probably with mixins?
   .interactive {
-    transition: 0.5s ease;
+    transition: var(--std-animation);
     cursor: pointer;
     &.disabled, // FIXME: ditch this class, its redundant with more semantic options
     &:disabled,
@@ -359,51 +352,18 @@
       background: none;
       justify-content: flex-start;
     }
-
-    &.disabled,
-    &:disabled,
-    &[aria-disabled='true'] {
-      opacity: 0.5;
-      cursor: not-allowed;
+    svg,
+    &.svg {
+      &.selected,
+      &[aria-selected='true'] {
+        fill-opacity: 1;
+      }
+      &.hover,
+      &:hover {
+        fill-opacity: 0.35;
+      }
       &:active {
-        // sneaky way of allowing hovers (for e.g. tooltips explaining why it's disabled) but not clicks
-        pointer-events: none;
-      }
-    }
-
-    &.selected,
-    &[aria-selected='true'] {
-      &.block,
-      &.text {
-        .active-invert();
-      }
-    }
-
-    &.hover,
-    &:hover {
-      &.block {
-        background: var(--color-interactive);
-        border-color: var(--color-interactive);
-        color: var(--color-bg);
-      }
-      &.text:not(.block) {
-        color: var(--color-interactive);
-      }
-      svg,
-      &.svg {
-        fill: var(--color-interactive);
-      }
-    }
-    &:active {
-      &.block {
-        background: var(--color-faded);
-      }
-      &.text:not(.block) {
-        color: var(--color-faded);
-      }
-      svg,
-      &.svg {
-        fill: var(--color-faded);
+        fill-opacity: 0.5;
       }
     }
   }
@@ -446,11 +406,7 @@
       justify-items: center;
       align-items: center;
       border: 1px solid;
-      transition: 0.5s ease;
-      border-color: currentColor;
-      &.editing {
-        background: var(--color-faded);
-      }
+      transition: var(--std-animation);
     }
   }
 
