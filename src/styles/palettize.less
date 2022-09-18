@@ -1,0 +1,121 @@
+// helper function
+.mixTo(@color1, @color2, @value) {
+  @result: mix(@color1, @color2, (@value*6.65));
+}
+
+// mixin that generates a palette based on FVTT's standard CSS variables.
+.palettizeFoundry(@dark, @light, @accentPrimary, @accentSecondary) {
+  --color-text-light-highlight: mix(
+    @accentSecondary,
+    .mixTo(@light, @dark, 15) [ @result],
+    9
+  );
+  --color-text-light-heading: mix(
+    @accentSecondary,
+    .mixTo(@light, @dark, 11) [ @result],
+    20
+  );
+  --color-text-light-primary: mix(
+    @accentSecondary,
+    .mixTo(@light, @dark, 10) [ @result],
+    15
+  );
+  --color-text-dark-primary: mix(
+    .mixTo(@light, @dark, 1) [ @result],
+    @accentSecondary,
+    96
+  );
+  --color-text-dark-secondary: mix(
+    .mixTo(@light, @dark, 4) [ @result],
+    @accentSecondary,
+    96
+  );
+  --color-text-dark-header: mix(
+    .mixTo(@light, @dark, 2) [ @result],
+    @accentSecondary,
+    96
+  );
+  --color-text-dark-inactive: mix(
+    @accentSecondary,
+    .mixTo(@light, @dark, 6) [ @result],
+    13
+  );
+  --color-text-hyperlink: @accentSecondary;
+  --color-text-light-0: @light;
+  each(range(1,7), {
+    --color-text-light-@{value}: .mixTo(@dark, @light, @value)[@result];
+  });
+  --color-text-dark-0: @dark;
+  each(range(1,6), {
+    --color-text-dark-@{value}: .mixTo(@light, @dark, @value)[@result];
+  });
+  each(range(1,2), {
+    --color-border-light-@{value}: mix(@dark,@light,((@value)*4*6.65 - 2*6.65));
+});
+  each(range(1,5), {
+    --color-border-dark-@{value}: mix(@light, @dark, (@value*6.65));
+  });
+
+  --color-shadow-primary: @accentPrimary;
+  --color-shadow-highlight: @accentSecondary;
+  --color-shadow-dark: @dark;
+  --color-underline-inactive: $--color-text-dark-inactive;
+  --color-underline-active: darken(
+    @accentSecondary,
+    36
+  ); // different color operation to make this more broadly useful?
+  --color-underline-header: darken(@accentPrimary, 27);
+  --color-underline-inactive: $--color-border-light-tertiary;
+
+  --color-border-light-highlight: $--color-text-light-highlight;
+  --color-border-light-primary: $--color-text-light-primary;
+  --color-border-light-secondary: $--color-text-light-heading;
+  --color-border-light-tertiary: $--color-text-dark-inactive;
+  --color-border-dark: @dark;
+  --color-border-dark-primary: $--color-text-dark-primary;
+  --color-border-dark-secondary: $--color-text-dark-header;
+  --color-border-dark-tertiary: $--color-text-dark-secondary;
+  --color-border-highlight: @accentSecondary;
+  --color-border-highlight-alt: @accentPrimary;
+
+  --color-bg-btn-minor-inactive: $--color-text-light-heading;
+  --color-bg-btn-minor-active: $--color-text-light-primary;
+  --color-bg-option: #dad8cc;
+  --color-bg-option: mix(
+    @accentSecondary,
+    .mixTo(@light, @dark, 13) [ @result],
+    5
+  );
+
+  // used in inputs
+
+  --overlay-dark-5: fade(@dark, 5%);
+  --overlay-dark-10: fade(@dark, 10%);
+  --overlay-dark-50: fade(@dark, 50%);
+  --overlay-input: var(--overlay-dark-5);
+  // overlays for inputs, etc
+  input[type='text'],
+  input[type='number'],
+  input[type='password'],
+  input[type='date'],
+  input[type='time'],
+  input[type='search'],
+  select,
+  textarea,
+  .dialog .dialog-buttons button.default,
+  .filepicker .directory,
+  .roll-table-config ol.table-results .table-header,
+  table {
+    background: var(--overlay-input);
+  }
+  // overlays for buttons
+}
+
+@ironswornDark: #000000;
+@ironswornLight: #ffffff;
+@ironswornAccentPrimary: #ff0000;
+@ironswornAccentSecondary: #ff6400;
+
+.color-haver {
+  .palettizeFoundry(@ironswornDark, @ironswornLight, @ironswornAccentPrimary, @ironswornAccentSecondary);
+}
