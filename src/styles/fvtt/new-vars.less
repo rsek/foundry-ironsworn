@@ -1,0 +1,921 @@
+@color_error: red;
+@color_darkest: black;
+@overlay_dark_1: fade(@color_darkest,1%);
+@overlay_dark_4: fade(@color_darkest,4%);
+@overlay_dark_5: fade(@color_darkest,5%)
+@overlay_dark_6: fade(@color_darkest,6%);
+@overlay_dark_7: fade(@color_darkest,7%);
+@overlay_dark_15: fade(@color_darkest,15%);
+@overlay_dark_25: fade(@color_darkest,25%);
+@overlay_dark_50: fade(@color_darkest,50%);
+@overlay_dark_66: fade(@color_darkest,66%);
+@overlay_dark_95: fade(@color_darkest,95%);
+@color_lightest: white;
+@overlay_light_20: fade(@color_lightest, 20%);
+@overlay_light_25: fade(@color_lightest, 25%);
+@overlay_light_8: fade(@color_lightest, 8%);
+@overlay_light_10: fade(@color_lightest, 10%);
+@overlay_light_5: fade(@color_lightest, 5%);
+
+
+
+
+/* ---------------------------------------- */
+/*  Text                                    */
+/* ---------------------------------------- */
+
+/* Links */
+a.content-link,
+a.inline-roll {
+  background: #ddd;
+}
+a.content-link.broken {
+  background: fade(@color_error, 5%);
+}
+a.inline-roll.gmroll {
+  background: #e8e8ef;
+  border-color: #545469;
+}
+a.inline-roll.blindroll {
+  background: #f5eaf5;
+  border-color: #6b476b;
+}
+::selection {
+  background: #82817d;
+}
+/* Blockquote */
+/* Secret Sections */
+section.secret {
+  background: rgba(53, 0, 121, 0.05);
+}
+section.secret.revealed {
+  background: rgba(0, 53, 0, 0.05);
+}
+/* ---------------------------------------- */
+/* Tables                                   */
+/* ---------------------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: @overlay_dark_5;
+  border-top: 1px solid var(--color-border-light-tertiary);
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  margin: 0.5em 0;
+}
+table thead {
+  background: @overlay_dark_50;
+  color: var(--color-text-light-highlight);
+  text-shadow: 1px 1px var(--color-shadow-dark);
+  border-bottom: 1px solid var(--color-border-dark);
+}
+table tr:nth-child(even) {
+  background-color: @overlay_light_20;
+}
+table td:first-child {
+  padding-left: 2px;
+}
+table td,
+table th {
+  padding: 0.25em 0;
+}
+/* ----------------------------------------- */
+/* Scrollbar
+/* ----------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: 0 0 1px #999 inset;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  outline: none;
+  border-radius: 3px;
+  background: #782e22;
+  border: 1px solid var(--color-border-highlight);
+}
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: #782e22 #111;
+}
+/* ----------------------------------------- */
+/* Images
+/* ----------------------------------------- */
+
+.window-app .window-resizable-handle {
+  background: #444;
+}
+/* ----------------------------------------- */
+/*  Context Dropdown Menu
+/* ----------------------------------------- */
+#context-menu {
+  background: #23221d;
+}
+
+/* ----------------------------------------- */
+/* Scrollbar
+/* ----------------------------------------- */
+::-webkit-scrollbar-thumb {
+  background: var(--color-underline-header);
+}
+:root {
+  scrollbar-color: var(--color-underline-header) (#111);
+}
+
+/* ---------------------------------------- */
+/* Notifications                            */
+/* ---------------------------------------- */
+
+.notification {
+  background: @overlay_dark_50;
+  text-shadow: 1px 1px @color_darkest;
+}
+.notification.info {
+  background: rgba(47, 80, 132, 0.8);
+  border: 1px solid var(--color-level-info);
+}
+.notification.warning {
+  background: rgba(214, 150, 0, 0.8);
+  border: 1px solid var(--color-level-warning);
+}
+.notification.error {
+  background: rgba(105, 0, 8, 0.8);
+  border: 1px solid var(--color-level-error);
+}
+.notification.stable {
+  background: rgba(138, 211, 4, 0.4);
+}
+.notification.testing {
+  background: rgba(211, 192, 4, 0.4);
+}
+.notification.development {
+  background: rgba(211, 119, 4, 0.4);
+}
+.notification.prototype {
+  background: rgba(211, 20, 4, 0.4);
+}
+/* ---------------------------------------- */
+/* Controls Reference                       */
+/* ---------------------------------------- */
+
+#controls-reference ol.hotkey-list .key {
+  background: @overlay_light_25;
+  box-shadow: 1px 1px #444;
+}
+#controls-reference ol.hotkey-list li.gm .key {
+  background: #f5eaf5;
+}
+/* ---------------------------------------- */
+/* Support Details Report                   */
+/* ---------------------------------------- */
+#support-report {
+  border: 2px dashed #c9baa7;
+}
+/* ---------------------------------------- */
+/*  Package Configuration Apps              */
+/* ---------------------------------------- */
+#keybindings .binding .key {
+  background: @overlay_light_25;
+  border: 1px solid var(--color-border-light-2);
+  box-shadow: 1px 1px #444;
+}
+#keybindings .binding .key.uneditable {
+  background: #cac9c5;
+}
+#keybindings .binding .binding-controls .control.conflicts {
+  color: orange;
+}
+#keybindings .binding .binding-controls .control.uneditable {
+  color: gray;
+}
+/* ---------------------------------------- */
+/* Tours                                    */
+/* ---------------------------------------- */
+.tour-fadeout {
+  box-shadow: rgba(33, 33, 33, 0.8) 0px 0px 1px 2px,
+    rgba(33, 33, 33, 0.6) 0px 0px 0px 5000px;
+}
+.tour-center-step {
+  background: @overlay_dark_95;
+  box-shadow: 0 0 4px @color_darkest;
+}
+
+.tour .step-header:after {
+  --webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    @color_darkest 30%,
+    @color_darkest 70%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    @color_darkest 5%,
+    @color_darkest 30%,
+    transparent 100%
+  );
+}
+/* ---------------------------------------- */
+/*  Forms                                   */
+/* ---------------------------------------- */
+
+/* ---------------------------------------- */
+/* Form Inputs                              */
+/* ---------------------------------------- */
+
+/* Text Input */
+input[type='text'],
+input[type='number'],
+input[type='password'],
+input[type='date'],
+input[type='time'],
+input[type='search'] {
+  background: @overlay_dark_5;
+}
+input[type='search']::-webkit-search-cancel-button {
+  background: linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 43%,
+      #333 45%,
+      #333 55%,
+      rgba(0, 0, 0, 0) 57%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      transparent 43%,
+      #333 45%,
+      #333 55%,
+      transparent 57%,
+      transparent 100%
+    );
+}
+/* Select Boxes */
+select {
+  background: @overlay_dark_5;
+}
+/* Text Areas */
+textarea {
+  background: @overlay_dark_5;
+}
+/* Buttons */
+button {
+  background: rgba(255, 255, 240, 0.8);
+}
+form button {
+  background: @overlay_dark_1;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+  background: #999999;
+  border: 1px solid #111;
+}
+input[type='range']::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+  background: #c85019;
+}
+input[type='range']:focus::-webkit-slider-runnable-track {
+  background: #a6a6a6;
+}
+input[type='range']::-moz-range-track {
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+  background: #999999;
+}
+input[type='range']::-moz-range-thumb {
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+  background: #c85019;
+}
+input[type='range']::-ms-fill-lower {
+  background: #8c8c8c;
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+}
+input[type='range']::-ms-fill-upper {
+  background: #999999;
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+}
+input[type='range']::-ms-thumb {
+  box-shadow: 1px 1px 1px @color_darkest, 0px 0px 1px #0d0d0d;
+  background: #c85019;
+}
+input[type='range']:focus::-ms-fill-lower {
+  background: #999999;
+}
+input[type='range']:focus::-ms-fill-upper {
+  background: #a6a6a6;
+}
+/**
+* Dark mode inputs
+*/
+.dark button {
+  background: rgba(255, 255, 240, 0.8);
+  border: 2px solid var(--color-border-light-secondary);
+}
+.dark input,
+.dark select {
+  background: rgba(255, 255, 240, 0.8);
+}
+/* ----------------------------------------- */
+/* TinyMCE Editor
+/* ----------------------------------------- */
+
+.editor-edit {
+  background: rgba(187, 187, 187, 0.75);
+}
+/* ----------------------------------------- */
+/* Dialog Window
+/* ----------------------------------------- */
+.dialog .dialog-buttons button {
+  background: @overlay_dark_1;
+}
+.dialog .dialog-buttons button.default {
+  background: @overlay_dark_5;
+}
+/* ----------------------------------------- */
+/*  Global Tooltip                           */
+/* ----------------------------------------- */
+#tooltip {
+  background: @overlay_dark_95;
+  box-shadow: 0 0 4px @color_darkest;
+}
+/* ----------------------------------------- */
+/* File Picker
+/* ----------------------------------------- */
+
+.filepicker .current-dir button {
+  background: @overlay_dark_1;
+}
+.filepicker .directory {
+  background: @overlay_dark_5;
+}
+
+.filepicker .directory > li.picked {
+  background: @overlay_dark_1;
+}
+.filepicker .private button.privacy {
+  background: rgba(115, 49, 255, 0.05);
+  box-shadow: 0 0 4px #7331ff inset;
+}
+.filepicker .private .directory,
+.filepicker .public .private.dir {
+  background: rgba(115, 49, 255, 0.05);
+}
+.filepicker .images-list li span.filename {
+  background: @overlay_dark_66;
+}
+
+.dice-roll .dice-formula,
+.dice-roll .dice-total {
+  background: @overlay_dark_1;
+  box-shadow: 0 0 2px #fff inset;
+}
+.dice-roll .dice-total.success {
+  color: green;
+}
+.dice-roll .dice-total.failure {
+  color: @color_error;
+}
+/** Inline Roll Tooltip */
+.inline-roll .dice-tooltip {
+  background: url(../ui/parchment.jpg) repeat;
+}
+.inline-roll:hover .dice-tooltip {
+  text-shadow: none;
+}
+/**
+* Legacy Tooltip Code
+*/
+.dice-roll .dice-tooltip .fail {
+  color: @color_error;
+}
+.dice-roll .dice-tooltip .crit {
+  color: lightgreen;
+}
+/* ----------------------------------------- */
+/*  Dice Tooltip
+/* ----------------------------------------- */
+
+.dice-tooltip .part-header .part-total {
+  background: @overlay_dark_1;
+}
+
+.dice-tooltip .dice-rolls .roll {
+  color: @color_darkest;
+}
+.dice-tooltip .dice-rolls .roll.success,
+.dice-tooltip .dice-rolls .roll.max {
+  color: #18520b;
+}
+.dice-tooltip .dice-rolls .roll.failure,
+.dice-tooltip .dice-rolls .roll.min {
+  color: #aa0200;
+}
+/* ---------------------------------------- */
+/* HUD Application
+/* ---------------------------------------- */
+
+.placeable-hud input[type='text'] {
+  background: @overlay_dark_6;
+}
+.placeable-hud input[type='text']:focus {
+  box-shadow: 0 0 10px #c60;
+}
+.placeable-hud .control-icon {
+  background: @overlay_dark_6;
+  border: 1px solid #333;
+}
+
+/* ---------------------------------------- */
+/* Token HUD
+/* ---------------------------------------- */
+
+#token-hud .attribute.bar1 input {
+  border: 1px solid #7cd000;
+}
+#token-hud .attribute.bar2 input {
+  border: 1px solid #659db5;
+}
+#token-hud .status-effects {
+  background: @overlay_dark_6;
+}
+/* ---------------------------------------- */
+/* Chat Bubbles
+/* ---------------------------------------- */
+.chat-bubble {
+  background: #f5f2ec;
+  border: 2px solid #6f6c66;
+}
+.chat-bubble.emote {
+  background: #f3edde;
+  border: 2px solid #887c5d;
+}
+.chat-bubble.chatter {
+  background: @overlay_dark_25;
+}
+#navigation #nav-toggle {
+  background: @overlay_dark_50;
+}
+#navigation #scene-list .scene {
+  background: rgba(39, 39, 39, 0.95);
+}
+#navigation #scene-list .scene.gm {
+  background: #130027;
+  border: 1px solid #3a00ae;
+}
+#navigation #scene-list .scene.view,
+#navigation #scene-list .scene.context {
+  background: rgba(52, 52, 52, 0.95);
+}
+#navigation #scene-list .scene li.scene-player {
+  color: @color_darkest;
+  background: #97dff4;
+}
+#navigation.collapsed {
+  pointer-events: none;
+}
+#navigation.collapsed #nav-toggle {
+  pointer-events: all;
+}
+#navigation.collapsed #scene-list {
+  display: none;
+}
+#loading {
+  background: @overlay_dark_6;
+  box-shadow: 0 0 4px #b2c3ff;
+}
+#loading label {
+  background: @overlay_dark_6;
+}
+#loading #loading-bar {
+  background: #5d49ff;
+  border: 1px solid #b2c3ff;
+}
+
+
+
+/* ----------------------------------------- */
+/*  Main Menu
+/* ----------------------------------------- */
+#menu {
+background: @overlay_dark_6;
+}
+/* ----------------------------------------- */
+/*  Scene Controls
+/* ----------------------------------------- */
+
+#controls ol.control-tools > li {
+background: @overlay_dark_50;
+/* Toggled Buttons */
+}
+#controls ol.control-tools > li.toggle {
+background: rgba(30, 0, 60, 0.5);
+border: 1px solid #3b1893;
+}
+#controls ol.control-tools > li.toggle.active,
+#controls ol.control-tools > li.toggle:hover {
+background: rgba(60, 0, 120, 0.75);
+border: 1px solid #9b8dff;
+box-shadow: 0 0 10px #9b8dff;
+}
+#controls ol.control-tools .has-notes::after {
+color: #3b1893;
+}
+
+/* ---------------------------------------- */
+/*  Hotbar                                  */
+/* ---------------------------------------- */
+
+#hotbar .bar-controls {
+background: @overlay_dark_6;
+box-shadow: 0 0 3px #444 inset;
+}
+
+#hotbar .macro {
+background: @overlay_dark_50;
+}
+#hotbar .macro.inactive {
+box-shadow: 0 0 5px #444 inset;
+}
+#hotbar .macro .macro-key {
+background: #111;
+}
+/* ---------------------------------------- */
+/*  PRIMARY SIDEBAR                         */
+/* ---------------------------------------- */
+.directory .directory-header .header-search input {
+flex: 1;
+margin: 0 3px;
+background: rgba(255, 255, 245, 0.8);
+}
+/* ----------------------------------------- */
+/*  Folders and Sub-folders
+/* ----------------------------------------- */
+li.folder > .folder-header {
+background: @overlay_light_20;
+}
+li.folder.collapsed > .folder-header {
+background: @overlay_dark_50;
+}
+/**
+* Subdirectory Styles
+*/
+.subdirectory {
+border-left: 3px solid @overlay_light_20;
+}
+/* ----------------------------------------- */
+/*  1.0 - Chat Panel
+/* ----------------------------------------- */
+
+#chat-controls .roll-type-select {
+background: rgba(255, 255, 245, 0.8);
+}
+/* Single Chat Message */
+.chat-message {
+border: 2px solid #6f6c66;
+}
+.chat-message.emote {
+background: #f3edde;
+border: 2px solid #887c5d;
+}
+.chat-message.whisper {
+background: #e8e8ef;
+border: 2px solid #545469;
+}
+.chat-message.blind {
+background: #f5eaf5;
+border: 2px solid #6b476b;
+}
+/* ----------------------------------------- */
+/*  Combat Tracker                           */
+/* ----------------------------------------- */
+
+.combat-sidebar li.combatant.hover,
+.combat-sidebar li.combatant:hover {
+background: @overlay_light_8;
+}
+.combat-sidebar li.combatant.active {
+background: @overlay_light_10;
+}
+
+
+/* ----------------------------------------- */
+/*  Playlists Directory                      */
+/* ----------------------------------------- */
+.playlists-sidebar .global-control .playlist-header {
+background: @overlay_dark_50;
+}
+/* ----------------------------------------- */
+/*  Compendium Packs                         */
+/* ----------------------------------------- */
+.compendium-sidebar h3 {
+background: @overlay_light_10;
+}
+/* ----------------------------------------- */
+/*  Settings                                 */
+/* ----------------------------------------- */
+
+.settings-sidebar h2 {
+background: @overlay_light_10;
+}
+/**
+* Role Permission Configuration Form
+*/
+#permissions-config header.table-header {
+background: @overlay_dark_50;
+}
+/* ----------------------------------------- */
+/*  Module Management                        */
+/* ----------------------------------------- */
+
+.package-list .package .tag {
+background: #333;
+}
+.package-list .package .tag.javascript {
+background: #803c62;
+}
+.package-list .package .tag.css {
+background: #1e5c6f;
+}
+.package-list .package .tag.compendium {
+background: #3b3a80;
+}
+.package-list .package .tag.unavailable {
+background: #750000;
+}
+.package-list .package .tag.unknown {
+background: #b07900;
+}
+.package-list .package .tag.languages {
+background: #224224;
+}
+/* ---------------------------------------- */
+/* Invitation Links                         */
+/* ---------------------------------------- */
+#invitation-links .connection.open {
+color: green;
+}
+#invitation-links .connection.unknown {
+color: rgba(214, 150, 0, 0.6);
+}
+#invitation-links .connection.closed {
+color: rgba(105, 0, 8, 0.6);
+}
+
+/* ---------------------------------------- */
+/* Roll Table Sheet                         */
+/* ---------------------------------------- */
+
+.roll-table-config ol.table-results .table-result.roulette {
+background: @overlay_dark_25;
+}
+.roll-table-config ol.table-results .table-result.drawn {
+background: @overlay_dark_15;
+}
+.roll-table-config ol.table-results .table-header {
+background: @overlay_dark_5;
+}
+
+/* --------------------------------------- */
+/*  Active Effects                         */
+/* --------------------------------------- */
+
+.active-effect-sheet .effects-header {
+background: @overlay_dark_1;
+}
+.user-config #characters .directory-item.context {
+background: @overlay_dark_1;
+}
+/* ----------------------------------------- */
+/*  Cards Sheet                              */
+/* ----------------------------------------- */
+.cards-config .cards-header {
+background: @overlay_dark_1;
+border-top: 2px groove #444;
+border-bottom: 2px groove #444;
+}
+/* -------------------------------------------- */
+/*  Adventure Importer and Exporter             */
+/* -------------------------------------------- */
+
+.sheet.adventure-exporter .tab.contents h4.update {
+background: @overlay_light_20;
+}
+.sheet.adventure-exporter .tab.contents h4.add {
+background: rgba(0, 255, 0, 0.1);
+}
+.sheet.adventure-exporter .tab.contents h4.remove {
+background: fade(@color_error, 10%);
+}
+/* -------------------------------------------- */
+/*  Ownership                                   */
+/* -------------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Journal Entries and Pages                */
+/* ----------------------------------------- */
+
+.journal-sheet .journal-header .title {
+margin: 0;
+background: @overlay_dark_1;
+
+}
+/* ----------------------------------------- */
+/*  Journal Entry                            */
+/* ----------------------------------------- */
+
+.sheet.journal-entry .journal-entry-content {
+border: 2px solid @color_darkest;
+}
+/* ----------------------------------------- */
+/*  Journal Entry Page                       */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Journal Image Page                       */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Journal Markdown Page                    */
+/* ----------------------------------------- */
+
+/* ---------------------------------- */
+/*  Journal Dialog                    */
+/* ---------------------------------- */
+
+div#camera-views {
+--color-border-av-light: #dfac46;
+--color-border-av-dark: #a85424;
+--color-border-av-speaking: #3ba55d;
+}
+
+div#camera-views.camera-position-left .camera-view-width-control:hover,
+div#camera-views.camera-position-right .camera-view-width-control:hover {
+background: @overlay_dark_25;
+}
+
+div#camera-views.camera-position-bottom .user-controls,
+div#camera-views.camera-position-top .user-controls {
+border-left: 2px solid @overlay_dark_50;
+}
+div#camera-views .user-controls {
+border-top: 2px solid @overlay_dark_50;
+}
+div#camera-views #players {
+border-top: 6px solid @overlay_dark_50;
+}
+.camera-view-width-control {
+background: @overlay_dark_50;
+}
+/* ----------------------------------------- */
+/* Single Camera View
+/* ----------------------------------------- */
+
+.camera-view .player-name {
+box-shadow: 4px 4px 15px 2px @overlay_dark_7;
+}
+
+.camera-view .av-control i:hover {
+color: #DDD;
+}
+.camera-view .control-bar,
+.camera-view .notification-bar {
+background: @overlay_dark_50;
+}
+
+.camera-view .status-hidden,
+.camera-view .status-muted {
+color: #ba2200;
+}
+
+/* ----------------------------------------- */
+/*  AV Configuration Sheet
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* Unclean Below
+/* ----------------------------------------- */
+
+.camera-box-popout .window-resizable-handle {
+background: #444;
+}
+
+.ProseMirror-selectednode {
+outline: 2px solid #8cf;
+}
+
+li.ProseMirror-selectednode:after {
+border: 2px solid #8cf;
+}
+
+.ProseMirror-gapcursor:after {
+border-top: 1px solid @color_darkest;
+}
+
+.prosemirror {
+--color-control-bg: #d9d8c8;
+--color-hover-bg: #f0f0e0;
+.prosemirror menu {
+background: @overlay_dark_1;
+}
+.prosemirror menu button:hover,
+.prosemirror menu button.active {
+color: @color_darkest;
+}
+
+.prosemirror menu .pm-dropdown ul {
+border: 1px solid #999;
+}
+
+.collaborating menu .concurrent-users .scene-player {
+color: @color_darkest;
+}
+/* ----------------------------------------- */
+/*  Source Code Editing                      */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Insertion Dialogs                        */
+/* ----------------------------------------- */
+
+/* Pages */
+/* ---------------------------------------- */
+/*  Main Setup Form                         */
+/* ---------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Module Configuration
+/* ----------------------------------------- */
+#setup-configuration {
+background: @overlay_dark_4;
+/* Config Header */
+/* Config Tabs */
+/* Tab Section */
+/* Configuration Contents */
+}
+#setup-configuration .bar {
+background: #5d49ff;
+border: 1px solid #b2c3ff;
+}
+#setup-configuration .pct {
+background: @overlay_dark_50;
+}
+#setup-configuration .message {
+background: @overlay_light_5;
+}
+/* ---------------------------------------- */
+/*  Application Configuration               */
+/* ---------------------------------------- */
+
+/* ---------------------------------------- */
+/*  Package Installation                    */
+/* ---------------------------------------- */
+
+#install-package .package-list .package.installed,
+#install-package .package-list .package.locked {
+background: @overlay_dark_5;
+}
+
+#install-package .package-list .package-tags .tag,
+#install-package .package-list .package-controls .tag {
+background: @overlay_dark_1;
+}
+/* ----------------------------------------- */
+/*  World Configuration                      */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Join Session
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/*  Manage Players
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* EULA and Notes
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* Updatelog
+/* ----------------------------------------- */
+
+.updated-packages-table th.Warning,
+.updated-packages-table td.Warning {
+color: orange;
+}
+.updated-packages-table th.Error,
+.updated-packages-table td.Error {
+color: firebrick;
+}
+.updated-packages-table th.Success,
+.updated-packages-table td.Success {
+color: darkolivegreen;
+}
+body.stream {
+background: lime;
+box-shadow: none;
+/* Stream Chat */
+}
