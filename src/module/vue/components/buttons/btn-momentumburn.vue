@@ -14,20 +14,21 @@
 import { computed } from '@vue/reactivity'
 import { inject } from 'vue'
 import { CharacterDataProperties } from '../../../actor/actortypes'
-import { $ActorKey } from '../../provisions'
+import { $CharacterKey } from '../../provisions'
 import btnFaicon from './btn-faicon.vue'
 
 defineProps<{ disabled?: boolean }>()
-const $actor = inject($ActorKey)
+const $character = inject($CharacterKey)
 
 const tooltip = computed(() => {
-  const { momentum, momentumReset } = ($actor?.data as CharacterDataProperties)
-    ?.data
+  const { momentum, momentumReset } = (
+    $character?.data as CharacterDataProperties
+  )?.data
   return game.i18n.format('IRONSWORN.BurnMomentumAndResetTo', {
     value: momentum,
     resetValue: momentumReset,
   })
 })
 
-const burnMomentum = () => $actor?.burnMomentum()
+const burnMomentum = () => $character?.burnMomentum()
 </script>

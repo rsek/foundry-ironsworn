@@ -59,21 +59,25 @@ type MergedIronswornActorProperties<
 
 export type IronswornActorProperties<
   TProperties extends ActorDataProperties = ActorDataProperties
-> = {
-  [P in keyof MergedIronswornActorProperties<TProperties>]: P extends keyof TProperties // prefers TProps's typings, then IronswornActor, then BaseActor
-    ? TProperties[P]
-    : P extends keyof IronswornActor
-    ? IronswornActor[P]
-    : P extends keyof Actor
-    ? Actor[P]
-    : never
-}
+> =
+  | {
+      [P in keyof MergedIronswornActorProperties<TProperties>]: P extends keyof TProperties // prefers TProps's typings, then IronswornActor, then BaseActor
+        ? TProperties[P]
+        : P extends keyof IronswornActor
+        ? IronswornActor[P]
+        : P extends keyof Actor
+        ? Actor[P]
+        : never
+    }
+  | IronswornActor
 
 // Sheets have to provide these
 export const $ActorKey = Symbol(
   '$actor'
 ) as InjectionKey<IronswornActorProperties>
-export const ActorKey = Symbol('actor') as InjectionKey<IronswornActorSource>
+export const ActorKey = Symbol('actor') as InjectionKey<
+  Ref<IronswornActorSource>
+>
 
 export const $CharacterKey = Symbol('$character') as InjectionKey<
   IronswornActorProperties<CharacterDataProperties>

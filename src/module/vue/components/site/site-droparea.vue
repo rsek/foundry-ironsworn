@@ -58,7 +58,7 @@ const $actor = inject($ActorKey)
 
 const actor = inject('actor') as any
 const editMode = computed(() => {
-  return actor.value.flags['foundry-ironsworn']?.['edit-mode']
+  return actor.flags['foundry-ironsworn']?.['edit-mode']
 })
 
 function foundryitem() {

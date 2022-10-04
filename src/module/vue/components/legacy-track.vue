@@ -39,22 +39,22 @@ h4 {
 <script setup lang="ts">
 import { computed, defineComponent, inject, Ref } from 'vue'
 import { IronswornActor } from '../../actor/actor'
-import { $ActorKey } from '../provisions'
+import { $ActorKey, $CharacterKey, CharacterKey } from '../provisions'
 import BtnFaicon from './buttons/btn-faicon.vue'
 import XpTrack from './xp-track.vue'
 import ProgressTrack from './progress/progress-track.vue'
 
 const props = defineProps<{ propKey: string; title: string }>()
 
-const actor = inject('actor') as Ref
-const $actor = inject($ActorKey)
+const character = inject(CharacterKey)
+const $character = inject($CharacterKey)
 
 const editMode = computed(() => {
-  return actor.value.flags['foundry-ironsworn']?.['edit-mode']
+  return character?.value.flags['foundry-ironsworn']?.['edit-mode']
 })
 
 const ticks = computed(() => {
-  return actor.value.data.legacies[props.propKey] ?? 0
+  return character?.value.data.legacies[props.propKey] ?? 0
 })
 const displayTicks = computed(() => ticks.value % 40)
 
@@ -75,7 +75,7 @@ const xpArray = computed(() => {
   return ret
 })
 const xpSpent = computed(() => {
-  return actor.value.data.legacies[`${props.propKey}XpSpent`] ?? 0
+  return character?.value.data.legacies[`${props.propKey}XpSpent`] ?? 0
 })
 const overflow = computed(() => {
   const n = Math.floor(ticks.value / 40) * 10
@@ -86,8 +86,8 @@ const overflow = computed(() => {
 })
 
 function adjust(inc) {
-  const current = actor.value.data?.legacies[props.propKey] ?? 0
-  $actor?.update({
+  const current = character?.value.data?.legacies[props.propKey] ?? 0
+  $character?.update({
     [`data.legacies.${props.propKey}`]: current + inc,
   })
 }
@@ -99,7 +99,7 @@ function decrease() {
 }
 
 function setXp(n) {
-  $actor?.update({
+  $character?.update({
     data: { legacies: { [`${props.propKey}XpSpent`]: n } },
   })
 }

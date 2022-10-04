@@ -18,10 +18,10 @@ import { computed, inject, Ref } from 'vue'
 import legacyTrack from '../legacy-track.vue'
 import progressBox from '../progress/progress-box.vue'
 
-const actor = inject('actor') as Ref
+const character = inject('actor') as Ref
 
 const starredProgresses = computed(() => {
-  return actor.value.items
+  return character.value.items
     .filter((x) => x.type === 'progress')
     .filter((x) => x.data.starred)
 })
