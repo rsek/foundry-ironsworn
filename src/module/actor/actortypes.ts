@@ -1,3 +1,16 @@
+export enum ActorType {
+  Character = 'character',
+  Site = 'site',
+  Shared = 'shared',
+  Foe = 'foe',
+  Starship = 'starship',
+  Location = 'location',
+}
+
+interface IronswornActorDataBase {
+  type: ActorType
+}
+
 interface CharacterDataSourceData {
   biography: string
   notes: string
@@ -48,13 +61,13 @@ interface CharacterDataPropertiesData extends CharacterDataSourceData {
   momentumReset: number
 }
 
-export interface CharacterDataProperties {
-  type: 'character'
+export interface CharacterDataProperties extends IronswornActorDataBase {
+  type: ActorType.Character
   data: CharacterDataPropertiesData
 }
 
-interface CharacterDataSource {
-  type: 'character'
+export interface CharacterDataSource extends IronswornActorDataBase {
+  type: ActorType.Character
   data: CharacterDataSourceData
 }
 
@@ -66,12 +79,12 @@ interface SharedDataSourceData {
 }
 type SharedDataPropertiesData = SharedDataSourceData
 
-interface SharedDataSource {
-  type: 'shared'
+export interface SharedDataSource extends IronswornActorDataBase {
+  type: ActorType.Shared
   data: SharedDataSourceData
 }
-export interface SharedDataProperties {
-  type: 'shared'
+export interface SharedDataProperties extends IronswornActorDataBase {
+  type: ActorType.Shared
   data: SharedDataPropertiesData
 }
 
@@ -80,12 +93,12 @@ export interface SharedDataProperties {
 interface FoeDataSourceData {}
 type FoeDataPropertiesData = FoeDataSourceData
 
-interface FoeDataSource {
-  type: 'foe'
+export interface FoeDataSource extends IronswornActorDataBase {
+  type: ActorType.Foe
   data: FoeDataSourceData
 }
-export interface FoeDataProperties {
-  type: 'foe'
+export interface FoeDataProperties extends IronswornActorDataBase {
+  type: ActorType.Foe
   data: FoeDataPropertiesData
 }
 
@@ -108,12 +121,12 @@ interface SiteDataSourceData {
 }
 type SiteDataPropertiesData = SiteDataSourceData
 
-export interface SiteDataSource {
-  type: 'site'
+export interface SiteDataSource extends IronswornActorDataBase {
+  type: ActorType.Site
   data: SiteDataSourceData
 }
-export interface SiteDataProperties {
-  type: 'site'
+export interface SiteDataProperties extends IronswornActorDataBase {
+  type: ActorType.Site
   data: SiteDataPropertiesData
 }
 
@@ -128,12 +141,12 @@ interface StarshipDataSourceData {
 }
 type StarshipDataPropertiesData = StarshipDataSourceData
 
-export interface StarshipDataSource {
-  type: 'starship'
+export interface StarshipDataSource extends IronswornActorDataBase {
+  type: ActorType.Starship
   data: StarshipDataSourceData
 }
-export interface StarshipDataProperties {
-  type: 'starship'
+export interface StarshipDataProperties extends IronswornActorDataBase {
+  type: ActorType.Starship
   data: StarshipDataPropertiesData
 }
 
@@ -146,12 +159,12 @@ interface LocationDataSourceData {
 }
 type LocationDataPropertiesData = LocationDataSourceData
 
-export interface LocationDataSource {
-  type: 'location'
+export interface LocationDataSource extends IronswornActorDataBase {
+  type: ActorType.Location
   data: LocationDataSourceData
 }
-export interface LocationDataProperties {
-  type: 'location'
+export interface LocationDataProperties extends IronswornActorDataBase {
+  type: ActorType.Location
   data: LocationDataPropertiesData
 }
 
