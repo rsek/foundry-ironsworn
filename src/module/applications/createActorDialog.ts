@@ -1,5 +1,6 @@
 import { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData'
 import { IronswornActor } from '../actor/actor'
+import { ActorType } from '../actor/actortypes.js'
 import { getFoundryTableByDfId } from '../dataforged'
 import { IronswornSettings } from '../helpers/settings'
 
@@ -70,7 +71,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 
     this._createWithFolder(
       drawResult.results[0]?.data.text || 'Character',
-      'character',
+      ActorType.Character,
       ev.currentTarget.dataset.img || undefined
     )
   }
@@ -79,7 +80,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
     ev.preventDefault()
     this._createWithFolder(
       'Shared',
-      'shared',
+      ActorType.Shared,
       ev.currentTarget.dataset.img || undefined
     )
   }
@@ -88,7 +89,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
     ev.preventDefault()
     this._createWithFolder(
       'Site',
-      'site',
+      ActorType.Site,
       ev.currentTarget.dataset.img || undefined
     )
   }
@@ -97,7 +98,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
     ev.preventDefault()
     this._createWithFolder(
       'NPC',
-      'foe',
+      ActorType.Foe,
       ev.currentTarget.dataset.img || undefined
     )
   }
@@ -110,7 +111,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 
     this._createWithFolder(
       name || 'Character',
-      'character',
+      ActorType.Character,
       ev.currentTarget.dataset.img || undefined,
       'ironsworn.StarforgedCharacterSheet'
     )
@@ -120,7 +121,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
     ev.preventDefault()
     this._createWithFolder(
       'Starship',
-      'starship',
+      ActorType.Starship,
       ev.currentTarget.dataset.img || undefined
     )
   }
@@ -129,14 +130,14 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
     ev.preventDefault()
     this._createWithFolder(
       'Location',
-      'location',
+      ActorType.Location,
       ev.currentTarget.dataset.img || undefined
     )
   }
 
   async _createWithFolder(
     name: string,
-    type: 'character' | 'site' | 'shared' | 'foe' | 'starship' | 'location',
+    type: ActorType,
     img: string,
     sheetClass?: string
   ) {
