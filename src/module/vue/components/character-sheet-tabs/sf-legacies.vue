@@ -6,22 +6,23 @@
 
     <hr class="nogrow" v-if="starredProgresses.length > 0" />
     <progress-box
-      v-for="item in starredProgresses"
-      :key="item._id"
-      :item="item"
+      v-for="(progressTrack, i) in starredProgresses"
+      :key="progressTrack._id ?? i"
+      :item="progressTrack"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, inject, Ref } from 'vue'
+import { CharacterKey } from '../../provisions.js'
 import legacyTrack from '../legacy-track.vue'
 import progressBox from '../progress/progress-box.vue'
 
-const character = inject('actor') as Ref
+const character = inject(CharacterKey)
 
 const starredProgresses = computed(() => {
-  return character.value.items
+  return character?.value.items
     .filter((x) => x.type === 'progress')
     .filter((x) => x.data.starred)
 })
