@@ -1,6 +1,17 @@
 import { IMove } from 'dataforged'
 import { RANKS } from '../constants'
 
+export enum ItemType {
+  Asset = 'asset',
+  Progress = 'progress',
+  Vow = 'vow',
+  Bondset = 'bondset',
+  Move = 'move',
+  SfMove = 'sfmove',
+  DelveTheme = 'delve-theme',
+  DelveDomain = 'delve-domain',
+}
+
 interface ProgressBase {
   description: string
   rank: keyof typeof RANKS
@@ -47,12 +58,12 @@ interface AssetDataSourceData {
 export interface AssetDataPropertiesData extends AssetDataSourceData {}
 
 export interface AssetDataSource {
-  type: 'asset'
+  type: ItemType.Asset
   data: AssetDataSourceData
 }
 
 export interface AssetDataProperties {
-  type: 'asset'
+  type: ItemType.Asset
   data: AssetDataPropertiesData
 }
 
@@ -69,11 +80,11 @@ interface ProgressDataSourceData extends ProgressBase {
 interface ProgressDataPropertiesData extends ProgressDataSourceData {}
 
 export interface ProgressDataSource {
-  type: 'progress'
+  type: ItemType.Progress
   data: ProgressDataSourceData
 }
 export interface ProgressDataProperties {
-  type: 'progress'
+  type: ItemType.Progress
   data: ProgressDataPropertiesData
 }
 
@@ -87,11 +98,11 @@ interface VowDataSourceData extends ProgressBase {
 interface VowDataPropertiesData extends VowDataSourceData {}
 
 export interface VowDataSource {
-  type: 'vow'
+  type: ItemType.Vow
   data: VowDataSourceData
 }
 export interface VowDataProperties {
-  type: 'vow'
+  type: ItemType.Vow
   data: VowDataPropertiesData
 }
 
@@ -108,11 +119,11 @@ interface BondsetDataSourceData {
 export interface BondsetDataPropertiesData extends BondsetDataSourceData {}
 
 export interface BondsetDataSource {
-  type: 'bondset'
+  type: ItemType.Bondset
   data: BondsetDataSourceData
 }
 export interface BondsetDataProperties {
-  type: 'bondset'
+  type: ItemType.Bondset
   data: BondsetDataPropertiesData
 }
 
@@ -133,11 +144,11 @@ interface DelveThemeDataSourceData {
 interface DelveThemeDataPropertiesData extends DelveThemeDataSourceData {}
 
 export interface DelveThemeDataSource {
-  type: 'delve-theme'
+  type: ItemType.DelveTheme
   data: DelveThemeDataSourceData
 }
 export interface DelveThemeDataProperties {
-  type: 'delve-theme'
+  type: ItemType.DelveTheme
   data: DelveThemeDataPropertiesData
 }
 ///////////////////////////////
@@ -151,11 +162,11 @@ interface DelveDomainDataSourceData {
 interface DelveDomainDataPropertiesData extends DelveDomainDataSourceData {}
 
 export interface DelveDomainDataSource {
-  type: 'delve-domain'
+  type: ItemType.DelveDomain
   data: DelveDomainDataSourceData
 }
 export interface DelveDomainDataProperties {
-  type: 'delve-domain'
+  type: ItemType.DelveDomain
   data: DelveDomainDataPropertiesData
 }
 
@@ -174,11 +185,11 @@ interface MoveDataSourceData {
 interface MoveDataPropertiesData extends MoveDataSourceData {}
 
 export interface MoveDataSource {
-  type: 'move'
+  type: ItemType.Move
   data: MoveDataSourceData
 }
 export interface MoveDataProperties {
-  type: 'move'
+  type: ItemType.Move
   data: MoveDataPropertiesData
 }
 
@@ -189,12 +200,12 @@ interface SFMoveDataPropertiesData extends IMove {
 }
 
 export interface SFMoveDataSource {
-  type: 'sfmove'
+  type: ItemType.SfMove
   data: IMove
 }
 export interface SFMoveDataProperties {
-  type: 'sfmove'
   data: SFMoveDataPropertiesData
+  type: ItemType.SfMove
 }
 
 ///////////////////////////////
