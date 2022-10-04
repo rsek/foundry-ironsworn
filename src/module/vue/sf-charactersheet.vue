@@ -163,15 +163,15 @@ import SfAssets from './components/character-sheet-tabs/sf-assets.vue'
 import SfProgresses from './components/character-sheet-tabs/sf-progresses.vue'
 import SfConnections1 from './components/character-sheet-tabs/sf-connections.vue'
 import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
+import { ActorKey, CharacterKey } from './provisions.js'
 
 const props = defineProps<{
   actor: any
 }>()
 
-provide(
-  'actor',
-  computed(() => props.actor)
-)
+provide(ActorKey, computed(() => props.actor) as any)
+
+provide(CharacterKey, computed(() => props.actor) as any)
 
 function openCompendium(name) {
   const pack = game.packs?.get(`foundry-ironsworn.${name}`)
