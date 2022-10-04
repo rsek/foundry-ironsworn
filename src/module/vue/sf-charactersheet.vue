@@ -1,5 +1,5 @@
 <template>
-  <div class="flexcol sf-character-sheet">
+  <article class="flexcol sf-character-sheet">
     <!-- TODO: rm inline styles added to maintain consistent styling (required largely because of other inline styles) -->
     <!-- Header row -->
     <sf-characterheader />
@@ -53,7 +53,9 @@
         </div>
 
         <tabs class="character-sheet-tabs" name="character-sheet-tabs">
-          <tab :title="$t('IRONSWORN.Legacies')"> <sf-legacies /> </tab>
+          <tab :title="$t('IRONSWORN.Legacies')">
+            <sf-legacies :actor="actor" />
+          </tab>
           <tab :title="$t('IRONSWORN.Assets')"> <sf-assets /> </tab>
           <tab :title="$t('IRONSWORN.Progress')"> <sf-progresses /> </tab>
           <tab :title="$t('IRONSWORN.Connections')"> <sf-connections /> </tab>
@@ -117,11 +119,12 @@
     <!-- Impacts -->
     <hr class="nogrow" />
     <sf-impacts class="nogrow" />
-  </div>
+  </article>
 </template>
 
 <style lang="less">
 .sf-character-sheet {
+  gap: 7px;
   .stat-roll {
     text-transform: uppercase;
   }
@@ -145,7 +148,7 @@
 </style>
 
 <script lang="ts" setup>
-import { computed, inject, provide } from 'vue'
+import { computed, provide } from 'vue'
 import AttrBox from './components/attr-box.vue'
 import BtnMomentumburn from './components/buttons/btn-momentumburn.vue'
 import SfLegacies from './components/character-sheet-tabs/sf-legacies.vue'
@@ -155,12 +158,9 @@ import Stack from './components/stack/stack.vue'
 import Tabs from './components/tabs/tabs.vue'
 import Tab from './components/tabs/tab.vue'
 import btnRollstat from './components/buttons/btn-rollstat.vue'
-import btnIsicon from './components/buttons/btn-isicon.vue'
 import sfImpacts from './components/sf-impacts.vue'
-import { IronswornActor } from '../actor/actor'
 import SfAssets from './components/character-sheet-tabs/sf-assets.vue'
 import SfProgresses from './components/character-sheet-tabs/sf-progresses.vue'
-import SfConnections1 from './components/character-sheet-tabs/sf-connections.vue'
 import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
 
 const props = defineProps<{
@@ -171,9 +171,4 @@ provide(
   'actor',
   computed(() => props.actor)
 )
-
-function openCompendium(name) {
-  const pack = game.packs?.get(`foundry-ironsworn.${name}`)
-  pack?.render(true)
-}
 </script>

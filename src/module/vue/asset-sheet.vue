@@ -1,17 +1,34 @@
 <template>
   <div>
-    <header class="sheet-header">
+    <SheetHeader class="nogrow">
       <document-name :document="item" />
-    </header>
+    </SheetHeader>
+
+    <section class="flexrow" style="gap: 5px">
+      <input
+        v-if="editMode"
+        type="text"
+        v-model="item.data.category"
+        @blur="setCategory"
+      />
+      <h3 v-else>{{ item.data.category }}</h3>
+
+      <input
+        type="color"
+        v-if="editMode"
+        v-model="item.data.color"
+        @change="setColor"
+      />
+    </section>
 
     <p>
       <input
         v-if="editMode"
         type="text"
-        v-model="item.data.description"
-        @blur="setDescription"
+        v-model="item.data.requirement"
+        @blur="setRequirement"
       />
-      <span v-else v-html="$enrichHtml(item.data.description)"></span>
+      <span v-else v-html="$enrichHtml(item.data.requirement)"></span>
     </p>
 
     <!-- FIELDS -->
@@ -51,6 +68,7 @@ h3 {
 </style>
 
 <script setup lang="ts">
+import SheetHeader from './sheet-header.vue'
 import { computed, inject, provide, Ref } from 'vue'
 import DocumentName from './components/document-name.vue'
 import AssetFieldsedit from './components/asset/asset-fieldsedit.vue'
@@ -79,7 +97,13 @@ const hasFields = computed(() => {
   return Object.values(props.item.data.fields || []).length > 0
 })
 
-function setDescription() {
-  $item?.update({ data: { description: props.item.data.description } })
+function setRequirement() {
+  $item?.update({ data: { requirement: props.item.data.requirement } })
+}
+function setCategory() {
+  $item?.update({ data: { category: props.item.data.category } })
+}
+function setColor() {
+  $item?.update({ data: { color: props.item.data.color } })
 }
 </script>

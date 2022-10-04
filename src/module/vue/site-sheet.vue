@@ -1,10 +1,7 @@
 <template>
   <div class="flexcol">
     <!-- HEADER -->
-    <header class="sheet-header" style="gap: 5px">
-      <DocumentImg :document="actor" />
-      <DocumentName :document="actor" />
-    </header>
+    <SheetHeaderBasic class="nogrow" :document="actor" />
 
     <!-- RANK -->
     <div class="flexrow nogrow">
@@ -33,6 +30,7 @@
       class="nogrow"
       style="margin-bottom: 1em"
       :ticks="actor.data.current"
+      :rank="actor.data.rank"
     />
 
     <!-- THEME/DOMAIN -->
@@ -148,6 +146,7 @@
 </style>
 
 <script setup lang="ts">
+import SheetHeaderBasic from './sheet-header-basic.vue'
 import { provide, computed, inject, nextTick, ref, Component } from 'vue'
 import { IronswornActor } from '../actor/actor'
 import { $ActorKey } from './provisions'
@@ -157,7 +156,7 @@ import DocumentName from './components/document-name.vue'
 import RankPips from './components/rank-pips/rank-pips.vue'
 import BtnCompendium from './components/buttons/btn-compendium.vue'
 import BtnFaicon from './components/buttons/btn-faicon.vue'
-import ProgressTrack from './components/progress/progress-track.vue'
+import Track from './components/progress/track.vue'
 import SiteDroparea from './components/site/site-droparea.vue'
 import SiteDenizenbox from './components/site/site-denizenbox.vue'
 import SiteMovebox from './components/site/site-movebox.vue'
@@ -177,6 +176,7 @@ import {
 } from '../item/itemtypes'
 import { OracleRollMessage, TableRow } from '../rolls'
 import { SiteDataProperties } from '../actor/actortypes'
+import ProgressTrack from './components/progress/progress-track.vue'
 
 const props = defineProps<{
   actor: any

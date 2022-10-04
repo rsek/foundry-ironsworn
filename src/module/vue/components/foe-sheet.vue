@@ -1,10 +1,6 @@
 <template>
   <div class="flexcol">
-    <header class="sheet-header flexrow nogrow" style="gap: 5px">
-      <DocumentImg :document="actor" />
-      <DocumentName :document="actor" />
-    </header>
-
+    <SheetHeaderBasic :document="actor" class="nogrow" />
     <div v-if="foe">
       <div class="flexrow nogrow">
         <RankPips
@@ -23,7 +19,11 @@
 
       <!-- PROGRESS -->
       <div class="flexrow track nogrow" style="margin-bottom: 1em">
-        <ProgressTrack :ticks="foe.data.current" />
+        <ProgressTrack
+          :rank="foe?.data.rank"
+          :ticks="foe.data.current"
+          data-tooltip-direction="RIGHT"
+        />
       </div>
 
       <hr class="nogrow" />
@@ -64,20 +64,20 @@
 </style>
 
 <script setup lang="ts">
+import SheetHeaderBasic from '../sheet-header-basic.vue'
 import { computed, inject, provide } from 'vue'
 import { IronswornActor } from '../../actor/actor'
 import { $ActorKey } from '../provisions'
 import { throttle } from 'lodash'
-import DocumentImg from './document-img.vue'
-import DocumentName from './document-name.vue'
 import RankPips from './rank-pips/rank-pips.vue'
 import BtnFaicon from './buttons/btn-faicon.vue'
-import ProgressTrack from './progress/progress-track.vue'
 import BtnCompendium from './buttons/btn-compendium.vue'
 import MceEditor from './mce-editor.vue'
 import { RANKS, RANK_INCREMENTS } from '../../constants'
 import { ProgressDataProperties } from '../../item/itemtypes'
 import { FoeDataProperties } from '../../actor/actortypes'
+import Track from './progress/track.vue'
+import ProgressTrack from './progress/progress-track.vue'
 
 const props = defineProps<{
   actor: ReturnType<typeof IronswornActor.prototype.toObject>

@@ -2,6 +2,31 @@
 
 ## Next Release
 
+- Updated asset-selection UI, with a better browsing experience ([#488](https://github.com/ben/foundry-ironsworn/pull/488))
+- Updated Spanish content from the official translation ([#489](https://github.com/ben/foundry-ironsworn/pull/489))
+- Added some new location icons by ErRains and KirinCorleone ([#485](https://github.com/ben/foundry-ironsworn/pull/485))
+- Re-imported Starforged foe actors to fix their icon images
+
+## 1.17.20
+
+- Remove the window transparency in the SF theme
+
+## 1.17.19
+
+- Ironsworn assets are now sourced from Dataforged, fixing a number of data issues ([#483](https://github.com/ben/foundry-ironsworn/pull/483))
+- Add icons to Starforged encounter items ([#478](https://github.com/ben/foundry-ironsworn/pull/478))
+- Behind the scenes: record asset categories ([#481](https://github.com/ben/foundry-ironsworn/pull/481)) and colors ([#484](https://github.com/ben/foundry-ironsworn/pull/484)) to compendium items
+- Add a bit of graphic flair to SF assets ([#482](https://github.com/ben/foundry-ironsworn/pull/482))
+
+## 1.17.18
+
+- Only show the "star" control on progresses on the Starforged sheet ([#475](https://github.com/ben/foundry-ironsworn/pull/475))
+- Better choice of "Fulfill Your Vow" when rolling a vow on a shared sheet
+
+## 1.17.17
+
+- Fix the zero-clock bug and add tooltips to clock wedges ([#473](https://github.com/ben/foundry-ironsworn/pull/473))
+
 ## 1.17.16
 
 - Ensure all character stats are numbers (fixes [#460](https://github.com/ben/foundry-ironsworn/pull/460))
