@@ -1,12 +1,11 @@
 <template>
-  <div class="flexcol">
-    <header class="sheet-header flexrow nogrow" style="gap: 5px">
-      <document-img :document="actor" />
-      <document-name :document="actor" />
-    </header>
-
+  <SheetBasic :document="actor">
     <section class="sheet-area nogrow">
-      <BtnRollStat class="text" attr="supply">
+      <BtnRollStat
+        class="text"
+        attr="supply"
+        :statLabel="$t('IRONSWORN.Supply')"
+      >
         {{ $t('IRONSWORN.Supply') }}
       </BtnRollStat>
 
@@ -20,7 +19,7 @@
     </section>
 
     <section v-if="hasBonds" class="sheet-area nogrow">
-      <bonds :actor="actor" />
+      <bonds :compact-progress="true" />
     </section>
 
     <active-completed-progresses />
@@ -33,17 +32,12 @@
         @change="throttledSaveNotes"
       />
     </section>
-  </div>
+  </SheetBasic>
 </template>
 
 <style lang="less" scoped>
 .stat-roll {
   text-transform: uppercase;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 83px;
 }
 
 h3 {
@@ -63,30 +57,28 @@ textarea.notes {
 
 <script setup lang="ts">
 import { provide, computed, inject } from 'vue'
-import { IronswornActor } from '../actor/actor'
 import { RollDialog } from '../helpers/rolldialog'
 import { IronswornSettings } from '../helpers/settings'
-import { $ActorKey } from './provisions'
-import DocumentImg from './components/document-img.vue'
-import DocumentName from './components/document-name.vue'
+import { $ActorKey, ActorKey } from './provisions'
 import Boxrow from './components/boxrow/boxrow.vue'
 import Bonds from './components/bonds.vue'
 import MceEditor from './components/mce-editor.vue'
 import { throttle } from 'lodash'
 import BtnRollStat from './components/buttons/btn-roll-stat.vue'
 import ActiveCompletedProgresses from './components/active-completed-progresses.vue'
+import { BondsetDataProperties } from '../item/itemtypes'
+import SheetBasic from './sheet-basic.vue'
 
 const props = defineProps<{
-  actor: ReturnType<typeof IronswornActor.prototype.toObject>
+  actor: any
 }>()
-provide(
-  'actor',
-  computed(() => props.actor)
-)
+provide(ActorKey, computed(() => props.actor) as any)
 const $actor = inject($ActorKey)
 
 const hasBonds = computed(() => {
-  const bonds = props.actor.items.find((x) => x.type === 'bondset')
+  const bonds = props.actor.items.find((x) => x.type === 'bondset') as
+    | BondsetDataProperties
+    | undefined
   const markedBonds = bonds?.data?.bonds?.length
   return markedBonds && markedBonds > 0
 })

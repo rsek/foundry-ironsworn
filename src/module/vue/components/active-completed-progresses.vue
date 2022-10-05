@@ -1,7 +1,7 @@
 <template>
   <div class="flexcol">
     <div class="flexcol ironsworn__drop__target" data-drop-type="progress">
-      <transition-group name="slide" tag="div" class="nogrow">
+      <CollapseTransition group tag="div" class="nogrow">
         <div
           class="flexrow nogrow"
           v-for="(item, i) in activeItems"
@@ -14,15 +14,15 @@
             @sortUp="sortUp"
             @sortDown="sortDown"
           />
-          <progress-box
+          <progress-list-item
             :item="item"
-            :actor="actor"
-            :showStar="true"
+            :showStar="progressStars"
             @completed="progressCompleted"
+            :compact-progress="compactProgress"
           />
         </div>
-      </transition-group>
-      <progress-controls foeCompendium="starforgedencounters" />
+      </CollapseTransition>
+      <progress-controls :foeCompendium="foeCompendium" />
     </div>
 
     <div class="item-row nogrow progress-completed" style="margin-top: 1rem">
@@ -37,14 +37,13 @@
           >{{ $t('IRONSWORN.Completed') }}</btn-faicon
         >
       </h3>
-      <transition
-        name="slide"
+      <CollapseTransition
         tag="div"
         class="nogrow completed"
         style="margin: 0; padding: 0"
       >
         <div v-if="data.expandCompleted">
-          <transition-group name="slide" tag="div" class="nogrow">
+          <CollapseTransition tag="div" class="nogrow" group>
             <div
               class="flexrow"
               v-for="(item, i) in completedItems"
@@ -57,11 +56,15 @@
                 @sortUp="completedSortUp"
                 @sortDown="completedSortDown"
               />
-              <progress-box :item="item" :actor="actor" :showStar="true" />
+              <progress-list-item
+                :item="item"
+                :showStar="progressStars"
+                :compact-progress="compactProgress"
+              />
             </div>
-          </transition-group>
+          </CollapseTransition>
         </div>
-      </transition>
+      </CollapseTransition>
     </div>
   </div>
 </template>
@@ -96,35 +99,43 @@ h3 {
     background-color: lightyellow;
   }
 }
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 106px;
-  &.completed {
-    max-height: 400px;
-  }
-}
 </style>
 
 <script setup lang="ts">
 import { computed, inject, reactive, Ref } from 'vue'
-import { $ActorKey } from '../provisions'
+import { $ActorKey, ActorKey } from '../provisions'
 import OrderButtons from './order-buttons.vue'
-import ProgressBox from './progress/progress-box.vue'
+import ProgressListItem from './progress/progress-list-item.vue'
 import ProgressControls from './progress-controls.vue'
 import BtnFaicon from './buttons/btn-faicon.vue'
+import { IronswornSettings } from '../../helpers/settings'
+import { compact } from 'lodash'
+import { IronswornItem } from '../../item/item'
+import { ProgressDataProperties } from '../../item/itemtypes'
+import CollapseTransition from './transition/collapse-transition.vue'
+
+const props = defineProps<{
+  exclude?: string
+  progressStars?: boolean
+  /**
+   * When true, renders the progress bars for more compact display.
+   */
+  compactProgress?: boolean
+}>()
 
 const data = reactive({
   expandCompleted: false,
   highlightCompleted: false,
 })
 
-const actor = inject('actor') as Ref
+const actor = inject(ActorKey) as Ref
 const $actor = inject($ActorKey)
 
+const excludedSubtypes = compact([props.exclude])
 const progressItems = computed(() => {
   return actor.value.items
     .filter((x) => x.type === 'progress')
-    .filter((x) => x.data.subtype !== 'bond')
+    .filter((x) => !excludedSubtypes.includes(x.data.subtype))
     .sort((a, b) => (a.sort || 0) - (b.sort || 0))
 })
 const activeItems = computed(() => {
@@ -152,10 +163,21 @@ function progressCompleted() {
   }, 2000)
 }
 
+const foeCompendium = computed(() => {
+  return IronswornSettings.starforgedToolsEnabled
+    ? 'starforgedencounters'
+    : 'ironswornfoes'
+})
+
 async function applySort(oldI, newI, sortBefore, filterFn) {
-  const foundryItems = $actor?.items
+  const foundryItems = ($actor?.items ?? [])
     .filter((x) => x.type === 'progress')
-    .filter((x) => x.data.data.subtype !== 'bond')
+    .filter(
+      (x) =>
+        !excludedSubtypes.includes(
+          (x.data as ProgressDataProperties).data.subtype
+        )
+    )
     .filter(filterFn)
     .sort((a, b) => (a.data.sort || 0) - (b.data.sort || 0))
   const updates = SortingHelpers.performIntegerSort(foundryItems[oldI], {

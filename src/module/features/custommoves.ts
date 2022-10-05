@@ -1,4 +1,5 @@
-import { IMove, IMoveCategory, starforged, ironsworn } from 'dataforged'
+import { IMove, IMoveCategory } from 'dataforged'
+import { ISMoveCategories, SFMoveCategories } from '../dataforged/data'
 import { IronswornItem } from '../item/item'
 import { MoveDataSource } from '../item/itemtypes'
 import { cachedDocumentsForPack } from './pack-cache'
@@ -16,8 +17,6 @@ export interface Move {
 }
 
 // For some reason, rollupJs mangles this
-const SFMoveCategories = starforged.default['Move Categories']
-const ISMoveCategories = ironsworn.default['Move Categories']
 
 async function createMoveTree(
   compendiumName: string,
@@ -92,11 +91,19 @@ async function augmentWithFolderContents(categories: MoveCategory[]) {
   ) as Folder | undefined
   if (!folder || folder.contents.length == 0) return
 
-  categories.push({
-    displayName: name,
-    moves: folder.contents.map((moveItem) => ({
-      displayName: moveItem.name,
+  const customMoves = [] as Move[]
+  for (const moveItem of folder.contents) {
+    if (moveItem.documentName !== 'Item' || moveItem.type !== 'sfmove') continue
+    customMoves.push({
+      displayName: moveItem.name ?? '(move)',
       moveItem,
-    })) as Move[],
-  })
+    })
+  }
+
+  if (customMoves.length > 0) {
+    categories.push({
+      displayName: name,
+      moves: customMoves,
+    })
+  }
 }

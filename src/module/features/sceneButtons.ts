@@ -9,7 +9,9 @@ function warn() {
 // Make sure a folder exists, e.g. ['Locations', 'Sector 05']
 async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
   let parentFolder: Folder | undefined
-  let directory: Folder[] | undefined = game.folders?.contents
+  let directory: Folder[] | undefined = game.folders?.filter(
+    (x) => x.type === 'Actor'
+  )
 
   for (const name of path) {
     if (directory === undefined) {
@@ -19,7 +21,9 @@ async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
     const existing = directory.find((x) => x.name === name)
     if (existing) {
       parentFolder = existing
-      directory = (existing as any).children
+      directory = (existing as any).children.map((child) => {
+        return child.folder /* v10 */ || child /* v9 */
+      })
       continue
     }
     parentFolder = await Folder.create({
@@ -188,8 +192,10 @@ export function activateSceneButtonListeners() {
 // In v9 we can inherit directly from CanvasLayer and it's fine
 // In v10 we have to use InteractionLayer
 
-let baseKlass = CanvasLayer
+let baseKlass: any = CanvasLayer
+// @ts-ignore
 if (typeof InteractionLayer !== 'undefined') {
+  // @ts-ignore
   baseKlass = InteractionLayer
 }
 

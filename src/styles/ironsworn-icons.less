@@ -8,6 +8,9 @@
   mask-size: contain;
   height: 1em; // height and width of the :before pseudo-element can be set as desired, these are just reasonable defaults that scale the current font size.
   width: 1em;
+  .vertical& {
+    transform: rotateZ(90deg);
+  }
 }
 
 [class^='isiconbg-'],
@@ -31,6 +34,7 @@
 [class^='isiconbg-'],
 [class*=' isiconbg-'] {
   position: relative; // required for the pseudo-element's position to function
+  z-index: 1;
   &:before {
     // don't forget to set the background for this pseudo-element, too. typically this is a flat colour, but it'll work with any valid background (gradients, images, etc).
     // this defaults to currentColor, so that it's clear that it's actually working when it's used
@@ -44,7 +48,7 @@
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: -1;
     position: absolute;
     box-sizing: border-box;
     mask-origin: content-box; // this + above make this sensitive to padding on the :before pseudo-element.
@@ -56,7 +60,7 @@
 [class^='isicon-'],
 [class*=' isicon-'] {
   i& {
-    display: inline flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     height: 1em;
@@ -100,7 +104,8 @@
   // dice
   d6-blank: ''; // FIXME
   d10-blank: ''; // FIXME
-  d10-tilt: ''; // FIXME
+  d10-tilt: ''; //
+  oracle: 'icon by rsek';
   // PC sheets
   sheet-character: 'https://game-icons.net/1x1/delapouite/skills.html';
   sheet-shared: 'https://game-icons.net/1x1/delapouite/three-friends.html';

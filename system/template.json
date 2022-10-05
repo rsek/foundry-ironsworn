@@ -48,6 +48,7 @@
       "xp": 0
     },
     "shared": {
+      "biography": "",
       "supply": 5
     },
     "foe": {},
@@ -140,6 +141,7 @@
       }
     },
     "location": {
+      "description": "",
       "subtype": "planet",
       "klass": ""
     }
@@ -190,7 +192,9 @@
     },
     "asset": {
       "templates": [],
-      "description": "",
+      "requirement": "",
+      "category": "",
+      "color": "",
       "fields": [
         {
           "name": "",

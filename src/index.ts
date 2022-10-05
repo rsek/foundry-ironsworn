@@ -4,15 +4,12 @@
 
 import { IRONSWORN } from './config'
 import { IronswornActor } from './module/actor/actor'
-import { IronswornCharacterSheet } from './module/actor/sheets/charactersheet'
 import { IronswornCharacterSheetV2 } from './module/actor/sheets/charactersheet-v2'
 import { IronswornCompactCharacterSheet } from './module/actor/sheets/compactsheet'
 import { FoeSheet } from './module/actor/sheets/foesheet'
 import { StarforgedCharacterSheet } from './module/actor/sheets/sf-charactersheet'
 import { StarforgedLocationSheet } from './module/actor/sheets/sf-locationsheet'
-import { IronswornSharedSheet } from './module/actor/sheets/sharedsheet'
 import { IronswornSharedSheetV2 } from './module/actor/sheets/sharedsheet-v2'
-import { IronswornSiteSheet } from './module/actor/sheets/sitesheet'
 import { IronswornSiteSheetV2 } from './module/actor/sheets/sitesheet-v2'
 import { StarshipSheet } from './module/actor/sheets/starshipsheet'
 import { CreateActorDialog } from './module/applications/createActorDialog'
@@ -71,7 +68,7 @@ Hooks.once('init', async () => {
 
   // Register our own sheets
   Actors.registerSheet('ironsworn', IronswornCharacterSheetV2, {
-    label: 'Character sheet v2',
+    label: 'Ironsworn character sheet',
     types: ['character'],
     makeDefault: true,
   })
@@ -83,19 +80,11 @@ Hooks.once('init', async () => {
     label: 'Compact sheet',
     types: ['character'],
   })
-  Actors.registerSheet('ironsworn', IronswornCharacterSheet, {
-    types: ['character'],
-    label: 'Classic character sheet',
-  })
 
   Actors.registerSheet('ironsworn', IronswornSharedSheetV2, {
     types: ['shared'],
-    label: 'Shared sheet v2',
+    label: 'Shared sheet',
     makeDefault: true,
-  })
-  Actors.registerSheet('ironsworn', IronswornSharedSheet, {
-    types: ['shared'],
-    label: 'Classic shared sheet',
   })
 
   Actors.registerSheet('ironsworn', FoeSheet, {
@@ -118,12 +107,8 @@ Hooks.once('init', async () => {
 
   Actors.registerSheet('ironsworn', IronswornSiteSheetV2, {
     types: ['site'],
-    label: 'Site sheet v2',
+    label: 'Site sheet',
     makeDefault: true,
-  })
-  Actors.registerSheet('ironsworn', IronswornSiteSheet, {
-    types: ['site'],
-    label: 'Classic site sheet',
   })
 
   Items.registerSheet('ironsworn', AssetSheetV2, {
@@ -192,42 +177,4 @@ Hooks.once('ready', async () => {
 
   // Pre-load all the oracles
   await primeCommonPackCaches()
-})
-
-Hooks.once('setup', () => {
-  Roll.prototype.render = async function (
-    chatOptions: {
-      user?: string | undefined
-      flavor?: string | undefined
-      template?: string | undefined
-      isPrivate?: boolean | undefined
-      blind?: boolean | undefined
-    } = {}
-  ) {
-    const template = 'systems/foundry-ironsworn/templates/chat/default-roll.hbs'
-    chatOptions = mergeObject(
-      {
-        user: game?.user?.id,
-        flavor: null,
-        template: template,
-        blind: false,
-      },
-      chatOptions
-    )
-    const isPrivate = chatOptions.isPrivate
-    // Execute the roll, if needed
-    if (!this._evaluated) await this.evaluate()
-    // Define chat data
-    const chatData = {
-      themeClass: `theme-${IronswornSettings.theme}`,
-      formula: isPrivate ? '???' : this.formula,
-      roll: this, // this is new
-      flavor: isPrivate ? null : chatOptions.flavor,
-      user: chatOptions.user,
-      tooltip: isPrivate ? '' : await this.getTooltip(),
-      total: isPrivate ? '?' : Math.round(this.total * 100) / 100,
-    }
-    // Render the roll display template
-    return renderTemplate(chatOptions.template || template, chatData)
-  }
 })

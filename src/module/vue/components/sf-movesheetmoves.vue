@@ -61,17 +61,20 @@ h2 {
 
 <script setup lang="ts">
 import { flatten } from 'lodash'
-import { computed, inject, nextTick, reactive, ref, Ref } from 'vue'
+import { computed, inject, provide, reactive, ref, Ref } from 'vue'
 import {
   createIronswornMoveTree,
   createStarforgedMoveTree,
 } from '../../features/custommoves'
-import { $EmitterKey } from '../provisions'
 import sfMoverow from './sf-moverow.vue'
 
 const props = defineProps<{ toolset: 'ironsworn' | 'starforged' }>()
+provide('toolset', props.toolset)
 
-const actor = inject('actor') as Ref
+const data = reactive({
+  searchQuery: '',
+  categories: [] as any[],
+})
 
 const tempCategories =
   props.toolset === 'ironsworn'
@@ -79,14 +82,10 @@ const tempCategories =
     : await createStarforgedMoveTree()
 for (const category of tempCategories) {
   for (const move of category.moves) {
-    move.highlighted = false
+    ;(move as any).highlighted = false
   }
 }
-
-const data = reactive({
-  searchQuery: '',
-  categories: tempCategories,
-})
+data.categories = tempCategories
 
 const checkedSearchQuery = computed(() => {
   try {
@@ -119,8 +118,7 @@ function collapseAll() {
   }
 }
 
-const $emitter = inject($EmitterKey)
-$emitter?.on('highlightMove', (_item) => {
+CONFIG.IRONSWORN.emitter.on('highlightMove', (_item) => {
   data.searchQuery = ''
 })
 </script>

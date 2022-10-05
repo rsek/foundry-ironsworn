@@ -1,8 +1,6 @@
 import { App, Component, ComponentPublicInstance, createApp } from 'vue'
-import mitt from 'mitt'
 import { IronswornSettings } from '../helpers/settings'
 import { IronswornVuePlugin } from './vue-plugin'
-import { $EmitterKey, EmitterEvents, IronswornEmitter } from './provisions'
 
 export interface VueSheetRenderHelperOptions {
   vueData: () => Promise<Record<string, any>>
@@ -13,7 +11,6 @@ export interface VueSheetRenderHelperOptions {
 export class VueSheetRenderHelper {
   vueApp: App<Element> | undefined
   vueRoot: ComponentPublicInstance | undefined
-  emitter: IronswornEmitter
   options: VueSheetRenderHelperOptions
   vueListenersActive = false
 
@@ -27,8 +24,7 @@ export class VueSheetRenderHelper {
       components: {},
       ...options,
     }
-    this.emitter = mitt<EmitterEvents>()
-    this.emitter.on('closeApp', () => this.app.close())
+    CONFIG.IRONSWORN.emitter.on('closeApp', () => this.app.close())
 
     this.options.helperHook?.(this)
   }
@@ -64,7 +60,6 @@ export class VueSheetRenderHelper {
       })
       this.vueApp.config.unwrapInjectedRef = true
       this.vueApp.use(IronswornVuePlugin)
-      this.vueApp.provide($EmitterKey, this.emitter)
       this.appHook?.(this.vueApp)
     } else {
       ;(this.vueRoot as any).updateData(data)
@@ -77,12 +72,12 @@ export class VueSheetRenderHelper {
     }
 
     // Stop here if we're closing
-    if (this.app._state === Application.RENDER_STATES.CLOSING) return
+    if (this.app['_state'] === Application.RENDER_STATES.CLOSING) return
 
     // No active Vue root, so run Foundry's render and mount it
     try {
       // Execute Foundry's render.
-      await this.app._render(...renderArgs)
+      await this.app['_render'](...renderArgs)
 
       // Run Vue's render, assign it to our prop for tracking.
       const selector = `[data-appid="${this.app.appId}"] .vueroot`
@@ -94,14 +89,14 @@ export class VueSheetRenderHelper {
         }, 150)
       }
     } catch (err: any) {
-      this.app._state = Application.RENDER_STATES.ERROR
+      this.app['_state'] = Application.RENDER_STATES.ERROR
       Hooks.onError('Application#render', err, {
-        msg: `An error occurred while rendering ${this.constructor.name} ${this.appId}`,
+        msg: `An error occurred while rendering ${this.constructor.name} ${this.app.id}`,
         log: 'error',
         ...renderArgs,
       })
       console.error(
-        `An error occurred while rendering ${this.constructor.name} ${this.appId}: ${err.message}`,
+        `An error occurred while rendering ${this.constructor.name} ${this.app.id}: ${err.message}`,
         err
       )
     }
@@ -142,9 +137,9 @@ export class VueSheetRenderHelper {
   }
 
   _dragHandler(html: JQuery) {
-    const dragHandler = (event) => this.app._onDragStart(event)
+    const dragHandler = (event) => this.app['_onDragStart'](event)
     html.find('.item[data-draggable="true"]').each((i, li) => {
-      li.setAttribute('draggable', true)
+      li.setAttribute('draggable', 'true')
       li.addEventListener('dragstart', dragHandler, false)
     })
   }

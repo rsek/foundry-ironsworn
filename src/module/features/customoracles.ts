@@ -1,11 +1,18 @@
-import { starforged, ironsworn, IOracle, IOracleCategory } from 'dataforged'
+import {
+  starforged,
+  ironsworn,
+  IOracle,
+  IOracleCategory,
+  Starforged,
+  Ironsworn,
+} from 'dataforged'
 import { compact } from 'lodash'
 import { getFoundryTableByDfId } from '../dataforged'
 import { cachedDocumentsForPack } from './pack-cache'
 
 export interface IOracleTreeNode {
   dataforgedNode?: IOracle | IOracleCategory
-  tables: RollTable[]
+  tables: RollTable[] | any[]
   displayName: string
   children: IOracleTreeNode[]
   forceExpanded?: boolean
@@ -13,8 +20,12 @@ export interface IOracleTreeNode {
 }
 
 // For some reason, rollupJs mangles this
-const SFOracleCategories = starforged.default['Oracle Categories']
-const ISOracleCategories = ironsworn.default['Oracle Categories']
+const SFOracleCategories = ((starforged as any).default as Starforged)[
+  'Oracle Categories'
+]
+const ISOracleCategories = ((ironsworn as any).default as Ironsworn)[
+  'Oracle Categories'
+]
 
 const emptyNode = () =>
   ({
@@ -52,16 +63,14 @@ async function createOracleTree(
 export async function createIronswornOracleTree(): Promise<IOracleTreeNode> {
   return createOracleTree(
     'foundry-ironsworn.ironswornoracles',
-    ISOracleCategories,
-    getFoundryTableByDfId
+    ISOracleCategories
   )
 }
 
 export async function createStarforgedOracleTree(): Promise<IOracleTreeNode> {
   return createOracleTree(
     'foundry-ironsworn.starforgedoracles',
-    SFOracleCategories,
-    getFoundryTableByDfId
+    SFOracleCategories
   )
 }
 
@@ -92,7 +101,11 @@ async function walkOracleCategory(
   return node
 }
 
-async function walkOracle(oracle: IOracle): Promise<IOracleTreeNode> {
+export async function walkOracle(
+  oracle?: IOracle | IOracleCategory
+): Promise<IOracleTreeNode> {
+  if (!oracle) return emptyNode()
+
   const table = await getFoundryTableByDfId(oracle.$id)
 
   const node: IOracleTreeNode = {
@@ -168,7 +181,7 @@ async function augmentWithFolderContents(node: IOracleTreeNode) {
   walkFolder(node, rootFolder)
 }
 
-function walkAndFreezeTables(node: IOracleTreeNode) {
+export function walkAndFreezeTables(node: IOracleTreeNode) {
   ;(node.tables as any) = Object.freeze(node.tables)
   for (const child of node.children) {
     walkAndFreezeTables(child)
@@ -184,6 +197,22 @@ export function findPathToNodeByTableId(
     ret.push(node)
     const foundTable = node.tables.find((x) => x.id === tableId)
     if (foundTable) return true
+    for (const child of node.children) {
+      if (walk(child)) return true
+    }
+    ret.pop()
+    return false
+  }
+
+  walk(rootNode)
+  return ret
+}
+
+export function findPathToNodeByDfId(rootNode: IOracleTreeNode, dfId: string) {
+  const ret: IOracleTreeNode[] = []
+  function walk(node: IOracleTreeNode) {
+    ret.push(node)
+    if (node.dataforgedNode?.$id === dfId) return true
     for (const child of node.children) {
       if (walk(child)) return true
     }

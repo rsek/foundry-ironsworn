@@ -6,6 +6,7 @@ import type { IMove } from 'dataforged'
 import type { RANKS } from '../constants'
 
 interface ProgressBase {
+  description: string
   /**
    * The challenge rank of the progress track.
    */
@@ -71,6 +72,10 @@ interface AssetExclusiveOption {
 }
 
 interface AssetDataSourceData {
+  category: string
+  description?: string
+  requirement: string
+  color: string
   /**
    * Text input fields for this asset.
    */
@@ -95,7 +100,7 @@ interface AssetDataSourceData {
   exclusiveOptions: AssetExclusiveOption[]
 }
 
-interface AssetDataPropertiesData extends AssetDataSourceData {}
+export interface AssetDataPropertiesData extends AssetDataSourceData {}
 
 export interface AssetDataSource extends ItemDataBaseSource {
   type: 'asset'
@@ -117,7 +122,7 @@ interface ProgressDataSourceData extends ProgressBase {
   clockTicks: number
   clockMax: number
 }
-interface ProgressDataPropertiesData extends ProgressDataSourceData {}
+export interface ProgressDataPropertiesData extends ProgressDataSourceData {}
 
 export interface ProgressDataSource extends ItemDataBaseSource {
   type: 'progress'
@@ -156,7 +161,7 @@ interface Bond {
 interface BondsetDataSourceData {
   bonds: Bond[]
 }
-interface BondsetDataPropertiesData extends BondsetDataSourceData {}
+export interface BondsetDataPropertiesData extends BondsetDataSourceData {}
 
 export interface BondsetDataSource extends ItemDataBaseSource {
   type: 'bondset'

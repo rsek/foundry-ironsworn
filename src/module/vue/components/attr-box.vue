@@ -1,5 +1,10 @@
 <template>
-  <div :class="classes" @click="click" tabindex="0">
+  <div
+    :class="classes"
+    @click="click"
+    tabindex="0"
+    :data-tooltip="$t('IRONSWORN.Roll +x', { stat: $t(i18nKey) })"
+  >
     <h4>{{ $t(i18nKey) }}</h4>
     <div class="flexrow">
       <div class="clickable text" v-if="editMode" @click="decrement">
@@ -38,12 +43,12 @@
 <script lang="ts" setup>
 import { inject, computed, capitalize, Ref } from 'vue'
 import { IronswornActor } from '../../actor/actor'
-import { RollDialog } from '../../helpers/rolldialog'
-import { $ActorKey } from '../provisions'
+import { IronswornPrerollDialog } from '../../rolls'
+import { $ActorKey, ActorKey } from '../provisions'
 
 const props = defineProps<{ attr: string }>()
 const $actor = inject($ActorKey)
-const actor = inject('actor') as Ref<
+const actor = inject(ActorKey) as Ref<
   ReturnType<typeof IronswornActor.prototype.toObject>
 >
 
@@ -61,7 +66,15 @@ const editMode = computed(
 
 function click() {
   if (editMode.value) return
-  RollDialog.show({ actor: $actor, stat: props.attr })
+
+  let attrName = game.i18n.localize('IRONSWORN.' + capitalize(props.attr))
+  if (attrName.startsWith('IRONSWORN.')) attrName = props.attr
+  const name = `${attrName} (${$actor?.name})`
+  IronswornPrerollDialog.showForStat(
+    name,
+    $actor?.data.data[props.attr],
+    $actor
+  )
 }
 
 function increment() {

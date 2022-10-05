@@ -2,7 +2,7 @@
   <btn-faicon
     class="move-chat"
     icon="comment"
-    :tooltip="tooltip"
+    :tooltip="$t('IRONSWORN.SendToChat')"
     @click="sendToChat"
     :disabled="disabled"
   >
@@ -13,18 +13,16 @@
 <style lang="less"></style>
 
 <script setup lang="ts">
+import { createSfMoveChatMessage } from '../../../chat/sf-move-chat-message'
 import { Move } from '../../../features/custommoves'
 import btnFaicon from './btn-faicon.vue'
 
 const props = defineProps<{
   move: Move
-  tooltip?: string
   disabled?: boolean
 }>()
 
 function sendToChat(e) {
-  CONFIG.IRONSWORN.SFRollMoveDialog.createDataforgedMoveChat(
-    props.move.moveItem
-  )
+  createSfMoveChatMessage(props.move.moveItem)
 }
 </script>

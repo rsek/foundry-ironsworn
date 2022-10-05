@@ -8,11 +8,33 @@ body.theme-starforged {
   @muted-color: #11777799;
   @medium-color: #33999999;
   @light-color: #55bbbb99;
-  @background-gradient: rgba(0, 0, 0, 0.6);
 
   @text-dark-color: #399;
   @text-medium-color: #3dd;
   @text-light-color: #6ff;
+
+  .hover-fx(@spread_box:5px,@spread_text:10px) {
+    &:hover {
+      box-shadow: 0 0 @spread_box @light-color;
+      color: @text-light-color;
+      text-shadow: 0 0 @spread_text @light-color;
+    }
+  }
+
+  --ironsworn-color-thematic: #399;
+
+  --ironsworn-color-bg: black;
+
+  --ironsworn-color-legacy-quests: var(--ironsworn-color-red-3);
+  --ironsworn-color-legacy-bonds: var(--ironsworn-color-purple-3);
+  --ironsworn-color-legacy-discoveries: var(--ironsworn-color-blue-3);
+
+  --ironsworn-color-danger: hsl(0, 80%, 50%);
+  --ironsworn-color-success: hsl(290, 80%, 50%);
+  --ironsworn-color-success-faded: hsl(290, 80%, 60%);
+
+  --ironsworn-dice-background: darken(@text-dark-color, 20);
+  --path-hexagon: polygon(0 25%, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%);
 
   body {
     font-family: @theme-font;
@@ -37,15 +59,27 @@ body.theme-starforged {
     border-color: @medium-color;
   }
 
-  .window-app {
-    background-color: @background-gradient;
+  .window-app,
+  .journal-entry .journal-entry-content {
+    background: initial;
+    background-color: var(--ironsworn-color-bg);
     border: 1px solid @text-dark-color;
   }
 
   .editor {
     color: @text-medium-color;
-    background-color: @background-gradient;
+    background-color: var(--ironsworn-color-bg);
+  }
+
+  .ProseMirror {
+    background-color: @dark-color;
     padding: 0.5rem;
+  }
+
+  .tox .tox-editor-header,
+  .tox .tox-toolbar-overlord,
+  .tox .tox-toolbar__primary {
+    background-color: var(--ironsworn-color-bg);
   }
 
   font-family: @theme-font;
@@ -76,9 +110,7 @@ body.theme-starforged {
   }
 
   .window-content {
-    // background-color: rgba(0, 0, 0, 0.4);
-    background: rgb(0, 0, 0);
-    background: @background-gradient;
+    background: var(--ironsworn-color-bg);
     background-image: none;
     color: @text-medium-color;
   }
@@ -100,23 +132,7 @@ body.theme-starforged {
     border-color: @light-color;
   }
 
-  .track-box {
-    stroke: @text-medium-color;
-  }
-
-  .rank-pip {
-    fill: @medium-color;
-
-    &.filled {
-      fill: @text-medium-color !important;
-    }
-
-    path {
-      stroke-width: 0;
-    }
-  }
-
-  .clickable {
+  .clickable:not(svg):not(.svg) {
     color: @text-dark-color;
     &.hover,
     &:hover,
@@ -125,10 +141,6 @@ body.theme-starforged {
       &.text {
         color: @text-light-color;
       }
-      svg,
-      &.svg {
-        fill: @medium-color;
-      }
     }
 
     &.selected,
@@ -136,16 +148,7 @@ body.theme-starforged {
       &.block,
       &.text {
         color: @text-light-color;
-        background-color: @medium-color;
       }
-      svg,
-      &.svg {
-        fill: @text-light-color;
-      }
-    }
-    svg,
-    &.svg {
-      fill: @dark-color;
     }
   }
 
@@ -183,21 +186,30 @@ body.theme-starforged {
     }
   }
 
+  .asset-ironsworn .asset-ability:before {
+    border: 1px solid @text-medium-color;
+  }
+  .asset-starforged .asset-ability:before {
+    background-color: @text-medium-color;
+    border: 1px solid @text-medium-color;
+  }
+
   .ironsworn-roll {
     .roll {
-      background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
+      // background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
     }
   }
 
+  // button,
   button {
+    .hover-fx();
+  }
+  .prosemirror button,
+  .tox .tox-tbtn--bespoke {
     background-color: @dark-color;
     color: @text-medium-color;
     border-color: @muted-color;
-
-    &:hover {
-      box-shadow: 0 0 5px @light-color;
-      color: @text-light-color;
-    }
+    .hover-fx();
   }
 
   select {
@@ -228,24 +240,22 @@ body.theme-starforged {
     .dice-formula,
     .dice-total {
       background: @dark-overlay;
-      color: @text-light-color;
+      // color: @text-light-color;
       border-width: 0px;
       padding: 5px 0px 5px 0px;
       .die {
         &.d6 {
-          background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
+          // background-image: url('systems/foundry-ironsworn/assets/icons/d6-blank.svg');
         }
         &.d10 {
-          background-image: url('systems/foundry-ironsworn/assets/icons/d10-blank.svg');
+          // background-image: url('systems/foundry-ironsworn/assets/icons/d10-blank.svg');
         }
 
         &.min {
           color: @text-medium-color;
-          filter: hue-rotate(180deg);
         }
         &.max {
           color: @text-medium-color;
-          filter: hue-rotate(-60deg);
         }
       }
     }

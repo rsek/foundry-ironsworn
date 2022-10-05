@@ -1,13 +1,15 @@
 <template>
-  <btn-isicon
-    icon="d10-tilt"
+  <BtnIsicon
+    icon="oracle"
     class="oracle-roll"
     @click="rollOracle"
-    :tooltip="tooltip"
+    :tooltip="
+      $t('IRONSWORN.RollOracleTable', { title: props.node.displayName })
+    "
     :disabled="disabled"
   >
     <slot name="default"></slot>
-  </btn-isicon>
+  </BtnIsicon>
 </template>
 
 <style lang="less"></style>
@@ -16,22 +18,24 @@
 import { sample } from 'lodash'
 import { inject } from 'vue'
 import { IOracleTreeNode } from '../../../features/customoracles.js'
-import btnIsicon from './btn-isicon.vue'
+import { OracleRollMessage } from '../../../rolls'
+import BtnIsicon from './btn-isicon.vue'
 
 const props = defineProps<{
-  tooltip?: string
   node: IOracleTreeNode
   disabled?: boolean
 }>()
 
 const toolset = inject<'ironsworn' | 'starforged'>('toolset')
 
-function rollOracle() {
+async function rollOracle() {
   const randomTable = sample(props.node.tables)
   const pack = {
     ironsworn: 'foundry-ironsworn.ironswornoracles',
     starforged: 'foundry-ironsworn.starforgedoracles',
-  }[toolset]
-  CONFIG.IRONSWORN.rollAndDisplayOracleResult(randomTable, pack)
+  }[toolset ?? '']
+
+  const orm = await OracleRollMessage.fromTableId(randomTable?.id ?? '', pack)
+  orm.createOrUpdate()
 }
 </script>

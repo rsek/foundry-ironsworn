@@ -1,103 +1,87 @@
 <template>
-  <div class="flexcol" style="gap: 5px">
-    <div class="flexrow nogrow" style="gap: 5px">
-      <!-- Region -->
-      <label class="flexrow" style="flex-basis: 150px; gap: 10px">
-        <span class="select-label">{{ $t('IRONSWORN.Region') }}</span>
-        <select v-model="region" @change="regionChanged">
-          <option value="terminus">
-            {{ $t('IRONSWORN.Terminus') }}
-          </option>
-          <option value="outlands">
-            {{ $t('IRONSWORN.Outlands') }}
-          </option>
-          <option value="expanse">
-            {{ $t('IRONSWORN.Expanse') }}
-          </option>
-        </select>
-      </label>
+  <SheetBasic :document="actor">
+    <template #before-header>
+      <div class="flexrow nogrow" style="gap: 5px">
+        <!-- Region -->
+        <label class="flexrow" style="flex-basis: 150px; gap: 10px">
+          <span class="select-label">{{ $t('IRONSWORN.Region') }}</span>
+          <select v-model="region" @change="regionChanged">
+            <option value="terminus">
+              {{ $t('IRONSWORN.Terminus') }}
+            </option>
+            <option value="outlands">
+              {{ $t('IRONSWORN.Outlands') }}
+            </option>
+            <option value="expanse">
+              {{ $t('IRONSWORN.Expanse') }}
+            </option>
+          </select>
+        </label>
 
-      <!-- Subtype -->
-      <label class="flexrow" style="flex-basis: 200px; gap: 10px">
-        {{ $t('IRONSWORN.LocationType') }}
-        <select v-model="actor.data.subtype" @change="subtypeChanged">
-          <option value="planet">Planet</option>
-          <option value="settlement">Settlement</option>
-          <option value="star">Stellar Object</option>
-          <option value="derelict">Derelict</option>
-          <option value="vault">Precursor Vault</option>
-        </select>
-      </label>
-    </div>
-
-    <!-- Klass -->
-    <label class="flexrow nogrow" style="position: relative; gap: 10px">
-      <!-- TODO: i18n and subtype text -->
-      <span class="select-label">{{ subtypeSelectText }}:</span>
-      <select
-        v-model="actor.data.klass"
-        @change="klassChanged"
-        :class="{ highlighted: data.firstLookHighlight }"
-      >
-        <option v-for="opt in klassOptions" :key="opt.value" :value="opt.value">
-          {{ opt.label }}
-        </option>
-      </select>
-      <btn-isicon
-        icon="d10-tilt juicy"
-        class="block nogrow"
-        style="
-          padding: 0px 5px;
-          position: absolute;
-          right: 15px;
-          height: 25px;
-          line-height: 30px;
-          top: 1px;
-        "
-        @click="randomizeKlass"
-        :tooltip="randomKlassTooltip"
-      />
-    </label>
-
-    <header
-      class="sheet-header flexrow nogrow"
-      style="position: relative; gap: 5px"
-    >
-      <document-img :document="actor" size="50px" />
-      <div class="flexcol">
-        <div class="flexrow nogrow">
-          <document-name
-            :document="actor"
-            :class="{
-              highlighted: data.firstLookHighlight && canRandomizeName,
-            }"
-          />
-
-          <btn-isicon
-            v-if="canRandomizeName"
-            icon="d10-tilt juicy"
-            class="block nogrow"
-            style="
-              position: absolute;
-              padding: 0px 10px;
-              line-height: 53px;
-              right: 1px;
-              top: 6px;
-              height: 48px;
-              border-radius: 0 3px 3px 0;
-            "
-            :tooltip="$t('IRONSWORN.RandomName')"
-            @click="randomizeName"
-          />
-        </div>
+        <!-- Subtype -->
+        <label class="flexrow" style="flex-basis: 200px; gap: 10px">
+          {{ $t('IRONSWORN.LocationType') }}
+          <select v-model="actor.data.subtype" @change="subtypeChanged">
+            <option value="planet">Planet</option>
+            <option value="settlement">Settlement</option>
+            <option value="star">Stellar Object</option>
+            <option value="derelict">Derelict</option>
+            <option value="vault">Precursor Vault</option>
+          </select>
+        </label>
       </div>
-    </header>
 
-    <section
-      class="boxgroup flexcol nogrow"
-      style="margin-bottom: 1rem"
-      v-if="oracles.length > 0"
-    >
+      <!-- Klass -->
+      <label class="flexrow nogrow" style="position: relative; gap: 10px">
+        <!-- TODO: i18n and subtype text -->
+        <span class="select-label">{{ subtypeSelectText }}:</span>
+        <select
+          v-model="actor.data.klass"
+          @change="klassChanged"
+          :class="{ highlighted: data.firstLookHighlight }"
+        >
+          <option
+            v-for="opt in klassOptions"
+            :key="opt.value"
+            :value="opt.value"
+          >
+            {{ opt.label }}
+          </option>
+        </select>
+        <btn-isicon
+          icon="d10-tilt juicy"
+          class="block nogrow"
+          style="
+            padding: 0px 5px;
+            position: absolute;
+            right: 15px;
+            height: 25px;
+            line-height: 30px;
+            top: 1px;
+          "
+          @click="randomizeKlass"
+          :tooltip="randomKlassTooltip"
+        />
+      </label>
+    </template>
+    <template #header>
+      <SheetHeaderBasic
+        :document="actor"
+        class="sf-location-header nogrow"
+        :nameClass="{
+          highlighted: data.firstLookHighlight && canRandomizeName,
+        }"
+      >
+        <btn-isicon
+          v-if="canRandomizeName"
+          icon="d10-tilt"
+          class="btn-randomize-name juicy block nogrow"
+          :tooltip="$t('IRONSWORN.RandomName')"
+          @click="randomizeName"
+        />
+      </SheetHeaderBasic>
+    </template>
+    <section class="boxgroup flexcol nogrow" v-if="oracles.length > 0">
       <div class="flexrow boxrow">
         <btn-isicon
           icon="d10-tilt"
@@ -132,7 +116,6 @@
         </btn-icon>
       </div>
     </section>
-
     <section class="flexcol">
       <MceEditor
         v-model="actor.data.description"
@@ -140,9 +123,28 @@
         @change="throttledSaveDescription"
       />
     </section>
-  </div>
+  </SheetBasic>
 </template>
 
+<style lang="less">
+.sf-location-header {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: max-content 1fr max-content;
+  > * {
+    grid-row: 1;
+  }
+  .charname {
+    grid-column: 2 / span 2;
+  }
+  .btn-randomize-name {
+    grid-column: 3;
+    height: 50px;
+    aspect-ratio: 1;
+    border-radius: 0 3px 3px 0;
+  }
+}
+</style>
 <style lang="less" scoped>
 label {
   line-height: 27px;
@@ -165,24 +167,25 @@ label {
 </style>
 
 <script setup lang="ts">
-import { capitalize, flatten, throttle } from 'lodash'
+import SheetHeaderBasic from './sheet-header-basic.vue'
+import { capitalize, flatten, sample, throttle } from 'lodash'
 import { provide, computed, reactive, inject } from 'vue'
 import { IronswornActor } from '../actor/actor'
-import { $ActorKey } from './provisions'
+import { $ActorKey, ActorKey } from './provisions'
 import BtnIsicon from './components/buttons/btn-isicon.vue'
 import DocumentImg from './components/document-img.vue'
 import DocumentName from './components/document-name.vue'
 import BtnIcon from './components/buttons/btn-icon.vue'
 import MceEditor from './components/mce-editor.vue'
+import { OracleRollMessage } from '../rolls'
+import { LocationDataProperties } from '../actor/actortypes'
+import SheetBasic from './sheet-basic.vue'
 
 const props = defineProps<{
-  actor: ReturnType<typeof IronswornActor.prototype.toObject>
+  actor: any
 }>()
 
-provide(
-  'actor',
-  computed(() => props.actor)
-)
+provide(ActorKey, computed(() => props.actor) as any)
 const $actor = inject($ActorKey)
 
 const sceneId = game.user?.viewedScene
@@ -194,7 +197,7 @@ const data = reactive({
   firstLookHighlight: false,
 })
 
-function randomImage(subtype, klass) {
+function randomImage(subtype, klass): string | void {
   if (subtype === 'planet') {
     const name = capitalize(klass)
     const i = Math.floor(Math.random() * 2) + 1
@@ -220,7 +223,7 @@ function randomImage(subtype, klass) {
   }
 }
 
-const klassOptions = computed(() => {
+const klassOptions = computed((): { value: string; label: string }[] => {
   switch (props.actor.data.subtype) {
     case 'planet':
       return [
@@ -296,7 +299,14 @@ const klassOptions = computed(() => {
   }
 })
 
-const oracles = computed(() => {
+interface OracleSpec {
+  title: string
+  dfId: string
+  qty?: string
+  fl?: boolean
+  requiresKlass?: boolean
+}
+const oracles = computed((): OracleSpec[][] => {
   const { subtype, klass } = props.actor.data
   const kc = klass
     .split(' ')
@@ -314,7 +324,7 @@ const oracles = computed(() => {
             requiresKlass: true,
           },
           {
-            title: 'From Space',
+            title: 'Observed from space',
             qty: '1-2',
             dfId: `Starforged/Oracles/Planets/${kc}/Observed_From_Space`,
             fl: true,
@@ -334,7 +344,7 @@ const oracles = computed(() => {
             requiresKlass: true,
           },
           {
-            title: 'Planetside Feature',
+            title: 'Planetside feature',
             qty: '1-2',
             dfId: `Starforged/Oracles/Planets/${kc}/Feature`,
             requiresKlass: true,
@@ -346,7 +356,7 @@ const oracles = computed(() => {
             dfId: `Starforged/Oracles/Planets/Peril/Lifebearing`,
           },
           {
-            title: 'Peril (no life)',
+            title: 'Peril (lifeless)',
             dfId: `Starforged/Oracles/Planets/Peril/Lifeless`,
           },
           {
@@ -354,7 +364,7 @@ const oracles = computed(() => {
             dfId: `Starforged/Oracles/Planets/Opportunity/Lifebearing`,
           },
           {
-            title: 'Opportunity (no life)',
+            title: 'Opportunity (lifeless)',
             dfId: `Starforged/Oracles/Planets/Opportunity/Lifeless`,
           },
         ],
@@ -369,7 +379,7 @@ const oracles = computed(() => {
             fl: true,
           },
           {
-            title: 'First Look',
+            title: 'First look',
             dfId: 'Starforged/Oracles/Settlements/First_Look',
             qty: '1-2',
             fl: true,
@@ -377,7 +387,7 @@ const oracles = computed(() => {
         ],
         [
           {
-            title: 'Initial Contact',
+            title: 'Initial contact',
             dfId: 'Starforged/Oracles/Settlements/Initial_Contact',
           },
           {
@@ -387,11 +397,11 @@ const oracles = computed(() => {
         ],
         [
           {
-            title: 'Projects',
+            title: 'Settlement projects',
             dfId: 'Starforged/Oracles/Settlements/Projects',
           },
           {
-            title: 'Trouble',
+            title: 'Settlement trouble',
             dfId: 'Starforged/Oracles/Settlements/Trouble',
           },
         ],
@@ -454,44 +464,44 @@ const oracles = computed(() => {
             fl: true,
           },
           {
-            title: 'Outer First Look',
+            title: 'Outer first look',
             dfId: `Starforged/Oracles/Vaults/Outer_First_Look`,
             fl: true,
           },
         ],
         [
           {
-            title: 'Interior First Look',
+            title: 'Interior first look',
             dfId: `Starforged/Oracles/Vaults/Interior/First_Look`,
           },
           {
-            title: 'Interior Feature',
+            title: 'Interior feature',
             dfId: `Starforged/Oracles/Vaults/Interior/Feature`,
           },
           {
-            title: 'Interior Peril',
+            title: 'Interior peril',
             dfId: `Starforged/Oracles/Vaults/Interior/Peril`,
           },
           {
-            title: 'Interior Opportunity',
+            title: 'Interior opportunity',
             dfId: `Starforged/Oracles/Vaults/Interior/Opportunity`,
           },
         ],
         [
           {
-            title: 'Sanctum Purpose',
+            title: 'Sanctum purpose',
             dfId: `Starforged/Oracles/Vaults/Sanctum/Purpose`,
           },
           {
-            title: 'Sanctum Feature',
+            title: 'Sanctum feature',
             dfId: `Starforged/Oracles/Vaults/Sanctum/Feature`,
           },
           {
-            title: 'Sanctum Peril',
+            title: 'Sanctum peril',
             dfId: `Starforged/Oracles/Vaults/Sanctum/Peril`,
           },
           {
-            title: 'Sanctum Opportunity',
+            title: 'Sanctum opportunity',
             dfId: `Starforged/Oracles/Vaults/Sanctum/Opportunity`,
           },
         ],
@@ -567,8 +577,22 @@ async function saveKlass(klass) {
   const { subtype } = props.actor.data
   const img = randomImage(subtype, klass)
 
-  await $actor?.update({ img, data: { klass } })
+  await $actor?.update({ img: img || undefined, data: { klass } })
   await updateAllTokens({ img })
+}
+
+async function drawAndReturnResult(
+  table?: RollTable
+): Promise<string | undefined> {
+  if (!table) return undefined
+
+  const orm = await OracleRollMessage.fromTableId(
+    table.id || '',
+    table.pack || undefined
+  )
+  orm.createOrUpdate()
+  const result = await orm.getResult()
+  return result?.text
 }
 
 async function randomizeName() {
@@ -579,13 +603,13 @@ async function randomizeName() {
     const json = await CONFIG.IRONSWORN.dataforgedHelpers.getDFOracleByDfId(
       `Starforged/Oracles/Planets/${kc}`
     )
-    name = CONFIG.IRONSWORN._.sample(json?.['Sample Names'] ?? [])
+    name = sample(json?.['Sample Names'] ?? [])
   } else if (subtype === 'settlement') {
     const table =
       await CONFIG.IRONSWORN.dataforgedHelpers.getFoundryTableByDfId(
         'Starforged/Oracles/Settlements/Name'
       )
-    name = await CONFIG.IRONSWORN.rollAndDisplayOracleResult(table)
+    name = await drawAndReturnResult(table)
   }
 
   if (name) {
@@ -611,7 +635,7 @@ async function randomizeKlass() {
   const table = await CONFIG.IRONSWORN.dataforgedHelpers.getFoundryTableByDfId(
     tableKey
   )
-  const rawText = await CONFIG.IRONSWORN.rollAndDisplayOracleResult(table)
+  const rawText = await drawAndReturnResult(table)
   if (!rawText) return
 
   const lctext = rawText.toLowerCase()
@@ -630,14 +654,16 @@ async function rollFirstLook() {
     }
   }
 }
+
 async function rollOracle(oracle) {
   const table = await CONFIG.IRONSWORN.dataforgedHelpers.getFoundryTableByDfId(
     oracle.dfId
   )
-  const drawText = await CONFIG.IRONSWORN.rollAndDisplayOracleResult(table)
+  const drawText = await drawAndReturnResult(table)
   if (!drawText) return
 
   // Append to description
+  const actor = props.actor as LocationDataProperties
   const parts = [
     props.actor.data.description,
     '<p><strong>',
@@ -655,10 +681,11 @@ async function updateAllTokens(data) {
 
   // All tokens in the scene
   const activeTokens = $actor?.getActiveTokens()
-  const updates = activeTokens.map((at) => ({
-    _id: at.data._id,
-    ...data,
-  }))
-  await canvas.scene?.updateEmbeddedDocuments('Token', updates)
+  const updates =
+    activeTokens?.map((at) => ({
+      _id: at.data._id,
+      ...data,
+    })) ?? []
+  await canvas?.scene?.updateEmbeddedDocuments('Token', updates)
 }
 </script>

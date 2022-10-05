@@ -1,10 +1,7 @@
 <template>
   <div class="flexcol">
     <!-- HEADER -->
-    <header class="sheet-header flexrow nogrow" style="gap: 5px">
-      <document-img :document="item" />
-      <document-name :document="item" />
-    </header>
+    <SheetHeaderBasic class="nogrow" :document="item" />
 
     <select
       class="nogrow"
@@ -38,24 +35,23 @@
         {{ $t('IRONSWORN.Track') }}
       </label>
 
-      <transition name="slide">
+      <CollapseTransition>
         <div class="nogrow" v-if="item.data.hasTrack">
           <!-- RANK -->
           <div class="flexrow nogrow">
-            <rank-hexes
+            <RankPips
               :current="item.data.rank"
               @click="setRank"
-              class="nogrow"
               style="margin-right: 1em"
             />
             <h4>{{ rankText }}</h4>
-            <btn-faicon
+            <BtnFaicon
               class="block nogrow"
               v-if="editMode"
               icon="trash"
               @click="clearProgress"
             />
-            <btn-faicon
+            <BtnFaicon
               class="block nogrow"
               icon="caret-right"
               @click="markProgress"
@@ -63,10 +59,10 @@
           </div>
           <!-- PROGRESS -->
           <div class="flexrow track nogrow" style="margin-bottom: 1em">
-            <progress-track :ticks="item.data.current" />
+            <ProgressTrack :ticks="item.data.current" :rank="item.data.rank" />
           </div>
         </div>
-      </transition>
+      </CollapseTransition>
     </div>
 
     <hr class="nogrow" />
@@ -81,10 +77,10 @@
         {{ $t('IRONSWORN.Clock') }}
       </label>
 
-      <transition name="slide">
+      <CollapseTransition>
         <div class="flexrow nogrow" v-if="item.data.hasClock">
           <div class="nogrow" style="margin: 0 1rem">
-            <clock
+            <Clock
               :wedges="item.data.clockMax"
               :ticked="item.data.clockTicks"
               @click="setClock"
@@ -98,21 +94,23 @@
               @change="clockMaxChange"
               style="margin: 0.5rem 0"
             >
-              <option value="4">4</option>
-              <option value="6">6</option>
-              <option value="8">8</option>
-              <option value="10">10</option>
-              <option value="12">12</option>
+              <option
+                v-for="clockSize in [4, 6, 8, 10, 12]"
+                :key="clockSize"
+                :value="clockSize"
+              >
+                {{ clockSize }}
+              </option>
             </select>
           </div>
         </div>
-      </transition>
+      </CollapseTransition>
     </div>
 
     <hr class="nogrow" />
 
     <!-- DESCRIPTION -->
-    <mce-editor
+    <MceEditor
       v-model="item.data.description"
       @save="saveDescription"
       @change="throttledSaveDescription"
@@ -120,40 +118,29 @@
   </div>
 </template>
 
-<style lang="less" scoped>
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 93px;
-}
-</style>
-
 <script setup lang="ts">
-import { computed, inject, provide, Ref } from 'vue'
+import { computed, inject, provide } from 'vue'
+import { RANKS, RANK_INCREMENTS } from '../constants'
 import { $ItemKey } from './provisions'
-import DocumentImg from './components/document-img.vue'
-import DocumentName from './components/document-name.vue'
-import RankHexes from './components/rank-hexes/rank-hexes.vue'
+import RankPips from './components/rank-pips/rank-pips.vue'
 import BtnFaicon from './components/buttons/btn-faicon.vue'
-import ProgressTrack from './components/progress/progress-track.vue'
 import Clock from './components/clock.vue'
 import MceEditor from './components/mce-editor.vue'
 import { throttle } from 'lodash'
-
-const $item = inject($ItemKey)
+import SheetHeaderBasic from './sheet-header-basic.vue'
+import ProgressTrack from './components/progress/progress-track.vue'
+import CollapseTransition from './components/transition/collapse-transition.vue'
 
 const props = defineProps<{ item: any }>()
-provide(
-  'item',
-  computed(() => props.item)
-)
+const $item = inject($ItemKey)
+
+provide($ItemKey, props.item)
 
 const editMode = computed(
   () => props.item.flags['foundry-ironsworn']?.['edit-mode']
 )
 
-const rankText = computed(() =>
-  game.i18n.localize(CONFIG.IRONSWORN.Ranks[props.item.data.rank])
-)
+const rankText = computed(() => game.i18n.localize(RANKS[props.item.data.rank]))
 
 function setRank(rank) {
   $item?.update({ data: { rank } })
@@ -164,7 +151,7 @@ function clearProgress() {
 }
 
 function markProgress() {
-  const increment = CONFIG.IRONSWORN.RankIncrements[props.item.data.rank]
+  const increment = RANK_INCREMENTS[props.item.data.rank]
   const newValue = Math.min(props.item.data.current + increment, 40)
   $item?.update({ 'data.current': newValue })
 }
@@ -174,7 +161,7 @@ function subtypeChange() {
 }
 
 function clockMaxChange() {
-  $item?.update({ data: { clockMax: props.item.data.clockMax } })
+  $item?.update({ data: { clockMax: parseInt(props.item.data.clockMax) } })
 }
 
 function saveChecks() {

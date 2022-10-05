@@ -58,7 +58,7 @@ export interface CharacterDataProperties extends ActorDataBaseProperties {
   data: CharacterDataPropertiesData
 }
 
-interface CharacterDataSource extends ActorDataBaseSource {
+export interface CharacterDataSource {
   type: 'character'
   data: CharacterDataSourceData
 }
@@ -66,6 +66,7 @@ interface CharacterDataSource extends ActorDataBaseSource {
 ////////////////////////////////////////
 
 interface SharedDataSourceData {
+  biography: string
   supply: number
 }
 type SharedDataPropertiesData = SharedDataSourceData
@@ -146,6 +147,7 @@ export interface StarshipDataProperties extends ActorDataBaseProperties {
 interface LocationDataSourceData {
   subtype: string
   klass: string
+  description: string
 }
 type LocationDataPropertiesData = LocationDataSourceData
 

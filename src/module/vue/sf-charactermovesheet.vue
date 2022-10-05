@@ -1,11 +1,11 @@
 <template>
   <tabs ref="tabs">
-    <tab :title="$t('IRONSWORN.Moves')">
+    <tab icon="isicon-d10-tilt" :title="$t('IRONSWORN.Moves')">
       <Suspense>
         <sf-movesheetmoves ref="movesTab" :toolset="toolset" />
       </Suspense>
     </tab>
-    <tab :title="$t('IRONSWORN.Oracles')">
+    <tab icon="isicon-oracle" :title="$t('IRONSWORN.Oracles')">
       <Suspense>
         <sf-movesheetoracles ref="oraclesTab" :toolset="toolset" />
       </Suspense>
@@ -18,27 +18,21 @@ import Tab from './components/tabs/tab.vue'
 import Tabs from './components/tabs/tabs.vue'
 import SfMovesheetmoves from './components/sf-movesheetmoves.vue'
 import SfMovesheetoracles from './components/sf-movesheetoracles.vue'
-import { computed, inject, nextTick, provide, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { CharacterDataProperties } from '../actor/actortypes'
-import { $EmitterKey } from './provisions'
+import { ActorKey } from './provisions.js'
 
 const props = defineProps<{
   actor: CharacterDataProperties
   toolset: 'ironsworn' | 'starforged'
 }>()
 
-provide(
-  'actor',
-  computed(() => props.actor)
-)
-
-const $emitter = inject($EmitterKey)
-// $emitter?.on('*', (...args) => console.log(...args))
+provide(ActorKey, computed(() => props.actor) as any)
 
 const tabs = ref<InstanceType<typeof Tabs>>()
 const movesTab = ref<InstanceType<typeof SfMovesheetmoves>>()
-$emitter?.on('highlightMove', () => tabs.value?.selectIndex(0))
+CONFIG.IRONSWORN.emitter.on('highlightMove', () => tabs.value?.selectIndex(0))
 
 const oraclesTab = ref<InstanceType<typeof SfMovesheetoracles>>()
-$emitter?.on('highlightOracle', () => tabs.value?.selectIndex(1))
+CONFIG.IRONSWORN.emitter.on('highlightOracle', () => tabs.value?.selectIndex(1))
 </script>

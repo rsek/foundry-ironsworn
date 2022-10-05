@@ -22,7 +22,7 @@ import { computed, useSlots } from '@vue/runtime-core'
 defineProps<{ tooltip?: string; disabled?: boolean }>()
 // so the span can be omitted if there's no slot content
 const hasDefaultSlot = computed(() => {
-  return !!useSlots().default()[0].children.length
+  return !!useSlots().default?.()[0].children?.length
 })
 </script>
 
@@ -58,9 +58,12 @@ const hasDefaultSlot = computed(() => {
 .icon-button {
   .button-text {
     // makes this seamless with existing buttons that don't need this styling
-    display: contents;
+    display: inline;
+    strong {
+      white-space: nowrap;
+    }
   }
-  &.vertical-v2 {
+  &.vertical {
     writing-mode: initial !important; // prevents this fix from breaking the button layout in FF
     flex-direction: column;
     .button-text {

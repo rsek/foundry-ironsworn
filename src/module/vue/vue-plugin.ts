@@ -1,6 +1,6 @@
 import { marked } from 'marked'
-import type { ComponentCustomProperties, Plugin } from 'vue'
-import { capitalize } from 'vue'
+import { Plugin } from 'vue'
+import { formatRollPlusStat } from '../rolls/ironsworn-roll-message.js'
 import { $EnrichHtmlKey, $EnrichMarkdownKey } from './provisions'
 // import type i18nData from '../../../system/lang/en.json'
 // import type { ValidLeafPaths } from '../../types/ValidPaths'
@@ -8,33 +8,25 @@ import { $EnrichHtmlKey, $EnrichMarkdownKey } from './provisions'
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     /**
-     * Shortcut for {@link game.i18n.format} if a data object is provided; if no object is provided, it instead uses {@link game.i18n.localize}.
-     * @see {game.i18n.localize}
-     * @see {game.i18n.format}
+     * Without a `data` parameter: shortcut for {@link game.i18n.localize}.
+     * With a `data` parameter: shortcut for {@link game.i18n.format}.
      */
-    $t: (
-      // stringId: ValidLeafPaths<typeof i18nData>,
-      stringId: string,
-      data?: Record<string, string | number> | undefined
-    ) => string
-    $capitalize: (string: string) => string
-    $concat: (...args: string[]) => string
-    $enrichMarkdown: (string: string) => string
-    $enrichHtml: (string: string) => string
+    $t: (stringId: string, data?: Record<string, unknown>) => string
+    $capitalize: (string) => string
+    $concat: (...args: any[]) => string
+    $enrichMarkdown: (string) => string
+    $enrichHtml: (string) => string
   }
 }
 
 export function enrichHtml(text) {
   const rendered = TextEditor.enrichHTML(text)
-  const rollText = game.i18n.localize('IRONSWORN.Roll')
   return rendered.replace(
     /\(\(rollplus (.*?)\)\)/g,
     (_, stat) => `
   <a class="inline-roll" data-param="${stat}">
     <i class="fas fa-dice-d6"></i>
-    ${rollText} +${game.i18n
-      .localize(`IRONSWORN.${capitalize(stat)}`)
-      .toLowerCase()}
+    ${formatRollPlusStat(stat)}
   </a>
 `
   )
@@ -48,15 +40,10 @@ export function enrichMarkdown(md: string): string {
 export const IronswornVuePlugin: Plugin = {
   install(app, ..._options) {
     app.config.globalProperties.$t = (
-      // k: ValidLeafPaths<typeof i18nData>,
-      k: string,
-      data: Record<string, string | number>
-    ) => {
-      if (data) {
-        return game.i18n.format(k, data)
-      }
-      return game.i18n.localize(k)
-    }
+      stringId: string,
+      data?: Record<string, unknown>
+    ) =>
+      data ? game.i18n.format(stringId, data) : game.i18n.localize(stringId)
     app.config.globalProperties.$concat = (...args) => args.join('')
     app.config.globalProperties.$capitalize = function (txt) {
       const [first, ...rest] = txt

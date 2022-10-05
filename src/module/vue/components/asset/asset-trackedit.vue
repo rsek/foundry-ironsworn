@@ -51,7 +51,7 @@ import { computed, inject } from 'vue'
 import { $ItemKey } from '../../provisions'
 import ConditionMeterSpinner from '../resource-meters/condition-meter-spinner.vue'
 
-const item = inject('item') as Ref
+const item = inject(ItemKey) as Ref
 const editMode = computed(() => {
   return item.value.flags['foundry-ironsworn']?.['edit-mode']
 })

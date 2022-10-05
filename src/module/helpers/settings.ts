@@ -57,6 +57,7 @@ export class IronswornSettings {
           starforged: 'IRONSWORN.Starforged',
         },
         default: 'sheet',
+        onChange: reload,
       }
     )
 
@@ -78,13 +79,18 @@ export class IronswornSettings {
       default: true,
     })
 
-    game.settings.register('foundry-ironsworn', 'df-is-moves-oracles', {
-      name: 'IRONSWORN.Settings.DataforgedIronswornMoves.Name',
-      hint: 'IRONSWORN.Settings.DataforgedIronswornMoves.Hint',
+    game.settings.register<
+      'foundry-ironsworn',
+      'progress-mark-animation',
+      boolean
+    >('foundry-ironsworn', 'progress-mark-animation', {
+      name: 'IRONSWORN.Settings.ProgressMarkAnimation.Name',
+      hint: 'IRONSWORN.Settings.ProgressMarkAnimation.Hint',
       scope: 'client',
-      config: true,
       type: Boolean,
-      default: false,
+      default: true,
+      config: true,
+      onChange: reload,
     })
 
     game.settings.register('foundry-ironsworn', 'data-version', {
@@ -116,10 +122,6 @@ export class IronswornSettings {
 
   static get logCharacterChanges(): boolean {
     return !!game.settings.get('foundry-ironsworn', 'log-changes')
-  }
-
-  static get dataforgedIronswornMoves(): boolean {
-    return !!game.settings.get('foundry-ironsworn', 'df-is-moves-oracles')
   }
 
   static async maybeSetGlobalSupply(value: number) {

@@ -3,14 +3,14 @@
     <div class="flexcol">
       <section class="sheet-area flexcol">
         <!-- Bonds -->
-        <Bonds />
+        <Bonds :compactProgress="true" />
 
         <hr class="nogrow" />
         <!-- Assets -->
         <div class="flexcol ironsworn__drop__target" data-drop-type="asset">
           <h4 class="nogrow">{{ $t('IRONSWORN.Assets') }}</h4>
 
-          <transition-group name="slide" tag="div" class="nogrow">
+          <CollapseTransition tag="div" class="nogrow" group>
             <div class="flexrow" v-for="(asset, i) in assets" :key="asset._id">
               <OrderButtons
                 v-if="editMode"
@@ -21,16 +21,20 @@
               />
               <Asset :asset="asset" />
             </div>
-          </transition-group>
-          <div class="flexcol nogrow" style="text-align: center">
-            <BtnCompendium class="block nogrow" compendium="ironswornassets">
+          </CollapseTransition>
+          <div class="flexrow nogrow" style="text-align: center">
+            <BtnFaicon
+              icon="atlas"
+              @click="assetBrowser"
+              class="clickable block"
+            >
               {{ $t('IRONSWORN.Assets') }}
-            </BtnCompendium>
+            </BtnFaicon>
           </div>
         </div>
       </section>
     </div>
-    <ActiveCompletedProgresses />
+    <ActiveCompletedProgresses :compactProgress="true" />
   </div>
 </template>
 
@@ -47,18 +51,11 @@ h3 {
     background-color: lightyellow;
   }
 }
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 106px;
-  &.completed {
-    max-height: 400px;
-  }
-}
 </style>
 
 <script lang="ts" setup>
-import { computed, inject, reactive } from 'vue'
-import { $ActorKey } from '../../provisions'
+import { computed, inject, reactive, Ref } from 'vue'
+import { $ActorKey, ActorKey } from '../../provisions'
 import Bonds from '../bonds.vue'
 import OrderButtons from '../order-buttons.vue'
 import Asset from '../asset/asset.vue'
@@ -68,20 +65,16 @@ import ProgressControls from '../progress-controls.vue'
 import { throttle } from 'lodash'
 import BtnFaicon from '../buttons/btn-faicon.vue'
 import ActiveCompletedProgresses from '../active-completed-progresses.vue'
+import { AssetCompendiumBrowser } from '../../../item/asset-compendium-browser'
+import CollapseTransition from '../transition/collapse-transition.vue'
 
-const actor = inject('actor') as Ref
+const actor = inject(ActorKey) as Ref
 const $actor = inject($ActorKey)
 
 const progressItems = computed(() => {
   return actor.value?.items
     .filter((x) => x.type === 'progress')
     .sort((a, b) => (a.sort || 0) - (b.sort || 0))
-})
-const activeItems = computed(() => {
-  return progressItems.value.filter((x) => !x.data.completed)
-})
-const completedItems = computed(() => {
-  return progressItems.value.filter((x) => x.data.completed)
 })
 const assets = computed(() => {
   return actor.value?.items
@@ -98,20 +91,6 @@ const data = reactive({
 })
 
 let highlightCompletedTimer: NodeJS.Timer | undefined
-function progressCompleted() {
-  data.highlightCompleted = true
-  clearTimeout(highlightCompletedTimer)
-  highlightCompletedTimer = setTimeout(() => {
-    data.highlightCompleted = false
-  }, 2000)
-}
-
-const completedCaret = computed(() => {
-  return data.expandCompleted ? 'caret-down' : 'caret-right'
-})
-const completedClass = computed(() => {
-  return data.highlightCompleted ? 'highlighted' : undefined
-})
 
 async function applySort(oldI, newI, sortBefore, collection) {
   const sorted = collection.sort(
@@ -145,5 +124,15 @@ function completedSortUp(i) {
 }
 function completedSortDown(i) {
   applySort(i, i + 1, false, (x) => x.data.data.completed)
+}
+
+let theAssetBrowser: AssetCompendiumBrowser | undefined
+function assetBrowser() {
+  if (!theAssetBrowser) {
+    theAssetBrowser = new AssetCompendiumBrowser(
+      $actor?.toolset ?? 'starforged'
+    )
+  }
+  theAssetBrowser.render(true)
 }
 </script>
