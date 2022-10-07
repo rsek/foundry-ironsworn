@@ -39,39 +39,46 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-    item: Object,
-    itemType: String,
-    titleKey: String,
-    compendiumKey: String,
-  },
+<script setup lang="ts">
+import { inject, Ref } from '@vue/runtime-core'
+import { $ActorKey, ActorKey } from '../../provisions'
+import { computed } from 'vue'
+import DocumentImg from '../document-img.vue'
+import BtnFaicon from '../buttons/btn-faicon.vue'
+import BtnCompendium from '../buttons/btn-compendium.vue'
 
-  computed: {
-    editMode() {
-      return this.actor.flags['foundry-ironsworn']?.['edit-mode']
-    },
-  },
+const props = defineProps<{
+  item: any
+  itemType: string
+  titleKey: string
+  compendiumKey: string
+}>()
 
-  methods: {
-    destroy() {
-      const titleKey = 'IRONSWORN.DeleteItem'
+const $actor = inject($ActorKey)
 
-      Dialog.confirm({
-        title: game.i18n.localize(titleKey),
-        content: `<p><strong>${game.i18n.localize(
-          'IRONSWORN.ConfirmDelete'
-        )}</strong></p>`,
-        yes: () => this.$item?.delete(),
-        defaultYes: false,
-      })
-    },
+const actor = inject(ActorKey) as Ref
+const editMode = computed(() => {
+  return actor.value.flags['foundry-ironsworn']?.['edit-mode']
+})
 
-    edit() {
-      this.$item.sheet.render(true)
-    },
-  },
+function foundryitem() {
+  return props.item && $actor?.items.get(props.item._id)
+}
+
+function destroy() {
+  const titleKey = 'IRONSWORN.DeleteItem'
+
+  Dialog.confirm({
+    title: game.i18n.localize(titleKey),
+    content: `<p><strong>${game.i18n.localize(
+      'IRONSWORN.ConfirmDelete'
+    )}</strong></p>`,
+    yes: () => foundryitem()?.delete(),
+    defaultYes: false,
+  })
+}
+
+function edit() {
+  foundryitem()?.sheet?.render(true)
 }
 </script>

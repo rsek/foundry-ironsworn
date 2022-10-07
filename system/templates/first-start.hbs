@@ -2,6 +2,7 @@
   .first-start .box label { padding: 1rem; } .first-start h1 { border: none; }
   .first-start h2 { border: none; margin-top: 1rem; } .first-start label.flexcol
   { align-items: center; } .first-start img { border: none; width: 170px; }
+
 </style>
 
 <form class='first-start'>
@@ -97,9 +98,13 @@
     </div>
   </div>
 
-  <button class='ironsworn__save' style='margin: 1rem 0;'>
-    <i class='fas fa-check'></i>
-    {{localize 'IRONSWORN.First Start.Save'}}
-  </button>
+  <div class='boxgroup' style='margin-top: 1rem'>
+    <div class='boxrow flexrow'>
+      <button class='clickable block ironsworn__save'>
+        <i class='fas fa-check'></i>
+        {{localize 'IRONSWORN.First Start.Save'}}
+      </button>
+    </div>
+  </div>
 
 </form>

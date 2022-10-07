@@ -1,10 +1,7 @@
 <template>
   <div class="flexcol">
     <!-- HEADER -->
-    <header class="sheet-header nogrow">
-      <document-img :document="item" />
-      <document-name :document="item" />
-    </header>
+    <SheetHeaderBasic class="nogrow" :document="item" />
 
     <select
       class="nogrow"
@@ -38,35 +35,34 @@
         {{ $t('IRONSWORN.Track') }}
       </label>
 
-      <transition name="slide">
+      <CollapseTransition>
         <div class="nogrow" v-if="item.data.hasTrack">
           <!-- RANK -->
           <div class="flexrow nogrow">
-            <rank-hexes
+            <RankPips
               :current="item.data.rank"
               @click="setRank"
-              class="nogrow"
               style="margin-right: 1em"
             />
             <h4>{{ rankText }}</h4>
-            <btn-faicon
-              class="block"
+            <BtnFaicon
+              class="block nogrow"
               v-if="editMode"
               icon="trash"
               @click="clearProgress"
             />
-            <btn-faicon
-              class="block"
+            <BtnFaicon
+              class="block nogrow"
               icon="caret-right"
               @click="markProgress"
             />
           </div>
           <!-- PROGRESS -->
           <div class="flexrow track nogrow" style="margin-bottom: 1em">
-            <progress-track :ticks="item.data.current" />
+            <ProgressTrack :ticks="item.data.current" :rank="item.data.rank" />
           </div>
         </div>
-      </transition>
+      </CollapseTransition>
     </div>
 
     <hr class="nogrow" />
@@ -81,10 +77,10 @@
         {{ $t('IRONSWORN.Clock') }}
       </label>
 
-      <transition name="slide">
+      <CollapseTransition>
         <div class="flexrow nogrow" v-if="item.data.hasClock">
           <div class="nogrow" style="margin: 0 1rem">
-            <clock
+            <Clock
               :wedges="item.data.clockMax"
               :ticked="item.data.clockTicks"
               @click="setClock"
@@ -98,89 +94,95 @@
               @change="clockMaxChange"
               style="margin: 0.5rem 0"
             >
-              <option value="4">4</option>
-              <option value="6">6</option>
-              <option value="8">8</option>
-              <option value="10">10</option>
-              <option value="12">12</option>
+              <option
+                v-for="clockSize in [4, 6, 8, 10, 12]"
+                :key="clockSize"
+                :value="clockSize"
+              >
+                {{ clockSize }}
+              </option>
             </select>
           </div>
         </div>
-      </transition>
+      </CollapseTransition>
     </div>
 
     <hr class="nogrow" />
 
     <!-- DESCRIPTION -->
-    <editor
-      target="data.description"
-      :owner="true"
-      :button="true"
-      :editable="true"
-      :content="item.data.description"
+    <MceEditor
+      v-model="item.data.description"
+      @save="saveDescription"
+      @change="throttledSaveDescription"
     />
   </div>
 </template>
 
-<style lang="less" scoped>
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 93px;
+<script setup lang="ts">
+import { computed, inject, provide } from 'vue'
+import { RANKS, RANK_INCREMENTS } from '../constants'
+import { $ItemKey, ItemKey } from './provisions'
+import RankPips from './components/rank-pips/rank-pips.vue'
+import BtnFaicon from './components/buttons/btn-faicon.vue'
+import Clock from './components/clock.vue'
+import MceEditor from './components/mce-editor.vue'
+import { throttle } from 'lodash'
+import SheetHeaderBasic from './sheet-header-basic.vue'
+import ProgressTrack from './components/progress/progress-track.vue'
+import CollapseTransition from './components/transition/collapse-transition.vue'
+
+const props = defineProps<{ item: any }>()
+const $item = inject($ItemKey)
+
+provide(
+  ItemKey,
+  computed(() => props.item)
+)
+
+const editMode = computed(
+  () => props.item.flags['foundry-ironsworn']?.['edit-mode']
+)
+
+const rankText = computed(() => game.i18n.localize(RANKS[props.item.data.rank]))
+
+function setRank(rank) {
+  $item?.update({ data: { rank } })
 }
-</style>
 
-<script>
-export default {
-  props: {
-    item: Object,
-  },
-
-  computed: {
-    editMode() {
-      return this.item.flags['foundry-ironsworn']?.['edit-mode']
-    },
-
-    rankText() {
-      return this.$t(CONFIG.IRONSWORN.Ranks[this.item.data.rank])
-    },
-  },
-
-  methods: {
-    setRank(rank) {
-      this.$item.update({ data: { rank } })
-    },
-
-    clearProgress() {
-      this.$item.update({ 'data.current': 0 })
-    },
-
-    markProgress() {
-      const increment = CONFIG.IRONSWORN.RankIncrements[this.item.data.rank]
-      const newValue = Math.min(this.item.data.current + increment, 40)
-      this.$item.update({ 'data.current': newValue })
-    },
-
-    subtypeChange() {
-      this.$item.update({ data: { subtype: this.item.data.subtype } })
-    },
-
-    clockMaxChange() {
-      this.$item.update({ data: { clockMax: this.item.data.clockMax } })
-    },
-
-    saveChecks() {
-      this.$item.update({
-        data: {
-          completed: this.item.data.completed,
-          hasTrack: this.item.data.hasTrack,
-          hasClock: this.item.data.hasClock,
-        },
-      })
-    },
-
-    setClock(num) {
-      this.$item.update({ data: { clockTicks: num } })
-    },
-  },
+function clearProgress() {
+  $item?.update({ 'data.current': 0 })
 }
+
+function markProgress() {
+  const increment = RANK_INCREMENTS[props.item.data.rank]
+  const newValue = Math.min(props.item.data.current + increment, 40)
+  $item?.update({ 'data.current': newValue })
+}
+
+function subtypeChange() {
+  $item?.update({ data: { subtype: props.item.data.subtype } })
+}
+
+function clockMaxChange() {
+  $item?.update({ data: { clockMax: parseInt(props.item.data.clockMax) } })
+}
+
+function saveChecks() {
+  $item?.update({
+    data: {
+      completed: props.item.data.completed,
+      hasTrack: props.item.data.hasTrack,
+      hasClock: props.item.data.hasClock,
+    },
+  })
+}
+
+function setClock(num) {
+  $item?.update({ data: { clockTicks: num } })
+}
+
+function saveDescription() {
+  $item?.update({ data: { description: props.item.data.description } })
+}
+const throttledSaveDescription = throttle(saveDescription, 1000)
 </script>

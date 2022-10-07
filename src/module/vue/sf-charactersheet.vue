@@ -1,35 +1,17 @@
 <template>
-  <div class="flexcol sf-character-sheet">
+  <article class="flexcol sf-character-sheet">
+    <!-- TODO: rm inline styles added to maintain consistent styling (required largely because of other inline styles) -->
     <!-- Header row -->
-    <sf-characterheader :actor="actor" />
+    <sf-characterheader />
 
     <!-- Main body row -->
     <div class="flexrow">
       <!-- Momentum on left -->
-      <div class="flexcol margin-left">
-        <div class="flexrow" style="flex-wrap: nowrap">
-          <div class="flexcol stack momentum">
-            <stack
-              :actor="actor"
-              stat="momentum"
-              :top="10"
-              :bottom="-6"
-              :softMax="actor.data.momentumMax"
-            ></stack>
-            <hr class="nogrow" />
-            <div>
-              <btn-momentumburn class="nogrow block stack-row" :actor="actor">
-                {{ $t('IRONSWORN.Burn') }}
-              </btn-momentumburn>
-
-              {{ $t('IRONSWORN.Reset') }}: {{ actor.data.momentumReset }}
-              {{ $t('IRONSWORN.Max') }}:
-              {{ actor.data.momentumMax }}
-            </div>
-          </div>
-
-          <h4 class="vertical-v2">{{ $t('IRONSWORN.Momentum') }}</h4>
-        </div>
+      <div class="flexcol margin-left nogrow" style="width: min-content">
+        <MomentumMeterSlider
+          labelPosition="right"
+          data-tooltip-direction="UP"
+        />
       </div>
 
       <!-- Center area -->
@@ -38,71 +20,49 @@
         <div class="flexrow stats" style="margin-bottom: 10px">
           <attr-box
             v-for="stat in ['edge', 'heart', 'iron', 'shadow', 'wits']"
-            :actor="actor"
             :attr="stat"
             :key="stat"
           />
         </div>
 
-        <tabbed-panels
-          aria-orientation="horizontal"
-          class="character-sheet-tabs"
-          name="character-sheet-tabs"
-          wrapperElement="section"
-          :actor="actor"
-          :tabs="tabs"
-        >
-        </tabbed-panels>
+        <tabs class="character-sheet-tabs" name="character-sheet-tabs">
+          <tab :title="$t('IRONSWORN.Legacies')">
+            <sf-legacies :actor="actor" />
+          </tab>
+          <tab :title="$t('IRONSWORN.Assets')"> <sf-assets /> </tab>
+          <tab :title="$t('IRONSWORN.Progress')"> <sf-progresses /> </tab>
+          <tab :title="$t('IRONSWORN.Connections')"> <sf-connections /> </tab>
+          <tab :title="$t('IRONSWORN.Notes')"> <sf-notes /> </tab>
+        </tabs>
       </div>
 
       <!-- Stats on right -->
-      <div class="flexcol margin-right condition-meters">
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="health">
-            {{ $t('IRONSWORN.Health') }}
-          </btn-rollstat>
-          <div class="flexcol stack health">
-            <stack :actor="actor" stat="health" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="spirit">
-            {{ $t('IRONSWORN.Spirit') }}
-          </btn-rollstat>
-          <div class="flexcol stack spirit">
-            <stack :actor="actor" stat="spirit" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="supply">
-            {{ $t('IRONSWORN.Supply') }}
-          </btn-rollstat>
-          <div class="flexcol stack supply">
-            <stack :actor="actor" stat="supply" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-      </div>
+      <PcConditionMeters
+        class="flexcol margin-right"
+        data-tooltip-direction="UP"
+        labelPosition="left"
+      />
     </div>
 
     <!-- Impacts -->
     <hr class="nogrow" />
-    <sf-impacts :actor="actor" class="nogrow" />
-  </div>
+    <sf-impacts class="nogrow" />
+  </article>
 </template>
 
 <style lang="less">
 .sf-character-sheet {
+  gap: 7px;
   .stat-roll {
     text-transform: uppercase;
+  }
+  .condition-meters {
+    .icon-button {
+      flex-direction: column;
+      .button-text {
+        writing-mode: vertical-lr;
+      }
+    }
   }
   .tabbed-panels.character-sheet-tabs {
     [role^='tablist'],
@@ -115,32 +75,25 @@
 }
 </style>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-  },
-  data() {
-    const tabs = [
-      { titleKey: 'IRONSWORN.Legacies', component: 'sf-legacies' },
-      { titleKey: 'IRONSWORN.Assets', component: 'sf-assets' },
-      { titleKey: 'IRONSWORN.Progress', component: 'sf-progresses' },
-      { titleKey: 'IRONSWORN.Connections', component: 'sf-connections' },
-      { titleKey: 'IRONSWORN.Notes', component: 'sf-notes' },
-    ]
-    return {
-      tabs,
-      currentTab: tabs[0],
-    }
-  },
-  methods: {
-    rollStat(stat) {
-      CONFIG.IRONSWORN.RollDialog.show({ actor: this.$actor, stat })
-    },
-    openCompendium(name) {
-      const pack = game.packs?.get(`foundry-ironsworn.${name}`)
-      pack?.render(true)
-    },
-  },
-}
+<script lang="ts" setup>
+import { computed, provide } from 'vue'
+import AttrBox from './components/attr-box.vue'
+import SfLegacies from './components/character-sheet-tabs/sf-legacies.vue'
+import SfConnections from './components/character-sheet-tabs/sf-connections.vue'
+import SfCharacterheader from './components/sf-characterheader.vue'
+import Tabs from './components/tabs/tabs.vue'
+import Tab from './components/tabs/tab.vue'
+import SfImpacts from './components/sf-impacts.vue'
+import SfAssets from './components/character-sheet-tabs/sf-assets.vue'
+import SfProgresses from './components/character-sheet-tabs/sf-progresses.vue'
+import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
+import { ActorKey } from './provisions.js'
+import PcConditionMeters from './components/resource-meter/pc-condition-meters.vue'
+import MomentumMeterSlider from './components/resource-meter/momentum-meter.vue'
+
+const props = defineProps<{
+  actor: any
+}>()
+
+provide(ActorKey, computed(() => props.actor) as any)
 </script>

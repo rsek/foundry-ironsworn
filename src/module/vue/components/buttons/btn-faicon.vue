@@ -1,34 +1,34 @@
 <template>
   <btn-icon
     :class="classes"
-    @click="$emit('click')"
     :tooltip="tooltip"
     :disabled="disabled"
+    @click="$emit('click')"
   >
-    <slot></slot>
+    <slot name="default"></slot>
   </btn-icon>
 </template>
 
-<script>
-export default {
-  props: {
-    icon: { type: String, required: true },
-    solid: { type: Boolean, default: true },
-    tooltip: String,
-    hoverBg: Boolean,
-    disabled: Boolean,
-  },
-  computed: {
-    classes() {
-      return {
-        fas: this.solid,
-        far: !this.solid,
-        [`fa-${this.icon}`]: true,
-        ['icon-bg-hover']: this.hoverBg,
-      }
-    },
-  },
-}
+<script lang="ts" setup>
+import { computed } from 'vue'
+import BtnIcon from './btn-icon.vue'
+
+const props = defineProps({
+  icon: { type: String, required: true },
+  solid: { type: Boolean, default: true },
+  tooltip: String,
+  hoverBg: Boolean,
+  disabled: Boolean,
+})
+
+defineEmits(['click'])
+
+const classes = computed(() => ({
+  fas: props.solid,
+  far: !props.solid,
+  [`fa-${props.icon}`]: true,
+  ['icon-bg-hover']: props.hoverBg,
+}))
 </script>
 
 <style lang="less">

@@ -1,32 +1,40 @@
 <template>
   <div class="flexcol">
-    <header class="sheet-header nogrow">
-      <document-img :document="actor" />
-      <document-name :document="actor" />
-    </header>
-
+    <SheetHeaderBasic :document="actor" class="nogrow" />
     <div v-if="foe">
       <div class="flexrow nogrow">
-        <rank-hexes
+        <RankPips
           :current="foe.data.rank"
           @click="setRank"
-          class="nogrow"
           style="margin-right: 1em"
         />
         <h4>{{ rankText }}</h4>
-        <btn-faicon class="block" icon="trash" @click="clearProgress" />
-        <btn-faicon class="block" icon="caret-right" @click="markProgress" />
+        <BtnFaicon class="block nogrow" icon="trash" @click="clearProgress" />
+        <BtnFaicon
+          class="block nogrow"
+          icon="caret-right"
+          @click="markProgress"
+        />
       </div>
 
       <!-- PROGRESS -->
       <div class="flexrow track nogrow" style="margin-bottom: 1em">
-        <progress-track :ticks="foe.data.current" />
+        <ProgressTrack
+          :rank="foe?.data.rank"
+          :ticks="foe.data.current"
+          data-tooltip-direction="RIGHT"
+        />
       </div>
 
       <hr class="nogrow" />
 
       <!-- DESCRIPTION -->
-      <div v-html="foe.data.description" />
+      <MceEditor
+        v-model="foe.data.description"
+        @save="saveDescription"
+        @change="throttledSaveDescription"
+      />
+      <!-- <div v-html="foe.data.description" /> -->
     </div>
 
     <div
@@ -35,14 +43,14 @@
       data-drop-type="progress"
       style="text-align: center; justify-items: space-around"
     >
-      <btn-faicon @click="addEmpty" class="block" icon="file">
-        {{ $t('IRONSWORN.Progress') }}</btn-faicon
+      <BtnFaicon @click="addEmpty" class="block" icon="file">
+        {{ $t('IRONSWORN.Progress') }}</BtnFaicon
       >
-      <btn-compendium class="block" compendium="ironswornfoes"
-        >{{ $t('IRONSWORN.Foes') }} (Ironsworn)</btn-compendium
+      <BtnCompendium class="block" compendium="ironswornfoes"
+        >{{ $t('IRONSWORN.Foes') }} (Ironsworn)</BtnCompendium
       >
-      <btn-compendium class="block" compendium="starforgedencounters"
-        >{{ $t('IRONSWORN.Foes') }} (Starforged)</btn-compendium
+      <BtnCompendium class="block" compendium="starforgedencounters"
+        >{{ $t('IRONSWORN.Foes') }} (Starforged)</BtnCompendium
       >
     </div>
   </div>
@@ -55,61 +63,77 @@
 }
 </style>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-  },
+<script setup lang="ts">
+import SheetHeaderBasic from '../sheet-header-basic.vue'
+import { computed, inject, provide } from 'vue'
+import { IronswornActor } from '../../actor/actor'
+import { $ActorKey, ActorKey } from '../provisions'
+import { throttle } from 'lodash'
+import RankPips from './rank-pips/rank-pips.vue'
+import BtnFaicon from './buttons/btn-faicon.vue'
+import BtnCompendium from './buttons/btn-compendium.vue'
+import MceEditor from './mce-editor.vue'
+import { RANKS, RANK_INCREMENTS } from '../../constants'
+import { ProgressDataProperties } from '../../item/itemtypes'
+import { FoeDataProperties } from '../../actor/actortypes'
+import Track from './progress/track.vue'
+import ProgressTrack from './progress/progress-track.vue'
 
-  computed: {
-    foe() {
-      return this.actor.items.find((x) => x.type === 'progress')
-    },
-    foundryFoe() {
-      return this.$actor.items.get(this.foe._id)
-    },
-    rankText() {
-      return this.$t(CONFIG.IRONSWORN.Ranks[this.actor.data.rank])
-    },
-  },
+const props = defineProps<{
+  actor: ReturnType<typeof IronswornActor.prototype.toObject> &
+    FoeDataProperties
+}>()
+provide(ActorKey, computed(() => props.actor) as any)
+const foe = props.actor.items.find(
+  (x) => x.type === 'progress'
+) as ProgressDataProperties
 
-  watch: {
-    async foe(newFoe) {
-      const data = { name: newFoe?.name, img: newFoe?.img }
-      await this.$actor.update(data)
-      await this.$actor.data.token.update(data)
-    },
-  },
+const $actor = inject($ActorKey)
+const foundryFoe = $actor?.items.get((foe as any)?._id)
 
-  methods: {
-    addEmpty() {
-      Item.create(
-        { name: 'NPC', type: 'progress', data: { subtype: 'progress' } },
-        { parent: this.$actor }
-      )
-    },
+const rankText = computed(() => {
+  return game.i18n.localize(RANKS[foe?.data.rank])
+})
 
-    openCompendium(name) {
-      const pack = game.packs?.get(`foundry-ironsworn.${name}`)
-      pack?.render(true)
-    },
+// async foe(newFoe) {
+//   const data = { name: newFoe?.name, img: newFoe?.img }
+//   await $actor?.update(data)
+//   await $actor?.data.token.update(data)
+// },
 
-    setRank(rank) {
-      this.foundryFoe?.update({ data: { rank } })
-      this.foe.data.rank = rank
-    },
-
-    clearProgress() {
-      this.foundryFoe?.update({ 'data.current': 0 })
-      this.foe.data.current = 0
-    },
-
-    markProgress() {
-      const increment = CONFIG.IRONSWORN.RankIncrements[this.foe.data.rank]
-      const newValue = Math.min(this.foe.data.current + increment, 40)
-      this.foundryFoe.update({ 'data.current': newValue })
-      this.foe.data.current = newValue
-    },
-  },
+function addEmpty() {
+  Item.create(
+    { name: 'NPC', type: 'progress', data: { subtype: 'foe' } },
+    { parent: $actor }
+  )
 }
+
+function openCompendium(name) {
+  const pack = game.packs?.get(`foundry-ironsworn.${name}`)
+  pack?.render(true)
+}
+
+function setRank(rank) {
+  foundryFoe?.update({ data: { rank } })
+  foe!.data.rank = rank
+}
+
+function clearProgress() {
+  foundryFoe?.update({ 'data.current': 0 })
+  foe.data.current = 0
+}
+
+function markProgress() {
+  const increment = RANK_INCREMENTS[foe?.data.rank]
+  const newValue = Math.min(foe?.data.current + increment, 40)
+  foundryFoe?.update({ 'data.current': newValue })
+  foe.data.current = newValue
+}
+
+function saveDescription() {
+  foundryFoe?.update({
+    data: { description: foe?.data.description },
+  })
+}
+const throttledSaveDescription = throttle(saveDescription, 1000)
 </script>

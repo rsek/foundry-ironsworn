@@ -1,58 +1,51 @@
 <template>
   <div class="flexcol">
-    <transition-group name="slide" tag="div" class="nogrow">
-      <div
-        class="item-row nogrow"
+    <CollapseTransition group>
+      <article
+        class="item-row nogrow flexrow"
         v-for="(bond, i) in item.data.bonds"
+        style="gap: 5px"
         :key="'bond' + i"
       >
-        <div class="flexrow" style="margin-bottom: 5px">
+        <div class="flexcol" style="gap: 5px">
           <input type="text" v-model="bond.name" @blur="save" />
-          <btn-faicon class="block" icon="trash" @click="deleteBond(i)" />
+          <textarea v-model="bond.notes" @blur="save" />
         </div>
-        <textarea v-model="bond.notes" @blur="save" />
-      </div>
-    </transition-group>
-
-    <btn-faicon
-      class="block"
-      icon="plus"
-      @click="addBond"
-      style="text-align: center"
-    />
+        <BtnFaicon class="block nogrow" icon="trash" @click="deleteBond(i)" />
+      </article>
+    </CollapseTransition>
+    <BtnFaicon class="block nogrow" icon="plus" @click="addBond" />
   </div>
 </template>
+<script setup lang="ts">
+import { computed, inject, provide } from 'vue'
+import { $ItemKey, ItemKey } from './provisions'
+import BtnFaicon from '../vue/components/buttons/btn-faicon.vue'
+import { BondsetDataPropertiesData } from '../item/itemtypes'
+import CollapseTransition from './components/transition/collapse-transition.vue'
 
-<style lang="less" scoped>
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 93px;
+const props = defineProps<{ item: any }>()
+provide(ItemKey, computed(() => props.item) as any)
+
+const $item = inject($ItemKey)
+
+function deleteBond(i) {
+  const data = props.item.data as BondsetDataPropertiesData
+  const bonds = Object.values(data.bonds)
+  bonds.splice(i, 1)
+  $item?.update({ data: { bonds } })
 }
-</style>
 
-<script>
-export default {
-  props: {
-    item: Object,
-  },
+function addBond() {
+  const data = props.item.data as BondsetDataPropertiesData
+  const bonds = Object.values(data.bonds)
+  bonds.push({ name: '', notes: '' })
+  $item?.update({ data: { bonds } })
+}
 
-  methods: {
-    deleteBond(i) {
-      const bonds = Object.values(this.item.data.bonds)
-      bonds.splice(i, 1)
-      this.$item.update({ data: { bonds } })
-    },
-
-    addBond() {
-      const bonds = Object.values(this.item.data.bonds)
-      bonds.push({ name: '', notes: '' })
-      this.$item.update({ data: { bonds } })
-    },
-
-    save() {
-      const bonds = Object.values(this.item.data.bonds)
-      this.$item.update({ data: { bonds } })
-    },
-  },
+function save() {
+  const data = props.item.data as BondsetDataPropertiesData
+  const bonds = Object.values(data.bonds)
+  $item?.update({ data: { bonds } })
 }
 </script>

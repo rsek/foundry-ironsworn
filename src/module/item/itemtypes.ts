@@ -2,6 +2,7 @@ import { IMove } from 'dataforged'
 import { RANKS } from '../constants'
 
 interface ProgressBase {
+  description: string
   rank: keyof typeof RANKS
   current: number
   completed: boolean
@@ -14,7 +15,7 @@ interface AssetField {
   value: string
 }
 
-interface AssetAbility {
+export interface AssetAbility {
   name?: string
   enabled: boolean
   description: string
@@ -29,6 +30,10 @@ interface AssetExclusiveOption {
 }
 
 interface AssetDataSourceData {
+  category: string
+  description?: string
+  requirement: string
+  color: string
   fields: AssetField[]
   abilities: AssetAbility[]
   track: {
@@ -40,7 +45,7 @@ interface AssetDataSourceData {
   exclusiveOptions: AssetExclusiveOption[]
 }
 
-interface AssetDataPropertiesData extends AssetDataSourceData {}
+export interface AssetDataPropertiesData extends AssetDataSourceData {}
 
 export interface AssetDataSource {
   type: 'asset'
@@ -62,7 +67,7 @@ interface ProgressDataSourceData extends ProgressBase {
   clockTicks: number
   clockMax: number
 }
-interface ProgressDataPropertiesData extends ProgressDataSourceData {}
+export interface ProgressDataPropertiesData extends ProgressDataSourceData {}
 
 export interface ProgressDataSource {
   type: 'progress'
@@ -101,7 +106,7 @@ interface Bond {
 interface BondsetDataSourceData {
   bonds: Bond[]
 }
-interface BondsetDataPropertiesData extends BondsetDataSourceData {}
+export interface BondsetDataPropertiesData extends BondsetDataSourceData {}
 
 export interface BondsetDataSource {
   type: 'bondset'

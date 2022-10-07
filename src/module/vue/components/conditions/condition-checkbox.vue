@@ -9,37 +9,46 @@
   </label>
 </template>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-    name: String,
-    global: Boolean,
-  },
+<script lang="ts" setup>
+import { inject, nextTick, Ref } from 'vue'
+import { IronswornSettings } from '../../../helpers/settings'
+import { $ActorKey, ActorKey } from '../../provisions'
 
-  methods: {
-    async input(ev) {
-      const actor = game.actors?.get(this.actor._id)
-      const value = ev.currentTarget.checked
-      let numDebilitiesMarked =
-        Object.values(this.actor.data.debility).filter((x) => x).length +
-        (value ? 1 : -1)
-      await actor.update({
-        data: {
-          debility: {
-            [this.name]: value,
-          },
-          momentumMax: 10 - numDebilitiesMarked,
-          momentumReset: Math.max(0, 2 - numDebilitiesMarked),
-        },
-      })
-      if (this.global) {
-        await CONFIG.IRONSWORN.IronswornSettings.maybeSetGlobalCondition(
-          this.name,
-          value
-        )
-      }
+const actor = inject(ActorKey) as Ref
+const $actor = inject($ActorKey)
+
+const props = defineProps<{
+  name: string
+  global?: boolean
+}>()
+
+async function input(ev: Event) {
+  const impactKey = 'debility'
+  const value = (ev.currentTarget as HTMLInputElement)?.checked
+  const data = {
+    data: {
+      [impactKey]: {
+        [props.name]: value,
+      },
     },
-  },
+  }
+  await $actor?.update(data)
+  await nextTick()
+  const numDebilitiesMarked = Object.values(actor.value.data.debility).filter(
+    (x) => x === true
+  ).length
+  await $actor?.update({
+    data: {
+      momentumMax: 10 - numDebilitiesMarked,
+      momentumReset: Math.max(0, 2 - numDebilitiesMarked),
+    },
+  })
+
+  if (props.global) {
+    await IronswornSettings.updateGlobalAttribute(data, [
+      'character',
+      'starship',
+    ])
+  }
 }
 </script>

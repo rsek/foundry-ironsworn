@@ -1,7 +1,6 @@
-import { capitalize } from 'lodash'
+import { compact, flatten } from 'lodash'
 import { moveDataByName, MoveOracle, MoveOracleEntry } from '../helpers/data'
 import { MoveContentCallbacks } from './movecontentcallbacks'
-import { HIT_TYPE, rollAndDisplayOracleResult } from './chatrollhelpers'
 import {
   DelveDomainDataProperties,
   DelveThemeDataProperties,
@@ -13,6 +12,10 @@ import { defaultActor } from '../helpers/actors'
 import { IronswornItem } from '../item/item'
 import { IronswornHandlebarsHelpers } from '../helpers/handlebars'
 import { cachedDocumentsForPack } from '../features/pack-cache'
+import { DfRollOutcome, RollOutcome } from '../rolls/ironsworn-roll'
+import { IronswornRollMessage, OracleRollMessage } from '../rolls'
+import { ChallengeResolutionDialog } from '../rolls/challenge-resolution-dialog'
+import { getFoundryTableByDfId } from '../dataforged'
 
 export class IronswornChatCard {
   id?: string | null
@@ -26,10 +29,48 @@ export class IronswornChatCard {
     return game.messages?.get(this.id || '')
   }
 
+  async attachMoveOracleContextMenu(html: JQuery) {
+    // Set up context-menu bindings
+    const moveLinks = html.find('a[draggable]')
+    const maybeTablePromises = moveLinks.map((_i, el) => {
+      const { pack, id } = el.dataset
+      if (!pack || !id) return []
+
+      const fPack = game.packs.get(pack)
+      const fItem = fPack?.get(id) as IronswornItem
+      if (fItem?.type !== 'sfmove') return []
+
+      const data = fItem.data as SFMoveDataProperties
+      const oracleIds = data.data.Oracles ?? []
+      return Promise.all(oracleIds.map(getFoundryTableByDfId))
+    })
+    const tables = compact(flatten(await Promise.all(maybeTablePromises)))
+    if (tables.length === 0) return
+
+    ContextMenu.create(
+      ui.chat!,
+      html,
+      `.message-content`,
+      tables.map((t) => ({
+        name: t.name || '',
+        icon: '<i class="isicon-oracle"></i>',
+        callback: async () => {
+          const msg = await OracleRollMessage.fromTableId(
+            t.id,
+            t.pack || undefined
+          )
+          msg.createOrUpdate()
+        },
+      }))
+    )
+  }
+
   updateBinding(message: ChatMessage, html: JQuery) {
     // Do not store html here
     this.id = message.id
     this.roll = message.isRoll ? message.roll : undefined
+
+    this.attachMoveOracleContextMenu(html)
 
     html
       .find('a.content-link')
@@ -44,6 +85,15 @@ export class IronswornChatCard {
     html
       .find('.burn-momentum-sf')
       .on('click', (ev) => this._sfBurnMomentum.call(this, ev))
+    html
+      .find('.ironsworn-roll-burn-momentum')
+      .on('click', (ev) => this._irBurnMomentum.call(this, ev))
+    html
+      .find('.oracle-roll .oracle-reroll')
+      .on('click', (ev) => this._oracleReroll.call(this, ev))
+    html
+      .find('.ironsworn-roll-resolve')
+      .on('click', (ev) => this._resolveChallenge.call(this, ev))
     html
       .find('.ironsworn__delvedepths__roll')
       .on('click', (ev) => this._delveDepths.call(this, ev))
@@ -80,35 +130,22 @@ export class IronswornChatCard {
       return (TextEditor as any)._onClickContentLink(ev)
     }
 
-    console.log(item)
-    for (const actor of game.actors?.contents || []) {
-      if (
-        (actor.moveSheet as any)?._state >= 0 &&
-        actor.moveSheet?.highlightMove
-      ) {
-        return actor.moveSheet.highlightMove(item)
-      }
-    }
-    item.sheet?.render(true)
+    CONFIG.IRONSWORN.emitter.emit('highlightMove', item.id ?? '')
   }
 
   async _oracleNavigate(ev: JQuery.ClickEvent) {
     ev.preventDefault()
     const { dfid } = ev.target.dataset
-    for (const actor of game.actors?.contents || []) {
-      if (
-        (actor.moveSheet as any)?._state >= 0 &&
-        actor.moveSheet?.highlightMove
-      ) {
-        return actor.moveSheet.highlightOracle(dfid)
-      }
-    }
+    CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
   }
 
   async _burnMomentum(ev: JQuery.ClickEvent) {
-    ev.preventDefault()
-
     const { actor, move, stat, hittype } = ev.target.dataset
+    const hitTypeKey = {
+      [RollOutcome.Miss]: 'Miss',
+      [RollOutcome.Weak_hit]: 'Weak',
+      [RollOutcome.Strong_hit]: 'Strong',
+    }[hittype]
 
     const theActor = game.actors?.get(actor)
     theActor?.burnMomentum()
@@ -117,23 +154,19 @@ export class IronswornChatCard {
     let result: string
     if (move) {
       const theMove = await moveDataByName(move)
-      result = theMove && theMove[capitalize(hittype.toLowerCase())]
+      result = theMove && theMove[hitTypeKey]
       bonusContent = MoveContentCallbacks[move]?.call(this, {
-        hitType: hittype as HIT_TYPE,
+        hitType: hittype as RollOutcome,
         stat,
       })
     } else {
-      const i18nKey = {
-        [HIT_TYPE.STRONG]: 'StrongHit',
-        [HIT_TYPE.WEAK]: 'WeakHit',
-        [HIT_TYPE.MISS]: 'Miss',
-      }[hittype]
-      result = `<strong>${game.i18n.localize('IRONSWORN.' + i18nKey)}</strong>`
+      const i18nKey = 'IRONSWORN.' + RollOutcome[parseInt(hittype)]
+      result = `<strong>${game.i18n.localize(i18nKey)}</strong>`
     }
 
     const parent = $(ev.currentTarget).parents('.message-content')
-    parent.find('.roll-result').addClass('strikethru')
-    parent.find('.roll-result button').prop('disabled', true)
+    parent.find('.move-outcome').addClass('strikethru')
+    parent.find('.move-outcome button').prop('disabled', true)
     parent.find('.momentum-burn').html(`
       <h3>${game.i18n.localize('IRONSWORN.MomentumBurnt')}</h3>
       ${result || ''}
@@ -151,15 +184,13 @@ export class IronswornChatCard {
 
     // Fetch the actor and move items
     const theActor = game.actors?.get(actor)
-    const pack = game.packs.get('foundry-ironsworn.starforgedmoves')
-    const theMove = (await pack?.getDocument(move)) as IronswornItem
+    const isPack = game.packs.get('foundry-ironsworn.ironswornmoves')
+    const sfPack = game.packs.get('foundry-ironsworn.starforgedmoves')
+    const theMove = ((await isPack?.getDocument(move)) ??
+      (await sfPack?.getDocument(move))) as IronswornItem
 
     // Get the new result
-    const k = {
-      [HIT_TYPE.STRONG]: 'Strong Hit',
-      [HIT_TYPE.WEAK]: 'Weak Hit',
-      [HIT_TYPE.MISS]: 'Miss',
-    }[hittype]
+    const k = DfRollOutcome[hittype]
     const moveData = theMove.data as SFMoveDataProperties
     const newOutcome = moveData.data.Outcomes?.[k]?.Text
 
@@ -168,8 +199,8 @@ export class IronswornChatCard {
 
     // Replace the chat-card HTML
     const parent = $(ev.currentTarget).parents('.message-content')
-    parent.find('.roll-result').addClass('strikethru')
-    parent.find('.roll-result button').prop('disabled', true)
+    parent.find('.move-outcome').addClass('strikethru')
+    parent.find('.move-outcome button').prop('disabled', true)
     parent.find('.momentum-burn').html(`
       <h3>${game.i18n.localize('IRONSWORN.MomentumBurnt')}</h3>
       <strong>${hittypetext}:</strong>
@@ -178,6 +209,30 @@ export class IronswornChatCard {
 
     const content = parent.html()
     await this.message?.update({ content })
+  }
+
+  async _irBurnMomentum(ev: JQuery.ClickEvent) {
+    ev.preventDefault()
+
+    const msgId = $(ev.target).parents('.chat-message').data('message-id')
+    const irmsg = await IronswornRollMessage.fromMessage(msgId)
+    return irmsg?.burnMomentum()
+  }
+
+  async _resolveChallenge(ev: JQuery.ClickEvent) {
+    ev.preventDefault()
+
+    const msgId = $(ev.target).parents('.chat-message').data('message-id')
+    ChallengeResolutionDialog.showForMessage(msgId)
+  }
+
+  async _oracleReroll(ev: JQuery.ClickEvent) {
+    ev.preventDefault()
+
+    const msgId = $(ev.target).parents('.chat-message').data('message-id')
+    const orm = await OracleRollMessage.fromMessage(msgId)
+    await orm?.forceRoll()
+    return orm?.createOrUpdate()
   }
 
   async _delveDepths(ev: JQuery.ClickEvent) {
@@ -197,10 +252,10 @@ export class IronswornChatCard {
       `
         <p class="flexrow" style="align-items: center;">
           <span>${oracle.name}</span>
-          <span class="roll die d10" style="flex: 0 0 25px;">${rollTotal}</span>
+          <span class="roll die d10 isiconbg-d10-blank" style="flex: 0 0 25px;">${rollTotal}</span>
         </p>
 
-        <h4 class="dice-formula">
+        <h4>
           ${result.low}–${result.high}: ${result.description}
         </h4>
       `
@@ -226,10 +281,10 @@ export class IronswornChatCard {
       `
         <p class="flexrow" style="align-items: center;">
           <span>${oracle.name}</span>
-          <span class="roll die d10" style="flex: 0 0 25px;">${rollTotal}</span>
+          <span class="roll die d10 isiconbg-d10-blank" style="flex: 0 0 25px;">${rollTotal}</span>
         </p>
 
-        <h4 class="dice-formula">
+        <h4>
           ${realResult?.low}–${realResult?.high}: ${realResult?.description}
         </h4>
       `
@@ -264,10 +319,10 @@ export class IronswornChatCard {
       `
         <p class="flexrow" style="align-items: center;">
           <span>${oracle.name}</span>
-          <span class="roll die d10" style="flex: 0 0 25px;">${rollTotal}</span>
+          <span class="roll die d10 isiconbg-d10-blank" style="flex: 0 0 25px;">${rollTotal}</span>
         </p>
 
-        <h4 class="dice-formula">
+        <h4>
           ${result?.low}–${result?.high}: ${result?.description}
         </h4>
       `
@@ -276,10 +331,18 @@ export class IronswornChatCard {
 
   async _sfOracleRoll(ev: JQuery.ClickEvent) {
     ev.preventDefault()
-    const pack = game.packs.get('foundry-ironsworn.starforgedoracles')
-    const { tableid } = ev.target.dataset
-    const table = (await pack?.getDocument(tableid)) as any | undefined
-    rollAndDisplayOracleResult(table, 'foundry-ironsworn.starforgedoracles')
+    const { tableid } = ev.currentTarget.dataset
+    const sfPack = game.packs.get('foundry-ironsworn.starforgedoracles')
+    const isPack = game.packs.get('foundry-ironsworn.ironswornoracles')
+    const table = ((await sfPack?.getDocument(tableid)) ??
+      (await isPack?.getDocument(tableid))) as RollTable | undefined
+    if (!table?.id) return
+
+    const msg = await OracleRollMessage.fromTableId(
+      table.id,
+      table.pack || undefined
+    )
+    msg.createOrUpdate()
   }
 
   async _sfOracleReroll(ev: JQuery.ClickEvent) {
@@ -294,10 +357,13 @@ export class IronswornChatCard {
 
     const tableId = parent.data('table-id')
     const table = await pack?.getDocument(tableId)
-    rollAndDisplayOracleResult(
-      table as RollTable,
-      'foundry-ironsworn.starforgedoracles'
+    if (!table?.id) return
+
+    const msg = await OracleRollMessage.fromTableId(
+      table.id,
+      table.pack || undefined
     )
+    msg.createOrUpdate()
   }
 
   async replaceSelectorWith(

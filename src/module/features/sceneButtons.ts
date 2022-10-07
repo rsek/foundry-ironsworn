@@ -9,7 +9,9 @@ function warn() {
 // Make sure a folder exists, e.g. ['Locations', 'Sector 05']
 async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
   let parentFolder: Folder | undefined
-  let directory: Folder[] | undefined = game.folders?.contents
+  let directory: Folder[] | undefined = game.folders?.filter(
+    (x) => x.type === 'Actor'
+  )
 
   for (const name of path) {
     if (directory === undefined) {
@@ -19,7 +21,9 @@ async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
     const existing = directory.find((x) => x.name === name)
     if (existing) {
       parentFolder = existing
-      directory = (existing as any).children
+      directory = (existing as any).children.map((child) => {
+        return child.folder /* v10 */ || child /* v9 */
+      })
       continue
     }
     parentFolder = await Folder.create({
@@ -114,14 +118,13 @@ function newVault() {
 }
 
 export function activateSceneButtonListeners() {
-  if (!IronswornSettings.starforgedToolsEnabled) return
-
   CONFIG.Canvas.layers['ironsworn'] = {
     layerClass: IronswornCanvasLayer,
     group: 'primary',
   }
 
   Hooks.on('getSceneControlButtons', (controls) => {
+    if (!IronswornSettings.starforgedToolsEnabled) return
     console.log({ controls })
     if (!game.user?.isGM) {
       return controls
@@ -130,50 +133,51 @@ export function activateSceneButtonListeners() {
     const sfControl: SceneControl = {
       name: 'Starforged',
       title: game.i18n.localize('IRONSWORN.StarforgedTools'),
-      icon: 'fas fa-space-shuttle',
+      icon: 'isicon-logo-starforged-dk',
       layer: 'ironsworn',
       visible: true,
       activeTool: 'select',
       tools: [
         {
           name: 'edit',
-          icon: 'fas fa-edit',
+          icon: 'isicon-region-sf',
+          // TODO: more informative string - 'set region'?
           title: game.i18n.localize('IRONSWORN.Edit'),
           onClick: editSector,
         },
         {
           name: 'sector',
-          icon: 'fas fa-globe',
+          icon: 'isicon-sector',
           title: game.i18n.localize('IRONSWORN.NewSector'),
           onClick: warn,
         },
         {
           name: 'star',
-          icon: 'fas fa-star',
+          icon: 'isicon-stellar-object',
           title: game.i18n.localize('IRONSWORN.NewStar'),
           onClick: newStar,
         },
         {
           name: 'planet',
-          icon: 'fas fa-globe-europe',
+          icon: 'isicon-world',
           title: game.i18n.localize('IRONSWORN.NewPlanet'),
           onClick: newPlanet,
         },
         {
           name: 'settlement',
-          icon: 'fas fa-city',
+          icon: 'isicon-settlement-sf',
           title: game.i18n.localize('IRONSWORN.NewSettlement'),
           onClick: newSettlement,
         },
         {
           name: 'derelict',
-          icon: 'fab fa-rocketchat',
+          icon: 'isicon-derelict',
           title: game.i18n.localize('IRONSWORN.NewDerelict'),
           onClick: newDerelict,
         },
         {
           name: 'vault',
-          icon: 'fab fa-quinscape',
+          icon: 'isicon-precursor-vault',
           title: game.i18n.localize('IRONSWORN.NewVault'),
           onClick: newVault,
         },
@@ -185,7 +189,17 @@ export function activateSceneButtonListeners() {
   })
 }
 
-class IronswornCanvasLayer extends CanvasLayer {
+// In v9 we can inherit directly from CanvasLayer and it's fine
+// In v10 we have to use InteractionLayer
+
+let baseKlass: any = CanvasLayer
+// @ts-ignore
+if (typeof InteractionLayer !== 'undefined') {
+  // @ts-ignore
+  baseKlass = InteractionLayer
+}
+
+class IronswornCanvasLayer extends baseKlass {
   static get layerOptions() {
     return foundry.utils.mergeObject(super.layerOptions, {
       zIndex: 180,

@@ -1,249 +1,85 @@
 <template>
-  <div class="flexcol">
+  <SheetBasic
+    :document="actor"
+    class="character-sheet-classic"
+    bodyClass="flexrow"
+  >
     <!-- Header row -->
-    <character-header :actor="actor"></character-header>
+    <template #header>
+      <CharacterHeader />
+    </template>
 
     <!-- Main body row -->
-    <div class="flexrow">
-      <!-- Momentum on left -->
-      <div class="flexcol margin-left">
-        <div class="flexrow" style="flex-wrap: nowrap">
-          <div class="flexcol stack momentum">
-            <stack
-              :actor="actor"
-              stat="momentum"
-              :top="10"
-              :bottom="-6"
-              :softMax="actor.data.momentumMax"
-            ></stack>
-            <hr class="nogrow" />
-            <div>
-              <btn-momentumburn :actor="actor" class="nogrow block stack-row">
-                {{ $t('IRONSWORN.Burn') }}
-              </btn-momentumburn>
-
-              {{ $t('IRONSWORN.Reset') }}: {{ actor.data.momentumReset }}
-              {{ $t('IRONSWORN.Max') }}:
-              {{ actor.data.momentumMax }}
-            </div>
-          </div>
-          <h4 class="vertical-v2">{{ $t('IRONSWORN.Momentum') }}</h4>
-        </div>
-      </div>
-
-      <!-- Center area -->
-      <div class="flexcol">
-        <!-- Attributes -->
-        <div class="flexrow stats">
-          <attr-box :actor="actor" attr="edge"></attr-box>
-          <attr-box :actor="actor" attr="heart"></attr-box>
-          <attr-box :actor="actor" attr="iron"></attr-box>
-          <attr-box :actor="actor" attr="shadow"></attr-box>
-          <attr-box :actor="actor" attr="wits"></attr-box>
-        </div>
-
-        <div class="flexrow">
-          <div class="flexcol">
-            <section class="sheet-area flexcol">
-              <!-- Bonds -->
-              <bonds :actor="actor"></bonds>
-
-              <hr class="nogrow" />
-              <!-- Assets -->
-              <div
-                class="flexcol ironsworn__drop__target"
-                data-drop-type="asset"
-              >
-                <h4 class="nogrow">{{ $t('IRONSWORN.Assets') }}</h4>
-
-                <transition-group name="slide" tag="div" class="nogrow">
-                  <div
-                    class="flexrow"
-                    v-for="(asset, i) in assets"
-                    :key="asset._id"
-                  >
-                    <order-buttons
-                      v-if="editMode"
-                      :i="i"
-                      :length="assets.length"
-                      @sortUp="assetSortUp"
-                      @sortDown="assetSortDown"
-                    />
-                    <asset :actor="actor" :asset="asset" />
-                  </div>
-                </transition-group>
-                <div class="flexrow nogrow" style="text-align: center">
-                  <btn-compendium class="block" compendium="ironswornassets">
-                    {{ $t('IRONSWORN.Assets') }}
-                  </btn-compendium>
-                </div>
-              </div>
-            </section>
-          </div>
-          <div class="flexcol">
-            <!-- Vows & Progress -->
-            <div
-              class="flexcol sheet-area ironsworn__drop__target"
-              data-drop-type="progress"
-            >
-              <transition-group name="slide" tag="div" class="nogrow">
-                <div
-                  class="flexrow nogrow"
-                  v-for="(item, i) in progressItems"
-                  :key="item._id"
-                >
-                  <order-buttons
-                    v-if="editMode"
-                    :i="i"
-                    :length="progressItems.length"
-                    @sortUp="progressSortUp"
-                    @sortDown="progressSortDown"
-                  />
-                  <progress-box :item="item" :actor="actor" />
-                </div>
-              </transition-group>
-
-              <progress-controls :actor="actor" />
-            </div>
-
-            <quill-editor theme="bubble" v-model="actor.data.biography" />
-          </div>
-        </div>
-
-        <!-- Conditions & Banes & Burdens -->
-        <section class="sheet-area nogrow">
-          <conditions :actor="actor" />
-        </section>
-      </div>
-
-      <!-- Stats on right -->
-      <div class="flexcol margin-right">
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="health">
-            {{ $t('IRONSWORN.Health') }}
-          </btn-rollstat>
-          <div class="flexcol stack health">
-            <stack :actor="actor" stat="health" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="spirit">
-            {{ $t('IRONSWORN.Spirit') }}
-          </btn-rollstat>
-          <div class="flexcol stack spirit">
-            <stack :actor="actor" stat="spirit" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-
-        <hr class="nogrow" />
-
-        <div class="flexrow nogrow" style="flex-wrap: nowrap">
-          <!-- TODO: restyle as h4-like -->
-          <btn-rollstat class="vertical-v2 text" :actor="actor" attr="supply">
-            {{ $t('IRONSWORN.Supply') }}
-          </btn-rollstat>
-          <div class="flexcol stack supply">
-            <stack :actor="actor" stat="supply" :top="5" :bottom="0"></stack>
-          </div>
-        </div>
-      </div>
+    <!-- Momentum on left -->
+    <div class="flexcol margin-left">
+      <MomentumMeterSlider labelPosition="right" data-tooltip-direction="UP" />
     </div>
-    <!-- <pre><code>{{foo}}</code></pre> -->
-  </div>
+
+    <!-- Center area -->
+    <div class="flexcol">
+      <!-- Attributes -->
+      <div class="flexrow stats" data-tooltip-direction="UP">
+        <attr-box attr="edge"></attr-box>
+        <attr-box attr="heart"></attr-box>
+        <attr-box attr="iron"></attr-box>
+        <attr-box attr="shadow"></attr-box>
+        <attr-box attr="wits"></attr-box>
+      </div>
+
+      <tabs style="margin-top: 0.5rem">
+        <tab :title="$t('IRONSWORN.Character')"><ironsworn-main /></tab>
+        <tab :title="$t('IRONSWORN.Notes')"><ironsworn-notes /></tab>
+      </tabs>
+
+      <!-- Conditions & Banes & Burdens -->
+      <section class="sheet-area nogrow">
+        <conditions />
+      </section>
+    </div>
+
+    <!-- Stats on right -->
+    <PcConditionMeters
+      class="flexcol margin-right"
+      data-tooltip-direction="UP"
+      labelPosition="left"
+    />
+  </SheetBasic>
 </template>
 
 <style lang="less" scoped>
+.character-sheet-classic {
+  gap: 10px;
+}
 .stat-roll {
   text-transform: uppercase;
 }
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 83px;
-}
-
-textarea.notes {
-  border-color: rgba(0, 0, 0, 0.1);
-  border-radius: 1px;
-  font-family: var(--font-primary);
-  resize: none;
-  flex: 1;
-  min-height: 150px;
-}
 </style>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-  },
-  computed: {
-    progressItems() {
-      return this.actor.items
-        .filter((x) => x.type === 'progress')
-        .sort((a, b) => (a.sort || 0) - (b.sort || 0))
-    },
-    assets() {
-      return this.actor.items
-        .filter((x) => x.type === 'asset')
-        .sort((a, b) => (a.sort || 0) - (b.sort || 0))
-    },
-    editMode() {
-      return this.actor.flags['foundry-ironsworn']?.['edit-mode']
-    },
-  },
-  watch: {
-    'actor.data.biography'() {
-      this.saveNotes()
-    },
-  },
-  methods: {
-    burnMomentum() {
-      this.$actor.burnMomentum()
-    },
-    rollStat(stat) {
-      CONFIG.IRONSWORN.RollDialog.show({ actor: this.$actor, stat })
-    },
-    openCompendium(name) {
-      const pack = game.packs?.get(`foundry-ironsworn.${name}`)
-      pack?.render(true)
-    },
-    saveNotes() {
-      this.$actor.update({ 'data.biography': this.actor.data.biography })
-    },
-    async applySort(oldI, newI, sortBefore, collection) {
-      const sorted = collection.sort(
-        (a, b) => (a.data.sort || 0) - (b.data.sort || 0)
-      )
-      const updates = SortingHelpers.performIntegerSort(sorted[oldI], {
-        target: sorted[newI],
-        siblings: sorted,
-        sortBefore,
-      })
-      await Promise.all(
-        updates.map(({ target, update }) => target.update(update))
-      )
-    },
-    assetSortUp(i) {
-      const items = this.$actor.items.filter((x) => x.type === 'asset')
-      this.applySort(i, i - 1, true, items)
-    },
-    assetSortDown(i) {
-      const items = this.$actor.items.filter((x) => x.type === 'asset')
-      this.applySort(i, i + 1, false, items)
-    },
-    progressSortUp(i) {
-      const items = this.$actor.items.filter((x) => x.type === 'progress')
-      this.applySort(i, i - 1, true, items)
-    },
-    progressSortDown(i) {
-      const items = this.$actor.items.filter((x) => x.type === 'progress')
-      this.applySort(i, i + 1, false, items)
-    },
-  },
-}
+<script setup lang="ts">
+import { ActorKey } from './provisions'
+import AttrBox from './components/attr-box.vue'
+import BtnMomentumburn from './components/buttons/btn-momentumburn.vue'
+import Stack from './components/stack/stack.vue'
+import { IronswornActor } from '../actor/actor'
+import { provide, computed } from 'vue'
+import CharacterHeader from './components/character-header.vue'
+import Conditions from './components/conditions/conditions.vue'
+import Tabs from './components/tabs/tabs.vue'
+import Tab from './components/tabs/tab.vue'
+import IronswornMain from './components/character-sheet-tabs/ironsworn-main.vue'
+import IronswornNotes from './components/character-sheet-tabs/ironsworn-notes.vue'
+import { CharacterDataProperties } from '../actor/actortypes'
+import SheetBasic from './sheet-basic.vue'
+import PcConditionMeters from './components/resource-meter/pc-condition-meters.vue'
+import MomentumMeterSlider from './components/resource-meter/momentum-meter.vue'
+
+const props = defineProps<{
+  actor: ReturnType<typeof IronswornActor.prototype.toObject>
+}>()
+const actorData = props.actor as CharacterDataProperties
+
+provide(
+  ActorKey,
+  computed(() => props.actor)
+)
 </script>

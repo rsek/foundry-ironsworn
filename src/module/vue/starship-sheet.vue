@@ -1,39 +1,25 @@
 <template>
-  <div class="flexcol">
-    <header class="sheet-header nogrow">
-      <document-img :document="actor" />
-      <document-name :document="actor" />
-    </header>
-
-    <tabbed-panels
-      :actor="actor"
-      :tabs="tabs"
-      name="starship-sheet-tabs"
-      ariaOrientation="horizontal"
-    >
-    </tabbed-panels>
+  <SheetBasic :document="actor">
+    <Tabs>
+      <Tab :title="$t('IRONSWORN.Assets')">
+        <SfAssets />
+      </Tab>
+      <Tab :title="$t('IRONSWORN.Notes')">
+        <SfNotes />
+      </Tab>
+    </Tabs>
 
     <hr class="nogrow" />
 
     <section class="flexrow nogrow">
       <div style="text-align: center">
-        <condition-checkbox
-          class="nogrow"
-          :actor="actor"
-          name="battered"
-          :global="true"
-        />
+        <condition-checkbox class="nogrow" name="battered" :global="true" />
       </div>
       <div style="text-align: center">
-        <condition-checkbox
-          class="nogrow"
-          :actor="actor"
-          name="cursed"
-          :global="true"
-        />
+        <condition-checkbox class="nogrow" name="cursed" :global="true" />
       </div>
     </section>
-  </div>
+  </SheetBasic>
 </template>
 
 <style lang="less" scoped>
@@ -41,7 +27,6 @@
   border-bottom: 1px solid grey;
 }
 .tab {
-  text-align: center;
   padding: 5px;
   &.active {
     background-color: darkgray;
@@ -49,28 +34,20 @@
 }
 </style>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-  },
+<script setup lang="ts">
+import { provide, computed } from 'vue'
+import { IronswornActor } from '../actor/actor'
+import Tabs from './components/tabs/tabs.vue'
+import Tab from './components/tabs/tab.vue'
+import SfAssets from './components/character-sheet-tabs/sf-assets.vue'
+import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
+import ConditionCheckbox from './components/conditions/condition-checkbox.vue'
+import SheetBasic from './sheet-basic.vue'
+import { ActorKey } from './provisions.js'
 
-  data() {
-    const tabs = [
-      { titleKey: 'IRONSWORN.Assets', component: 'sf-assets' },
-      { titleKey: 'IRONSWORN.Notes', component: 'sf-notes' },
-    ]
-    return {
-      tabs,
-      currentTab: tabs[0],
-    }
-  },
+const props = defineProps<{
+  actor: ReturnType<typeof IronswornActor.prototype.toObject>
+}>()
 
-  methods: {
-    openCompendium() {
-      const pack = game.packs?.get('foundry-ironsworn.starforgedassets')
-      pack?.render(true)
-    },
-  },
-}
+provide(ActorKey, computed(() => props.actor) as any)
 </script>

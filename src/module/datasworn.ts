@@ -1,11 +1,5 @@
 import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData'
-import { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData.js'
-import { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData.js'
-import { IOracle, IOracleCategory, ironsworn, IRow } from 'dataforged'
-import { max } from 'lodash'
-import { marked } from 'marked'
 import { IronswornActor } from './actor/actor'
-import { hash } from './dataforged'
 import { IronswornItem } from './item/item.js'
 
 const THEME_IMAGES = {
@@ -99,8 +93,6 @@ const FOE_IMAGES = {
 }
 
 const PACKS = [
-  'foundry-ironsworn.ironswornitems',
-  'foundry-ironsworn.ironswornassets',
   'foundry-ironsworn.ironsworndelvethemes',
   'foundry-ironsworn.ironsworndelvedomains',
   'foundry-ironsworn.ironswornfoes',
@@ -116,44 +108,6 @@ export async function importFromDatasworn() {
     const idsToDelete = pack.index.map((x: any) => x._id)
     await Item.deleteDocuments(idsToDelete, { pack: key })
   }
-
-  // Moves
-  const movesJson = await fetch(
-    'systems/foundry-ironsworn/assets/moves.json'
-  ).then((x) => x.json())
-  const movesToCreate = [] as (ItemDataConstructorData &
-    Record<string, unknown>)[]
-  for (const category of movesJson.Categories) {
-    for (const move of category.Moves) {
-      movesToCreate.push({
-        type: 'move',
-        name: move.Name,
-        img: 'icons/dice/d10black.svg',
-        data: {
-          description: move.Description,
-          strong: move.Strong,
-          weak: move.Weak,
-          miss: move.Miss,
-          stats: move.Stats || [],
-        },
-      })
-    }
-  }
-  await Item.createDocuments(movesToCreate, {
-    pack: 'foundry-ironsworn.ironswornitems',
-  })
-
-  // Assets
-  const assetsJson = await fetch(
-    'systems/foundry-ironsworn/assets/assets.json'
-  ).then((x) => x.json())
-  const assetsToCreate = assetsJson.map((raw) => ({
-    type: 'asset',
-    ...raw,
-  }))
-  await Item.createDocuments(assetsToCreate, {
-    pack: 'foundry-ironsworn.ironswornassets',
-  })
 
   // Themes
   const themesJson = await fetch(
@@ -288,84 +242,4 @@ export async function importFromDatasworn() {
       foeItem.data as unknown as Record<string, unknown>,
     ])
   }
-
-  // Oracles from Dataforged
-  const oraclesToCreate: RollTableDataConstructorData[] = []
-  function tableData(
-    table: IRow[],
-    $id: string,
-    name: string,
-    category: string,
-    description: string
-  ): RollTableDataConstructorData {
-    const renderedDescription = marked.parseInline(description ?? '')
-    const maxRoll = max(table.map((x) => x.Ceiling || 0)) //oracle.Table && maxBy(oracle.Table, (x) => x.Ceiling)?.Ceiling
-    return {
-      _id: hash($id),
-      flags: {
-        dfId: $id,
-        category: category,
-      },
-      name,
-      img: 'icons/dice/d10black.svg',
-      description: renderedDescription,
-      formula: `d${maxRoll}`,
-      replacement: true,
-      displayRoll: true,
-      /* folder: // would require using an additional module */
-      results: table
-        ?.map((tableRow) => {
-          let text: string
-          if (tableRow.Result && tableRow.Summary) {
-            text = `${tableRow.Result} (${tableRow.Summary})`
-          } else text = tableRow.Result ?? ''
-          return {
-            range: [tableRow.Floor, tableRow.Ceiling],
-            text: tableRow.Result && text,
-          } as TableResultDataConstructorData
-        })
-        .filter((x) => x.range[0] !== null),
-    }
-  }
-  function processOracle(oracle: IOracle) {
-    if (oracle.Table) {
-      oraclesToCreate.push(
-        tableData(
-          oracle.Table,
-          oracle.$id,
-          oracle.Display.Title,
-          oracle.Category,
-          oracle.Description ?? ''
-        )
-      )
-      for (const tableEntry of oracle.Table) {
-        if (tableEntry.Subtable) {
-          const name = tableEntry.Result
-          oraclesToCreate.push(
-            tableData(
-              tableEntry.Subtable,
-              `${oracle.$id}/${name}`,
-              name,
-              oracle.Category,
-              tableEntry.Result
-            )
-          )
-        }
-      }
-    }
-
-    for (const child of oracle.Oracles ?? []) processOracle(child)
-  }
-  async function processCategory(cat: IOracleCategory) {
-    for (const oracle of cat.Oracles ?? []) processOracle(oracle)
-    for (const child of cat.Categories ?? []) await processCategory(child)
-  }
-
-  for (const category of ironsworn['Oracle Categories']) {
-    await processCategory(category)
-  }
-  await RollTable.createDocuments(oraclesToCreate, {
-    pack: 'foundry-ironsworn.ironswornoracles',
-    keepId: true,
-  })
 }

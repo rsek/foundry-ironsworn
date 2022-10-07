@@ -1,111 +1,38 @@
 <template>
-  <div class="flexcol">
-    <header class="sheet-header nogrow">
-      <document-img :document="actor" />
-      <document-name :document="actor" />
-    </header>
-
+  <SheetBasic :document="actor" class="shared-sheet">
     <section class="sheet-area nogrow">
-      <h4 class="clickable text" @click="rollSupply">
-        {{ $t('IRONSWORN.Supply') }}
-      </h4>
-
-      <boxrow
-        style="line-height: 25px"
-        :min="0"
+      <ConditionMeter
+        sliderStyle="horizontal"
+        attr="supply"
+        :statLabel="$t('IRONSWORN.Supply')"
         :max="5"
-        :current="actor.data.supply"
-        @click="setSupply"
+        :min="0"
+        :currentValue="actor.data.supply"
+        documentType="Actor"
+        :global="IronswornSettings.globalSupply"
       />
     </section>
 
     <section v-if="hasBonds" class="sheet-area nogrow">
-      <bonds :actor="actor" />
+      <bonds :compact-progress="true" />
     </section>
 
-    <section
-      class="sheet-area ironsworn__drop__target"
-      data-drop-type="progress"
-    >
-      <transition-group name="slide" tag="div" class="nogrow">
-        <div
-          class="flexrow nogrow"
-          v-for="(item, i) in activeItems"
-          :key="item._id"
-        >
-          <order-buttons
-            v-if="editMode"
-            :i="i"
-            :length="activeItems.length"
-            @sortUp="sortUp"
-            @sortDown="sortDown"
-          />
-          <progress-box
-            :item="item"
-            :actor="actor"
-            @completed="progressCompleted"
-          />
-        </div>
-      </transition-group>
+    <active-completed-progresses />
 
-      <progress-controls :actor="actor" />
+    <section class="sheet-area">
+      <h4 class="nogrow">{{ $t('IRONSWORN.Notes') }}</h4>
+      <mce-editor
+        v-model="actor.data.biography"
+        @save="saveNotes"
+        @change="throttledSaveNotes"
+      />
     </section>
-
-    <section
-      class="item-row nogrow progress-completed"
-      style="margin-top: 1rem"
-    >
-      <h3>
-        <btn-faicon
-          :disabled="completedItems.length === 0"
-          class="text collapse-control"
-          :class="completedClass"
-          :icon="completedCaret"
-          @click="expandCompleted = !expandCompleted"
-        >
-          {{ $t('IRONSWORN.Completed') }}
-        </btn-faicon>
-      </h3>
-      <transition
-        name="slide"
-        tag="div"
-        class="nogrow completed"
-        style="margin: 0; padding: 0"
-      >
-        <div v-if="expandCompleted">
-          <transition-group name="slide" tag="div" class="nogrow">
-            <div
-              class="flexrow"
-              v-for="(item, i) in completedItems"
-              :key="item._id"
-            >
-              <order-buttons
-                v-if="editMode"
-                :i="i"
-                :length="completedItems.length"
-                @sortUp="completedSortUp"
-                @sortDown="completedSortDown"
-              />
-              <progress-box :item="item" :actor="actor" :showStar="true" />
-            </div>
-          </transition-group>
-        </div>
-      </transition>
-    </section>
-
-    <textarea
-      class="notes"
-      :placeholder="$t('IRONSWORN.Notes')"
-      v-model="actor.data.biography"
-      @blur="saveNotes"
-    />
-  </div>
+  </SheetBasic>
 </template>
 
 <style lang="less" scoped>
-.slide-enter-active,
-.slide-leave-active {
-  max-height: 83px;
+.stat-roll {
+  text-transform: uppercase;
 }
 
 h3 {
@@ -123,93 +50,34 @@ textarea.notes {
 }
 </style>
 
-<script>
-export default {
-  props: {
-    actor: Object,
-  },
-  data() {
-    return {
-      expandCompleted: false,
-      highlightCompleted: false,
-    }
-  },
-  computed: {
-    progressItems() {
-      return [
-        ...this.actor.items.filter((x) => x.type === 'vow'),
-        ...this.actor.items.filter((x) => x.type === 'progress'),
-      ].sort((a, b) => (a.sort || 0) - (b.sort || 0))
-    },
-    activeItems() {
-      return this.progressItems.filter((x) => !x.data.completed)
-    },
-    completedItems() {
-      return this.progressItems.filter((x) => x.data.completed)
-    },
-    editMode() {
-      return this.actor.flags['foundry-ironsworn']?.['edit-mode']
-    },
-    completedCaret() {
-      return 'fa fa-caret-' + (this.expandCompleted ? 'down' : 'right')
-    },
-    completedClass() {
-      return this.highlightCompleted ? 'highlighted' : undefined
-    },
-    hasBonds() {
-      const bonds = this.actor.items.find((x) => x.type === 'bondset')
-      const markedBonds = bonds?.data?.bonds?.length
-      return markedBonds && markedBonds > 0
-    },
-  },
-  methods: {
-    setSupply(_ev, value) {
-      this.$actor.update({ data: { supply: value } })
-      CONFIG.IRONSWORN.IronswornSettings.maybeSetGlobalSupply(value)
-    },
-    rollSupply() {
-      CONFIG.IRONSWORN.RollDialog.show({
-        actor: this.$actor,
-        stat: 'supply',
-      })
-    },
-    progressCompleted() {
-      this.highlightCompleted = true
-      clearTimeout(this.highlightCompletedTimer)
-      this.highlightCompletedTimer = setTimeout(() => {
-        this.highlightCompleted = false
-      }, 2000)
-    },
-    saveNotes() {
-      this.$actor.update({ 'data.biography': this.actor.data.biography })
-    },
-    async applySort(oldI, newI, sortBefore, filterFn) {
-      const foundryItems = this.$actor.items
-        .filter((x) => x.type === 'progress')
-        .filter((x) => x.data.data.subtype !== 'bond')
-        .filter(filterFn)
-        .sort((a, b) => (a.data.sort || 0) - (b.data.sort || 0))
-      const updates = SortingHelpers.performIntegerSort(foundryItems[oldI], {
-        target: foundryItems[newI],
-        siblings: foundryItems,
-        sortBefore,
-      })
-      await Promise.all(
-        updates.map(({ target, update }) => target.update(update))
-      )
-    },
-    sortUp(i, ...args) {
-      this.applySort(i, i - 1, true, (x) => !x.data.data.completed)
-    },
-    sortDown(i) {
-      this.applySort(i, i + 1, false, (x) => !x.data.data.completed)
-    },
-    completedSortUp(i) {
-      this.applySort(i, i - 1, true, (x) => x.data.data.completed)
-    },
-    completedSortDown(i) {
-      this.applySort(i, i + 1, false, (x) => x.data.data.completed)
-    },
-  },
+<script setup lang="ts">
+import { provide, computed, inject } from 'vue'
+import { $ActorKey, ActorKey } from './provisions'
+import Bonds from './components/bonds.vue'
+import MceEditor from './components/mce-editor.vue'
+import { throttle } from 'lodash'
+import ActiveCompletedProgresses from './components/active-completed-progresses.vue'
+import { BondsetDataProperties } from '../item/itemtypes'
+import SheetBasic from './sheet-basic.vue'
+import ConditionMeter from './components/resource-meter/condition-meter.vue'
+import { IronswornSettings } from '../helpers/settings.js'
+
+const props = defineProps<{
+  actor: any
+}>()
+provide(ActorKey, computed(() => props.actor) as any)
+const $actor = inject($ActorKey)
+
+const hasBonds = computed(() => {
+  const bonds = props.actor.items.find((x) => x.type === 'bondset') as
+    | BondsetDataProperties
+    | undefined
+  const markedBonds = bonds?.data?.bonds?.length
+  return markedBonds && markedBonds > 0
+})
+
+function saveNotes() {
+  $actor?.update({ 'data.biography': props.actor.data.biography })
 }
+const throttledSaveNotes = throttle(saveNotes, 1000)
 </script>

@@ -1,4 +1,5 @@
-import { IMove, IMoveCategory, starforged } from 'dataforged'
+import { IMove, IMoveCategory } from 'dataforged'
+import { ISMoveCategories, SFMoveCategories } from '../dataforged/data'
 import { IronswornItem } from '../item/item'
 import { MoveDataSource } from '../item/itemtypes'
 import { cachedDocumentsForPack } from './pack-cache'
@@ -15,16 +16,19 @@ export interface Move {
   dataforgedMove?: IMove
 }
 
-export async function createStarforgedMoveTree(): Promise<MoveCategory[]> {
+// For some reason, rollupJs mangles this
+
+async function createMoveTree(
+  compendiumName: string,
+  categories: IMoveCategory[]
+): Promise<MoveCategory[]> {
   const ret = [] as MoveCategory[]
 
   // Make sure compendium is loaded
-  const compendiumMoves = await cachedDocumentsForPack(
-    'foundry-ironsworn.starforgedmoves'
-  )
+  const compendiumMoves = await cachedDocumentsForPack(compendiumName)
 
   // Construct the base tree
-  for (const category of starforged['Move Categories']) {
+  for (const category of categories) {
     ret.push(walkCategory(category, compendiumMoves as IronswornItem[]))
   }
 
@@ -34,7 +38,22 @@ export async function createStarforgedMoveTree(): Promise<MoveCategory[]> {
   // Fire the hook and allow extensions to modify the list
   await Hooks.call('ironswornMoves', ret)
 
+  // Prevent Vue from adding reactivity to Foundry objects
+  for (const cat of ret) {
+    for (const move of cat.moves) {
+      ;(move.moveItem as any) = Object.freeze(move.moveItem)
+    }
+  }
+
   return ret
+}
+
+export async function createIronswornMoveTree(): Promise<MoveCategory[]> {
+  return createMoveTree('foundry-ironsworn.ironswornmoves', ISMoveCategories)
+}
+
+export async function createStarforgedMoveTree(): Promise<MoveCategory[]> {
+  return createMoveTree('foundry-ironsworn.starforgedmoves', SFMoveCategories)
 }
 
 function walkCategory(
@@ -72,11 +91,19 @@ async function augmentWithFolderContents(categories: MoveCategory[]) {
   ) as Folder | undefined
   if (!folder || folder.contents.length == 0) return
 
-  categories.push({
-    displayName: name,
-    moves: folder.contents.map((moveItem) => ({
-      displayName: moveItem.name,
+  const customMoves = [] as Move[]
+  for (const moveItem of folder.contents) {
+    if (moveItem.documentName !== 'Item' || moveItem.type !== 'sfmove') continue
+    customMoves.push({
+      displayName: moveItem.name ?? '(move)',
       moveItem,
-    })) as Move[],
-  })
+    })
+  }
+
+  if (customMoves.length > 0) {
+    categories.push({
+      displayName: name,
+      moves: customMoves,
+    })
+  }
 }

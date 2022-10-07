@@ -1,27 +1,33 @@
 <template>
   <btn-isicon
     @click="rollProgress()"
-    :tooltip="tooltip"
+    :tooltip="$t('IRONSWORN.MakeAProgressRoll', { score: progressScore })"
     class="progress-roll"
-    :class="attr"
     icon="d10-tilt"
-    :disabled="disabled"
+    :disabled="props.disabled"
   >
-    <slot></slot>
+    <slot name="default"></slot>
   </btn-isicon>
 </template>
 
-<script>
-export default {
-  props: {
-    item: Object, // the progress track
-    tooltip: String,
-    disabled: Boolean,
-  },
-  methods: {
-    rollProgress() {
-      this.$item.fulfill()
-    },
-  },
+<script setup lang="ts">
+import { computed } from '@vue/reactivity'
+import { inject } from '@vue/runtime-core'
+import { ProgressDataProperties } from '../../../item/itemtypes'
+import { $ItemKey } from '../../provisions'
+import BtnIsicon from './btn-isicon.vue'
+
+const props = defineProps<{ item: any; tooltip?: string; disabled?: boolean }>()
+
+const $item = inject($ItemKey, undefined)
+
+const progressScore = computed(() => {
+  if (!$item) return 0
+  const itemData = $item.data as ProgressDataProperties
+  return Math.floor(itemData.data.current / 4)
+})
+
+function rollProgress() {
+  $item?.fulfill()
 }
 </script>

@@ -3,14 +3,11 @@
     <div v-for="category in truths" :key="category.Name">
       <h2 style="margin-top: 1em">{{ category.Name }}</h2>
 
-      <sf-truth
+      <SfTruth
         v-for="option in category.Table"
-        :key="option.Description"
+        :key="option.$id"
         :radiogroup="category.Name"
-        :description="option.Description"
-        :details="option.Details"
-        :quest="option['Quest Starter']"
-        :table="option.Table"
+        :truth="option"
         @change="radioselect"
       />
 
@@ -18,46 +15,48 @@
     </div>
 
     <hr />
-    <!-- TODO: wire up this button -->
-    <btn-faicon class="ironsworn__sf__save__truths block" icon="feather">
+    <BtnFaicon class="block" icon="feather" @click="saveTruths">
       {{ $t('IRONSWORN.SaveYourTruths') }}
-    </btn-faicon>
+    </BtnFaicon>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    truths: Array,
-  },
+<script setup lang="ts">
+import { computed, inject, reactive } from 'vue'
+import SfTruth from './components/sf-truth.vue'
+import BtnFaicon from './components/buttons/btn-faicon.vue'
+import { ISettingTruth } from 'dataforged'
 
-  data() {
-    const output = {}
-    for (const category of this.truths) {
-      output[category.Name] = null
-    }
+const props = defineProps<{ truths: ISettingTruth[] }>()
 
-    return { output }
-  },
+const output = {}
+for (const category of props.truths ?? []) {
+  output[category.Name] = null
+}
 
-  computed: {
-    composedOutput() {
-      return this.truths
-        .map((category) => category.Name)
-        .map((name) =>
-          this.output[name]
-            ? `<h2>${name}</h2>\n${this.output[name]}\n\n`
-            : undefined
-        )
-        .filter((x) => x !== undefined)
-        .join('\n')
-    },
-  },
+const data = reactive({ output })
 
-  methods: {
-    radioselect(category, value) {
-      this.output[category] = value
-    },
-  },
+const composedOutput = computed(() =>
+  props.truths
+    .map((category) => category.Name)
+    .map((name) =>
+      data.output[name]
+        ? `<h2>${name}</h2>\n${data.output[name]}\n\n`
+        : undefined
+    )
+    .filter((x) => x !== undefined)
+    .join('\n')
+)
+function radioselect(category, value) {
+  data.output[category] = value
+}
+
+async function saveTruths() {
+  const journal = await JournalEntry.create({
+    name: game.i18n.localize('IRONSWORN.SFSettingTruthsTitle'),
+    content: composedOutput.value,
+  })
+  journal?.sheet?.render(true)
+  CONFIG.IRONSWORN.emitter.emit('closeApp')
 }
 </script>

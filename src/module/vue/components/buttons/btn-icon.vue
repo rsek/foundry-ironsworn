@@ -1,12 +1,10 @@
-<!-- generic button used to build other icon buttons (for FA, IS, and SVG icons) -->
+<!-- generic button used to build other icon buttons that use an icon font or SVGs -->
 <!-- the default value for a button element's type is "submit", which refreshes the page; "type=button" obviates the need for preventing the submit action with JS. -->
 <template>
   <button
     class="icon-button clickable"
-    :class="classes"
     type="button"
-    @click="$emit('click')"
-    :title="tooltip"
+    :tooltip="tooltip"
     :aria-label="tooltip"
     :data-tooltip="tooltip"
     :disabled="disabled"
@@ -16,18 +14,15 @@
     </span>
   </button>
 </template>
-<script>
-export default {
-  props: {
-    tooltip: String,
-    disabled: Boolean,
-  },
-  computed: {
-    hasDefaultSlot() {
-      return !!this.$slots.default
-    },
-  },
-}
+
+<script setup lang="ts">
+import { computed, useSlots } from '@vue/runtime-core'
+
+defineProps<{ tooltip?: string; disabled?: boolean }>()
+// so the span can be omitted if there's no slot content
+const hasDefaultSlot = computed(() => {
+  return !!useSlots().default?.()[0].children?.length
+})
 </script>
 
 <style lang="less">
@@ -38,14 +33,9 @@ export default {
   align-content: center;
   text-align: center;
   justify-content: center;
-  padding: 0.25em;
+  padding: 0.2em;
   &:not(:empty) {
-    gap: 0.25em;
-  }
-  &:before {
-    line-height: 1;
-    height: 1em;
-    width: 1em;
+    gap: 0.2em;
   }
   &:empty {
     // restricts width + removes border if there's no text
@@ -54,9 +44,11 @@ export default {
     line-height: 1;
     height: max-content;
     width: max-content;
-    padding: 2px;
-    gap: 0;
-    // min-width: 1.25em;
+  }
+  &:before {
+    line-height: 1;
+    height: 1em;
+    width: 1em;
   }
 }
 
@@ -64,10 +56,13 @@ export default {
 .icon-button {
   .button-text {
     // makes this seamless with existing buttons that don't need this styling
-    display: contents;
+    display: inline;
+    strong {
+      white-space: nowrap;
+    }
   }
-  &.vertical-v2 {
-    writing-mode: unset; // prevents this fix from breaking the button layout in FF
+  &.vertical {
+    writing-mode: initial !important; // prevents this fix from breaking the button layout in FF
     flex-direction: column;
     .button-text {
       line-height: inherit;

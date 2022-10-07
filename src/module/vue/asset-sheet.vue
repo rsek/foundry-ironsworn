@@ -1,38 +1,69 @@
 <template>
   <div>
-    <header class="sheet-header">
+    <SheetHeader class="nogrow">
       <document-name :document="item" />
-    </header>
+    </SheetHeader>
 
-    <p>
+    <section class="flexrow" style="gap: 5px">
       <input
         v-if="editMode"
         type="text"
-        v-model="item.data.description"
-        @blur="setDescription"
+        v-model="item.data.category"
+        @blur="setCategory"
       />
+      <h3 v-else>{{ item.data.category }}</h3>
+
+      <input
+        type="color"
+        v-if="editMode"
+        v-model="item.data.color"
+        @change="setColor"
+      />
+    </section>
+
+    <section style="margin-top: 1em" v-if="item.data.description">
+      <div v-if="editMode">
+        <label>{{ $t('IRONSWORN.Description') }}</label>
+        <input
+          type="text"
+          v-model="item.data.description"
+          @blur="setDescription"
+        />
+      </div>
       <span v-else v-html="$enrichHtml(item.data.description)"></span>
-    </p>
+    </section>
+
+    <section style="margin-top: 1em">
+      <div v-if="editMode">
+        <label>Requirement</label>
+        <input
+          type="text"
+          v-model="item.data.requirement"
+          @blur="setRequirement"
+        />
+      </div>
+      <span v-else v-html="$enrichHtml(item.data.requirement)"></span>
+    </section>
 
     <!-- FIELDS -->
     <div v-if="hasFields || editMode">
       <h3>{{ $t('IRONSWORN.Fields') }}</h3>
-      <asset-fieldsedit :item="item" />
+      <asset-fieldsedit />
     </div>
 
     <!-- ABILITIES -->
     <h3>{{ $t('IRONSWORN.Abilities') }}</h3>
-    <asset-abilitiesedit :item="item" />
+    <asset-abilitiesedit />
 
     <!-- OPTIONS -->
     <div v-if="hasOptions || editMode">
       <h3>{{ $t('IRONSWORN.Options') }}</h3>
-      <asset-optionsedit :item="item" />
+      <asset-optionsedit />
     </div>
 
     <!-- TRACK -->
     <h3>{{ $t('IRONSWORN.Track') }}</h3>
-    <asset-trackedit :item="item" />
+    <asset-trackedit />
   </div>
 </template>
 
@@ -50,30 +81,43 @@ h3 {
 }
 </style>
 
-<script>
-export default {
-  props: {
-    item: Object,
-  },
+<script setup lang="ts">
+import SheetHeader from './sheet-header.vue'
+import { computed, inject, provide, Ref } from 'vue'
+import DocumentName from './components/document-name.vue'
+import AssetFieldsedit from './components/asset/asset-fieldsedit.vue'
+import AssetAbilitiesedit from './components/asset/asset-abilitiesedit.vue'
+import AssetOptionsedit from './components/asset/asset-optionsedit.vue'
+import AssetTrackedit from './components/asset/asset-trackedit.vue'
+import { $ItemKey, ItemKey } from './provisions'
 
-  computed: {
-    editMode() {
-      return this.item.flags['foundry-ironsworn']?.['edit-mode']
-    },
+const $item = inject($ItemKey)
 
-    hasOptions() {
-      return Object.values(this.item.data.exclusiveOptions || []).length > 0
-    },
+const props = defineProps<{ item: any }>()
+provide(ItemKey, computed(() => props.item) as any)
 
-    hasFields() {
-      return Object.values(this.item.data.fields || []).length > 0
-    },
-  },
+const editMode = computed(() => {
+  return props.item.flags['foundry-ironsworn']?.['edit-mode']
+})
 
-  methods: {
-    setDescription() {
-      this.$item.update({ data: { description: this.item.data.description } })
-    },
-  },
+const hasOptions = computed(() => {
+  return Object.values(props.item.data.exclusiveOptions || []).length > 0
+})
+
+const hasFields = computed(() => {
+  return Object.values(props.item.data.fields || []).length > 0
+})
+
+function setRequirement() {
+  $item?.update({ data: { requirement: props.item.data.requirement } })
+}
+function setDescription() {
+  $item?.update({ data: { description: props.item.data.description } })
+}
+function setCategory() {
+  $item?.update({ data: { category: props.item.data.category } })
+}
+function setColor() {
+  $item?.update({ data: { color: props.item.data.color } })
 }
 </script>

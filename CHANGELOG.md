@@ -1,10 +1,184 @@
 # Changelog
 
-## In progress
+## Next Release
 
-- Code reorganization and format normalization
-- Update to the right version of the Foundry types
-- Fix the dev server for fewer errors, and so that HMR works
+## 1.18.1
+
+- Reinstate visibility of the description field for custom assets ([#499](https://github.com/ben/foundry-ironsworn/pull/499))
+
+## 1.18.0
+
+- Updated asset-selection UI, with a better browsing experience ([#488](https://github.com/ben/foundry-ironsworn/pull/488))
+- Upgraded progress widgets and legacies tab ([#486](https://github.com/ben/foundry-ironsworn/pull/486))
+- Updated Spanish content from the official translation ([#489](https://github.com/ben/foundry-ironsworn/pull/489))
+- Added some new location icons by ErRains and KirinCorleone ([#485](https://github.com/ben/foundry-ironsworn/pull/485))
+- Re-imported Starforged foe actors to fix their icon images
+
+## 1.17.20
+
+- Remove the window transparency in the SF theme
+
+## 1.17.19
+
+- Ironsworn assets are now sourced from Dataforged, fixing a number of data issues ([#483](https://github.com/ben/foundry-ironsworn/pull/483))
+- Add icons to Starforged encounter items ([#478](https://github.com/ben/foundry-ironsworn/pull/478))
+- Behind the scenes: record asset categories ([#481](https://github.com/ben/foundry-ironsworn/pull/481)) and colors ([#484](https://github.com/ben/foundry-ironsworn/pull/484)) to compendium items
+- Add a bit of graphic flair to SF assets ([#482](https://github.com/ben/foundry-ironsworn/pull/482))
+
+## 1.17.18
+
+- Only show the "star" control on progresses on the Starforged sheet ([#475](https://github.com/ben/foundry-ironsworn/pull/475))
+- Better choice of "Fulfill Your Vow" when rolling a vow on a shared sheet
+
+## 1.17.17
+
+- Fix the zero-clock bug and add tooltips to clock wedges ([#473](https://github.com/ben/foundry-ironsworn/pull/473))
+
+## 1.17.16
+
+- Ensure all character stats are numbers (fixes [#460](https://github.com/ben/foundry-ironsworn/pull/460))
+- Add an "oracle" icon and lots of v10 tooltips ([#466](https://github.com/ben/foundry-ironsworn/pull/466))
+- Use the _Fulfill Your Vow_ move when doing a progress roll on a vow ([#470](https://github.com/ben/foundry-ironsworn/pull/470))
+- Update the rank pips and clock components ([#469](https://github.com/ben/foundry-ironsworn/pull/469))
+- Standardize tables and rules-text displays ([#468](https://github.com/ben/foundry-ironsworn/pull/468))
+- Internal cleanups and tightening of types
+
+## 1.17.15
+
+- Fix name randomizer for settlements
+
+## 1.17.14
+
+- Fix clicking links embedded in notes tabs
+
+## 1.17.13
+
+- Re-import Dataforged under v9 to make sure the `data` field is present
+
+## 1.17.12
+
+- The return of oracles in the Ironsworn move sheet ([#465](https://github.com/ben/foundry-ironsworn/pull/465))
+- Normalize some labels in the SF location sheet ([#464](https://github.com/ben/foundry-ironsworn/pull/464))
+- Periodically refresh document caches to prevent the garbage collector from purging them and breaking oracle rolls
+
+## 1.17.11
+
+- Improvements to oracles ([#463](https://github.com/ben/foundry-ironsworn/pull/463)):
+  - Right-clicking on a move-result chat card will now display shortcuts for rolling oracles if any are mentioned
+  - The move sheet now uses the standard oracle control for in-move oracles, which makes them more compact, and saves a click and some chat space if you just want to roll the oracle
+
+## 1.17.10
+
+- Fix momentum calculation
+
+## 1.17.9
+
+- Fix the move editor sheet
+
+## 1.17.8
+
+- Fix Ironsworn moves and oracles
+
+## 1.17.7
+
+- Starforged-theme editor color fixes
+- Add a dialog for resolving a roll with extra challenge dice ([#458](https://github.com/ben/foundry-ironsworn/pull/458))
+
+## 1.17.6
+
+- Prevent progress tracks from having negative values
+- Fix a bug when clicking a post-move oracle-roll button in the chat
+- Render links in Ironsworn oracles on import
+
+## 1.17.5
+
+- Fix a visual glitch with the "Health" label buttons in the Ironsworn sheet.
+- Fix a custom-oracles bug introduced with the new pipeline
+
+## 1.17.4
+
+- Fix a bug with creating duplicate folders with scene buttons in v10 ([#454](https://github.com/ben/foundry-ironsworn/pull/454))
+- New oracle-rolling pipeline ([#452](https://github.com/ben/foundry-ironsworn/pull/452))
+
+## 1.17.3
+
+- Remove "Oracle NN:" from Ironsworn oracle names ([#453](https://github.com/ben/foundry-ironsworn/pull/453))
+- Fix a visual glitch with progress tracks in v10
+- Retire the classic Site sheet
+
+## 1.17.2
+
+- Freshen up the compact PC sheet, and use the new rolling pipeline ([#448](https://github.com/ben/foundry-ironsworn/pull/448))
+- Fix a bug where clicking on a progress-item's image would change the parent actor's image
+- Include "connection" items in the progress lists of shared and Ironsworn sheets
+- Retire the Handlebars move/oracle sheet, in favor of the Vue one introduced in #419 ([#439](https://github.com/ben/foundry-ironsworn/pull/439))
+
+## 1.17.1
+
+- Make delve-site roll rendering a bit less ugly, until we can make it more pretty ([#446](https://github.com/ben/foundry-ironsworn/pull/446))
+
+## 1.17.0
+
+- Add a new dice-rolling engine, and upgrade the move/stat/track/progress rolling dialogs ([#422](https://github.com/ben/foundry-ironsworn/pull/422))
+- Fix the die-roll backgrounds in the SF theme
+- Don't open editors for non-editable items when clicking a move link and no character move sheet is open.
+- Add a start for Polish translations (see [#428](https://github.com/ben/foundry-ironsworn/issues/428))
+- Retire the "Classic" character ([#438](https://github.com/ben/foundry-ironsworn/pull/438)) and shared ([#440](https://github.com/ben/foundry-ironsworn/pull/440)) sheets
+- Improve choice of foe compendium in the "shared" sheet ([#442](https://github.com/ben/foundry-ironsworn/pull/442))
+
+## 1.16.9
+
+- Fix the new-character dialog to correctly generate SF character names
+- Bump dataforged to [v1.5.0](https://github.com/rsek/dataforged/releases/tag/v1.5.0) and re-import data ([#433](https://github.com/ben/foundry-ironsworn/pull/433))
+
+## 1.16.8
+
+- Fix the values for momentum max/reset for new characters
+- Fix chat-message reroll and momentum-burn buttons for Ironsworn rolls (beta feature)
+
+## 1.16.7
+
+- Fix a v10 visual glitch around minimizing the move sheet
+- Fix a bug with a blank SF setting-truths dialog
+
+## 1.16.6
+
+- Fix the first-start dialog save button ([#423](https://github.com/ben/foundry-ironsworn/pull/423))
+- Move "manual" content from the readme to the [wiki](https://github.com/ben/foundry-ironsworn/wiki/Getting-Started)
+- Run the "Ironsworn Startup" macro on startup, if it exists
+
+## 1.16.5
+
+- (v10) Fix a bug with move navigation ([#421](https://github.com/ben/foundry-ironsworn/pull/421))
+- Properly announce setting and clearing of custom conditions in the chat window
+- Fix selection of movesheet with combinations of Ironsworn/Starforged sheets/toolboxes and beta checkbox
+
+## 1.16.4
+
+- Custom conditions with custom names ([#420](https://github.com/ben/foundry-ironsworn/pull/420))
+
+## 1.16.3
+
+- Ironsworn sheet: completed area, and move notes to a tab ([#417](https://github.com/ben/foundry-ironsworn/pull/417))
+- Import Ironsworn moves from dataforged ([#418](https://github.com/ben/foundry-ironsworn/pull/418))
+- (Beta) Allow use of the new move/oracle UI for Ironsworn([#419](https://github.com/ben/foundry-ironsworn/pull/419))
+
+## 1.16.2
+
+- First release that fully loads under Foundry v10 ([#413](https://github.com/ben/foundry-ironsworn/pull/413))
+
+## 1.16.1
+
+- A small fix that should allow DF Manual Rolls to work properly (fixes [#411](https://github.com/ben/foundry-ironsworn/issues/411))
+
+## 1.16.0
+
+- Replace the quirky Quill editor with a Vue wrapper around Foundry's TinyMCE.
+- Under-the-hood updates:
+  - Code reorganization and format normalization
+  - Update to the right version of the Foundry types
+  - Update `system.json` to include the new v10 fields
+  - Port the code to Vue3 using Vite (also [#407](https://github.com/ben/foundry-ironsworn/pull/407))
 
 ## 1.15.14
 

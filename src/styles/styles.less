@@ -1,4 +1,5 @@
-@import url('../../system/assets/font/icon-font.css');
+@import './ironsworn-icons.less';
+@import 'mixins.less';
 
 ::-webkit-scrollbar-track {
   box-shadow: 0 0 1px #999 inset;
@@ -13,6 +14,41 @@
 :root {
   scrollbar-width: thin;
   scrollbar-color: #444 rgba(0, 0, 0, 0.1);
+  --std-animation: all 0.5s ease;
+  --widget-fill-opacity: 1;
+  --widget-fill-opacity-preview: 0.5;
+  --widget-stroke-width: 1px;
+  --ironsworn-color-bg: white;
+
+  --ironsworn-color-red-1: #ff4f5e;
+  // original sample from PDF: #c9181a
+  // previously: #ec230e
+  --ironsworn-color-red-2: #e33722;
+  --ironsworn-color-red-3: #8e0006;
+  --ironsworn-color-purple-1: #e056e4;
+  // original sample from PDF: #8c1d81
+  --ironsworn-color-purple-2: #b32fb5;
+  --ironsworn-color-purple-3: #6d0075;
+  --ironsworn-color-blue-1: #00d1ff;
+  // original sample from PDF: #35a9e0
+  --ironsworn-color-blue-2: #00a2ef;
+  --ironsworn-color-blue-3: #0062e3;
+
+  --ironsworn-color-legacy-quests: var(--ironsworn-color-red-2);
+  --ironsworn-color-legacy-bonds: var(--ironsworn-color-purple-2);
+  --ironsworn-color-legacy-discoveries: var(--ironsworn-color-blue-2);
+
+  --ironsworn-color-danger: hsl(0, 80%, 40%);
+  --ironsworn-color-danger-faded: hsl(0, 80%, 40%);
+  --ironsworn-color-warning: hsl(55, 100%, 50%);
+  --ironsworn-color-warning-faded: hsl(55, 100%, 50%);
+  --ironsworn-color-success: hsl(200, 80%, 40%);
+  --ironsworn-color-success-faded: hsl(200, 80%, 40%);
+  --ironsworn-dice-background: #afafaf;
+}
+
+.grid {
+  display: grid;
 }
 
 .ironsworn {
@@ -29,15 +65,10 @@
     font-family: inherit;
   }
 
-  button:hover,
-  button:focus {
-    background: unset;
-    border: unset;
-    outline: none;
-    box-shadow: unset;
-  }
-
-  button {
+  button
+  // &.dialog .dialog-buttons button,
+  // &.dialog .dialog-buttons button.default
+  {
     width: unset;
     margin: unset;
     background: unset;
@@ -47,8 +78,14 @@
     // line-height: unset;
     font-family: inherit;
     cursor: pointer;
+    &:hover,
+    &:focus {
+      // background: unset;
+      // border: unset;
+      outline: none;
+      box-shadow: unset;
+    }
   }
-
   .window-content {
     height: 100%;
     padding: 5px;
@@ -70,57 +107,6 @@
     }
   }
 
-  .sheet-header {
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-bottom: 10px;
-    flex: 0 0 auto;
-
-    .profile-img {
-      flex: 0 0 50px;
-      height: 50px;
-      margin-right: 10px;
-    }
-
-    .header-fields {
-      flex: 1;
-      height: 100px;
-    }
-
-    h1.charname {
-      flex-grow: 1;
-      height: 50px;
-      padding: 0px;
-      margin: 5px 0;
-      border-bottom: 0;
-
-      input {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
-    }
-  }
-
-  .xp {
-    flex-grow: 0;
-    flex-direction: row;
-    flex-basis: 140px;
-    align-items: center;
-
-    .xp {
-      height: 15px;
-      flex-basis: 15px;
-      border: 1px solid;
-      margin: 3px;
-      line-height: 13px;
-      text-align: center;
-    }
-  }
-
   .margin-left {
     flex: 0;
     border-right: 1px solid;
@@ -134,25 +120,6 @@
     margin-left: 5px;
     position: relative;
   }
-
-  .asset-entry h3 {
-    margin-bottom: 0;
-  }
-
-  .asset-summary {
-    transition: all 0.5s ease;
-    overflow: hidden;
-
-    &.collapsed {
-      height: 0px;
-    }
-
-    ul,
-    ol {
-      margin: 0;
-    }
-  }
-
   .item-list {
     flex: 1 0 100px;
     overflow-y: scroll;
@@ -175,17 +142,9 @@
   }
 
   .vertical {
-    // padding: 0 5px;
     writing-mode: vertical-lr;
     border: none;
     width: 1.5rem;
-    line-height: 1.5rem;
-  }
-
-  .vertical-v2 {
-    writing-mode: vertical-lr;
-    border: none;
-    width: 1.25rem;
 
     i {
       display: inline-block;
@@ -208,6 +167,7 @@
       z-index: 1;
       padding: 0;
       &:hover,
+      &.hover,
       &.selected,
       &[aria-selected='true'] {
         z-index: 10; // with position: relative, ensures that hovered item borders/filters aren't rendered behind other items
@@ -228,31 +188,10 @@
     }
   }
 
-  .track {
-    flex-wrap: nowrap;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-
-    .track-box {
-      flex: 1 0 20px;
-      max-height: 30px;
-      border: 1px solid;
-      margin-right: -1px;
-      stroke-width: 5;
-      text-align: center;
-      align-items: center;
-      justify-items: center;
-    }
-  }
-
-  .rank-pip {
-    flex: 0 1 auto;
-    stroke-width: 10;
-    margin: 1px !important;
-  }
-
-  .clickable {
+  // TODO: restructure this styling so that it also applies to dialog-buttons. probably with mixins?
+  .interactive {
+    transition: var(--std-animation);
+    cursor: pointer;
     &.disabled, // FIXME: ditch this class, its redundant with more semantic options
     &:disabled,
     &[aria-disabled="true"] {
@@ -260,20 +199,47 @@
       pointer-events: none;
       opacity: 0.5;
     }
-    &.block,
-    &.text {
-      &:hover {
-        transition: 0.5s ease;
-      }
-      &:active {
-        transition: 0.2s ease;
-      }
+  }
+
+  &.dialog .dialog-buttons button {
+    // .interactive();
+    // TODO: reimplement the above when updating roll dialog
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .button-text {
+      .clickable();
+      .nogrow();
+      .initial-caps();
+      width: max-content;
+      height: max-content;
     }
+
+    i {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  .clickable {
+    .interactive();
     &.text {
       justify-content: flex-start;
     }
-    transition: 0.5s ease;
-    cursor: pointer;
+    svg,
+    &.svg {
+      &.selected,
+      &[aria-selected='true'] {
+        fill-opacity: 1;
+      }
+      &.hover,
+      &:hover {
+        fill-opacity: 0.35;
+      }
+      &:active {
+        fill-opacity: 0.5;
+      }
+    }
   }
 
   .stats {
@@ -301,15 +267,17 @@
       justify-items: center;
       align-items: center;
       border: 1px solid;
-      transition: 0.5s ease;
+      transition: var(--std-animation);
     }
   }
 
   .compact {
+    h2,
     h3,
     h4,
     h5 {
       margin: 3px 0;
+      border: none;
     }
   }
 
@@ -502,66 +470,206 @@ hr {
 }
 
 .ironsworn-roll {
+  h3,
+  button {
+    .initial-caps();
+  }
   .hit-type {
     font-weight: bold;
     font-variant: all-small-caps;
   }
+
+  [class*=' isiconbg-'],
+  [class^='isiconbg-'] {
+    &:before {
+      background-color: var(--ironsworn-dice-background);
+    }
+  }
+
+  @dice-glow-offset: 0px 0px 5px;
 
   .roll {
     width: 24px;
     line-height: 24px;
     display: inline-block;
     margin-right: 1px;
-    background-image: url('icons/svg/d6-grey.svg');
     background-repeat: no-repeat;
     background-size: 24px 24px;
     font-weight: bold;
     text-align: center;
 
     &.d4 {
-      background-image: url('icons/svg/d4-grey.svg');
+      background-image: url('../../icons/svg/d4-grey.svg');
     }
 
     &.d6 {
-      background-image: url('icons/svg/d6-grey.svg');
+      background-color: var(--ironsworn-dice-background);
+      mask-image: url('/assets/icons/d6-blank.svg');
+      content: '';
     }
 
     &.d8 {
-      background-image: url('icons/svg/d8-grey.svg');
+      background-image: url('../../icons/svg/d8-grey.svg');
     }
 
     &.d10 {
-      background-image: url('icons/svg/d10-grey.svg');
+      background-color: var(--ironsworn-dice-background);
+      mask-image: url('/assets/icons/d10-blank.svg');
+      content: '';
     }
 
     &.d12 {
-      background-image: url('icons/svg/d12-grey.svg');
+      background-image: url('../../icons/svg/d12-grey.svg');
     }
 
     &.d20 {
-      background-image: url('icons/svg/d20-grey.svg');
+      background-image: url('../../icons/svg/d20-grey.svg');
     }
 
-    &.min,
+    &.min:not(.challenge),
     &.challenge.max {
-      color: #aa0200;
-      filter: drop-shadow(1px 1px 4px darkred);
+      color: var(--ironsworn-color-danger) !important;
+      filter: drop-shadow(
+        @dice-glow-offset var(--ironsworn-color-danger-faded)
+      );
     }
 
-    &.max,
+    &.max:not(.challenge),
     &.challenge.min {
-      color: #18520b;
-      filter: drop-shadow(1px 1px 4px darkgreen);
+      color: var(--ironsworn-color-success) !important;
+      filter: drop-shadow(
+        @dice-glow-offset var(--ironsworn-color-success-faded)
+      );
     }
 
     &.canceled {
-      filter: drop-shadow(1px 1px 4px orange);
+      color: var(--ironsworn-color-warning) !important;
+      filter: drop-shadow(
+        @dice-glow-offset var(--ironsworn-color-warning-faded)
+      ) !important;
     }
+  }
+
+  del .roll {
+    text-decoration: line-through;
+    color: var(--ironsworn-color-warning) !important;
+    filter: drop-shadow(
+      @dice-glow-offset var(--ironsworn-color-warning-faded)
+    ) !important;
   }
 }
 
 .bonus-content .dice-formula {
   word-break: normal;
+}
+
+// roll-graphic.hbs
+
+.ironsworn-roll-title {
+  margin: 0;
+}
+
+@graphic-gap: 0.25rem;
+
+.ironsworn-roll {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.roll-graphic.dice-formula {
+  display: flex;
+  flex-flow: row nowrap;
+  flex: auto;
+  gap: @graphic-gap;
+  justify-content: center;
+  margin: 0;
+  padding: @graphic-gap;
+  * {
+    margin: 0;
+  }
+
+  .die {
+    flex-grow: 0;
+  }
+  .indeterminate-value {
+    opacity: 0.5;
+  }
+  .action-score-capped {
+    text-decoration: dotted underline;
+  }
+  .score {
+    font-weight: bold;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .challenge-dice {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    gap: (@graphic-gap / 2);
+    .challenge-die {
+    }
+  }
+}
+
+.outcome-shortcuts {
+  display: contents;
+}
+.roll-outcome {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+  * {
+    margin: 0;
+  }
+
+  .outcome-label {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: larger;
+    span {
+      display: inline;
+      white-space: nowrap;
+    }
+    .outcome-text {
+      font-weight: bold;
+    }
+  }
+}
+// preroll-dialog.hbs
+.preroll-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  button {
+    .initial-caps();
+  }
+
+  .roll-trigger-text {
+  }
+
+  .trigger-options {
+  }
+
+  .form-group {
+    padding: 0;
+    border: none;
+  }
+
+  .advanced-roll-options {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid;
+  }
+  .advanced-roll-options-toggle {
+  }
 }
 
 table td:first-child {
@@ -581,24 +689,22 @@ table td:first-child {
   }
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.4s ease;
-  overflow: hidden;
-  max-height: 500px; // NOTE: fill this in where you know the right number
-  opacity: 1;
+.hover-controls-anchor {
+  position: relative;
+
+  .hover-controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    transition: all 0.2s ease;
+  }
+
+  &:hover .hover-controls {
+    opacity: 1;
+  }
 }
-.slide-enter,
-.slide-leave-to {
-  max-height: 0 !important;
-  opacity: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  border-top: 0 !important;
-  border-bottom: 0 !important;
-}
+
 // workaround to make FA easier to use as button decorations without adding a whole extra element. the pseudo-element is already there, and can be simply be attached to the parent element rather than it being an <i> element
 .fa,
 .fab,

@@ -11,6 +11,8 @@ interface CharacterDataSourceData {
   supply: number
   experience: number
   momentum: number
+  momentumReset: number
+  momentumMax: number
   debility: {
     corrupted: boolean
     cursed: boolean
@@ -25,6 +27,10 @@ interface CharacterDataSourceData {
     doomed: boolean
     indebted: boolean
     battered: boolean
+    custom1: boolean
+    custom1name: string
+    custom2: boolean
+    custom2name: string
   }
   legacies: {
     quests: number
@@ -47,7 +53,7 @@ export interface CharacterDataProperties {
   data: CharacterDataPropertiesData
 }
 
-interface CharacterDataSource {
+export interface CharacterDataSource {
   type: 'character'
   data: CharacterDataSourceData
 }
@@ -55,6 +61,7 @@ interface CharacterDataSource {
 ////////////////////////////////////////
 
 interface SharedDataSourceData {
+  biography: string
   supply: number
 }
 type SharedDataPropertiesData = SharedDataSourceData
@@ -135,6 +142,7 @@ export interface StarshipDataProperties {
 interface LocationDataSourceData {
   subtype: string
   klass: string
+  description: string
 }
 type LocationDataPropertiesData = LocationDataSourceData
 
