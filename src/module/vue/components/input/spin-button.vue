@@ -1,9 +1,10 @@
 <template>
-  <btn-faicon
+  <BtnFaicon
     tabindex="-1"
     class="spin-button block"
-    :class="classes"
-    aria-hidden="true"
+    :class="{
+      [type]: true,
+    }"
     v-model.number="value"
     :tooltip="tooltip"
     :icon="icon"
@@ -12,7 +13,7 @@
     @click="$emit('click', value)"
   />
 </template>
-<style lang="less">
+<style lang="less" scoped>
 .spin-button {
   cursor: pointer;
   overflow: hidden;
@@ -23,30 +24,26 @@
   }
 }
 </style>
-<script>
-export default {
-  props: {
-    parentId: { type: String, required: true },
-    step: { type: Number, default: 1 },
-    tooltip: { type: String },
-    type: { type: String, options: ['increase', 'decrease'], required: true },
-    disabled: { type: Boolean, default: false },
-  },
+<script lang="ts" setup>
+import { computed } from '@vue/reactivity'
+import BtnFaicon from '../buttons/btn-faicon.vue'
 
-  computed: {
-    value() {
-      return this.type === 'increase'
-        ? parseInt(this.step)
-        : parseInt(-this.step)
-    },
-    icon() {
-      return this.type === 'increase' ? 'plus' : 'minus'
-    },
-    classes() {
-      return {
-        [this.type]: true,
-      }
-    },
-  },
-}
+const props = withDefaults(
+  defineProps<{
+    parentId: string
+    step?: number
+    tooltip: string
+    type: 'increase' | 'decrease'
+    disabled?: boolean
+  }>(),
+  {
+    step: 1,
+    disabled: false,
+  }
+)
+
+const value = computed(() =>
+  props.type === 'increase' ? props.step : -props.step
+)
+const icon = computed(() => (props.type === 'increase' ? 'plus' : 'minus'))
 </script>
