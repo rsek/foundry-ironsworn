@@ -8,10 +8,7 @@
     <div class="flexrow">
       <!-- Momentum on left -->
       <div class="flexcol margin-left nogrow" style="width: min-content">
-        <MomentumMeterSlider
-          labelPosition="right"
-          data-tooltip-direction="UP"
-        />
+        <MomentumMeter labelPosition="right" data-tooltip-direction="UP" />
       </div>
 
       <!-- Center area -->
@@ -89,7 +86,7 @@ import SfProgresses from './components/character-sheet-tabs/sf-progresses.vue'
 import SfNotes from './components/character-sheet-tabs/sf-notes.vue'
 import { ActorKey } from './provisions.js'
 import PcConditionMeters from './components/resource-meter/pc-condition-meters.vue'
-import MomentumMeterSlider from './components/resource-meter/momentum-meter.vue'
+import MomentumMeter from './components/resource-meter/momentum-meter.vue'
 
 const props = defineProps<{
   actor: any

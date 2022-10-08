@@ -12,7 +12,7 @@
     <!-- Main body row -->
     <!-- Momentum on left -->
     <div class="flexcol margin-left">
-      <MomentumMeterSlider labelPosition="right" data-tooltip-direction="UP" />
+      <MomentumMeter labelPosition="right" data-tooltip-direction="UP" />
     </div>
 
     <!-- Center area -->
@@ -71,7 +71,7 @@ import IronswornNotes from './components/character-sheet-tabs/ironsworn-notes.vu
 import { CharacterDataProperties } from '../actor/actortypes'
 import SheetBasic from './sheet-basic.vue'
 import PcConditionMeters from './components/resource-meter/pc-condition-meters.vue'
-import MomentumMeterSlider from './components/resource-meter/momentum-meter.vue'
+import MomentumMeter from './components/resource-meter/momentum-meter.vue'
 
 const props = defineProps<{
   actor: ReturnType<typeof IronswornActor.prototype.toObject>

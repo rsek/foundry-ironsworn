@@ -80,7 +80,7 @@
           v-if="data.data.track.enabled"
           attr="track"
           documentType="Item"
-          sliderStyle="horizontal"
+          orientation="horizontal"
           :max="data.data.track.max"
           :currentValue="data.data.track.current"
           :read-only="true"

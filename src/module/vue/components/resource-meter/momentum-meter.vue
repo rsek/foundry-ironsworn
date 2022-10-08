@@ -1,14 +1,14 @@
 <template>
-  <AttrSlider
+  <AttrInput
     class="momentum-meter"
     attr="momentum"
     documentType="Actor"
     :labelPosition="labelPosition"
-    :sliderStyle="props.sliderStyle"
-    :current-value="actor?.data.momentum ?? 2"
+    :value="actor?.data.momentum ?? 2"
     :min="-6"
     :max="10"
     :softMax="actor?.data.momentumMax"
+    :widgetStyle="widgetStyle"
     :segmentClass="{
       [actor.data.momentumReset]: 'segment-momentum-reset',
     }"
@@ -27,7 +27,7 @@
         {{ $t('IRONSWORN.Momentum') }}
       </BtnMomentumburn>
     </template>
-  </AttrSlider>
+  </AttrInput>
 </template>
 
 <style lang="less">
@@ -45,21 +45,14 @@
 </style>
 
 <script lang="ts" setup>
-import { inject, Ref } from 'vue'
+import { inject, PropType, Ref } from 'vue'
 import { IronswornActor } from '../../../actor/actor.js'
 import { CharacterDataProperties } from '../../../actor/actortypes.js'
 import { ActorKey } from '../../provisions.js'
 import BtnMomentumburn from '../buttons/btn-momentumburn.vue'
+import AttrInput from './attr-input.vue'
 
-import AttrSlider from './attr-slider.vue'
-
-const props = withDefaults(
-  defineProps<{
-    sliderStyle?: 'horizontal' | 'vertical'
-    labelPosition?: 'right' | 'left'
-  }>(),
-  { sliderStyle: 'vertical', labelPosition: 'left' }
-)
+const props = defineProps<PropType<typeof AttrInput>>()
 
 const actor = inject(ActorKey) as Ref<
   ReturnType<typeof IronswornActor.prototype.toObject> & CharacterDataProperties

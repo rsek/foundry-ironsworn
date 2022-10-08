@@ -7,7 +7,7 @@
         :statLabel="$t('IRONSWORN.Supply')"
         :max="5"
         :min="0"
-        :currentValue="actor.data.supply"
+        :value="actor.data.supply"
         documentType="Actor"
         :global="IronswornSettings.globalSupply"
       />

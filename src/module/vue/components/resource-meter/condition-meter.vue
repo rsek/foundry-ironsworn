@@ -1,15 +1,16 @@
 <template>
-  <AttrSlider
+  <AttrInput
     class="condition-meter"
     :documentType="documentType"
     :attr="props.attr"
-    :sliderStyle="sliderStyle"
-    :current-value="currentValue"
+    :orientation="sliderStyle"
+    :value="value"
     :min="0"
     :max="max"
     :softMax="softMax"
     :read-only="readOnly"
     :global="global"
+    :widgetStyle="widgetStyle"
   >
     <template #label>
       <BtnRollstat
@@ -24,15 +25,15 @@
         {{ statLabel }}
       </BtnRollstat>
     </template>
-  </AttrSlider>
+  </AttrInput>
 </template>
 
 <script setup lang="ts">
-import AttrSlider from './attr-slider.vue'
 import { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 import BtnRollstat from '../buttons/btn-rollstat.vue'
 import { inject } from 'vue'
 import { ItemKey } from '../../provisions.js'
+import AttrInput from './attr-input.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -53,14 +54,18 @@ const props = withDefaults(
     global?: boolean
     max: number
     softMax?: number
-    currentValue: number
+    value: number
     sliderStyle?: 'vertical' | 'horizontal'
-    labelPosition?: 'right' | 'left' | 'none'
+    labelPosition?: 'right' | 'left' | 'top' | 'bottom' | 'none'
     /**
      * This string will be inserted in into the tooltip text "Roll +{x}" on the roll button. It should already be localized.
      */
     statLabel: string
     readOnly?: boolean
+    /**
+     * Whether the widget is rendered as {@link SliderBar} or a {@link NumberSpinner}.
+     */
+    widgetStyle: 'spinner' | 'slider'
   }>(),
   {
     sliderStyle: 'vertical',

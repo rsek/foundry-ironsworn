@@ -6,16 +6,16 @@
     :aria-readonly="props.readOnly"
     :aria-valuemin="props.min"
     :aria-valuemax="currentMax"
-    :aria-valuenow="currentValue"
+    :aria-valuenow="value"
     :aria-orientation="orientation"
-    @keydown.arrow-up="setSliderValue(currentValue + 1, $event)"
-    @keydown.+="setSliderValue(currentValue + 1, $event)"
-    @keydown.arrow-left="setSliderValue(currentValue + 1, $event)"
-    @keydown.page-up="setSliderValue(currentValue + 2, $event)"
-    @keydown.-="setSliderValue(currentValue - 1, $event)"
-    @keydown.arrow-down="setSliderValue(currentValue - 1, $event)"
-    @keydown.arrow-right="setSliderValue(currentValue - 1, $event)"
-    @keydown.page-down="setSliderValue(currentValue - 2, $event)"
+    @keydown.arrow-up="setSliderValue(value + 1, $event)"
+    @keydown.+="setSliderValue(value + 1, $event)"
+    @keydown.arrow-left="setSliderValue(value + 1, $event)"
+    @keydown.page-up="setSliderValue(value + 2, $event)"
+    @keydown.-="setSliderValue(value - 1, $event)"
+    @keydown.arrow-down="setSliderValue(value - 1, $event)"
+    @keydown.arrow-right="setSliderValue(value - 1, $event)"
+    @keydown.page-down="setSliderValue(value - 2, $event)"
     @keydown.home="setSliderValue(min, $event)"
     @keydown.end="setSliderValue(currentMax, $event)"
     @keydown.0="setSliderValue(0, $event)"
@@ -36,7 +36,7 @@
       class="slider-segment clickable block"
       :class="props.segmentClass?.[segment]"
       tabindex="-1"
-      :aria-selected="segment === currentValue"
+      :aria-selected="segment === value"
       :aria-disabled="!inRange(segment, props.min, currentMax + 1)"
       @click.capture="setSliderValue(segment, $event)"
       @focus.prevent
@@ -136,13 +136,19 @@ import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     readOnly?: boolean
-    currentValue: number
+    value: number
     /**
      * @default 0
      */
     min?: number | undefined
-    max: number
-    softMax?: number | undefined
+    /**
+     * The number of segments to be rendered.
+     */
+    segments: number
+    /**
+     * The current maximum value of the meter.
+     */
+    max: number | undefined
     /**
      * @default "vertical"
      */
@@ -168,10 +174,10 @@ const $emit = defineEmits<{
   (e: 'change', value: number): void
 }>()
 
-const sliderSegments = computed(() => rangeRight(props.min, props.max + 1))
+const sliderSegments = computed(() => rangeRight(props.min, props.segments + 1))
 
 const currentMax = computed(() =>
-  Math.min(props.softMax ?? props.max, props.max)
+  Math.min(props.max ?? props.segments, props.segments)
 )
 
 function setSliderValue(newValue: number, event: Event) {

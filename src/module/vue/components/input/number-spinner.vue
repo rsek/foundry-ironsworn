@@ -2,11 +2,11 @@
 <template>
   <article
     :id="id"
+    class="number-spinner"
     :class="{
-      'number-spinner': true,
       [`buttons-${buttonPosition}`]: true,
     }"
-    :aria-readonly="readonly"
+    :aria-readonly="readOnly"
   >
     <input
       type="number"
@@ -15,7 +15,7 @@
       :autofocus="autofocus"
       :min="min"
       :max="max"
-      :readonly="readonly"
+      :readonly="readOnly"
       :class="inputClass"
       :aria-valuenow="value"
       @input="onInput(value)"
@@ -50,7 +50,6 @@
 <script lang="ts" setup>
 // adapted from https://github.com/smwbtech/vue-number-input
 import { clamp } from 'lodash'
-import { computed } from 'vue'
 import SpinButton from './spin-button.vue'
 
 const props = withDefaults(
@@ -82,7 +81,7 @@ const props = withDefaults(
     /**
      * Defines a value for 'readonly' attribute of the number input. Also renders the buttons with `visibility: hidden`.
      */
-    readonly?: boolean
+    readOnly?: boolean
     /**
      * Defines a value for 'autofocus' attribute of the number input.
      */

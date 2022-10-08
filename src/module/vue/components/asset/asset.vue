@@ -84,7 +84,7 @@
           class="asset-condition-meter nogrow"
           documentType="Item"
           attr="track.current"
-          :current-value="asset.data.track.current"
+          :value="asset.data.track.current"
           :max="asset.data.track.max"
           :min="0"
           :statLabel="asset.data.track.name"
