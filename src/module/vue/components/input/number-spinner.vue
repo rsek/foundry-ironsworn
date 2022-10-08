@@ -2,14 +2,17 @@
 
 <template>
   <article :id="id" :class="classes" :aria-readonly="readonly">
-    <!-- hidden from screen readers because the HTML input already has good keyboard control -->
+    <!-- hidden from screen readers because the HTML number input already has good keyboard control -->
     <!-- this makes the other aria-* attrs useless, but they're start in place in case this needs to be changed (and because they provide useful annotation to people looking at the code) -->
-    <spin-button
+    <SpinButton
       :parentId="`${id}_input`"
       :step="step"
+      aria-hidden="true"
       type="decrease"
       :disabled="value === min"
-      @click="handleIncrement"
+      @click.capture="handleIncrement"
+      @focus.prevent
+      tabindex="-1"
     />
     <input
       type="number"
@@ -18,17 +21,18 @@
       :autofocus="autofocus ? 'autofocus' : false"
       :min="min"
       :max="max"
-      :aria-valuenow="value"
       :readonly="readonly"
       :class="inputClasses"
       @input="handleInput(value)"
     />
-    <spin-button
+    <SpinButton
       :parentId="`${id}_input`"
       :step="step"
       type="increase"
       :disabled="value === max"
-      @click="handleIncrement"
+      @click.capture="handleIncrement"
+      @focus.prevent
+      tabindex="-1"
     />
   </article>
 </template>
