@@ -1,7 +1,7 @@
 <template>
   <BtnFaicon
     tabindex="-1"
-    class="spin-button block"
+    class="spin-button"
     :class="{
       [type]: true,
     }"
