@@ -1,185 +1,144 @@
 <!-- TODO: replace credit -->
-
 <template>
   <article :id="id" :class="classes" :aria-readonly="readonly">
-    <!-- hidden from screen readers because the HTML number input already has good keyboard control -->
-    <!-- this makes the other aria-* attrs useless, but they're start in place in case this needs to be changed (and because they provide useful annotation to people looking at the code) -->
-    <SpinButton
-      :parentId="`${id}_input`"
-      :step="step"
-      aria-hidden="true"
-      type="decrease"
-      :disabled="value === min"
-      @click.capture="handleIncrement"
-      @focus.prevent
-      tabindex="-1"
-    />
     <input
       type="number"
       v-model.number="value"
-      :id="`${id}_input`"
-      :autofocus="autofocus ? 'autofocus' : false"
+      :id="`${id}_number_input`"
+      :autofocus="autofocus"
       :min="min"
       :max="max"
       :readonly="readonly"
-      :class="inputClasses"
-      @input="handleInput(value)"
+      :class="inputClass"
+      :aria-valuenow="value"
+      @input="onInput(value)"
+    />
+    <!-- hidden from screen readers because the HTML number input already has good keyboard control -->
+    <!-- this makes the other aria-* attrs useless, but they're left in place in case this needs to be changed (and because they provide useful annotation to people looking at the code) -->
+    <SpinButton
+      :controls="`${id}_number_input`"
+      :class="buttonDecreaseClass"
+      :icon="buttonDecreaseIcon"
+      aria-hidden="true"
+      type="decrease"
+      :disabled="value <= min"
+      @click.capture="onInput(value - step)"
+      @focus.prevent
+      tabindex="-1"
     />
     <SpinButton
-      :parentId="`${id}_input`"
-      :step="step"
+      :controls="`${id}_number_input`"
+      :class="buttonDecreaseClass"
+      :icon="buttonIncreaseIcon"
+      aria-hidden="true"
       type="increase"
-      :disabled="value === max"
-      @click.capture="handleIncrement"
+      :disabled="value >= max"
+      @click.capture="onInput(value + step)"
       @focus.prevent
       tabindex="-1"
     />
   </article>
 </template>
 
-<script>
-export default {
-  props: {
-    // A unique ID for the outer element, used to derive additional IDs for use in annotating element relationships
-    id: { type: String, required: true },
-    // Defines a value for 'value' and 'aria-valuenow' attributes of element.
-    value: {
-      type: Number,
-      default: 0,
-    },
-    // Minimum value of the number range. Provides a value for 'aria-valuemin' attributes of element.
-    min: {
-      type: Number,
-      default: Number.MIN_SAFE_INTEGER,
-    },
-    // Maximum value of the number range. Provides a value for 'aria-valuemax' attributes of element.
-    max: {
-      type: Number,
-      default: Number.MAX_SAFE_INTEGER,
-    },
-    //  	increaseal step
-    step: {
-      type: Number,
-      default: 1,
-    },
-    // Defines a value for 'aria-disabled' and 'disabled' attributes of element. Also disable controls buttons
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    // Defines a value for 'readonly' attribute of element.
-    // also renders the buttons with `visibility: hidden`
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-    // Defines a value for 'autofocus' attribute of element.
-    autofocus: {
-      type: Boolean,
-      default: false,
-    },
-    // Defines position of control buttons. Acceptable values: 'split', 'start', end'.
-    buttonPosition: {
-      type: String,
-      default: 'split',
-      options: ['split', 'start', 'end'],
-    },
-    // Defines user's class for input element
-    inputClass: {
-      type: String,
-    },
-    // Defines user's class for increase button
-    buttonIncreaseClass: {
-      type: String,
-    },
-    // Defines user's class for decrease button
-    buttonDecreaseClass: {
-      type: String,
-    },
-    buttonIncreaseIcon: {
-      type: String,
-      default: 'plus',
-    },
-    buttonDecreaseIcon: {
-      type: String,
-      default: 'minus',
-    },
-  },
-  computed: {
-    /**
-     * Returns classes for container
-     * @return {Object} - classes object
-     */
-    classes() {
-      let type
-      switch (this.buttonPosition) {
-        case 'split':
-          type = 'buttons-split'
-          break
-        case 'start':
-          type = 'buttons-start'
-          break
-        case 'end':
-          type = 'buttons-end'
-          break
-      }
-      return {
-        'number-spinner': true,
-        [type]: true,
-      }
-    },
-    /**
-     * Returns classes for down button
-     * @return {Object} - classes object
-     */
-    buttonDecreaseClasses() {
-      return this.buttonClasses('decrease')
-    },
-    /**
-     * Returns classes for up button
-     * @return {Object} - classes object
-     */
-    buttonIncreaseClasses() {
-      return this.buttonClasses('increase')
-    },
+<script lang="ts" setup>
+// adapted from https://github.com/smwbtech/vue-number-input
+import { clamp } from 'lodash'
+import { computed } from 'vue'
+import SpinButton from './spin-button.vue'
 
+const props = withDefaults(
+  defineProps<{
     /**
-     * Returns classes for input field
-     * @return {Object} - classes object
+     * A unique ID for the outer element, used to derive additional IDs for use in annotating element relationships
      */
-    inputClasses() {
-      return {
-        [this.inputClass]: !!this.inputClass,
-      }
-    },
-  },
+    id: string
+    /**
+     * Defines a value for 'value' and 'aria-valuenow' attributes of element.
+     */
+    value?: number
+    /**
+     * Minimum value of the number input.
+     */
+    min?: number
+    /**
+     * Maximum value of the number input.
+     */
+    max?: number
+    /**
+     * Step value of the numbr input.
+     */
+    step?: number
+    /**
+     * Defines a value for 'aria-disabled' and 'disabled' attributes of element. Also disable controls buttons.
+     */
+    disabled?: boolean
+    /**
+     * Defines a value for 'readonly' attribute of the number input. Also renders the buttons with `visibility: hidden`.
+     */
+    readonly?: boolean
+    /**
+     * Defines a value for 'autofocus' attribute of the number input.
+     */
+    autofocus?: boolean
+    /**
+     * Defines position of control buttons.
+     */
+    buttonPosition?:
+      | 'split-horizontal'
+      | 'split-vertical'
+      | 'top'
+      | 'bottom'
+      | 'left'
+      | 'right'
+    /**
+     * Defines user's class for input element
+     */
+    inputClass?: any
+    /**
+     * Defines user's class for increase button
+     */
+    buttonIncreaseClass?: any
+    /**
+     * Defines user's class for decrease button
+     */
+    buttonDecreaseClass?: any
+    buttonIncreaseIcon?: string
+    buttonDecreaseIcon?: string
+  }>(),
+  {
+    value: 0,
+    min: Number.MIN_SAFE_INTEGER,
+    max: Number.MAX_SAFE_INTEGER,
+    step: 1,
+    disabled: false,
+    readonly: false,
+    autofocus: false,
+    buttonPosition: 'split-horizontal',
+    buttonIncreaseIcon: 'plus',
+    buttonDecreaseIcon: 'minus',
+  }
+)
 
-  methods: {
-    handleIncrement(increment) {
-      console.log('spinner increment event', increment)
-      this.handleInput(this.value + increment)
-    },
-    handleInput(newValue) {
-      console.log('number-spinner handleInput', newValue)
-      this.$emit('input', newValue)
-    },
-    /**
-     * generates classes for input increment/decrement buttons
-     * @param {string} type
-     */
-    buttonClasses(type) {
-      return {
-        [`btn-${type}`]: true,
-        [`btn-${type}_inactive`]: this.value === this.min || this.disabled,
-        [this[`button${type.capitalize()}Class`]]:
-          !!this[`button${type.capitalize()}Class`],
-      }
-    },
-  },
+const $emit = defineEmits<{
+  (event: 'input', value: number): void
+}>()
+
+/**
+ * Returns classes for container
+ * @return {Object} - classes object
+ */
+const classes = computed(() => ({
+  'number-spinner': true,
+  [`buttons-${props.buttonPosition}`]: true,
+}))
+
+function onInput(newValue: number) {
+  console.log('number-spinner handleInput', newValue)
+  $emit('input', clamp(newValue, props.min, props.max))
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .number-spinner {
   @anim_length: 0.25s;
   align-items: center;
@@ -224,9 +183,17 @@ export default {
       order: 2;
     }
   }
-  &.buttons-start {
+  &.buttons-top {
   }
-  &.buttons-end {
+  &.buttons-left {
+  }
+  &.buttons-right {
+  }
+  &.buttons-bottom {
+  }
+  &.buttons-split-horizontal {
+  }
+  &.buttons-split-vertical {
   }
 }
 </style>

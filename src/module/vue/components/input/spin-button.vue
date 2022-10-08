@@ -5,12 +5,10 @@
     :class="{
       [type]: true,
     }"
-    v-model.number="value"
-    :tooltip="tooltip"
     :icon="icon"
-    :aria-controls="`${parentId}_${type}`"
+    :aria-controls="controls"
     :disabled="disabled"
-    @click="$emit('click', value)"
+    @click="$emit('click')"
   />
 </template>
 <style lang="less" scoped>
@@ -30,20 +28,19 @@ import BtnFaicon from '../buttons/btn-faicon.vue'
 
 const props = withDefaults(
   defineProps<{
-    parentId: string
-    step?: number
-    tooltip: string
+    /**
+     * Sets the ID of the element that this spin button controls.
+     */
+    controls: string
     type: 'increase' | 'decrease'
     disabled?: boolean
+    icon?: string | undefined
   }>(),
   {
-    step: 1,
     disabled: false,
   }
 )
-
-const value = computed(() =>
-  props.type === 'increase' ? props.step : -props.step
+const icon = computed(
+  () => props.icon ?? (props.type === 'increase' ? 'plus' : 'minus')
 )
-const icon = computed(() => (props.type === 'increase' ? 'plus' : 'minus'))
 </script>
