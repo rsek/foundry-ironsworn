@@ -1,6 +1,13 @@
 <!-- TODO: replace credit -->
 <template>
-  <article :id="id" :class="classes" :aria-readonly="readonly">
+  <article
+    :id="id"
+    :class="{
+      'number-spinner': true,
+      [`buttons-${buttonPosition}`]: true,
+    }"
+    :aria-readonly="readonly"
+  >
     <input
       type="number"
       v-model.number="value"
@@ -123,15 +130,6 @@ const $emit = defineEmits<{
   (event: 'input', value: number): void
 }>()
 
-/**
- * Returns classes for container
- * @return {Object} - classes object
- */
-const classes = computed(() => ({
-  'number-spinner': true,
-  [`buttons-${props.buttonPosition}`]: true,
-}))
-
 function onInput(newValue: number) {
   console.log('number-spinner handleInput', newValue)
   $emit('input', clamp(newValue, props.min, props.max))
@@ -154,6 +152,7 @@ function onInput(newValue: number) {
     }
   }
   .spin-button {
+    aspect-ratio: 1;
     margin: 0;
     // 'visibility' doesn't animate, so we cheat a bit with opacity
     transition: visibility 0s ease-in-out, opacity @anim_length ease-in-out;
@@ -166,34 +165,56 @@ function onInput(newValue: number) {
         opacity @anim_length ease-in-out;
     }
   }
-  &.buttons-split {
+  &.buttons-top,
+  &.buttons-left,
+  &.buttons-right,
+  &.buttons-bottom {
+    display: grid;
+    grid-template-columns: max-content;
+    grid-template-rows: max-content min-content;
+  }
+  &.buttons-top {
+    input[type='number'] {
+      grid-column: 1 / span 2;
+      grid-row: 2;
+    }
+  }
+  &.buttons-bottom {
+    input[type='number'] {
+      grid-column: 1 / span 2;
+      grid-row: 1;
+    }
+  }
+  &.buttons-left {
+    input[type='number'] {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+    }
+  }
+  &.buttons-right {
+    input[type='number'] {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+    }
+  }
+  &.buttons-split-horizontal,
+  &.buttons-split-vertical {
     display: flex;
-    flex-flow: row nowrap;
-    .spin-button {
-      height: 100%;
-      flex: 1;
-      &.decrease {
-        order: 1;
-      }
-      &.increase {
-        order: 2;
-      }
+    .decrease {
+      order: 1;
     }
     input[type='number'] {
       order: 2;
     }
-  }
-  &.buttons-top {
-  }
-  &.buttons-left {
-  }
-  &.buttons-right {
-  }
-  &.buttons-bottom {
+    .increase {
+      order: 3;
+    }
   }
   &.buttons-split-horizontal {
+    flex-direction: row;
   }
   &.buttons-split-vertical {
+    flex-direction: column;
   }
 }
 </style>
