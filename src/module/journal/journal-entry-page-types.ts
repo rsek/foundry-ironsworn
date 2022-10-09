@@ -8,11 +8,13 @@ interface CounterBase {
 interface Threat extends CounterBase {
   name: string
   enabled: boolean
+  max: 10
 }
 
 interface Countdown extends CounterBase {
   name: string
   enabled: boolean
+  max: 4
 }
 
 /////////// PROGRESS

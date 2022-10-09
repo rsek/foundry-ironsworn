@@ -22,4 +22,4 @@ export const ItemKey = Symbol('item') as InjectionKey<
   Ref<ReturnType<typeof IronswornItem.prototype.toObject>>
 >
 
-export const $PageKey = Symbol('$page') as InjectionKey<JournallEntryPage>
+export const $PageKey = Symbol('$page') as InjectionKey<JournalEntryPage>

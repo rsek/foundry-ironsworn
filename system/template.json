@@ -460,11 +460,32 @@
     }
   },
   "JournalEntryPage": {
-    "types": ["progress"],
+    "types": [
+      "progress",
+      "clock"
+    ],
     "progress": {
-      "rank": 1,
       "name": "",
-      "current": 0
+      "rank": 1,
+      "ticks": 0,
+      "threat": {
+        "enabled": false,
+        "name": "",
+        "value": 0,
+        "max": 10
+      },
+      "countdown": {
+        "enabled": false,
+        "name": "",
+        "value": 0,
+        "max": 4
+      }
+    },
+    "clock": {
+      "name": "",
+      "value": 0,
+      "max": 4,
+      "clockType": "tension"
     }
   }
 }
