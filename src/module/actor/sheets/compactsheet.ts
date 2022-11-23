@@ -1,7 +1,7 @@
 import { IronswornSettings } from '../../helpers/settings'
 import { IronswornPrerollDialog } from '../../rolls'
 import { CharacterDataPropertiesData } from '../actortypes'
-import { BrowserSheet } from './browser-sheet'
+import { OracleMoveBrowserSheet } from './oracle-move-browser-sheet'
 
 export class IronswornCompactCharacterSheet extends ActorSheet {
   static get defaultOptions() {
@@ -49,7 +49,7 @@ export class IronswornCompactCharacterSheet extends ActorSheet {
     e?.preventDefault()
 
     if (!this.actor.browserSheet) {
-      this.actor.browserSheet ||= new BrowserSheet(
+      this.actor.browserSheet ||= new OracleMoveBrowserSheet(
         this.actor,
         IronswornSettings.get('toolbox') === 'starforged'
           ? 'starforged'

@@ -1,5 +1,5 @@
 import { CharacterDataPropertiesData } from './actortypes'
-import { BrowserSheet } from './sheets/browser-sheet'
+import { OracleMoveBrowserSheet } from './sheets/oracle-move-browser-sheet'
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -9,7 +9,7 @@ export class IronswornActor extends Actor {
   // Type hack for v10 compatibility updates
   declare system: typeof this.data.data
 
-  browserSheet?: BrowserSheet
+  browserSheet?: OracleMoveBrowserSheet
 
   static async createDialog(data, _options = {}) {
     if (CONFIG.IRONSWORN.applications.createActorDialog) {

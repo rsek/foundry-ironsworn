@@ -2,7 +2,7 @@ import { IronswornSettings } from '../../helpers/settings'
 import characterSheetVue from '../../vue/character-sheet.vue'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { BrowserSheet } from './browser-sheet'
+import { OracleMoveBrowserSheet } from './oracle-move-browser-sheet'
 
 export class IronswornCharacterSheetV2 extends VueActorSheet {
   static get defaultOptions() {
@@ -39,7 +39,7 @@ export class IronswornCharacterSheetV2 extends VueActorSheet {
 
   _openMoveSheet(_e?: JQuery.ClickEvent) {
     if (!this.actor.browserSheet) {
-      this.actor.browserSheet ||= new BrowserSheet(
+      this.actor.browserSheet ||= new OracleMoveBrowserSheet(
         this.actor,
         IronswornSettings.get('toolbox') === 'starforged'
           ? 'starforged'

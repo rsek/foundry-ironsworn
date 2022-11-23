@@ -2,7 +2,7 @@ import { IronswornSettings } from '../../helpers/settings'
 import SfCharacterSheet from '../../vue/sf-charactersheet.vue'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { BrowserSheet } from './browser-sheet'
+import { OracleMoveBrowserSheet } from './oracle-move-browser-sheet'
 
 export class StarforgedCharacterSheet extends VueActorSheet {
   static get defaultOptions() {
@@ -38,7 +38,7 @@ export class StarforgedCharacterSheet extends VueActorSheet {
     ]
   }
   _openMoveSheet(_e?: JQuery.ClickEvent) {
-    this.actor.browserSheet ||= new BrowserSheet(
+    this.actor.browserSheet ||= new OracleMoveBrowserSheet(
       this.actor,
       IronswornSettings.get('toolbox') === 'ironsworn'
         ? 'ironsworn'

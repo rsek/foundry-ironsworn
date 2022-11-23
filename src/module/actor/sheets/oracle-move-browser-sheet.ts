@@ -1,11 +1,11 @@
-import BrowserSheetVue from '../../vue/browser-sheet.vue'
+import OracleMoveBrowserSheetVue from '../../vue/oracle-move-browser-sheet.vue'
 import { IronswornActor } from '../actor'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { App } from 'vue'
 import { $ActorKey } from '../../vue/provisions'
 import { VueAppMixin } from '../../vue/vueapp.js'
 
-export class BrowserSheet extends VueAppMixin(Application) {
+export class OracleMoveBrowserSheet extends VueAppMixin(Application) {
   constructor(
     protected actor: IronswornActor,
     protected toolset: 'ironsworn' | 'starforged' = 'starforged',
@@ -16,7 +16,7 @@ export class BrowserSheet extends VueAppMixin(Application) {
 
   get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
     return {
-      components: { 'browser-sheet': BrowserSheetVue },
+      components: { 'oracle-move-browser-sheet': OracleMoveBrowserSheetVue },
       vueData: async () => ({
         actor: this.actor.toObject(),
         toolset: this.toolset,
