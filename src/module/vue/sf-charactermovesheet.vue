@@ -7,7 +7,7 @@
     </tab>
     <tab icon="isicon-oracle" :title="$t('IRONSWORN.Oracles')">
       <Suspense>
-        <sf-movesheetoracles ref="oraclesTab" :toolset="toolset" />
+        <OracleBrowser ref="oraclesTab" :toolset="toolset" />
       </Suspense>
     </tab>
   </Tabs>
@@ -17,7 +17,7 @@
 import Tab from './components/tabs/tab.vue'
 import Tabs from './components/tabs/tabs.vue'
 import SfMovesheetmoves from './components/sf-movesheetmoves.vue'
-import SfMovesheetoracles from './components/sf-movesheetoracles.vue'
+import OracleBrowser from './components/oracle-browser.vue'
 import { computed, provide, ref } from 'vue'
 import { CharacterDataProperties } from '../actor/actortypes'
 import { ActorKey } from './provisions.js'
@@ -33,6 +33,6 @@ const tabs = ref<InstanceType<typeof Tabs>>()
 const movesTab = ref<InstanceType<typeof SfMovesheetmoves>>()
 CONFIG.IRONSWORN.emitter.on('highlightMove', () => tabs.value?.selectIndex(0))
 
-const oraclesTab = ref<InstanceType<typeof SfMovesheetoracles>>()
+const oraclesTab = ref<InstanceType<typeof OracleBrowser>>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', () => tabs.value?.selectIndex(1))
 </script>
