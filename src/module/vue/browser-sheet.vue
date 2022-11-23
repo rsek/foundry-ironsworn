@@ -1,22 +1,22 @@
 <template>
   <Tabs ref="tabs">
-    <tab icon="isicon-d10-tilt" :title="$t('IRONSWORN.Moves')">
+    <Tab icon="isicon-d10-tilt" :title="$t('IRONSWORN.Moves')">
       <Suspense>
-        <sf-movesheetmoves ref="movesTab" :toolset="toolset" />
+        <MoveBrowser ref="movesTab" :toolset="toolset" />
       </Suspense>
-    </tab>
-    <tab icon="isicon-oracle" :title="$t('IRONSWORN.Oracles')">
+    </Tab>
+    <Tab icon="isicon-oracle" :title="$t('IRONSWORN.Oracles')">
       <Suspense>
         <OracleBrowser ref="oraclesTab" :toolset="toolset" />
       </Suspense>
-    </tab>
+    </Tab>
   </Tabs>
 </template>
 
 <script lang="ts" setup>
 import Tab from './components/tabs/tab.vue'
 import Tabs from './components/tabs/tabs.vue'
-import SfMovesheetmoves from './components/sf-movesheetmoves.vue'
+import MoveBrowser from './components/move-browser.vue'
 import OracleBrowser from './components/oracle-browser.vue'
 import { computed, provide, ref } from 'vue'
 import { CharacterDataProperties } from '../actor/actortypes'
@@ -30,7 +30,7 @@ const props = defineProps<{
 provide(ActorKey, computed(() => props.actor) as any)
 
 const tabs = ref<InstanceType<typeof Tabs>>()
-const movesTab = ref<InstanceType<typeof SfMovesheetmoves>>()
+const movesTab = ref<InstanceType<typeof MoveBrowser>>()
 CONFIG.IRONSWORN.emitter.on('highlightMove', () => tabs.value?.selectIndex(0))
 
 const oraclesTab = ref<InstanceType<typeof OracleBrowser>>()

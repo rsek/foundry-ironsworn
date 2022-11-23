@@ -1,4 +1,4 @@
-import CharacterMoveSheet from '../../vue/sf-charactermovesheet.vue'
+import CharacterMoveSheet from '../../vue/browser-sheet.vue'
 import { IronswornActor } from '../actor'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { App } from 'vue'
