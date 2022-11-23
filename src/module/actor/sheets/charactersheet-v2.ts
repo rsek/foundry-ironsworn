@@ -2,7 +2,7 @@ import { IronswornSettings } from '../../helpers/settings'
 import characterSheetVue from '../../vue/character-sheet.vue'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { SFCharacterMoveSheet } from './sf-charactermovesheet'
+import { BrowserSheet } from './browser-sheet'
 
 export class IronswornCharacterSheetV2 extends VueActorSheet {
   static get defaultOptions() {
@@ -38,8 +38,8 @@ export class IronswornCharacterSheetV2 extends VueActorSheet {
   }
 
   _openMoveSheet(_e?: JQuery.ClickEvent) {
-    if (!this.actor.moveSheet) {
-      this.actor.moveSheet ||= new SFCharacterMoveSheet(
+    if (!this.actor.browserSheet) {
+      this.actor.browserSheet ||= new BrowserSheet(
         this.actor,
         IronswornSettings.get('toolbox') === 'starforged'
           ? 'starforged'
@@ -47,6 +47,6 @@ export class IronswornCharacterSheetV2 extends VueActorSheet {
         { left: 755 }
       )
     }
-    this.actor.moveSheet.render(true, { focus: true })
+    this.actor.browserSheet.render(true, { focus: true })
   }
 }

@@ -23,7 +23,7 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
   }
 
   close(...args) {
-    this.actor.moveSheet?.close(...args)
+    this.actor.browserSheet?.close(...args)
     return super.close(...args)
   }
 

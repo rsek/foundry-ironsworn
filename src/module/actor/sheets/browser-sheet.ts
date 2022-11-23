@@ -1,11 +1,11 @@
-import CharacterMoveSheet from '../../vue/browser-sheet.vue'
+import BrowserSheetVue from '../../vue/browser-sheet.vue'
 import { IronswornActor } from '../actor'
 import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
 import { App } from 'vue'
 import { $ActorKey } from '../../vue/provisions'
 import { VueAppMixin } from '../../vue/vueapp.js'
 
-export class SFCharacterMoveSheet extends VueAppMixin(Application) {
+export class BrowserSheet extends VueAppMixin(Application) {
   constructor(
     protected actor: IronswornActor,
     protected toolset: 'ironsworn' | 'starforged' = 'starforged',
@@ -16,7 +16,7 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 
   get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
     return {
-      components: { 'sfcharacter-movesheet': CharacterMoveSheet },
+      components: { 'browser-sheet': BrowserSheetVue },
       vueData: async () => ({
         actor: this.actor.toObject(),
         toolset: this.toolset,
@@ -39,7 +39,7 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       template:
-        'systems/foundry-ironsworn/templates/actor/sf-charactermoves.hbs',
+        'systems/foundry-ironsworn/templates/actor/oracle-move-browser.hbs',
       resizable: true,
       width: 350,
       height: 820,
