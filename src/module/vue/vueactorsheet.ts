@@ -2,13 +2,16 @@ import { App } from 'vue'
 import { IronswornItem } from '../item/item'
 import { $ActorKey } from './provisions'
 import {
-  VueSheetRenderHelper,
-  VueSheetRenderHelperOptions,
+  VueAppRenderHelper,
+  VueAppRenderHelperOptions,
 } from './vue-render-helper'
 import { VueAppMixin } from './vueapp.js'
 
-export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
-  renderHelper: VueSheetRenderHelper | undefined
+export abstract class VueActorSheet<
+  Options extends ActorSheet.Options = ActorSheet.Options,
+  Data extends object = ActorSheet.Data<Options>
+> extends VueAppMixin(ActorSheet)<Options, Data> {
+  renderHelper: VueAppRenderHelper | undefined
 
   static get defaultOptions(): ActorSheet.Options {
     return mergeObject(super.defaultOptions, {
@@ -16,7 +19,7 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
     })
   }
 
-  abstract get renderHelperOptions(): Partial<VueSheetRenderHelperOptions>
+  abstract get renderHelperOptions(): Partial<VueAppRenderHelperOptions>
 
   setupVueApp(app: App) {
     app.provide($ActorKey, this.actor)
@@ -31,7 +34,7 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
     force?: boolean | undefined,
     options?: Application.RenderOptions<ActorSheet.Options> | undefined
   ): this {
-    this.renderHelper ||= new VueSheetRenderHelper(
+    this.renderHelper ||= new VueAppRenderHelper(
       this,
       {
         vueData: async () => ({ actor: this.actor.toObject() }),

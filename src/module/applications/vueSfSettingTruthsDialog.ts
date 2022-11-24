@@ -1,6 +1,6 @@
 import { Starforged, starforged } from 'dataforged'
 import sfTruthsVue from '../vue/sf-truths.vue'
-import { VueSheetRenderHelperOptions } from '../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../vue/vue-render-helper'
 import { VueAppMixin } from '../vue/vueapp.js'
 
 export class SFSettingTruthsDialogVue extends VueAppMixin(Application) {
@@ -15,7 +15,7 @@ export class SFSettingTruthsDialogVue extends VueAppMixin(Application) {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'sf-truths': sfTruthsVue },
       vueData: async () => ({

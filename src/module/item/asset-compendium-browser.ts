@@ -1,4 +1,4 @@
-import { VueSheetRenderHelperOptions } from '../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../vue/vue-render-helper'
 import AssetCompendiumBrowserVue from '../vue/asset-compendium-browser.vue'
 import { VueAppMixin } from '../vue/vueapp.js'
 
@@ -21,7 +21,7 @@ export class AssetCompendiumBrowser extends VueAppMixin(Application) {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'asset-compendium-browser': AssetCompendiumBrowserVue },
       vueData: async () => ({ toolset: this.toolset }),

@@ -1,6 +1,6 @@
 import { SiteDataSource } from '../actortypes'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import siteSheetVue from '../../vue/site-sheet.vue'
 
 export class IronswornSiteSheetV2 extends VueActorSheet {
@@ -13,7 +13,7 @@ export class IronswornSiteSheetV2 extends VueActorSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'site-sheet': siteSheetVue },
     }

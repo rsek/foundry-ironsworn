@@ -2,12 +2,15 @@ import { App } from 'vue'
 import { $ItemKey } from './provisions'
 import { VueAppMixin } from './vueapp.js'
 import {
-  VueSheetRenderHelper,
-  VueSheetRenderHelperOptions,
+  VueAppRenderHelper,
+  VueAppRenderHelperOptions,
 } from './vue-render-helper'
 
-export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
-  renderHelper: VueSheetRenderHelper | undefined
+export abstract class VueItemSheet<
+  Options extends DocumentSheetOptions = DocumentSheetOptions,
+  Data extends object = ItemSheet.Data<Options>
+> extends VueAppMixin(ItemSheet)<Options, Data> {
+  renderHelper: VueAppRenderHelper | undefined
 
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
@@ -17,7 +20,7 @@ export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
     })
   }
 
-  abstract get renderHelperOptions(): Partial<VueSheetRenderHelperOptions>
+  abstract get renderHelperOptions(): Partial<VueAppRenderHelperOptions>
 
   setupVueApp(app: App) {
     app.provide($ItemKey, this.item)
@@ -27,7 +30,7 @@ export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
     force?: boolean | undefined,
     options?: Application.RenderOptions<DocumentSheetOptions> | undefined
   ): this {
-    this.renderHelper ||= new VueSheetRenderHelper(
+    this.renderHelper ||= new VueAppRenderHelper(
       this,
       {
         vueData: async () => ({ item: this.item.toObject() }),

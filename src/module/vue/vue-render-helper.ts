@@ -2,21 +2,21 @@ import { App, Component, ComponentPublicInstance, createApp } from 'vue'
 import { IronswornSettings } from '../helpers/settings'
 import { IronswornVuePlugin } from './vue-plugin'
 
-export interface VueSheetRenderHelperOptions {
+export interface VueAppRenderHelperOptions {
   vueData: () => Promise<Record<string, any>>
   components: { [k: string]: Component }
-  helperHook?: (helper: VueSheetRenderHelper) => any
+  helperHook?: (helper: VueAppRenderHelper) => any
 }
 
-export class VueSheetRenderHelper {
+export class VueAppRenderHelper {
   vueApp: App<Element> | undefined
   vueRoot: ComponentPublicInstance | undefined
-  options: VueSheetRenderHelperOptions
+  options: VueAppRenderHelperOptions
   vueListenersActive = false
 
   constructor(
     protected app: Application,
-    options?: Partial<VueSheetRenderHelperOptions>,
+    options?: Partial<VueAppRenderHelperOptions>,
     protected appHook?: (App) => void
   ) {
     this.options = {

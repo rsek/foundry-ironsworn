@@ -1,5 +1,5 @@
 import foeSheetVue from '../../vue/components/foe-sheet.vue'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
 
 export class FoeSheet extends VueActorSheet {
@@ -11,7 +11,7 @@ export class FoeSheet extends VueActorSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'foe-sheet': foeSheetVue },
     }

@@ -1,5 +1,5 @@
 import sharedSheetVue from '../../vue/shared-sheet.vue'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
 
 export class IronswornSharedSheetV2 extends VueActorSheet {
@@ -11,7 +11,7 @@ export class IronswornSharedSheetV2 extends VueActorSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'shared-sheet': sharedSheetVue },
     }

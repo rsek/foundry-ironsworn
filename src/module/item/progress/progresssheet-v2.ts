@@ -1,5 +1,5 @@
 import progressSheetVue from '../../vue/progress-sheet.vue'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueItemSheet } from '../../vue/vueitemsheet'
 
 export class ProgressSheetV2 extends VueItemSheet {
@@ -10,7 +10,7 @@ export class ProgressSheetV2 extends VueItemSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'progress-sheet': progressSheetVue },
     }

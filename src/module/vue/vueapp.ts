@@ -1,7 +1,7 @@
 import { App } from 'vue'
 import {
-  VueSheetRenderHelper,
-  VueSheetRenderHelperOptions,
+  VueAppRenderHelper,
+  VueAppRenderHelperOptions,
 } from './vue-render-helper.js'
 
 type Constructor<T = object> = abstract new (...args: any[]) => T
@@ -10,7 +10,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
   Base: TBase
 ) {
   abstract class VueMixin extends Base {
-    renderHelper: VueSheetRenderHelper | undefined
+    renderHelper: VueAppRenderHelper | undefined
 
     static get defaultOptions(): ApplicationOptions {
       return mergeObject(
@@ -21,14 +21,14 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
         }
       )
     }
-    abstract get renderHelperOptions(): Partial<VueSheetRenderHelperOptions>
+    abstract get renderHelperOptions(): Partial<VueAppRenderHelperOptions>
 
     setupVueApp(app: App): void {
       return
     }
 
     render(force?: boolean, inputOptions?: Application.RenderOptions) {
-      this.renderHelper ||= new VueSheetRenderHelper(
+      this.renderHelper ||= new VueAppRenderHelper(
         this,
         this.renderHelperOptions,
         this.setupVueApp.bind(this)

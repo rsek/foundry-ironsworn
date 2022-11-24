@@ -1,5 +1,5 @@
 import sfmoveSheetVue from '../../vue/sfmove-sheet.vue'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueItemSheet } from '../../vue/vueitemsheet'
 
 export class SFMoveSheet extends VueItemSheet {
@@ -10,7 +10,7 @@ export class SFMoveSheet extends VueItemSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'sfmove-sheet': sfmoveSheetVue },
     }

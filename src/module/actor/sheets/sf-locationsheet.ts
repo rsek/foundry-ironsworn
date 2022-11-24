@@ -1,5 +1,5 @@
 import sfLocationsheetVue from '../../vue/sf-locationsheet.vue'
-import { VueSheetRenderHelperOptions } from '../../vue/vue-render-helper'
+import { VueAppRenderHelperOptions } from '../../vue/vue-render-helper'
 import { VueActorSheet } from '../../vue/vueactorsheet'
 
 export class StarforgedLocationSheet extends VueActorSheet {
@@ -11,7 +11,7 @@ export class StarforgedLocationSheet extends VueActorSheet {
     })
   }
 
-  get renderHelperOptions(): Partial<VueSheetRenderHelperOptions> {
+  get renderHelperOptions(): Partial<VueAppRenderHelperOptions> {
     return {
       components: { 'sf-locationsheet': sfLocationsheetVue },
     }
