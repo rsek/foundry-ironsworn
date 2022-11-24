@@ -28,7 +28,7 @@ export abstract class VueItemSheet<
 
   render(
     force?: boolean | undefined,
-    options?: Application.RenderOptions<DocumentSheetOptions> | undefined
+    options?: Application.RenderOptions<Options> | undefined
   ): this {
     this.renderHelper ||= new VueAppRenderHelper(
       this,
