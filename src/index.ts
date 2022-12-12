@@ -35,6 +35,7 @@ import { DelveThemeOrDomainSheet } from './module/item/delve-theme-domain/delvet
 import { IronswornItem } from './module/item/item'
 import { SFMoveSheet } from './module/item/move/sfmovesheet'
 import { ProgressSheetV2 } from './module/item/progress/progresssheet-v2'
+import { JournalProgressPageSheet } from './module/journal/progress-page'
 
 declare global {
   interface LenientGlobalVariableTypes {
@@ -145,6 +146,18 @@ Hooks.once('init', async () => {
     label: 'HBS wrapper journal',
     makeDefault: true,
   })
+
+  DocumentSheetConfig.registerSheet(
+    // @ts-ignore
+    JournalEntryPage,
+    'ironsworn',
+    JournalProgressPageSheet,
+    {
+      types: ['progress'],
+      makeDefault: true,
+      label: 'Progress',
+    }
+  )
 
   // Register Handlebars helpers
   IronswornHandlebarsHelpers.registerHelpers()
