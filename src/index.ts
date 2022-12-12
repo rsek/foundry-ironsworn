@@ -4,6 +4,7 @@
 
 import { IRONSWORN } from './config'
 import { IronswornActor } from './module/actor/actor'
+import { IronswornJournalSheet } from './module/actor/sheets/journal-sheet'
 import { IronswornCharacterSheetV2 } from './module/actor/sheets/charactersheet-v2'
 import { IronswornCompactCharacterSheet } from './module/actor/sheets/compactsheet'
 import { FoeSheet } from './module/actor/sheets/foesheet'
@@ -137,6 +138,11 @@ Hooks.once('init', async () => {
   Items.registerSheet('ironsworn', ProgressSheetV2, {
     types: ['progress'],
     label: 'Progress sheet v2',
+    makeDefault: true,
+  })
+
+  Journal.registerSheet('ironsworn', IronswornJournalSheet, {
+    label: 'HBS wrapper journal',
     makeDefault: true,
   })
 
