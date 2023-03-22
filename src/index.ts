@@ -38,42 +38,44 @@ import { TruthJournalPageSheet } from './module/journal/truth-page'
 import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
 
+import 'handlebars'
+
 import 'virtual:svg-icons-register'
 
 declare global {
 	type ConfiguredConfig = Config<
 		AmbientLightDocument,
 		ActiveEffect,
-		IronswornActor,
-		ActorDirectory<IronswornActor>,
-		ChatLog<ChatMessage<IronswornActor>>,
-		ChatMessage<IronswornActor>,
+		IronswornActor<any>,
+		ActorDirectory<IronswornActor<any>>,
+		ChatLog<ChatMessage<IronswornActor<any>>>,
+		ChatMessage<IronswornActor<any>>,
 		Combat,
-		Combatant<Combat | null, IronswornActor | null>,
+		Combatant<Combat | null, IronswornActor<any> | null>,
 		CombatTracker<Combat>,
 		CompendiumDirectory,
 		Hotbar,
-		IronswornItem,
+		IronswornItem<any>,
 		Macro,
 		MeasuredTemplateDocument,
 		TileDocument,
 		TokenDocument,
 		WallDocument<Scene | null>,
 		Scene,
-		User<IronswornActor>,
+		User<IronswornActor<any>>,
 		EffectsCanvasGroup,
 		IronswornJournalPage
 	>
 	interface IronGame
 		extends Game<
-			IronswornActor,
-			Actors<IronswornActor>,
+			IronswornActor<any>,
+			Actors<IronswornActor<any>>,
 			ChatMessage,
 			Combat,
 			IronswornItem,
 			Macro,
 			Scene,
-			User<IronswornActor>
+			User<IronswornActor<any>>
 		> {}
 
 	interface ConfigIronsworn extends ConfiguredConfig {
@@ -91,8 +93,8 @@ declare global {
 
 		// eslint-disable-next-line no-var
 		var ui: FoundryUI<
-			IronswornActor,
-			ActorDirectory<IronswornActor>,
+			IronswornActor<any>,
+			ActorDirectory<IronswornActor<any>>,
 			IronswornItem,
 			ChatLog,
 			CompendiumDirectory
