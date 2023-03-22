@@ -50,7 +50,8 @@ module.exports = {
 		// temporarily disabled to reduce noise while migrating to new types package
 		'@typescript-eslint/no-floating-promises': 'off',
 		'@typescript-eslint/consistent-type-assertions': 'off',
-		'no-useless-call': 'off'
+		'no-useless-call': 'off',
+		'@typescript-eslint/strict-boolean-expressions': 'off'
 	},
 	overrides: [
 		{
