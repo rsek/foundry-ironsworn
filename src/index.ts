@@ -87,6 +87,9 @@ declare global {
 		var game: IronGame
 
 		// eslint-disable-next-line no-var
+		var canvas: Canvas
+
+		// eslint-disable-next-line no-var
 		var ui: FoundryUI<
 			IronswornActor,
 			ActorDirectory<IronswornActor>,
