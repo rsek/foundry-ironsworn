@@ -19,10 +19,12 @@ async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
 			ui.notifications?.warn('Actor folders not found???')
 			return
 		}
-		const existing = directory.find((x) => x.name === name)
+		const existing = directory.find((x) => x.name === name) as
+			| Folder<IronswornActor>
+			| undefined
 		if (existing != null) {
 			parentFolder = existing
-			directory = (existing as any).children.map((child) => {
+			directory = existing.children.map((child) => {
 				return child.folder /* v10 */ || child /* v9 */
 			})
 			continue
@@ -32,7 +34,7 @@ async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
 			name,
 			parent: parentFolder?.id
 		})
-		directory = (parentFolder as any).children
+		directory = parentFolder?.children
 	}
 	return parentFolder
 }
@@ -83,7 +85,7 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 		'Locations',
 		game.scenes?.current?.name ?? '???'
 	)
-	const loc = await IronswornActor.create({
+	const loc = (await IronswornActor.create({
 		type: 'location',
 		name,
 		data: { subtype },
@@ -94,7 +96,7 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 			scale
 		},
 		folder: parentFolder?.id
-	})
+	})) as IronswornActor<'location'>
 	if (loc == null) return
 
 	await dropToken(loc)

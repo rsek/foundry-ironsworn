@@ -13,28 +13,7 @@ declare global {
 	interface DocumentModificationContext {
 		suppressLog?: boolean
 	}
-	// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-	class Hooks {
-		static on(...args: HookParamsUpdate<IronswornActor, 'Actor'>): number
-		static on(...args: HookParamsUpdate<IronswornItem, 'Item'>): number
-		static on(
-			...args: HookParameters<'preDeleteItem', [IronswornItem, any, number]>
-		)
-		static on(
-			...args: HookParameters<
-				'preUpdateActor',
-				[IronswornActor, any, any, number]
-			>
-		): number
-		static on(
-			...args: HookParameters<
-				'preUpdateItem',
-				[IronswornItem, any, any, number]
-			>
-		): number
-	}
 }
-
 export function registerChatAlertHooks() {
 	Hooks.on(
 		'preUpdateActor',
@@ -421,5 +400,5 @@ async function sendToChat(speaker: IronswornActor, msg: string) {
 	}
 
 	const cls = CONFIG.ChatMessage.documentClass
-	return await cls.create(messageData as any)
+	await cls.create(messageData as any)
 }

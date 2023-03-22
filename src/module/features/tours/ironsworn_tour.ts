@@ -1,14 +1,35 @@
-// Make Typescript happy with tour extensions
-declare global {
-	interface TourStep {
-		sidebarTab?: string
-		layer?: string
-		tool?: string
-		hook?: () => Promise<unknown> | unknown
-	}
+export interface IronTourStep extends TourStep {
+	sidebarTab?: string
+	layer?: string
+	tool?: string
+	hook?: () => Promise<unknown> | unknown
+}
+
+export interface IronTourConfig extends TourConfig {
+	namespace: 'foundry-ironsworn'
+	steps: IronTourStep[]
 }
 
 export class IronswornTour extends Tour {
+	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
+	constructor(
+		config: IronTourConfig,
+		override: {
+			id?: string | undefined
+			namespace?: string | undefined
+		} = {}
+	) {
+		super(config, override)
+	}
+
+	get steps(): IronTourStep[] {
+		return super.steps as IronTourStep[]
+	}
+
+	get currentStep(): IronTourStep | null {
+		return super.currentStep as IronTourStep | null
+	}
+
 	/** @override */
 	protected async _preStep(): Promise<void> {
 		await super._preStep()

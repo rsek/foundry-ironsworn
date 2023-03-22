@@ -10,8 +10,6 @@ import { IronswornRoll } from '.'
 import type { IronswornActor } from '../actor/actor'
 import type { CharacterDataPropertiesData } from '../actor/actortypes'
 import { getFoundryTableByDfId } from '../dataforged'
-import type { SFMoveDataPropertiesData } from '../item/itemtypes'
-import { SFMoveDataProperties } from '../item/itemtypes'
 import { enrichMarkdown } from '../vue/vue-plugin'
 import { DfRollOutcome, RollOutcome } from './ironsworn-roll'
 import { renderRollGraphic } from './roll-graphic'
@@ -138,7 +136,7 @@ export function outcomeKey(
 }
 
 export class IronswornRollMessage {
-	constructor(public roll: IronswornRoll, public actor?: IronswornActor) {
+	constructor(public roll: IronswornRoll, public actor?: IronswornActor<any>) {
 		if (actor == null && roll.preRollOptions.actorId) {
 			this.actor = game.actors?.get(roll.preRollOptions.actorId)
 		}
@@ -156,7 +154,7 @@ export class IronswornRollMessage {
 
 		const r = IronswornRoll.fromJson(json)
 		r.chatMessageId = messageId
-		r.roll = msg?.roll ?? undefined
+		r.roll = msg?.rolls[0] ?? undefined
 
 		return new IronswornRollMessage(r)
 	}

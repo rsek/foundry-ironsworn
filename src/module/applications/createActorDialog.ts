@@ -8,7 +8,7 @@ interface CreateActorDialogOptions extends FormApplicationOptions {
 }
 
 export class CreateActorDialog extends FormApplication<
-	IronswornActor,
+	Partial<IronswornActor<any>['_source']>,
 	CreateActorDialogOptions
 > {
 	constructor() {
@@ -75,7 +75,7 @@ export class CreateActorDialog extends FormApplication<
 
 		this._createWithFolder(
 			drawResult?.results[0]?.data.text ||
-				game.i18n.localize(CONFIG.Actor.typeLabels.character),
+				game.i18n.localize(CONFIG.Actor.typeLabels.character!),
 			'character',
 			ev.currentTarget.dataset.img || undefined
 		)
@@ -84,7 +84,7 @@ export class CreateActorDialog extends FormApplication<
 	async _sharedCreate(ev: JQuery.ClickEvent) {
 		ev.preventDefault()
 		this._createWithFolder(
-			game.i18n.localize(CONFIG.Actor.typeLabels.shared),
+			game.i18n.localize(CONFIG.Actor.typeLabels.shared!),
 			'shared',
 			ev.currentTarget.dataset.img || undefined
 		)
@@ -93,7 +93,7 @@ export class CreateActorDialog extends FormApplication<
 	async _siteCreate(ev: JQuery.ClickEvent) {
 		ev.preventDefault()
 		this._createWithFolder(
-			game.i18n.localize(CONFIG.Actor.typeLabels.site),
+			game.i18n.localize(CONFIG.Actor.typeLabels.site!),
 			'site',
 			ev.currentTarget.dataset.img || undefined
 		)
@@ -102,7 +102,7 @@ export class CreateActorDialog extends FormApplication<
 	async _foeCreate(ev: JQuery.ClickEvent) {
 		ev.preventDefault()
 		this._createWithFolder(
-			game.i18n.localize(CONFIG.Actor.typeLabels.foe),
+			game.i18n.localize(CONFIG.Actor.typeLabels.foe!),
 			'foe',
 			ev.currentTarget.dataset.img || undefined
 		)
@@ -114,7 +114,7 @@ export class CreateActorDialog extends FormApplication<
 		const name = await this._randomStarforgedName()
 
 		this._createWithFolder(
-			name ?? game.i18n.localize(CONFIG.Actor.typeLabels.character),
+			name ?? game.i18n.localize(CONFIG.Actor.typeLabels.character!),
 			'character',
 			ev.currentTarget.dataset.img || undefined,
 			'ironsworn.StarforgedCharacterSheet'
@@ -124,7 +124,7 @@ export class CreateActorDialog extends FormApplication<
 	async _sfshipCreate(ev: JQuery.ClickEvent) {
 		ev.preventDefault()
 		this._createWithFolder(
-			game.i18n.localize(CONFIG.Actor.typeLabels.starship),
+			game.i18n.localize(CONFIG.Actor.typeLabels.starship!),
 			'starship',
 			ev.currentTarget.dataset.img || undefined
 		)
@@ -133,50 +133,50 @@ export class CreateActorDialog extends FormApplication<
 	async _sfLocationCreate(ev: JQuery.ClickEvent) {
 		ev.preventDefault()
 		this._createWithFolder(
-			game.i18n.localize(CONFIG.Actor.typeLabels.location),
+			game.i18n.localize(CONFIG.Actor.typeLabels.location!),
 			'location',
 			ev.currentTarget.dataset.img || undefined
 		)
 	}
 
-	async _createWithFolder(
+	async _createWithFolder<T extends IronswornActor['type']>(
 		name: string,
-		type: IronswornActor['type'],
-		img: string,
+		type: T,
+		img: ImageFilePath,
 		sheetClass?: string
 	) {
-		const data: ActorDataConstructorData & Record<string, any> = {
+		const data: PreCreate<IronswornActor<T>['_source']> = {
 			name,
 			img,
 			type,
 			token: { actorLink: true },
-			folder: this.options.folder || undefined
+			folder: this.options.folder || null
 		}
 		if (sheetClass) {
-			data.flags = { core: { sheetClass } }
+			data.flags = { core: { sheetClass } } as any
 		}
 		await IronswornActor.create(data, { renderSheet: true })
 		await this.close()
 	}
 
 	async _ironlanderNameTables(): Promise<RollTable[] | undefined> {
-		const tableA = (await getFoundryTableByDfId(
+		const tableA = await getFoundryTableByDfId(
 			'Ironsworn/Oracles/Name/Ironlander/A'
-		)) as any
-		const tableB = (await getFoundryTableByDfId(
+		)
+		const tableB = await getFoundryTableByDfId(
 			'Ironsworn/Oracles/Name/Ironlander/B'
-		)) as any
+		)
 		if (tableA && tableB) return [tableA, tableB]
 		return undefined
 	}
 
 	async _randomStarforgedName(): Promise<string | undefined> {
-		const firstTable = (await getFoundryTableByDfId(
+		const firstTable = await getFoundryTableByDfId(
 			'Starforged/Oracles/Characters/Name/Given_Name'
-		)) as any
-		const lastTable = (await getFoundryTableByDfId(
+		)
+		const lastTable = await getFoundryTableByDfId(
 			'Starforged/Oracles/Characters/Name/Family_Name'
-		)) as any
+		)
 		if (!firstTable || !lastTable) return undefined
 
 		const first = await firstTable.draw({ displayChat: false })

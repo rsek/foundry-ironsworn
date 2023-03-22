@@ -16,7 +16,7 @@ export async function registerTours() {
 	console.log('Posting first-start messages...')
 
 	const gms = ChatMessage.getWhisperRecipients('GM')
-	const cm = ChatMessage.implementation as typeof ChatMessage
+	const cm = ChatMessage.implementation
 	ChatMessage.create({
 		whisper: gms,
 		speaker: { alias: game.i18n.localize('IRONSWORN.Ironsworn') },

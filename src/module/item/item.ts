@@ -1,15 +1,15 @@
-import { IronswornActor } from '../actor/actor'
+import type { IronswornActor } from '../actor/actor'
 import { RANK_INCREMENTS } from '../constants'
 import { getFoundryMoveByDfId } from '../dataforged'
 import { IronswornPrerollDialog } from '../rolls'
-import { DelveSiteDanger, DelveSiteFeature } from './itemtypes'
+import type { DelveSiteDanger, DelveSiteFeature } from './itemtypes'
 
 /**
  * Extend the base Item entity
  */
-export class IronswornItem<
-	T extends ItemType = ItemType
-> extends Item<IronswornActor> {
+export class IronswornItem<T extends ItemType = ItemType> extends Item<
+	IronswornActor<any>
+> {
 	get type(): T {
 		return super.type as T
 	}
@@ -79,7 +79,7 @@ export class IronswornItem<
 		}
 
 		const progress = Math.floor(system.current / 4)
-		return await IronswornPrerollDialog.showForProgress(
+		return IronswornPrerollDialog.showForProgress(
 			this.name ?? '(progress)',
 			progress,
 			this.actor ?? undefined,

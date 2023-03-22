@@ -2,8 +2,11 @@ import { fill, range } from 'lodash-es'
 import { ChallengeRank, RANK_INCREMENTS } from '../../constants'
 import { localizeRank } from '../../helpers/util'
 import { IronswornPrerollDialog } from '../../rolls'
+import type { IronswornJournalPage } from '../journal-entry-page'
 
-export class JournalProgressPageSheet extends JournalPageSheet {
+export class JournalProgressPageSheet extends JournalPageSheet<
+	IronswornJournalPage<'progress'>
+> {
 	static get defaultOptions() {
 		const options = super.defaultOptions
 		options.height = 300
@@ -18,7 +21,9 @@ export class JournalProgressPageSheet extends JournalPageSheet {
 		}.hbs`
 	}
 
-	protected async _renderInner(data) {
+	protected async _renderInner(
+		data: FormApplicationData<IronswornJournalPage<'progress'>>
+	) {
 		await (loadTemplates as any)({
 			progressButtons:
 				'systems/foundry-ironsworn/templates/journal/progress-buttons.hbs',
@@ -27,7 +32,7 @@ export class JournalProgressPageSheet extends JournalPageSheet {
 			rankPips:
 				'systems/foundry-ironsworn/templates/journal/progress-rank-pips.hbs'
 		})
-		return await super._renderInner(data)
+		return await super._renderInner(data, {})
 	}
 
 	getData(options?: Partial<DocumentSheetOptions> | undefined): any {
@@ -76,7 +81,6 @@ export class JournalProgressPageSheet extends JournalPageSheet {
 	activateListeners(html: JQuery<HTMLElement>): void {
 		html.find('.rank-pip').on('click', async (ev) => {
 			await this.object.update({
-				// @ts-expect-error
 				system: { rank: parseInt(ev.currentTarget.dataset.rank ?? '0') }
 			})
 			this.render()
@@ -99,12 +103,15 @@ export class JournalProgressPageSheet extends JournalPageSheet {
 	}
 }
 
-function increment(object: any, direction: 1 | -1) {
+async function increment(
+	object: IronswornJournalPage<'progress'>,
+	direction: 1 | -1
+) {
 	const rank: ChallengeRank = object.system.rank ?? ChallengeRank.Troublesome
 	const increment = RANK_INCREMENTS[rank]
 	const currentValue = object.system.ticks || 0
 	const newValue = currentValue + increment * direction
-	return object.update({
+	return await object.update({
 		system: { ticks: Math.min(Math.max(newValue, 0), 40) }
 	})
 }

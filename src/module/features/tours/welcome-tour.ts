@@ -1,5 +1,6 @@
 import { compact } from 'lodash-es'
 import { CreateActorDialog } from '../../applications/createActorDialog'
+import type { IronTourStep } from './ironsworn_tour'
 import { IronswornTour } from './ironsworn_tour'
 
 export class WelcomeTour extends IronswornTour {
@@ -7,6 +8,8 @@ export class WelcomeTour extends IronswornTour {
 
 	constructor() {
 		super({
+			namespace: 'foundry-ironsworn',
+			id: 'welcome',
 			title: 'IRONSWORN.Tours.Welcome.Title',
 			description: 'IRONSWORN.Tours.Welcome.Description',
 			canBeResumed: false,
@@ -15,7 +18,7 @@ export class WelcomeTour extends IronswornTour {
 		})
 	}
 
-	get steps(): TourStep[] {
+	get steps(): IronTourStep[] {
 		return compact([
 			{
 				id: 'welcome',

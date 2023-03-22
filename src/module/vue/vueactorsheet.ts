@@ -1,8 +1,9 @@
 import type { App } from 'vue'
-import { IronswornActor } from '../actor/actor'
+import type { IronswornActor } from '../actor/actor'
 import type { IronswornItem } from '../item/item'
 import { $ActorKey } from './provisions'
-import { Constructor, VueAppMixin } from './vueapp.js'
+import type { Constructor } from './vueapp.js'
+import { VueAppMixin } from './vueapp.js'
 
 export abstract class VueActorSheet extends VueAppMixin<
 	Constructor<ActorSheet<IronswornActor>>

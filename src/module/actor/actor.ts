@@ -1,5 +1,5 @@
-// import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs'
 import { CreateActorDialog } from '../applications/createActorDialog'
+import type { IronswornItem } from '../item/item'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 
 let CREATE_DIALOG: CreateActorDialog
@@ -14,6 +14,14 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor {
 	}
 
 	system!: ActorSystemMap[T]['system']
+
+	override async createEmbeddedDocuments(
+		embeddedName: string,
+		data: Array<IronswornItem['_source']>,
+		context?: DocumentModificationContext<this> | undefined
+	): Promise<foundry.abstract.Document[]> {
+		return await super.createEmbeddedDocuments(embeddedName, data, context)
+	}
 
 	moveSheet?: SFCharacterMoveSheet
 
@@ -50,7 +58,7 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor {
 	}
 
 	async burnMomentum() {
-		if (this.type != 'character') return
+		if (this.type !== 'character') return
 		const { momentum, momentumReset } = (this as IronswornActor<'character'>)
 			.system
 		console.log({ momentum, momentumReset })

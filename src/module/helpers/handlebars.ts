@@ -52,6 +52,7 @@ const challengeRolls = (roll) =>
 		(r) => r.dice.length > 0 && r.dice[0].faces === CHALLENGE_DIE_SIDES
 	)
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class IronswornHandlebarsHelpers {
 	static registerHelpers() {
 		Handlebars.registerHelper('concat', (...args) => args.slice(0, -1).join(''))

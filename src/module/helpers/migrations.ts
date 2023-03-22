@@ -39,7 +39,7 @@ async function everyItem(fn: (x: IronswornItem) => any) {
 	// Actor-owned items (includes packs)
 	await everyActor(async (a) => {
 		for (const item of a.items.contents) {
-			await fn(item)
+			await fn(item as IronswornItem)
 		}
 	})
 }
@@ -54,7 +54,7 @@ async function noop() {
 async function fixFormidableSpelling() {
 	// Iterate through everything that has a rank (sites, items, owned items), and change "formidible" to "formidable"
 	await everyItem(async (x) => {
-		if ((x?.data?.data as any).rank === 'formidible') {
+		if ((x?.system as any).rank === 'formidible') {
 			console.log(`Upgrading ${x.type} / ${x.name}`)
 			await x.update({ system: { rank: 'formidable' } })
 		}
@@ -90,7 +90,7 @@ async function statsAreAlwaysNumbers() {
 		]
 		const update = {}
 		for (const k of statKeys) {
-			update[k] = parseInt(actor.data.data[k] || '0', 10)
+			update[k] = parseInt(actor.system[k] || '0', 10)
 		}
 		await actor.update({ system: update })
 	})
@@ -113,9 +113,7 @@ async function normalizeDelveTableRows() {
 		}
 	})
 	await everyItem(async (item) => {
-		const typesToMigrate = ['delve-domain', 'delve-theme'] as Array<
-			SourceConfig['Item']['type']
-		>
+		const typesToMigrate = ['delve-domain', 'delve-theme'] as ItemType[]
 		const keysToMigrate = ['system.features', 'system.dangers']
 		if (typesToMigrate.includes(item.type)) {
 			keysToMigrate.forEach((key) => {

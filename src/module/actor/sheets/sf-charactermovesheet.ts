@@ -46,7 +46,7 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 		this.localEmitter.emit('activateTab', tabKey)
 	}
 
-	protected _getHeaderButtons(): Application.HeaderButton[] {
+	protected _getHeaderButtons(): ApplicationHeaderButton[] {
 		return [
 			{
 				class: 'ironsworn-help',
@@ -69,7 +69,7 @@ Hooks.on('preUpdateActor', (actor: IronswornActor, data: any) => {
 		actor.moveSheet = undefined
 	}
 })
-Hooks.on('preUpdateSetting', (setting: Setting, data: any) => {
+Hooks.on('preUpdateSetting', (setting: SettingConfig, data: any) => {
 	if (setting.key === 'core.sheetClasses') {
 		for (const actor of game.actors ?? []) {
 			actor.moveSheet = undefined
