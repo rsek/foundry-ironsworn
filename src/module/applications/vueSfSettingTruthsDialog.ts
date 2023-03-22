@@ -26,12 +26,8 @@ export class SFSettingTruthsDialogVue extends VueAppMixin(FormApplication) {
 		// Nothing to do
 	}
 
-	getData(
-		options?: Partial<ApplicationOptions> | undefined
-	): MaybePromise<object>
-	getData(
-		options?: Partial<FormApplicationOptions> | undefined
-	): MaybePromise<object>
+	getData(options?: Partial<ApplicationOptions> | undefined)
+	getData(options?: Partial<FormApplicationOptions> | undefined)
 	async getData(options?: unknown) {
 		const pack = game.packs.get('foundry-ironsworn.starforgedtruths')
 		const documents = (await pack?.getDocuments()) as JournalEntry[]

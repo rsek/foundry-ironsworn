@@ -19,9 +19,7 @@ export class EditSectorDialog extends VueAppMixin(Application) {
 		}) as any
 	}
 
-	getData(
-		options?: Partial<ApplicationOptions> | undefined
-	): MaybePromise<object> {
+	getData(options?: Partial<ApplicationOptions> | undefined) {
 		return {
 			...super.getData(options),
 			sceneId: this.sceneId

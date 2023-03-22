@@ -19,9 +19,7 @@ export class AssetCompendiumBrowser extends VueAppMixin(Application) {
 		}) as any
 	}
 
-	getData(
-		options?: Partial<ApplicationOptions> | undefined
-	): MaybePromise<object> {
+	getData(options?: Partial<ApplicationOptions> | undefined) {
 		return {
 			...super.getData(),
 			toolset: this.toolset

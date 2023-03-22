@@ -15,7 +15,7 @@ export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
 		app.provide($ItemKey, this.item)
 	}
 
-	getData(...args): MaybePromise<object> {
+	getData(...args) {
 		return {
 			...super.getData(...args),
 			item: this.item.toObject()

@@ -14,9 +14,7 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 		super(options)
 	}
 
-	getData(
-		options?: Partial<ApplicationOptions> | undefined
-	): MaybePromise<object> {
+	getData(options?: Partial<ApplicationOptions> | undefined) {
 		return {
 			...super.getData(options),
 			toolset: this.toolset,

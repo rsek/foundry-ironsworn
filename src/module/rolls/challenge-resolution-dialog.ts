@@ -43,9 +43,7 @@ export class ChallengeResolutionDialog extends VueAppMixin(Application) {
 		}) as any
 	}
 
-	getData(
-		options?: Partial<ApplicationOptions> | undefined
-	): MaybePromise<object> {
+	getData(options?: Partial<ApplicationOptions> | undefined) {
 		return {
 			...super.getData(options),
 			messageId: this.messageId
