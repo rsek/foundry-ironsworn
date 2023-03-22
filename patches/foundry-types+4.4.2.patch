@@ -1,0 +1,78 @@
+diff --git a/node_modules/foundry-types/client/config.d.ts b/node_modules/foundry-types/client/config.d.ts
+index 0ae9cc8..c4ab545 100644
+--- a/node_modules/foundry-types/client/config.d.ts
++++ b/node_modules/foundry-types/client/config.d.ts
+@@ -21,7 +21,8 @@ declare global {
+         TWallDocument extends WallDocument<TScene | null>,
+         TScene extends Scene,
+         TUser extends User,
+-        TEffectsCanvasGroup extends EffectsCanvasGroup
++        TEffectsCanvasGroup extends EffectsCanvasGroup,
++        TJournalEntryPage extends JournalEntryPage
+     > {
+         /** Configure debugging flags to display additional information */
+         debug: {
+@@ -61,7 +62,8 @@ declare global {
+                     }
+                 >
+             >;
+-            typeLabels: Record<string, string | undefined>;
++            typeLabels: Record<TActor['type'], string | undefined>;
++            typeIcons: Record<TActor['type'], string>,
+         };
+ 
+         /** Configuration for the Cards primary Document type */
+@@ -115,7 +117,9 @@ declare global {
+                     }
+                 >
+             >;
+-            typeLabels: Record<string, string | undefined>;
++
++            typeLabels: Record<TItem['type'], string | undefined>;
++            typeIcons: Record<TItem['type'], string>,
+         };
+ 
+         /** Configuration for the Combat document */
+@@ -134,7 +138,12 @@ declare global {
+ 
+         /** Configuration for the JournalEntry entity */
+         JournalEntry: {
+-            documentClass: typeof JournalEntry;
++            documentClass: {
++                new (
++                    data: PreCreate<TJournalEntryPage["_source"]>,
++                    context?: DocumentConstructionContext<TJournalEntryPage["parent"]>
++                ): TJournalEntryPage;
++            };
+             noteIcons: {
+                 Anchor: string;
+                 [key: string]: string;
+@@ -180,6 +189,15 @@ declare global {
+         /*  Embedded Documents                          */
+         /* -------------------------------------------- */
+ 
++        /** Configuration for the JournalEntryPage embedded document type. */
++        JournalEntryPage: {
++          documentClass: ConstructorOf<TJournalEntryPage>,
++          typeLabels: Record<TJournalEntryPage['type'], string | undefined>;
++          typeIcons: Record<TJournalEntryPage['type'], string>,
++          defaultType: TJournalEntryPage['type'],
++          sidebarIcon: string
++        },
++
+         /** Configuration for the AmbientLight embedded document type and its representation on the game Canvas */
+         AmbientLight: {
+             documentClass: ConstructorOf<TAmbientLightDocument>;
+diff --git a/node_modules/foundry-types/common/utils/helpers.d.ts b/node_modules/foundry-types/common/utils/helpers.d.ts
+index 4b7edd4..a25ae1e 100644
+--- a/node_modules/foundry-types/common/utils/helpers.d.ts
++++ b/node_modules/foundry-types/common/utils/helpers.d.ts
+@@ -297,6 +297,8 @@ declare global {
+         inplace?: boolean;
+         enforceTypes?: boolean;
+         performDeletions?: boolean;
++        /** @default true */
++        recursive?: boolean
+     }
+ 
+     namespace globalThis {
