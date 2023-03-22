@@ -1,9 +1,12 @@
 import type { App } from 'vue'
+import { IronswornActor } from '../actor/actor'
 import type { IronswornItem } from '../item/item'
 import { $ActorKey } from './provisions'
-import { VueAppMixin } from './vueapp.js'
+import { Constructor, VueAppMixin } from './vueapp.js'
 
-export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
+export abstract class VueActorSheet extends VueAppMixin<
+	Constructor<ActorSheet<IronswornActor>>
+>(ActorSheet) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'actor']
@@ -14,15 +17,22 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
 		app.provide($ActorKey, this.actor)
 	}
 
-	getData(...args): MaybePromise<object> {
+	override getData(...args) {
 		return {
 			...super.getData(...args),
 			actor: this.actor.toObject()
 		}
 	}
 
+	// getData(...args): MaybePromise<object> {
+	// 	return {
+	// 		...super.getData(...args),
+	// 		actor: this.actor.toObject()
+	// 	}
+	// }
+
 	async close(...args) {
-		this.actor.moveSheet?.close(...args)
+		await this.actor.moveSheet?.close(...args)
 		await super.close(...args)
 	}
 
@@ -43,7 +53,10 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
 	_toggleEditMode(e: JQuery.ClickEvent) {
 		e.preventDefault()
 
-		const currentValue = this.actor.getFlag('foundry-ironsworn', 'edit-mode')
+		const currentValue = this.actor.getFlag(
+			'foundry-ironsworn',
+			'edit-mode'
+		) as boolean
 		this.actor.setFlag('foundry-ironsworn', 'edit-mode', !currentValue)
 	}
 
@@ -51,14 +64,10 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
 		const data = (TextEditor as any).getDragEventData(event)
 
 		if (data.type === 'AssetBrowserData') {
-			const document = (await fromUuid(data.uuid)) as
-				| StoredDocument<IronswornItem>
-				| undefined
+			const document = (await fromUuid(data.uuid)) as IronswornItem | undefined
 
 			if (document != null) {
-				this.actor.createEmbeddedDocuments('Item', [
-					(document as any).toObject()
-				])
+				await this.actor.createEmbeddedDocuments('Item', [document.toObject()])
 			}
 		}
 

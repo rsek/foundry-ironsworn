@@ -1,4 +1,5 @@
 import type { ChallengeRank } from '../constants'
+import { IronswornJournalPage } from './journal-entry-page'
 
 interface CounterBase {
 	max: number
@@ -30,51 +31,36 @@ interface ProgressTrack {
 	countdown?: Countdown
 }
 
-export interface ProgressTrackDataSourceData extends ProgressTrack {}
+export interface ProgressTrackSystem extends ProgressTrack {}
 
 export interface ProgressTrackDataSource {
 	// distinguish progress types with different sheets?
 	type: 'progress'
-	system: ProgressTrackDataSourceData
-}
-
-export interface ProgressTrackDataPropertiesData
-	extends ProgressTrackDataSourceData {}
-
-export interface ProgressTrackDataProperties {
-	type: 'progress'
-	system: ProgressTrackDataPropertiesData
+	system: ProgressTrackSystem
 }
 
 /// //////// CLOCKS
 
-export interface ClockDataSourceData extends CounterBase {
+export interface ClockSystem extends CounterBase {
 	clockType: 'tension' | 'campaign'
 }
-
-export interface ClockDataPropertiesData extends ClockDataSourceData {}
-
 export interface ClockDataSource {
 	type: 'clock'
-	system: ClockDataSourceData
+	system: ClockSystem
 }
-export interface ClockDataProperties {
-	type: 'clock'
-	system: ClockDataPropertiesData
-}
-
-export type JournalEntryPageDataSource =
-	| ProgressTrackDataSource
-	| ClockDataSource
-export type JournalEntryPageDataProperties =
-	| ProgressTrackDataProperties
-	| ClockDataProperties
 
 declare global {
-	interface SourceConfig {
-		JournalEntryPage: JournalEntryPageDataSource
+	type JournalEntryPageSystemMap = {
+		progress: ProgressTrackDataSource
+		clock: ClockDataSource
+	} & {
+		[K in foundry.JournalEntryPageMetadata['coreTypes'][number]]: {
+			system: object
+		}
 	}
-	interface DataConfig {
-		JournalEntryPage: JournalEntryPageDataProperties
+	type JournalEntryPageTypeMap = {
+		[K in keyof JournalEntryPageSystemMap]: JournalEntryPageSystemMap[K] &
+			IronswornJournalPage
 	}
+	type JournalEntryPageType = keyof JournalEntryPageSystemMap
 }

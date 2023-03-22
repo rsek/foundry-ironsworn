@@ -1,34 +1,33 @@
-import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs'
-import type { BaseUser } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/documents.mjs'
 import { clamp } from 'lodash-es'
 import { ChallengeRank, RANK_INCREMENTS } from '../constants'
-import type { ProgressTrackDataPropertiesData } from './journal-entry-page-types'
 
 /**
  * Extends the base {@link JournalEntryPage} document class.
  */
 export class IronswornJournalPage<
-	T extends DataConfig['JournalEntryPage'] = DataConfig['JournalEntryPage']
-> extends JournalEntryPage {
-	system!: T['system']
-	type!: T['type']
+	T extends JournalEntryPageType = JournalEntryPageType
+> extends JournalEntryPage<JournalEntry | null> {
+	system!: JournalEntryPageSystemMap[T]['system']
+	get type(): T {
+		return super.type as T
+	}
+
 	protected override async _preCreate(
-		data: JournalEntryPageData.ConstructorData,
-		options: DocumentModificationOptions,
-		user: BaseUser
+		data: PreDocumentId<this['_source']>,
+		options: DocumentModificationContext<this>,
+		user: foundry.documents.BaseUser
 	): Promise<void> {
 		// FIXME: JEPs aren't initialized with proper defaults, so we DIY it.
 		// https://github.com/foundryvtt/foundryvtt/issues/8628
-		const defaults = game.system.template.JournalEntryPage?.[
+		const defaults = (game.system as any).template.JournalEntryPage?.[
 			// @ts-expect-error
 			data.type
-		] as JournalEntryPageDataSource
-		if (defaults) {
+		] as ReturnType<this['toObject']>
+		if (defaults != null) {
 			const alreadySet = data.system
 			const newSourceData = mergeObject(defaults, alreadySet ?? {}, {
 				recursive: true
 			})
-			// @ts-expect-error
 			this.updateSource({ system: newSourceData })
 		}
 		await super._preCreate(data, options, user)
@@ -41,7 +40,7 @@ export class IronswornJournalPage<
 	 */
 	async markProgress(progressUnits = 1) {
 		if (this.type !== 'progress') return
-		const system = this.system as ProgressTrackDataPropertiesData
+		const system = (this as IronswornJournalPage<'progress'>).system
 		const legacyRank = ChallengeRank[system.rank]
 		const oldTicks = system.ticks ?? 0
 		const minTicks = 0
@@ -56,18 +55,17 @@ declare global {
 	interface DocumentClassConfig {
 		JournalEntryPage: typeof IronswornJournalPage
 	}
-	// eslint-disable-next-line @typescript-eslint/no-namespace
-	namespace Game {
-		interface SystemData<T> extends PackageData<T> {
-			model: {
-				JournalEntryPage: Record<string, Record<string, unknown>>
-			}
-			template: {
-				JournalEntryPage?: {
-					types: string[]
-					templates?: Record<string, unknown>
-				} & Record<string, unknown>
-			}
-		}
-	}
+	// namespace Game {
+	// 	interface SystemData<T> extends PackageData<T> {
+	// 		model: {
+	// 			JournalEntryPage: Record<string, Record<string, unknown>>
+	// 		}
+	// 		template: {
+	// 			JournalEntryPage?: {
+	// 				types: string[]
+	// 				templates?: Record<string, unknown>
+	// 			} & Record<string, unknown>
+	// 		}
+	// 	}
+	// }
 }

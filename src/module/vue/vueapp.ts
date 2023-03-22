@@ -8,7 +8,7 @@ import { IronswornSettings } from '../helpers/settings.js'
 import { IronswornVuePlugin } from './vue-plugin.js'
 import { pickBy } from 'lodash-es'
 
-type Constructor<T = object> = abstract new (...args: any[]) => T
+export type Constructor<T = object> = abstract new (...args: any[]) => T
 
 export interface VueApplicationOptions extends ApplicationOptions {
 	rootComponent: Component
@@ -23,10 +23,12 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 		vueListenersActive = false
 		localEmitter: LocalEmitter = Mitt<LocalEmitterEvents>()
 
+		options!: VueApplicationOptions
+
 		static get defaultOptions(): VueApplicationOptions {
 			return mergeObject(
 				// @ts-expect-error TS complains about super not having defaultOptions here, but Application does have it -- just on the class, not the constructor.
-				super.defaultOptions as ApplicaionOptions,
+				super.defaultOptions,
 				{
 					classes: ['ironsworn'],
 					template: 'systems/foundry-ironsworn/templates/vue-app.hbs',
@@ -40,8 +42,10 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 			// Implement in descendants if needed
 		}
 
-		async render(...renderArgs) {
-			const vueOptions = this.options as VueApplicationOptions
+		async render(
+			...args: [boolean | undefined, RenderOptions | undefined]
+		): Promise<this> {
+			const vueOptions = this.options
 			const data = await this.getData()
 
 			// Create the Vue App instance
@@ -86,16 +90,16 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 						this.activateVueListeners($(this.element), true)
 					}, 150)
 				}
-				return
+				return this
 			}
 
 			// Stop here if we're closing
-			if (this._state === Application.RENDER_STATES.CLOSING) return
+			if (this._state === Application.RENDER_STATES.CLOSING) return this
 
 			// No active Vue root, so run Foundry's render and mount it
 			try {
 				// Execute Foundry's render.
-				await this._render(...renderArgs)
+				await this._render(...args)
 
 				// Run Vue's render, assign it to our prop for tracking.
 				const selector = `[data-appid="${this.appId}"] .vueroot`
@@ -111,7 +115,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 				Hooks.onError('Application#render', err, {
 					msg: `An error occurred while rendering ${this.constructor.name} ${this.id}`,
 					log: 'error',
-					...renderArgs
+					...args
 				})
 				console.error(
 					`An error occurred while rendering ${this.constructor.name} ${this.id}: ${err.message}`,
@@ -126,7 +130,13 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 			return this
 		}
 
-		async close(options?: Application.CloseOptions | undefined) {
+		async close(
+			options?:
+				| ({
+						force?: boolean | undefined
+				  } & Record<string, unknown>)
+				| undefined
+		) {
 			this.vueApp?.unmount()
 			this.vueApp = undefined
 			this.vueRoot = undefined

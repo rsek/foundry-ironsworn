@@ -10,15 +10,13 @@ import { hashLookup } from './import'
 
 export async function getFoundryTableByDfId(
 	dfid: string
-): Promise<StoredDocument<RollTable> | undefined> {
+): Promise<RollTable | undefined> {
 	const isd = await cachedDocumentsForPack('foundry-ironsworn.ironswornoracles')
 	const sfd = await cachedDocumentsForPack(
 		'foundry-ironsworn.starforgedoracles'
 	)
 	const matcher = (x) => x.id === hashLookup(dfid)
-	return (isd?.find(matcher) ?? sfd?.find(matcher)) as
-		| StoredDocument<RollTable>
-		| undefined
+	return (isd?.find(matcher) ?? sfd?.find(matcher)) as RollTable | undefined
 }
 
 export async function getFoundryMoveByDfId(

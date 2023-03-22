@@ -1,6 +1,3 @@
-import type { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData'
-import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type {
 	IAssetType,
 	IMoveCategory,
@@ -115,11 +112,9 @@ export async function importFromDataforged() {
  * MOVES
  */
 
-function movesForCategories(
-	categories: IMoveCategory[]
-): Array<ItemDataConstructorData & Record<string, unknown>> {
+function movesForCategories(categories: IMoveCategory[]) {
 	const movesToCreate = [] as Array<
-		ItemDataConstructorData & Record<string, unknown>
+		PreCreate<IronswornItem<'sfmove'>['_source']>
 	>
 	for (const category of categories) {
 		for (const move of category.Moves) {
@@ -146,14 +141,14 @@ function movesForCategories(
 
 async function processISMoves() {
 	const movesToCreate = movesForCategories(ISMoveCategories)
-	await Item.createDocuments(movesToCreate, {
+	await Item.createDocuments<IronswornItem<'sfmove'>>(movesToCreate, {
 		pack: 'foundry-ironsworn.ironswornmoves',
 		keepId: true
 	})
 }
 async function processSFMoves() {
 	const movesToCreate = movesForCategories(SFMoveCategories)
-	await Item.createDocuments(movesToCreate, {
+	await Item.createDocuments<IronswornItem<'sfmove'>>(movesToCreate, {
 		pack: 'foundry-ironsworn.starforgedmoves',
 		keepId: true
 	})
@@ -165,7 +160,7 @@ async function processSFMoves() {
 
 function assetsForTypes(types: IAssetType[]) {
 	const assetsToCreate = [] as Array<
-		ItemDataConstructorData & Record<string, unknown>
+		PreCreate<IronswornItem<'asset'>['_source']>
 	>
 	for (const assetType of types) {
 		for (const asset of assetType.Assets) {
@@ -230,7 +225,7 @@ function assetsForTypes(types: IAssetType[]) {
 
 async function processSFAssets() {
 	const assetsToCreate = assetsForTypes(SFAssetTypes)
-	await Item.createDocuments(assetsToCreate, {
+	await Item.createDocuments<IronswornItem<'asset'>>(assetsToCreate, {
 		pack: 'foundry-ironsworn.starforgedassets',
 		keepId: true
 	})
@@ -238,7 +233,7 @@ async function processSFAssets() {
 
 async function processISAssets() {
 	const assetsToCreate = assetsForTypes(ISAssetTypes)
-	await Item.createDocuments(assetsToCreate, {
+	await Item.createDocuments<IronswornItem<'asset'>>(assetsToCreate, {
 		pack: 'foundry-ironsworn.ironswornassets',
 		keepId: true
 	})
@@ -249,7 +244,7 @@ async function processISAssets() {
  */
 async function processOracle(
 	oracle: IOracle,
-	output: RollTableDataConstructorData[]
+	output: Array<PreCreate<RollTable['_source']>>
 ) {
 	// Oracles JSON is a tree we wish to iterate through depth first adding
 	// parents prior to their children, and children in order
@@ -280,7 +275,7 @@ async function processOracle(
 					_id: hashLookup(tableRow.$id ?? ''),
 					range: [tableRow.Floor, tableRow.Ceiling],
 					text: tableRow.Result && renderLinksInStr(text)
-				} as TableResultDataConstructorData
+				} as PreCreate<TableResult['_source']>
 			}).filter((x) => x.range[0] !== null)
 		})
 	}
@@ -289,7 +284,7 @@ async function processOracle(
 }
 async function processOracleCategory(
 	cat: IOracleCategory,
-	output: RollTableDataConstructorData[]
+	output: Array<PreCreate<RollTable['_source']>>
 ) {
 	for (const oracle of cat.Oracles ?? []) await processOracle(oracle, output)
 	for (const child of cat.Categories ?? [])
@@ -297,7 +292,7 @@ async function processOracleCategory(
 }
 
 async function processSFOracles() {
-	const oraclesToCreate: RollTableDataConstructorData[] = []
+	const oraclesToCreate: Array<PreCreate<RollTable['_source']>> = []
 
 	for (const category of SFOracleCategories) {
 		await processOracleCategory(category, oraclesToCreate)
@@ -309,7 +304,7 @@ async function processSFOracles() {
 }
 
 async function processISOracles() {
-	const oraclesToCreate: RollTableDataConstructorData[] = []
+	const oraclesToCreate: Array<PreCreate<RollTable['_source']>> = []
 
 	for (const category of ISOracleCategories) {
 		await processOracleCategory(category, oraclesToCreate)
@@ -322,7 +317,7 @@ async function processISOracles() {
 
 async function processSFEncounters() {
 	const encountersToCreate = [] as Array<
-		ItemDataConstructorData & Record<string, unknown>
+		PreCreate<IronswornItem<'progress'>['_source']>
 	>
 	for (const encounter of starforged.Encounters) {
 		const description = await renderTemplate(
@@ -369,17 +364,17 @@ async function processSFEncounters() {
 			})
 		}
 	}
-	await Item.createDocuments(encountersToCreate, {
+	await Item.createDocuments<IronswornItem<'progress'>>(encountersToCreate, {
 		pack: 'foundry-ironsworn.starforgedencounters',
 		keepId: true
 	})
 }
 
 async function processSFFoes() {
-	const foesPack = game.packs.get('foundry-ironsworn.starforgedencounters')
-	const foeItems = (await foesPack?.getDocuments()) as Array<
-		StoredDocument<IronswornItem>
-	>
+	const foesPack = game.packs.get<
+		CompendiumCollection<IronswornItem<'progress'>>
+	>('foundry-ironsworn.starforgedencounters')
+	const foeItems = await foesPack?.getDocuments()
 	for (const foeItem of foeItems ?? []) {
 		const actor = await IronswornActor.create(
 			{
@@ -393,7 +388,7 @@ async function processSFFoes() {
 			{
 				name: foeItem.name ?? 'wups',
 				type: 'progress',
-				system: foeItem.system as unknown as Record<string, unknown>
+				system: foeItem.system
 			}
 		])
 	}

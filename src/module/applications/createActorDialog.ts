@@ -1,4 +1,3 @@
-import type { ActorDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData'
 import { sample } from 'lodash-es'
 import { IronswornActor } from '../actor/actor'
 import { getFoundryTableByDfId } from '../dataforged'
@@ -8,7 +7,10 @@ interface CreateActorDialogOptions extends FormApplicationOptions {
 	folder: string
 }
 
-export class CreateActorDialog extends FormApplication<CreateActorDialogOptions> {
+export class CreateActorDialog extends FormApplication<
+	IronswornActor,
+	CreateActorDialogOptions
+> {
 	constructor() {
 		super({})
 	}
@@ -31,7 +33,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		} as FormApplicationOptions)
 	}
 
-	getData(_options?: Application.RenderOptions): any {
+	getData(_options?: RenderOptions): any {
 		return {
 			sfenabled: IronswornSettings.starforgedToolsEnabled
 		}
@@ -112,7 +114,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		const name = await this._randomStarforgedName()
 
 		this._createWithFolder(
-			name || game.i18n.localize(CONFIG.Actor.typeLabels.character),
+			name ?? game.i18n.localize(CONFIG.Actor.typeLabels.character),
 			'character',
 			ev.currentTarget.dataset.img || undefined,
 			'ironsworn.StarforgedCharacterSheet'

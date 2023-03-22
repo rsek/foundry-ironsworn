@@ -2,7 +2,8 @@
  * A Foundry implementation of the Ironsworn family of systems, by Shawn Tomkin
  */
 
-import { IRONSWORN, IronswornConfig } from './config'
+import type { IronswornConfig } from './config'
+import { IRONSWORN } from './config'
 import { IronswornActor } from './module/actor/actor'
 import { IronswornCharacterSheetV2 } from './module/actor/sheets/charactersheet-v2'
 import { FoeSheet } from './module/actor/sheets/foesheet'
@@ -60,7 +61,8 @@ declare global {
 		WallDocument<Scene | null>,
 		Scene,
 		User<IronswornActor>,
-		EffectsCanvasGroup
+		EffectsCanvasGroup,
+		IronswornJournalPage
 	>
 	interface IronGame
 		extends Game<
@@ -79,6 +81,20 @@ declare global {
 	}
 
 	const CONFIG: ConfigIronsworn
+
+	namespace globalThis {
+		// eslint-disable-next-line no-var
+		var game: IronGame
+
+		// eslint-disable-next-line no-var
+		var ui: FoundryUI<
+			IronswornActor,
+			ActorDirectory<IronswornActor>,
+			IronswornItem,
+			ChatLog,
+			CompendiumDirectory
+		>
+	}
 }
 
 Hooks.once('init', async () => {
