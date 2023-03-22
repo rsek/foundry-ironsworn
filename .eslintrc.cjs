@@ -44,7 +44,13 @@ module.exports = {
 				name: 'lodash',
 				message: 'Please use `lodash-es` instead.'
 			}
-		]
+		],
+		// namespaces are used in dependent types, we use them to be consistent
+		'@typescript-eslint/no-namespace': 'off',
+		// temporarily disabled to reduce noise while migrating to new types package
+		'@typescript-eslint/no-floating-promises': 'off',
+		'@typescript-eslint/consistent-type-assertions': 'off',
+		'no-useless-call': 'off'
 	},
 	overrides: [
 		{
