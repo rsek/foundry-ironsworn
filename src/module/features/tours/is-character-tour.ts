@@ -3,7 +3,7 @@ import type { StarforgedCharacterSheet } from '../../actor/sheets/sf-charactersh
 import { IronswornTour } from './ironsworn_tour'
 
 export class ISCharacterTour extends IronswornTour {
-	constructor(actor: IronswornActor) {
+	constructor(actor: IronswornActor<'character'>) {
 		const sheet = actor.sheet as StarforgedCharacterSheet
 		const sheetSel = `.app[data-appid="${sheet?.appId}"]`
 
