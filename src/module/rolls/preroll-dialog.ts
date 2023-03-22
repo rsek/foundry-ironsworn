@@ -7,9 +7,7 @@ import type {
 import { capitalize, cloneDeep, maxBy, minBy, sortBy } from 'lodash-es'
 import type { IronswornActor } from '../actor/actor'
 import { getFoundryMoveByDfId } from '../dataforged'
-import { IronswornSettings } from '../helpers/settings'
 import type { IronswornItem } from '../item/item'
-import type { SFMoveDataPropertiesData } from '../item/itemtypes'
 import type {
 	PreRollOptions,
 	RollOutcome,
@@ -57,7 +55,7 @@ function rollableOptions(trigger: IMoveTrigger) {
 
 export function moveHasRollableOptions(move: IronswornItem) {
 	if (move.type !== 'sfmove') return false
-	const data = move.system as SFMoveDataPropertiesData
+	const data = (move as IronswornItem<'sfmove'>).system
 	const options = rollableOptions(data.Trigger)
 	return options.length > 0
 }
@@ -164,15 +162,16 @@ function prerollOptionsWithFormData(
 	return opts
 }
 
-export class IronswornPrerollDialog extends Dialog<
-	PreRollOptions & DialogOptions
-> {
+export class IronswornPrerollDialog
+	extends Dialog
+	implements Application<PreRollOptions & ApplicationOptions>
+{
 	prerollOptions: PreRollOptions = {}
 
 	constructor(
 		pro: PreRollOptions,
-		data: Dialog.Data,
-		options?: Partial<DialogOptions>
+		data: DialogData,
+		options?: Partial<PreRollOptions & ApplicationOptions>
 	) {
 		super(data, options)
 		this.prerollOptions = pro
@@ -216,7 +215,7 @@ export class IronswornPrerollDialog extends Dialog<
 				}
 			}
 		}
-		return new IronswornPrerollDialog(prerollOptions, {
+		return await new IronswornPrerollDialog(prerollOptions, {
 			title,
 			content,
 			buttons,
@@ -263,7 +262,7 @@ export class IronswornPrerollDialog extends Dialog<
 				}
 			}
 		}
-		return new IronswornPrerollDialog(prerollOptions, {
+		return await new IronswornPrerollDialog(prerollOptions, {
 			title,
 			content,
 			buttons,
@@ -290,7 +289,7 @@ export class IronswornPrerollDialog extends Dialog<
 		}
 
 		return await this.showForMoveItem(
-			move,
+			move as IronswornItem<'sfmove'>,
 			{
 				moveId: move.id || undefined,
 				progress: opts?.progress
@@ -300,13 +299,13 @@ export class IronswornPrerollDialog extends Dialog<
 	}
 
 	private static async showForMoveItem(
-		move: IronswornItem,
+		move: IronswornItem<'sfmove'>,
 		prerollOptions: PreRollOptions,
 		opts?: showForMoveOpts
 	) {
 		prerollOptions.actorId = opts?.actor?.id || undefined
 
-		const data = move.system as SFMoveDataPropertiesData
+		const data = move.system
 		const options = rollableOptions(data.Trigger)
 		if (options.length === 0) {
 			if (prerollOptions.progress == null)
@@ -385,7 +384,7 @@ export class IronswornPrerollDialog extends Dialog<
 			addButton(i, option.Method, option.Using)
 		}
 
-		return new IronswornPrerollDialog(prerollOptions, {
+		return await new IronswornPrerollDialog(prerollOptions, {
 			title,
 			content,
 			buttons,
