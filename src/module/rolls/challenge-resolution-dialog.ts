@@ -1,6 +1,12 @@
 import ChallengeResolutionDialogVue from '../vue/challenge-resolution-dialog.vue'
 import { VueAppMixin } from '../vue/vueapp.js'
 
+declare global {
+	namespace Application {
+		type CloseOptions = Parameters<Application['close']>[0]
+	}
+}
+
 export class ChallengeResolutionDialog extends VueAppMixin(Application) {
 	private constructor(
 		protected messageId: string,
