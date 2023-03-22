@@ -39,7 +39,6 @@ import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
 
 import 'handlebars'
-
 import 'virtual:svg-icons-register'
 
 declare global {
