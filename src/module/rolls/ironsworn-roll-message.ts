@@ -10,6 +10,7 @@ import { IronswornRoll } from '.'
 import type { IronswornActor } from '../actor/actor'
 import type { CharacterDataPropertiesData } from '../actor/actortypes'
 import { getFoundryTableByDfId } from '../dataforged'
+import { IronswornItem } from '../item/item'
 import { enrichMarkdown } from '../vue/vue-plugin'
 import { DfRollOutcome, RollOutcome } from './ironsworn-roll'
 import { renderRollGraphic } from './roll-graphic'
@@ -261,7 +262,7 @@ export class IronswornRollMessage {
 		if (move?.type !== 'sfmove') return ret
 
 		const key = DfRollOutcome[theOutcome]
-		const moveSystem = move.system as SFMoveDataPropertiesData
+		const moveSystem = (move as IronswornItem<'sfmove'>).system
 		let moveOutcome = moveSystem.Outcomes?.[key] as IOutcomeInfo
 		if (this.roll.isMatch && moveOutcome?.['With a Match']?.Text)
 			moveOutcome = moveOutcome['With a Match']
@@ -319,7 +320,7 @@ export class IronswornRollMessage {
 		const move = await this.roll.moveItem
 		if (move?.type !== 'sfmove') return {}
 
-		const system = move.system as SFMoveDataPropertiesData
+		const system = (move as IronswornItem<'sfmove'>).system
 		const dfIds = system.Oracles ?? []
 		const nextOracles = compact(
 			await Promise.all(dfIds.map(getFoundryTableByDfId))

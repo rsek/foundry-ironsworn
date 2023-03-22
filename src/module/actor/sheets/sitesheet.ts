@@ -1,8 +1,9 @@
-import type { SiteDataSourceData } from '../actortypes'
 import { VueActorSheet } from '../../vue/vueactorsheet'
 import siteSheetVue from '../../vue/site-sheet.vue'
+import type { IronswornItem } from '../../item/item'
+import type { IronswornActor } from '../actor'
 
-export class IronswornSiteSheet extends VueActorSheet {
+export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			width: 750,
@@ -11,9 +12,12 @@ export class IronswornSiteSheet extends VueActorSheet {
 		}) as any
 	}
 
-	async _onDropItem(event: DragEvent, data: ActorSheet.DropData.Item) {
+	async _onDropItem<T extends IronswornItem>(
+		event: DragEvent,
+		data: DropCanvasData<'Item', T>
+	) {
 		// Fetch the item. We only want to override denizens (progress-type items)
-		const item = await Item.fromDropData(data)
+		const item = await Item.fromDropData<T>(data)
 		if (item == null) return false
 		if (item.type !== 'progress') {
 			return await super._onDropItem(event, data)
@@ -25,7 +29,7 @@ export class IronswornSiteSheet extends VueActorSheet {
 		)[0]
 		if (!dropTarget) return false
 		const idx = parseInt(dropTarget.dataset.idx || '')
-		const { denizens } = this.actor.system as SiteDataSourceData
+		const { denizens } = this.actor.system
 		if (!denizens[idx]) return false
 
 		// Set the denizen description

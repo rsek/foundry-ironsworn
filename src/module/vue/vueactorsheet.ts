@@ -5,9 +5,9 @@ import { $ActorKey } from './provisions'
 import type { Constructor } from './vueapp.js'
 import { VueAppMixin } from './vueapp.js'
 
-export abstract class VueActorSheet extends VueAppMixin<
-	Constructor<ActorSheet<IronswornActor>>
->(ActorSheet) {
+export abstract class VueActorSheet<
+	T extends IronswornActor
+> extends VueAppMixin<Constructor<ActorSheet<IronswornActor>>>(ActorSheet) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'actor']
@@ -22,7 +22,11 @@ export abstract class VueActorSheet extends VueAppMixin<
 		return {
 			...super.getData(...args),
 			actor: this.actor.toObject()
-		}
+		} as ActorSheetData<T>
+	}
+
+	get actor(): T {
+		return super.actor as T
 	}
 
 	async close(...args) {

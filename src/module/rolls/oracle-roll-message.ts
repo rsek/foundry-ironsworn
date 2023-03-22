@@ -1,4 +1,3 @@
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import { compact, pick, sortBy } from 'lodash-es'
 import { marked } from 'marked'
 import { getFoundryTableByDfId } from '../dataforged'
@@ -91,7 +90,7 @@ export class OracleRollMessage {
 	}
 
 	static fromTableResults(
-		tableResults: TableResultDataConstructorData[],
+		tableResults: Array<PreCreate<TableResult['_source']>>,
 		title: string,
 		subtitle?: string
 	) {
@@ -180,8 +179,8 @@ export class OracleRollMessage {
 			createIronswornOracleTree()
 		])
 		const pathElements =
-			findPathToNodeByTableId(starforgedRoot, uuid.documentId!) ??
-			findPathToNodeByTableId(ironswornRooot, uuid.documentId!)
+			findPathToNodeByTableId(starforgedRoot, uuid.documentId) ??
+			findPathToNodeByTableId(ironswornRooot, uuid.documentId)
 		pathElements.shift() // no display name for root node
 		pathElements.pop() // last node is the table we rolled
 		return pathElements.map((x) => x.displayName).join(' / ')
@@ -258,7 +257,7 @@ export class OracleRollMessage {
 
 		// Older messages include tableId/tablePack; if that's the case we reconstruct a uuid
 		// Compendium.foundry-ironsworn.starforgedoracles.16fbeb54dfe52e19
-		const { tableId, tablePack } = json
+		const { tableId, tablePack }: { tableId: string; tablePack: string } = json
 		if (tableId) {
 			delete json.tableId
 			delete json.tablePack

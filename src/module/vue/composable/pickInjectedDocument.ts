@@ -1,4 +1,3 @@
-import type { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 import { inject } from 'vue'
 import { $ActorKey, $ItemKey, ActorKey, ItemKey } from '../provisions.js'
 
@@ -6,7 +5,9 @@ import { $ActorKey, $ItemKey, ActorKey, ItemKey } from '../provisions.js'
  * Selects the injected document of the appropriate type.
  * @param documentType The type of injected document to use.
  */
-export function pickInjectedDocument<T extends DocumentType>(documentType: T) {
+export function pickInjectedDocument<T extends 'Actor' | 'Item'>(
+	documentType: T
+) {
 	switch (documentType) {
 		case 'Actor': {
 			return {
