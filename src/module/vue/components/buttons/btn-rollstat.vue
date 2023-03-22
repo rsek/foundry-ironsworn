@@ -13,10 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 import type { ExtractPropTypes } from 'vue'
-import { inject, useSlots } from 'vue'
-import type { AssetDataProperties } from '../../../item/itemtypes.js'
+import { inject } from 'vue'
+import type { IronswornItem } from '../../../item/item'
 import { IronswornPrerollDialog } from '../../../rolls'
 import { $ActorKey, $ItemKey } from '../../provisions'
 import IronBtn from './iron-btn.vue'
@@ -33,7 +32,7 @@ interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {
 const props = defineProps<Props>()
 
 const $actor = inject($ActorKey, undefined)
-const $item = inject($ItemKey, undefined)
+const $item = inject($ItemKey, undefined) as IronswornItem<'asset'>
 
 function rollStat(): any {
 	if (props.documentType === 'Item') {
@@ -42,7 +41,7 @@ function rollStat(): any {
 		// so, for now, we assume that assets are the only Items that we bother to roll with.
 		return IronswornPrerollDialog.showForStat(
 			name,
-			($item?.data as AssetDataProperties).data.track.current,
+			$item.system.track.current,
 			$actor
 		)
 	} else if (props.documentType === 'Actor') {

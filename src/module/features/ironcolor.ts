@@ -25,7 +25,7 @@ export function updateColorScheme(
 	newColorScheme: ClientSettings.Values['foundry-ironsworn.color-scheme']
 ) {
 	const colorSchemes = Object.keys(
-		game.settings.settings.get('foundry-ironsworn.color-scheme')
+		game.settings.settings.get('foundry-ironsworn.color-scheme' as any)
 			?.choices as unknown as Record<string, unknown>
 	)
 

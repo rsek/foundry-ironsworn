@@ -55,26 +55,29 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import { computed, inject, reactive } from 'vue'
-import type { SiteDataPropertiesData } from '../../../actor/actortypes'
+import type { IronswornActor } from '../../../actor/actor'
 import { getFoundryTableByDfId } from '../../../dataforged'
 import type { Move } from '../../../features/custommoves'
 import { createIronswornMoveTree } from '../../../features/custommoves'
-import type { DelveThemeDataSourceData } from '../../../item/itemtypes'
+import type { IronswornItem } from '../../../item/item'
 import { OracleRollMessage, IronswornPrerollDialog } from '../../../rolls'
 import { $ActorKey, ActorKey } from '../../provisions'
 
 import SfMoverow from '../sf-moverow.vue'
 
 const site = inject(ActorKey)
-const $site = inject($ActorKey)
+const $site = inject($ActorKey) as IronswornActor<'site'> | undefined
 
 const theme = computed(() => {
-	return site?.value?.items.find((x) => x.type === 'delve-theme')
+	return site?.value?.items.find((x) => x.type === 'delve-theme') as
+		| IronswornItem<'delve-theme'>['_source']
+		| undefined
 })
 const domain = computed(() => {
-	return site?.value?.items.find((x) => x.type === 'delve-domain')
+	return site?.value?.items.find((x) => x.type === 'delve-domain') as
+		| IronswornItem<'delve-domain'>['_source']
+		| undefined
 })
 
 const hasThemeAndDomain = computed(() => {
@@ -116,8 +119,10 @@ async function revealADanger() {
 	)
 	if (!oracle) return
 
-	const themeData = (theme.value as any)?.system as DelveThemeDataSourceData
-	const domainData = (domain.value as any)?.system as DelveThemeDataSourceData
+	const themeData = theme.value
+		?.system as IronswornItem<'delve-theme'>['system']
+	const domainData = domain.value
+		?.system as IronswornItem<'delve-domain'>['system']
 
 	const tableResults = [
 		...themeData.dangers,
@@ -129,7 +134,7 @@ async function revealADanger() {
 	const title = moves.revealADanger.moveItem().name ?? 'Reveal a Danger'
 	const subtitle = `${$site?.name} – ${theme.value?.name} ${domain.value?.name}`
 	const orm = await OracleRollMessage.fromTableResults(
-		tableResults as TableResultDataConstructorData[],
+		tableResults as PreCreate<TableResult['_source']>[],
 		title,
 		subtitle
 	)
@@ -138,7 +143,7 @@ async function revealADanger() {
 
 async function locateObjective() {
 	if (!$site) return
-	const siteSys = $site.system as SiteDataPropertiesData
+	const siteSys = $site.system
 	const progress = Math.floor(siteSys.current / 4)
 
 	IronswornPrerollDialog.showForOfficialMove(

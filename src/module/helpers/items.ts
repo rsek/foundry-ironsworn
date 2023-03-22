@@ -1,4 +1,3 @@
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { LegacyFeatureOrDanger } from '../item/itemtypes'
 import type { TableRow } from '../rolls'
 
@@ -13,7 +12,7 @@ export function normalizeTableRows(
 	document: any,
 	key: string,
 	type: string
-): TableResultDataConstructorData[] {
+): Array<PreCreate<TableResult['_source']>> {
 	const oldRows = getProperty(document, key) as Array<
 		TableRow | LegacyFeatureOrDanger
 	>
@@ -41,7 +40,7 @@ export function normalizeTableRows(
 export function toTableResult(
 	tableRow: TableRow | LegacyFeatureOrDanger,
 	flags?: Record<string, unknown>
-): TableResultDataConstructorData {
+): PreCreate<TableResult['_source']> {
 	const text =
 		(tableRow as LegacyFeatureOrDanger).description ??
 		(tableRow as TableRow).text
@@ -49,5 +48,5 @@ export function toTableResult(
 		range: (tableRow as any).range ?? [tableRow.low, tableRow.high],
 		text,
 		flags
-	} as TableResultDataConstructorData
+	} as PreCreate<TableResult['_source']>
 }

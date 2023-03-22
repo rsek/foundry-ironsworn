@@ -29,17 +29,15 @@
 </template>
 
 <script lang="ts" setup>
-/**
- * A slider that controls the value of an attribute.
- */
-import { Document } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/module.mjs.js'
-import type { DocumentType } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes.js'
 import { computed } from 'vue'
 import { IronswornSettings } from '../../../helpers/settings.js'
 import { pickInjectedDocument } from '../../composable/pickInjectedDocument.js'
 import SliderBar from './slider-bar.vue'
 
 const props = withDefaults(
+	/**
+	 * A slider that controls the value of an attribute.
+	 */
 	defineProps<{
 		/**
 		 * The key of the attribute controlled by the slider. This is the property of the injected document that will be controlled.
@@ -50,7 +48,7 @@ const props = withDefaults(
 		 * @see {$ActorKey}
 		 * @see {$ItemKey}
 		 */
-		documentType: DocumentType
+		documentType: 'Actor' | 'Item'
 		/**
 		 * When 'true' and documentType is set to "Actor", updates *all* actors of the 'shared' and 'character' types.
 		 */

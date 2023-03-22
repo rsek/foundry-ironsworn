@@ -2,9 +2,12 @@ import { ISCharacterTour } from '../../features/tours/is-character-tour'
 import { IronswornSettings } from '../../helpers/settings'
 import characterSheetVue from '../../vue/character-sheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
+import { IronswornActor } from '../actor'
 import { SFCharacterMoveSheet } from './sf-charactermovesheet'
 
-export class IronswornCharacterSheetV2 extends VueActorSheet {
+export class IronswornCharacterSheetV2 extends VueActorSheet<
+	IronswornActor<'character'>
+> {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			width: 700,

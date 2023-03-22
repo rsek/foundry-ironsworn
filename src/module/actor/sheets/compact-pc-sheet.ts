@@ -2,8 +2,9 @@ import { VueActorSheet } from '../../vue/vueactorsheet'
 import CompactCharacterSheet from '../../vue/compact-charactersheet.vue'
 import { IronswornSettings } from '../../helpers/settings'
 import { SFCharacterMoveSheet } from './sf-charactermovesheet'
+import { IronswornActor } from '../actor'
 
-export class CompactPCSheet extends VueActorSheet {
+export class CompactPCSheet extends VueActorSheet<IronswornActor<'character'>> {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			width: 560,

@@ -1,8 +1,8 @@
 import type { IronswornActor } from '../../../actor/actor'
-import type { ProgressDataPropertiesData } from '../../../item/itemtypes'
+import type { IronswornItem } from '../../../item/item'
 
 export type CompletedProgressType = 'completed-only' | 'no-completed' | 'all'
-export type ProgressSubtype = ProgressDataPropertiesData['subtype']
+export type ProgressSubtype = IronswornItem<'progress'>['system']['subtype']
 
 export function isValidProgressItem(
 	item: any,

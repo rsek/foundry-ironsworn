@@ -13,12 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ActorDataBaseSource } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/actorData.js'
 import { inject, computed, Ref } from 'vue'
-import type {
-	BondsetDataPropertiesData,
-	BondsetDataSource
-} from '../../item/itemtypes.js'
+import type { IronswornActor } from '../../actor/actor'
+import type { IronswornItem } from '../../item/item'
 import { $ActorKey, ActorKey } from '../provisions'
 import IronBtn from './buttons/iron-btn.vue'
 import ProgressTrack from './progress/progress-track.vue'
@@ -26,27 +23,25 @@ import ProgressTrack from './progress/progress-track.vue'
 const props = defineProps<{ compactProgress?: boolean }>()
 
 const actor = inject(ActorKey)
-const $actor = inject($ActorKey)
+const $actor = inject($ActorKey) as IronswornActor<'character'> | undefined
 
 const bonds = computed(() => {
 	return actor?.value?.items.find(
 		(x) => x.type === 'bondset'
-	) as unknown as ActorDataBaseSource & BondsetDataSource
+	) as IronswornItem<'bondset'>['_source']
 })
 const bondcount = computed(() => {
-	const sys = (bonds.value as any)?.system as
-		| BondsetDataPropertiesData
-		| undefined
+	const sys = bonds.value?.system as IronswornItem<'bondset'>['system']
 	if (!sys?.bonds) return 0
 	return Object.values(sys.bonds).length
 })
 
 function editBonds() {
-	const item = $actor?.items.get(bonds?.value?._id as string)
+	const item = $actor?.items.get(bonds?.value?._id) as IronswornItem<'bondset'>
 	item?.sheet?.render(true)
 }
 function rollBonds() {
-	const item = $actor?.items.get(bonds?.value?._id as string)
+	const item = $actor?.items.get(bonds?.value?._id) as IronswornItem<'bondset'>
 	item?.writeEpilogue()
 }
 </script>

@@ -1,4 +1,3 @@
-import { ItemDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/itemData'
 import { IronswornActor } from './actor/actor'
 import { IronswornItem } from './item/item.js'
 import type { DelveSiteFeatureOrDanger } from './item/itemtypes'

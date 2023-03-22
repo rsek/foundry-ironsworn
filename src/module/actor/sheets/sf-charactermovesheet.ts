@@ -7,7 +7,7 @@ import { MoveSheetTour } from '../../features/tours/move-sheet-tour'
 
 export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 	constructor(
-		protected actor: IronswornActor,
+		protected actor: IronswornActor<'character'>,
 		protected toolset: 'ironsworn' | 'starforged' = 'starforged',
 		options?: Partial<ApplicationOptions>
 	) {

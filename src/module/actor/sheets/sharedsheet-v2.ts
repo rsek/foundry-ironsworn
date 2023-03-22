@@ -1,7 +1,10 @@
 import sharedSheetVue from '../../vue/shared-sheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
+import { IronswornActor } from '../actor'
 
-export class IronswornSharedSheetV2 extends VueActorSheet {
+export class IronswornSharedSheetV2 extends VueActorSheet<
+	IronswornActor<'shared'>
+> {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			width: 350,
