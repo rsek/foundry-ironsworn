@@ -2,7 +2,7 @@
  * A Foundry implementation of the Ironsworn family of systems, by Shawn Tomkin
  */
 
-import { IRONSWORN } from './config'
+import { IRONSWORN, IronswornConfig } from './config'
 import { IronswornActor } from './module/actor/actor'
 import { IronswornCharacterSheetV2 } from './module/actor/sheets/charactersheet-v2'
 import { FoeSheet } from './module/actor/sheets/foesheet'
@@ -40,9 +40,45 @@ import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
 import 'virtual:svg-icons-register'
 
 declare global {
-	interface LenientGlobalVariableTypes {
-		game: never // the type doesn't matter
+	type ConfiguredConfig = Config<
+		AmbientLightDocument,
+		ActiveEffect,
+		IronswornActor,
+		ActorDirectory<IronswornActor>,
+		ChatLog<ChatMessage<IronswornActor>>,
+		ChatMessage<IronswornActor>,
+		Combat,
+		Combatant<Combat | null, IronswornActor | null>,
+		CombatTracker<Combat>,
+		CompendiumDirectory,
+		Hotbar,
+		IronswornItem,
+		Macro,
+		MeasuredTemplateDocument,
+		TileDocument,
+		TokenDocument,
+		WallDocument<Scene | null>,
+		Scene,
+		User<IronswornActor>,
+		EffectsCanvasGroup
+	>
+	interface IronGame
+		extends Game<
+			IronswornActor,
+			Actors<IronswornActor>,
+			ChatMessage,
+			Combat,
+			IronswornItem,
+			Macro,
+			Scene,
+			User<IronswornActor>
+		> {}
+
+	interface ConfigIronsworn extends ConfiguredConfig {
+		IRONSWORN: IronswornConfig
 	}
+
+	const CONFIG: ConfigIronsworn
 }
 
 Hooks.once('init', async () => {

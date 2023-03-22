@@ -1,9 +1,5 @@
-import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs'
+// import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs'
 import { CreateActorDialog } from '../applications/createActorDialog'
-import type {
-	CharacterDataPropertiesData,
-	SiteDataPropertiesData
-} from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 
 let CREATE_DIALOG: CreateActorDialog
@@ -12,15 +8,18 @@ let CREATE_DIALOG: CreateActorDialog
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
-export class IronswornActor extends Actor {
-	// Type hack for v10 compatibility updates
-	declare system: typeof this.data.data
+export class IronswornActor<T extends ActorType = ActorType> extends Actor {
+	get type(): T {
+		return super.type as T
+	}
+
+	system!: ActorSystemMap[T]['system']
 
 	moveSheet?: SFCharacterMoveSheet
 
 	protected override _onCreate(
-		data: this['data']['_source'],
-		options: DocumentModificationOptions,
+		data: this['_source'],
+		options: DocumentModificationContext<this>,
 		userId: string
 	): void {
 		super._onCreate(data, options, userId)
@@ -28,12 +27,12 @@ export class IronswornActor extends Actor {
 			case 'site':
 				// initialize sourceId flags for denizens
 				{
-					const denizens = (this.system as SiteDataPropertiesData).denizens.map(
-						(denizen) => {
-							denizen.flags['foundry-ironsworn'].sourceId = this.id
-							return denizen
-						}
-					)
+					const denizens = (
+						this as IronswornActor<'site'>
+					).system.denizens?.map((denizen) => {
+						denizen.flags['foundry-ironsworn'].sourceId = this.id
+						return denizen
+					})
 					this.update({ system: { denizens } })
 				}
 
@@ -52,8 +51,8 @@ export class IronswornActor extends Actor {
 
 	async burnMomentum() {
 		if (this.type != 'character') return
-		const { momentum, momentumReset } = this
-			.system as CharacterDataPropertiesData
+		const { momentum, momentumReset } = (this as IronswornActor<'character'>)
+			.system
 		console.log({ momentum, momentumReset })
 		if (momentum > momentumReset) {
 			this.update({

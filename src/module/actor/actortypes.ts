@@ -1,7 +1,7 @@
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { ChallengeRank } from '../constants'
+import { IronswornActor } from './actor'
 
-interface CharacterDataSourceData {
+interface CharacterSystem {
 	biography: string
 	notes: string
 	edge: number
@@ -46,74 +46,36 @@ interface CharacterDataSourceData {
 	xp: number
 }
 
-export interface CharacterDataPropertiesData extends CharacterDataSourceData {
+export interface CharacterDataPropertiesData extends CharacterSystem {
 	momentumMax: number
 	momentumReset: number
 }
 
 export interface CharacterDataProperties {
 	type: 'character'
-	/**
-	 * @deprecated
-	 */
-	data: CharacterDataPropertiesData
 	system: CharacterDataPropertiesData
 }
 
-export interface CharacterDataSource {
+export interface IronswornCharacter {
 	type: 'character'
-	/**
-	 * @deprecated
-	 */
-	data: CharacterDataSourceData
-	system: CharacterDataSourceData
+	system: CharacterSystem
 }
 
 /// /////////////////////////////////////
 
-interface SharedDataSourceData {
-	biography: string
-	supply: number
-}
-export type SharedDataPropertiesData = SharedDataSourceData
-
-interface SharedDataSource {
+export interface IronswornShared {
 	type: 'shared'
-	/**
-	 * @deprecated
-	 */
-	data: SharedDataSourceData
-	system: SharedDataSourceData
-}
-export interface SharedDataProperties {
-	type: 'shared'
-	/**
-	 * @deprecated
-	 */
-	data: SharedDataPropertiesData
-	system: SharedDataPropertiesData
+	system: {
+		biography: string
+		supply: number
+	}
 }
 
 /// /////////////////////////////////////
 
-interface FoeDataSourceData {}
-type FoeDataPropertiesData = FoeDataSourceData
-
-interface FoeDataSource {
+export interface IronswornFoe {
 	type: 'foe'
-	/**
-	 * @deprecated
-	 */
-	data: FoeDataSourceData
-	system: FoeDataSourceData
-}
-export interface FoeDataProperties {
-	type: 'foe'
-	/**
-	 * @deprecated
-	 */
-	data: FoeDataPropertiesData
-	system: FoeDataPropertiesData
+	system: Record<string, unknown>
 }
 
 /// /////////////////////////////////////
@@ -121,7 +83,7 @@ export interface FoeDataProperties {
 /**
  * Represents an entry in the delve site denizen matrix.
  */
-export interface DelveSiteDenizen extends TableResultDataConstructorData {
+export interface DelveSiteDenizen extends TableResult {
 	flags: {
 		'foundry-ironsworn': {
 			type: 'delve-site-denizen'
@@ -133,110 +95,57 @@ export interface DelveSiteDenizen extends TableResultDataConstructorData {
 	}
 }
 
-export interface SiteDataSourceData {
-	objective: string
-	description: string
-	notes: string
-	rank: ChallengeRank
-	current: number
-	denizens: DelveSiteDenizen[]
-}
-export type SiteDataPropertiesData = SiteDataSourceData
-
-export interface SiteDataSource {
+export interface IronswornDelveSite {
 	type: 'site'
-	/**
-	 * @deprecated
-	 */
-	data: SiteDataSourceData
-	system: SiteDataSourceData
-}
-export interface SiteDataProperties {
-	type: 'site'
-	/**
-	 * @deprecated
-	 */
-	data: SiteDataPropertiesData
-	system: SiteDataPropertiesData
-}
-
-/// /////////////////////////////////////
-
-interface StarshipDataSourceData {
-	health: number
-	debility: {
-		battered: boolean
-		cursed: boolean
+	system: {
+		objective: string
+		description: string
+		notes: string
+		rank: ChallengeRank
+		current: number
+		denizens: DelveSiteDenizen[]
 	}
 }
-export type StarshipDataPropertiesData = StarshipDataSourceData
 
-export interface StarshipDataSource {
+/// /////////////////////////////////////
+
+export interface IronswornStarship {
 	type: 'starship'
-	/**
-	 * @deprecated
-	 */
-	data: StarshipDataSourceData
-	system: StarshipDataSourceData
-}
-export interface StarshipDataProperties {
-	type: 'starship'
-	/**
-	 * @deprecated
-	 */
-	data: StarshipDataPropertiesData
-	system: StarshipDataPropertiesData
+	system: {
+		health: number
+		debility: {
+			battered: boolean
+			cursed: boolean
+		}
+	}
 }
 
 /// /////////////////////////////////////
 
-interface LocationDataSourceData {
-	subtype: string
-	klass: string
-	description: string
-}
-type LocationDataPropertiesData = LocationDataSourceData
-
-export interface LocationDataSource {
+export interface IronswornLocation {
 	type: 'location'
-	/**
-	 * @deprecated
-	 */
-	data: LocationDataSourceData
-	system: LocationDataSourceData
-}
-export interface LocationDataProperties {
-	type: 'location'
-	/**
-	 * @deprecated
-	 */
-	data: LocationDataPropertiesData
-	system: LocationDataPropertiesData
+	system: {
+		subtype: string
+		klass: string
+		description: string
+	}
 }
 
 /// /////////////////////////////////////
-
-export type ActorDataSource =
-	| CharacterDataSource
-	| SharedDataSource
-	| FoeDataSource
-	| SiteDataSource
-	| StarshipDataSource
-	| LocationDataSource
-export type ActorDataProperties =
-	| CharacterDataProperties
-	| SharedDataProperties
-	| FoeDataProperties
-	| SiteDataProperties
-	| StarshipDataProperties
-	| LocationDataProperties
 
 declare global {
-	interface SourceConfig {
-		Actor: ActorDataSource
+	// These are kept separate so they can be readily referenced without excessive recursion
+	interface ActorSystemMap {
+		character: IronswornCharacter
+		shared: IronswornShared
+		foe: IronswornFoe
+		site: IronswornDelveSite
+		starship: IronswornStarship
+		location: IronswornLocation
 	}
-
-	interface DataConfig {
-		Actor: ActorDataProperties
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	type ActorTypeMap = {
+		[K in keyof ActorSystemMap]?: ActorSystemMap[K] & IronswornActor
 	}
+	type ActorType = keyof ActorSystemMap
 }

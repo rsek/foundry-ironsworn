@@ -1,29 +1,24 @@
-import type { DocumentModificationOptions } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/document.mjs'
+import { IronswornActor } from '../actor/actor'
 import { RANK_INCREMENTS } from '../constants'
 import { getFoundryMoveByDfId } from '../dataforged'
 import { IronswornPrerollDialog } from '../rolls'
-import type {
-	BondsetDataPropertiesData,
-	DelveDomainDataPropertiesData,
-	DelveSiteDanger,
-	DelveSiteFeature,
-	DelveThemeDataPropertiesData,
-	ProgressDataPropertiesData,
-	SFMoveDataPropertiesData
-} from './itemtypes'
+import { DelveSiteDanger, DelveSiteFeature } from './itemtypes'
 
 /**
  * Extend the base Item entity
- * @extends {Item}
  */
-export class IronswornItem extends Item {
-	// Type hacks for v10 compatibility updates
-	declare system: typeof this.data.data
-	declare sort: typeof this.data.sort
+export class IronswornItem<
+	T extends ItemType = ItemType
+> extends Item<IronswornActor> {
+	get type(): T {
+		return super.type as T
+	}
+
+	system!: ItemSystemMap[T]['system']
 
 	protected override _onCreate(
-		data: this['data']['_source'],
-		options: DocumentModificationOptions,
+		data: this['_source'],
+		options: DocumentModificationContext<this>,
 		userId: string
 	): void {
 		super._onCreate(data, options, userId)
@@ -32,17 +27,14 @@ export class IronswornItem extends Item {
 			case 'delve-theme':
 			case 'delve-domain':
 				{
+					const system = (this as IronswornItem<'delve-theme' | 'delve-domain'>)
+						.system
 					// initialize sourceId flags for delve site features and dangers
-					this.system = this.system as
-						| DelveDomainDataPropertiesData
-						| DelveThemeDataPropertiesData
-					const features = this.system.features.map(
-						(feature: DelveSiteFeature) => {
-							feature.flags['foundry-ironsworn'].sourceId = this.id
-							return feature
-						}
-					)
-					const dangers = this.system.dangers.map((danger: DelveSiteDanger) => {
+					const features = system.features.map((feature: DelveSiteFeature) => {
+						feature.flags['foundry-ironsworn'].sourceId = this.id
+						return feature
+					})
+					const dangers = system.dangers.map((danger: DelveSiteDanger) => {
 						danger.flags['foundry-ironsworn'].sourceId = this.id
 						return danger
 					})
@@ -60,8 +52,7 @@ export class IronswornItem extends Item {
 	 */
 	async markProgress(numMarks = 1) {
 		if (this.type !== 'progress') return
-		const system = this.system as ProgressDataPropertiesData
-
+		const system = (this as IronswornItem<'progress'>).system
 		const increment = RANK_INCREMENTS[system.rank] * numMarks
 		let newValue = system.current + increment
 		newValue = Math.min(newValue, 40)
@@ -70,13 +61,13 @@ export class IronswornItem extends Item {
 	}
 
 	async clearProgress() {
-		if (this.data.type !== 'progress') return
+		if (this.type !== 'progress') return
 		return await this.update({ 'system.current': 0 })
 	}
 
 	async fulfill() {
 		if (this.type !== 'progress') return
-		const system = this.system as ProgressDataPropertiesData
+		const system = (this as IronswornItem<'progress'>).system
 
 		let moveDfId: string | undefined
 		if (system.subtype === 'vow') {
@@ -102,7 +93,7 @@ export class IronswornItem extends Item {
 
 	async writeEpilogue() {
 		if (this.type !== 'bondset') return
-		const system = this.system as BondsetDataPropertiesData
+		const system = (this as IronswornItem<'bondset'>).system
 
 		const move = await getFoundryMoveByDfId(
 			'Ironsworn/Moves/Relationship/Write_Your_Epilogue'
@@ -128,8 +119,8 @@ export class IronswornItem extends Item {
 	isProgressMove(): boolean | undefined {
 		if (this.type !== 'sfmove') return
 
-		const sfMoveSystem = this.system as SFMoveDataPropertiesData
-		return sfMoveSystem.Trigger.Options?.some(
+		const system = (this as IronswornItem<'sfmove'>).system
+		return system.Trigger.Options?.some(
 			(option) => option['Roll type'] === 'Progress roll'
 		)
 	}

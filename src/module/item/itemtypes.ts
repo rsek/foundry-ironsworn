@@ -1,6 +1,6 @@
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { IMove } from 'dataforged'
 import type { ChallengeRank } from '../constants'
+import type { IronswornItem } from './item'
 
 interface ProgressBase {
 	description: string
@@ -35,38 +35,29 @@ interface AssetCondition {
 	ticked: boolean
 }
 
-interface AssetDataSourceData {
-	category: string
-	description?: string
-	requirement: string
-	color: string
-	fields: AssetField[]
-	abilities: AssetAbility[]
-	track: {
-		enabled: boolean
-		name: string
-		current: number
-		max: number
+export interface IronswornAsset {
+	type: 'asset'
+	system: {
+		category: string
+		description?: string
+		requirement: string
+		color: string
+		fields: AssetField[]
+		abilities: AssetAbility[]
+		track: {
+			enabled: boolean
+			name: string
+			current: number
+			max: number
+		}
+		exclusiveOptions: AssetExclusiveOption[]
+		conditions: AssetCondition[]
 	}
-	exclusiveOptions: AssetExclusiveOption[]
-	conditions: AssetCondition[]
-}
-
-export interface AssetDataPropertiesData extends AssetDataSourceData {}
-
-export interface AssetDataSource {
-	type: 'asset'
-	data: AssetDataSourceData
-}
-
-export interface AssetDataProperties {
-	type: 'asset'
-	data: AssetDataPropertiesData
 }
 
 /// ////////////////////////////
 
-interface ProgressDataSourceData extends ProgressBase {
+interface ProgressSystem extends ProgressBase {
 	subtype: string
 	starred: boolean
 	hasTrack: boolean
@@ -74,15 +65,10 @@ interface ProgressDataSourceData extends ProgressBase {
 	clockTicks: number
 	clockMax: number
 }
-export interface ProgressDataPropertiesData extends ProgressDataSourceData {}
 
-export interface ProgressDataSource {
+export interface IronswornProgress {
 	type: 'progress'
-	data: ProgressDataSourceData
-}
-export interface ProgressDataProperties {
-	type: 'progress'
-	data: ProgressDataPropertiesData
+	system: ProgressSystem
 }
 
 /// ////////////////////////////
@@ -92,18 +78,11 @@ interface Bond {
 	notes: string
 }
 
-interface BondsetDataSourceData {
-	bonds: Bond[]
-}
-export interface BondsetDataPropertiesData extends BondsetDataSourceData {}
-
-export interface BondsetDataSource {
+export interface IronswornBondset {
 	type: 'bondset'
-	data: BondsetDataSourceData
-}
-export interface BondsetDataProperties {
-	type: 'bondset'
-	data: BondsetDataPropertiesData
+	system: {
+		bonds: Bond[]
+	}
 }
 
 /// ////////////////////////////
@@ -118,7 +97,7 @@ export interface DelveSiteFeatureOrDanger<
 	T extends 'delve-site-danger' | 'delve-site-feature' =
 		| 'delve-site-danger'
 		| 'delve-site-feature'
-> extends TableResultDataConstructorData {
+> extends ConstructorParameters<typeof TableResult> {
 	flags: {
 		'foundry-ironsworn': {
 			/**
@@ -139,81 +118,51 @@ export interface DelveSiteFeature
 export interface DelveSiteDanger
 	extends DelveSiteFeatureOrDanger<'delve-site-danger'> {}
 
-export interface DelveThemeDataSourceData {
-	summary: string
-	description: string
-	features: DelveSiteFeature[]
-	dangers: DelveSiteDanger[]
-}
-export interface DelveThemeDataPropertiesData
-	extends DelveThemeDataSourceData {}
-
-export interface DelveThemeDataSource {
+export interface IronswornDelveTheme {
 	type: 'delve-theme'
-	data: DelveThemeDataSourceData
-}
-export interface DelveThemeDataProperties {
-	type: 'delve-theme'
-	data: DelveThemeDataPropertiesData
+	system: {
+		summary: string
+		description: string
+		features: DelveSiteFeature[]
+		dangers: DelveSiteDanger[]
+	}
 }
 /// ////////////////////////////
 
-export interface DelveDomainDataSourceData {
-	summary: string
-	description: string
-	features: DelveSiteFeature[]
-	dangers: DelveSiteDanger[]
-}
-export interface DelveDomainDataPropertiesData
-	extends DelveDomainDataSourceData {}
-
-export interface DelveDomainDataSource {
+export interface IronswornDelveDomain {
 	type: 'delve-domain'
-	data: DelveDomainDataSourceData
-}
-export interface DelveDomainDataProperties {
-	type: 'delve-domain'
-	data: DelveDomainDataPropertiesData
+	system: {
+		summary: string
+		description: string
+		features: DelveSiteFeature[]
+		dangers: DelveSiteDanger[]
+	}
 }
 
 /// ////////////////////////////
 
-export interface SFMoveDataPropertiesData extends IMove {
+export interface MoveSystem extends IMove {
 	dfid: string
 }
 
-export interface SFMoveDataSource {
+export interface IronswornMove {
 	type: 'sfmove'
-	data: SFMoveDataPropertiesData
-}
-export interface SFMoveDataProperties {
-	type: 'sfmove'
-	data: SFMoveDataPropertiesData
+	system: MoveSystem
 }
 
 /// ////////////////////////////
 
-export type ItemDataSource =
-	| AssetDataSource
-	| ProgressDataSource
-	| BondsetDataSource
-	| SFMoveDataSource
-	| DelveThemeDataSource
-	| DelveDomainDataSource
-export type ItemDataProperties =
-	| AssetDataProperties
-	| ProgressDataProperties
-	| BondsetDataProperties
-	| SFMoveDataProperties
-	| DelveThemeDataProperties
-	| DelveDomainDataProperties
-
 declare global {
-	interface SourceConfig {
-		Item: ItemDataSource
+	interface ItemSystemMap {
+		asset: IronswornAsset
+		progress: IronswornProgress
+		bondset: IronswornBondset
+		sfmove: IronswornMove
+		'delve-theme': IronswornDelveTheme
+		'delve-domain': IronswornDelveDomain
 	}
-
-	interface DataConfig {
-		Item: ItemDataProperties
+	type ItemTypeMap = {
+		[K in keyof ItemSystemMap]?: ItemSystemMap[K] & IronswornItem
 	}
+	type ItemType = keyof ItemSystemMap
 }
