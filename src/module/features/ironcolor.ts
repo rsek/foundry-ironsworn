@@ -22,7 +22,7 @@ export function colorSchemeSetup() {
  * Instantly updates the client's color scheme without reloading.
  */
 export function updateColorScheme(
-	newColorScheme: ClientSettings.Values['foundry-ironsworn.color-scheme']
+	newColorScheme: ClientSettings.Config['foundry-ironsworn']['color-scheme']
 ) {
 	const colorSchemes = Object.keys(
 		game.settings.settings.get('foundry-ironsworn.color-scheme' as any)

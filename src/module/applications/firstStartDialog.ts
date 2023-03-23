@@ -12,7 +12,7 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 			classes: ['ironsworn', 'sheet', 'first-start'],
 			width: 600,
 			height: 360
-		} as FormApplicationOptions)
+		})
 	}
 
 	async _updateObject() {
@@ -33,7 +33,7 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		ev.preventDefault()
 
 		// Character sheet
-		const setting = game.settings.get('core', 'sheetClasses') as string[]
+		const setting = game.settings.get('core', 'sheetClasses')
 		foundry.utils.mergeObject(setting, {
 			'Actor.character': 'ironsworn.IronswornCharacterSheetV2'
 		})
@@ -49,7 +49,7 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		ev.preventDefault()
 
 		// Character sheet
-		const setting = game.settings.get('core', 'sheetClasses') as string[]
+		const setting = game.settings.get('core', 'sheetClasses')
 		foundry.utils.mergeObject(setting, {
 			'Actor.character': 'ironsworn.StarforgedCharacterSheet'
 		})

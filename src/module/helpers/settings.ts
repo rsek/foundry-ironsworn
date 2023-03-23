@@ -22,21 +22,23 @@ declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace ClientSettings {
 		/** Settings added here will be automatically typed throughout the game system. */
-		interface Values {
-			'foundry-ironsworn.toolbox': 'ironsworn' | 'starforged' | 'sheet'
+		interface Config {
+			'foundry-ironsworn': {
+				toolbox: 'ironsworn' | 'starforged' | 'sheet'
 
-			'foundry-ironsworn.theme': keyof typeof IronTheme.THEMES
-			'foundry-ironsworn.color-scheme': 'zinc' | 'phosphor'
-			'foundry-ironsworn.progress-mark-animation': boolean
+				theme: keyof typeof IronTheme.THEMES
+				'color-scheme': 'zinc' | 'phosphor'
+				'progress-mark-animation': boolean
 
-			'foundry-ironsworn.log-changes': boolean
-			'foundry-ironsworn.prompt-world-truths': boolean
+				'log-changes': boolean
+				'prompt-world-truths': boolean
 
-			'foundry-ironsworn.shared-supply': boolean
+				'shared-supply': boolean
 
-			// Internal only
-			'foundry-ironsworn.first-run-tips-shown': boolean
-			'foundry-ironsworn.data-version': number
+				// Internal only
+				'first-run-tips-shown': boolean
+				'data-version': number
+			}
 		}
 	}
 }
@@ -173,6 +175,7 @@ export class IronswornSettings {
 		})
 
 		game.settings.register('foundry-ironsworn', 'data-version', {
+			name: 'Data version',
 			scope: 'world',
 			config: false,
 			type: Number,
@@ -180,6 +183,7 @@ export class IronswornSettings {
 		})
 
 		game.settings.register('foundry-ironsworn', 'first-run-tips-shown', {
+			name: 'First run tips shown',
 			scope: 'world',
 			config: false,
 			type: Boolean,
@@ -191,9 +195,9 @@ export class IronswornSettings {
 	 * Wraps {@link game.settings.get} (within the `foundry-ironsworn` scope) to ensure that Vue always gets the updated value.
 	 * @param key The key of the setting within the `foundry-ironsworn` scope.
 	 */
-	static get<K extends string>(
+	static get<K extends keyof ClientSettings.Config['foundry-ironsworn']>(
 		key: K
-	): ClientSettings.Values[`foundry-ironsworn.${K}`] {
+	) {
 		return game.settings.get('foundry-ironsworn', key)
 	}
 
@@ -202,7 +206,7 @@ export class IronswornSettings {
 		if (this.get('toolbox') === 'starforged') return true
 
 		// Set to "match sheet, so check the sheet"
-		const sheetClasses = game.settings.get('core', 'sheetClasses') as any
+		const sheetClasses = game.settings.get('core', 'sheetClasses')
 		return (
 			sheetClasses.Actor?.character === 'ironsworn.StarforgedCharacterSheet'
 		)
@@ -223,7 +227,7 @@ export class IronswornSettings {
 		for (const actor of actorsToUpdate) {
 			await actor.update(data, {
 				suppressLog: true
-			} as any)
+			})
 		}
 	}
 }

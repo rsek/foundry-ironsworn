@@ -29,9 +29,9 @@ function classesForRoll(r: Roll, opts?: Partial<RollClassesOptions>) {
 	const maxRoll = d?.faces ?? SCORE_MAX
 	return [
 		d?.constructor.name.toLowerCase(),
-		d && `isiconbg-d${d.faces}-blank`,
-		(d?.total || r.result) <= 1 ? 'min' : null,
-		(d?.total || r.result) == maxRoll ? 'max' : null,
+		d && `isiconbg-d${d.faces as number}-blank`,
+		((d?.total as number) || (r.result as any)) <= 1 ? 'min' : null,
+		((d?.total as number) || r.result) == maxRoll ? 'max' : null,
 		theOpts.type,
 		theOpts.canceled ? 'canceled' : null
 	]
@@ -54,12 +54,12 @@ export class IronswornHandlebarsHelpers {
 	static registerHelpers() {
 		Handlebars.registerHelper('concat', (...args) => args.slice(0, -1).join(''))
 
-		Handlebars.registerHelper('sum', (a, b) => a + b)
+		Handlebars.registerHelper('sum', (a: number, b: number) => a + b)
 		Handlebars.registerHelper('capitalize', localeCapitalize)
 		Handlebars.registerHelper('formatRollPlusStat', formatRollPlusStat)
 		Handlebars.registerHelper('formatRollMethod', formatRollMethod)
 		Handlebars.registerHelper('computeOutcomeText', computeOutcomeText)
-		Handlebars.registerHelper('lowercase', (str) => str.toLowerCase())
+		Handlebars.registerHelper('lowercase', (str: string) => str.toLowerCase())
 
 		Handlebars.registerHelper('json', function (context) {
 			return JSON.stringify(context, null, 2)

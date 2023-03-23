@@ -8,7 +8,7 @@ function rotateTokenBy(
 	ev.preventDefault()
 	const token = canvas?.scene?.tokens.get(tokenData._id)
 	if (token == null) return
-	const rotation = token.data.rotation + angle
+	const rotation = (token.data.rotation as number) + angle
 	canvas?.scene?.updateEmbeddedDocuments('Token', [{ _id: token.id, rotation }])
 }
 
