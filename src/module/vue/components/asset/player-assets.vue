@@ -51,6 +51,7 @@ const actor = inject(ActorKey) as Ref
 const $actor = inject($ActorKey)
 
 const assets = computed(() => {
+	// TODO: use $actor?.itemTypes.asset instead?
 	return actor.value?.items
 		.filter((x) => x.type === 'asset')
 		.sort((a, b) => (a.sort || 0) - (b.sort || 0))
@@ -71,10 +72,14 @@ async function applySort(oldI, newI, sortBefore, collection) {
 	await Promise.all(updates.map(({ target, update }) => target.update(update)))
 }
 function assetSortUp(i) {
+	// TODO: use $actor?.itemTypes.asset instead?
+
 	const items = $actor?.items.filter((x) => x.type === 'asset')
 	applySort(i, i - 1, true, items)
 }
 function assetSortDown(i) {
+	// TODO: use $actor?.itemTypes.asset instead?
+
 	const items = $actor?.items.filter((x) => x.type === 'asset')
 	applySort(i, i + 1, false, items)
 }

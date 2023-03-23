@@ -5,11 +5,15 @@ import { ChallengeRank, RANK_INCREMENTS } from '../constants'
  * Extends the base {@link JournalEntryPage} document class.
  */
 export class IronswornJournalPage<
-	T extends JournalEntryPageType = JournalEntryPageType
-> extends JournalEntryPage<JournalEntry | null> {
-	system!: JournalEntryPageSystemMap[T]['system']
-	get type(): T {
-		return super.type as T
+	TType extends JournalEntryPageType = JournalEntryPageType
+> extends JournalEntryPage<
+	JournalEntry | null,
+	TType,
+	JournalEntryPageSystemMap[TType]['system']
+> {
+	system!: JournalEntryPageSystemMap[TType]['system']
+	get type(): TType {
+		return super.type as TType
 	}
 
 	protected override async _preCreate(
@@ -20,9 +24,8 @@ export class IronswornJournalPage<
 		// FIXME: JEPs aren't initialized with proper defaults, so we DIY it.
 		// https://github.com/foundryvtt/foundryvtt/issues/8628
 		const defaults = (game.system as any).template.JournalEntryPage?.[
-			// @ts-expect-error
 			data.type
-		] as ReturnType<this['toObject']>
+		] as this['_source']
 		if (defaults != null) {
 			const alreadySet = data.system
 			const newSourceData = mergeObject(defaults, alreadySet ?? {}, {

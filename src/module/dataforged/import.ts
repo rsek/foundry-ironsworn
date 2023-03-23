@@ -141,14 +141,14 @@ function movesForCategories(categories: IMoveCategory[]) {
 
 async function processISMoves() {
 	const movesToCreate = movesForCategories(ISMoveCategories)
-	await Item.createDocuments<IronswornItem<'sfmove'>>(movesToCreate, {
+	await Item.createDocuments(movesToCreate, {
 		pack: 'foundry-ironsworn.ironswornmoves',
 		keepId: true
 	})
 }
 async function processSFMoves() {
 	const movesToCreate = movesForCategories(SFMoveCategories)
-	await Item.createDocuments<IronswornItem<'sfmove'>>(movesToCreate, {
+	await Item.createDocuments(movesToCreate, {
 		pack: 'foundry-ironsworn.starforgedmoves',
 		keepId: true
 	})
@@ -225,7 +225,7 @@ function assetsForTypes(types: IAssetType[]) {
 
 async function processSFAssets() {
 	const assetsToCreate = assetsForTypes(SFAssetTypes)
-	await Item.createDocuments<IronswornItem<'asset'>>(assetsToCreate, {
+	await Item.createDocuments(assetsToCreate, {
 		pack: 'foundry-ironsworn.starforgedassets',
 		keepId: true
 	})
@@ -233,7 +233,7 @@ async function processSFAssets() {
 
 async function processISAssets() {
 	const assetsToCreate = assetsForTypes(ISAssetTypes)
-	await Item.createDocuments<IronswornItem<'asset'>>(assetsToCreate, {
+	await Item.createDocuments(assetsToCreate, {
 		pack: 'foundry-ironsworn.ironswornassets',
 		keepId: true
 	})
@@ -258,7 +258,7 @@ async function processOracle(
 			flags: {
 				dfId: oracle.$id,
 				category: oracle.Category
-			},
+			} as any,
 			name: oracle.Name,
 			img: 'icons/dice/d10black.svg',
 			description,
@@ -276,7 +276,9 @@ async function processOracle(
 					range: [tableRow.Floor, tableRow.Ceiling],
 					text: tableRow.Result && renderLinksInStr(text)
 				} as PreCreate<TableResult['_source']>
-			}).filter((x) => x.range[0] !== null)
+			}).filter(
+				({ range }) => (range as [number | null, number | null])[0] !== null
+			)
 		})
 	}
 
@@ -364,7 +366,7 @@ async function processSFEncounters() {
 			})
 		}
 	}
-	await Item.createDocuments<IronswornItem<'progress'>>(encountersToCreate, {
+	await Item.createDocuments(encountersToCreate, {
 		pack: 'foundry-ironsworn.starforgedencounters',
 		keepId: true
 	})
@@ -429,6 +431,7 @@ async function processTruths(
 		await JournalEntryPage.create(
 			{
 				name: 'Character Inspiration',
+				type: 'text',
 				text: {
 					markdown: truth.Character,
 					format: 2 // JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN

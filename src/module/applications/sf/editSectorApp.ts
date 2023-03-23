@@ -1,5 +1,5 @@
 import editSectorVue from '../../vue/edit-sector.vue'
-import { VueAppMixin } from '../../vue/vueapp.js'
+import { VueAppMixin, VueApplicationOptions } from '../../vue/vueapp.js'
 
 export class EditSectorDialog extends VueAppMixin(Application) {
 	constructor(protected sceneId: string) {
@@ -19,7 +19,7 @@ export class EditSectorDialog extends VueAppMixin(Application) {
 		}) as any
 	}
 
-	getData(options?: Partial<ApplicationOptions> | undefined) {
+	getData(options?: Partial<VueApplicationOptions> | undefined) {
 		return {
 			...super.getData(options),
 			sceneId: this.sceneId

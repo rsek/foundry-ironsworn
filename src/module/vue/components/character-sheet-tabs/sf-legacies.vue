@@ -33,6 +33,8 @@ import { ActorKey } from '../../provisions.js'
 const actor = inject(ActorKey) as Ref
 
 const starredProgresses = computed(() =>
+	// TODO: use $actor?.itemTypes.progress instead?
+
 	actor?.value.items.filter(
 		(item) =>
 			item.type === 'progress' &&

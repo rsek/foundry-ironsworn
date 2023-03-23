@@ -1,5 +1,4 @@
 import { compact, flatten } from 'lodash-es'
-import type { SFMoveDataPropertiesData } from '../item/itemtypes'
 import type { IronswornItem } from '../item/item'
 import { IronswornRollMessage, OracleRollMessage } from '../rolls'
 import { ChallengeResolutionDialog } from '../rolls/challenge-resolution-dialog'
@@ -27,7 +26,7 @@ export class IronswornChatCard {
 			const fItem = fPack?.get(id) as IronswornItem
 			if (fItem?.type !== 'sfmove') return []
 
-			const system = fItem.system as SFMoveDataPropertiesData
+			const system = (fItem as IronswornItem<'sfmove'>).system
 			const oracleIds = system.Oracles ?? []
 			return await Promise.all(oracleIds.map(getFoundryTableByDfId))
 		})
@@ -35,7 +34,7 @@ export class IronswornChatCard {
 		if (tables.length === 0) return
 
 		ContextMenu.create(
-			ui.chat!,
+			ui.chat,
 			html,
 			`.message-content`,
 			tables.map((t) => ({
@@ -59,9 +58,9 @@ export class IronswornChatCard {
 			.find('a.content-link')
 			.removeClass('content-link') // Prevent default Foundry behavior
 			.on('click', async (ev) => await this._moveNavigate.call(this, ev))
-		html
-			.find('a.oracle-category-link')
-			.on('click', async (ev) => { await this._oracleNavigate.call(this, ev); })
+		html.find('a.oracle-category-link').on('click', async (ev) => {
+			await this._oracleNavigate.call(this, ev)
+		})
 		html
 			.find('.burn-momentum')
 			.on('click', async (ev) => await this._burnMomentum.call(this, ev))
@@ -82,16 +81,16 @@ export class IronswornChatCard {
 				.attr('data-tooltip', game.i18n.localize('IRONSWORN.ClipboardDisabled'))
 				.attr('data-tooltip-direction', 'LEFT')
 		} else {
-			html
-				.find('.copy-result')
-				.on('click', async (ev) => { await this._oracleResultCopy.call(this, ev); })
+			html.find('.copy-result').on('click', async (ev) => {
+				await this._oracleResultCopy.call(this, ev)
+			})
 		}
-		html
-			.find('.ironsworn-roll-resolve')
-			.on('click', async (ev) => { await this._resolveChallenge.call(this, ev); })
-		html
-			.find('.starforged__oracle__roll')
-			.on('click', async (ev) => { await this._oracleRoll.call(this, ev); })
+		html.find('.ironsworn-roll-resolve').on('click', async (ev) => {
+			await this._resolveChallenge.call(this, ev)
+		})
+		html.find('.starforged__oracle__roll').on('click', async (ev) => {
+			await this._oracleRoll.call(this, ev)
+		})
 	}
 
 	async _moveNavigate(ev: JQuery.ClickEvent) {

@@ -25,6 +25,10 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 
 		options!: VueApplicationOptions
 
+		override async getData(options?: Partial<VueApplicationOptions>) {
+			return await super.getData(options)
+		}
+
 		static get defaultOptions(): VueApplicationOptions {
 			return mergeObject(
 				// @ts-expect-error TS complains about super not having defaultOptions here, but Application does have it -- just on the class, not the constructor.
@@ -161,7 +165,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 		}
 
 		_onFocus(event: JQuery.FocusEvent) {
-			const target = event.currentTarget
+			const target = event.currentTarget as Element | undefined
 			setTimeout(() => {
 				if (target && target == document.activeElement) {
 					$(target).trigger('select')

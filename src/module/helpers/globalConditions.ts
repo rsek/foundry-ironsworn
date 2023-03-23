@@ -1,10 +1,9 @@
 import type { IronswornActor } from '../actor/actor'
 import type { IronswornItem } from '../item/item'
-import type { AssetDataPropertiesData } from '../item/itemtypes'
 
 interface ActorsAndAssets {
-	actors: IronswornActor[]
-	assets: IronswornItem[]
+	actors: Array<IronswornActor<'character' | 'starship'>>
+	assets: Array<IronswornItem<'asset'>>
 }
 
 export function actorsOrAssetsWithConditionEnabled(
@@ -15,13 +14,12 @@ export function actorsOrAssetsWithConditionEnabled(
 	for (const actor of game.actors?.contents ?? []) {
 		const actorData = actor.system as any
 		if (actorData.debility?.[condition]) {
-			ret.actors.push(actor)
+			ret.actors.push(actor as IronswornActor<'character' | 'starship'>)
 		}
 
-		for (const item of actor.items.filter((x) => x.type === 'asset')) {
-			const assetData = item.system as AssetDataPropertiesData
+		for (const item of actor.itemTypes.asset) {
 			if (
-				assetData.conditions.find(
+				item.system.conditions.find(
 					(c) => c.name.toLowerCase() === condition.toLowerCase() && c.ticked
 				) != null
 			) {

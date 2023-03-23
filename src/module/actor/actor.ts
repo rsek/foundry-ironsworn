@@ -8,7 +8,10 @@ let CREATE_DIALOG: CreateActorDialog
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
-export class IronswornActor<T extends ActorType = ActorType> extends Actor {
+export class IronswornActor<T extends ActorType = ActorType> extends Actor<
+	TokenDocument<IronswornActor<T>>,
+	ItemTypeMap
+> {
 	get type(): T {
 		return super.type as T
 	}
@@ -17,7 +20,7 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor {
 
 	override async createEmbeddedDocuments(
 		embeddedName: string,
-		data: Array<IronswornItem['_source']>,
+		data: Array<PreCreate<IronswornItem['_source']>>,
 		context?: DocumentModificationContext<this> | undefined
 	): Promise<foundry.abstract.Document[]> {
 		return await super.createEmbeddedDocuments(embeddedName, data, context)
@@ -98,10 +101,11 @@ declare global {
 	}
 }
 
-Hooks.on('createActor', async (actor: IronswornActor) => {
+Hooks.on('createActor', async (actor, _ctx, _userId) => {
 	if (!['character', 'shared'].includes(actor.type)) return
+
 	await Item.createDocuments([{ type: 'bondset', name: 'bonds' }], {
 		parent: actor,
 		suppressLog: true
-	} as any)
+	})
 })

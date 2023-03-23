@@ -1,3 +1,4 @@
+import { ISettingTruthOption } from 'dataforged'
 import type { ChallengeRank } from '../constants'
 import { IronswornJournalPage } from './journal-entry-page'
 
@@ -49,10 +50,19 @@ export interface ClockDataSource {
 	system: ClockSystem
 }
 
+/// /////// SETTING TRUTHS
+
+export interface SettingTruthOptionSystem extends ISettingTruthOption {}
+export interface SettingTruthOptionDataSource {
+	type: 'truth'
+	system: SettingTruthOptionSystem
+}
+
 declare global {
 	type JournalEntryPageSystemMap = {
 		progress: ProgressTrackDataSource
 		clock: ClockDataSource
+		truth: SettingTruthOptionDataSource
 	} & {
 		[K in foundry.JournalEntryPageMetadata['coreTypes'][number]]: {
 			system: object

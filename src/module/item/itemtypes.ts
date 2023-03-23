@@ -162,7 +162,7 @@ declare global {
 		'delve-domain': IronswornDelveDomain
 	}
 	type ItemTypeMap = {
-		[K in keyof ItemSystemMap]?: ItemSystemMap[K] & IronswornItem
+		[K in keyof ItemSystemMap]: ItemSystemMap[K] & IronswornItem<K>
 	}
 	type ItemType = keyof ItemSystemMap
 }

@@ -1,8 +1,12 @@
 import type { App } from 'vue'
 import { $ItemKey } from './provisions'
+import type { VueApplicationOptions } from './vueapp.js'
 import { VueAppMixin } from './vueapp.js'
+import type { IronswornItem } from '../item/item'
 
-export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
+export abstract class VueItemSheet<T extends IronswornItem> extends VueAppMixin(
+	ItemSheet
+) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'item'],
@@ -11,15 +15,20 @@ export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
 		})
 	}
 
+	get item() {
+		return super.item as T
+	}
+
 	setupVueApp(app: App) {
 		app.provide($ItemKey, this.item)
 	}
 
-	getData(...args) {
+	override async getData(options?: Partial<VueApplicationOptions>) {
+		const data = await super.getData(options)
 		return {
-			...super.getData(...args),
+			...data,
 			item: this.item.toObject()
-		}
+		} as any
 	}
 
 	readonly hasEditMode: boolean = true

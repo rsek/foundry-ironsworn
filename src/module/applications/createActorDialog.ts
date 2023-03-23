@@ -145,13 +145,13 @@ export class CreateActorDialog extends FormApplication<
 		img: ImageFilePath,
 		sheetClass?: string
 	) {
-		const data: PreCreate<IronswornActor<T>['_source']> = {
+		const data = {
 			name,
 			img,
 			type,
 			token: { actorLink: true },
 			folder: this.options.folder || null
-		}
+		} as PreCreate<IronswornActor<T>['_source']>
 		if (sheetClass) {
 			data.flags = { core: { sheetClass } } as any
 		}
@@ -181,6 +181,8 @@ export class CreateActorDialog extends FormApplication<
 
 		const first = await firstTable.draw({ displayChat: false })
 		const last = await lastTable.draw({ displayChat: false })
-		return `${first?.results[0]?.text} ${last?.results[0]?.text}`
+		return `${first?.results[0]?.text as string} ${
+			last?.results[0]?.text as string
+		}`
 	}
 }

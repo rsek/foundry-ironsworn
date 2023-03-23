@@ -135,7 +135,7 @@ export function activateSceneButtonListeners() {
 		group: 'primary'
 	}
 
-	Hooks.on('getSceneControlButtons', (controls) => {
+	Hooks.on('getSceneControlButtons', (controls: SceneControl[]) => {
 		const oracleButton: SceneControlTool = {
 			name: 'Oracles',
 			title: game.i18n.localize('IRONSWORN.ROLLTABLES.TypeOracle'),
@@ -243,7 +243,7 @@ if (typeof InteractionLayer !== 'undefined') {
 	baseKlass = InteractionLayer
 }
 
-class IronswornCanvasLayer extends baseKlass {
+export class IronswornCanvasLayer extends baseKlass {
 	static get layerOptions() {
 		return foundry.utils.mergeObject(super.layerOptions, {
 			zIndex: 180,

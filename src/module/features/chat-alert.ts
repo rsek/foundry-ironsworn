@@ -15,79 +15,63 @@ declare global {
 	}
 }
 export function registerChatAlertHooks() {
-	Hooks.on(
-		'preUpdateActor',
-		async (actor: IronswornActor, data: any, options: any, _userId: number) => {
-			if (!IronswornSettings.get('log-changes')) return
-			if (options.suppressLog) return
+	Hooks.on('preUpdateActor', async (actor, data, options, _userId) => {
+		if (!IronswornSettings.get('log-changes')) return
+		if (options.suppressLog) return
 
-			let content: string | undefined
-			if (data.name) {
-				content = game.i18n.format('IRONSWORN.ChatAlert.Renamed', {
-					name: data.name
-				})
-			} else {
-				content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor, data)
-				if (!content) return
-			}
-
-			sendToChat(actor, content)
-		}
-	)
-
-	Hooks.on(
-		'preUpdateItem',
-		async (item: IronswornItem, data: any, _options, _userId: number) => {
-			if (!IronswornSettings.get('log-changes')) return
-			if (item.parent == null) return // No logging for unowned items, they don't matter
-
-			let content: string | undefined
-			if (data.name) {
-				content = game.i18n.format('IRONSWORN.ChatAlert.renamed', {
-					name: data.name
-				})
-			} else {
-				content = ITEM_TYPE_HANDLERS[item.type]?.(item, data)
-			}
+		let content: string | undefined
+		if (typeof data.name === 'string') {
+			content = game.i18n.format('IRONSWORN.ChatAlert.Renamed', {
+				name: data.name
+			})
+		} else {
+			content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor, data)
 			if (!content) return
-
-			const itemName = item.type === 'bondset' ? '' : item.name
-			sendToChat(item.parent, `${itemName} ${content}`)
 		}
-	)
 
-	Hooks.on(
-		'preCreateItem',
-		async (
-			item: IronswornItem,
-			options: DocumentModificationContext,
-			_userId: string
-		) => {
-			if (!IronswornSettings.get('log-changes')) return
-			if (item.parent == null) return // No logging for unowned items, they don't matter
-			if (options.suppressLog) return
-			if (item.type === 'bondset') return // No need to log this
+		sendToChat(actor, content)
+	})
 
-			sendToChat(
-				item.parent,
-				game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
-			)
+	Hooks.on('preUpdateItem', async (item, data, _options, _userId) => {
+		if (!IronswornSettings.get('log-changes')) return
+		if (item.parent == null) return // No logging for unowned items, they don't matter
+
+		let content: string | undefined
+		if (typeof data.name === 'string') {
+			content = game.i18n.format('IRONSWORN.ChatAlert.renamed', {
+				name: data.name
+			})
+		} else {
+			content = ITEM_TYPE_HANDLERS[item.type]?.(item, data)
 		}
-	)
+		if (!content) return
 
-	Hooks.on(
-		'preDeleteItem',
-		async (item: IronswornItem, options, _userId: number) => {
-			if (!IronswornSettings.get('log-changes')) return
-			if (item.parent == null) return // No logging for unowned items, they don't matter
-			if (options.suppressLog) return
+		const itemName: string = item.type === 'bondset' ? '' : item.name
+		sendToChat(item.parent, `${itemName} ${content}`)
+	})
 
-			sendToChat(
-				item.parent,
-				game.i18n.format('IRONSWORN.ChatAlert.Deleted', { name: item.name })
-			)
-		}
-	)
+	Hooks.on('preCreateItem', async (item, options, _userId: string) => {
+		if (!IronswornSettings.get('log-changes')) return
+		if (item.parent == null) return // No logging for unowned items, they don't matter
+		if (options.suppressLog) return
+		if (item.type === 'bondset') return // No need to log this
+
+		sendToChat(
+			item.parent,
+			game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
+		)
+	})
+
+	Hooks.on('preDeleteItem', async (item, options, _userId) => {
+		if (!IronswornSettings.get('log-changes')) return
+		if (item.parent == null) return // No logging for unowned items, they don't matter
+		if (options.suppressLog) return
+
+		sendToChat(
+			item.parent,
+			game.i18n.format('IRONSWORN.ChatAlert.Deleted', { name: item.name })
+		)
+	})
 }
 
 const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
@@ -166,15 +150,14 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 				const oldValue = characterData.debility[debility]
 				if (oldValue === newValue) continue
 				const i18nPath = `IRONSWORN.${conditionType.toUpperCase()}`
-				const i18nDebility = `<b class='term ${conditionType}'>${
-					debility.startsWith('custom')
-						? get(characterData.debility, `${debility}name`)
-						: game.i18n.localize(`${i18nPath}.${capitalize(debility)}`)
-				}</b>`
+				const i18nDebility = debility.startsWith('custom')
+					? (getProperty(characterData.debility, `${debility}name`) as string)
+					: game.i18n.localize(`${i18nPath}.${capitalize(debility)}`)
+				const debilityLabel = `<b class='term ${conditionType}'>${i18nDebility}</b>`
 
 				const params = gameIsStarforged
-					? { impact: i18nDebility }
-					: { debility: i18nDebility }
+					? { impact: debilityLabel }
+					: { debility: debilityLabel }
 
 				if (newValue)
 					return game.i18n.format(
@@ -387,7 +370,7 @@ const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
 	}
 }
 
-async function sendToChat(speaker: IronswornActor, msg: string) {
+async function sendToChat(speaker: Actor, msg: string) {
 	const whisperToCurrentUser =
 		speaker.getFlag('foundry-ironsworn', 'muteBroadcast') ?? (false as boolean)
 	const whisper = whisperToCurrentUser ? compact([game.user?.id]) : undefined
@@ -399,6 +382,6 @@ async function sendToChat(speaker: IronswornActor, msg: string) {
 		speaker: { actor: speaker.id }
 	}
 
-	const cls = CONFIG.ChatMessage.documentClass
+	const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
 	await cls.create(messageData as any)
 }

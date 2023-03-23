@@ -1,10 +1,6 @@
 import { IronswornSettings } from '../helpers/settings'
 
 export class WorldTruthsDialog extends FormApplication<FormApplicationOptions> {
-	constructor() {
-		super({})
-	}
-
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			title: game.i18n.localize('IRONSWORN.YourWorldTruths'),
@@ -31,14 +27,14 @@ export class WorldTruthsDialog extends FormApplication<FormApplicationOptions> {
 			for (let i = 0; i < category.Options.length; i++) {
 				const option = category.Options[i]
 				option.Truth = game.i18n.localize(
-					`IRONSWORN.WorldTruths.${category.Name}.option${i + 1}`
+					`IRONSWORN.WorldTruths.${category.Name as string}.option${i + 1}`
 				)
 				option.Quest = game.i18n.localize(
-					`IRONSWORN.WorldTruths.${category.Name}.quest${i + 1}`
+					`IRONSWORN.WorldTruths.${category.Name as string}.quest${i + 1}`
 				)
 			}
 			category.Name = game.i18n.localize(
-				`IRONSWORN.WorldTruths.${category.Name}.name`
+				`IRONSWORN.WorldTruths.${category.Name as string}.name`
 			)
 		}
 
@@ -71,8 +67,9 @@ export class WorldTruthsDialog extends FormApplication<FormApplicationOptions> {
 			const { category } = radio.dataset
 			const descriptionElement = $(radio).parent().find('.description')
 			const description =
-				descriptionElement.html() || `<p>${descriptionElement.val()}</p>`
-			sections.push(`<h2>${category}</h2> ${description}`)
+				descriptionElement.html() ||
+				`<p>${descriptionElement.val() as string}</p>`
+			sections.push(`<h2>${category as string}</h2> ${description}`)
 		}
 
 		const journal = await JournalEntry.create({

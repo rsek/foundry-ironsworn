@@ -7,7 +7,9 @@ import { VueAppMixin } from './vueapp.js'
 
 export abstract class VueActorSheet<
 	T extends IronswornActor
-> extends VueAppMixin<Constructor<ActorSheet<IronswornActor>>>(ActorSheet) {
+> extends VueAppMixin<Constructor<ActorSheet<IronswornActor, IronswornItem>>>(
+	ActorSheet
+) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'actor']

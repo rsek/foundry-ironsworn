@@ -37,7 +37,9 @@ import { JournalProgressPageSheet } from './module/journal/sheet/progress-page'
 import { TruthJournalPageSheet } from './module/journal/truth-page'
 import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
+import type { Constructor } from './module/vue/vueapp'
 
+import 'foundry-types'
 import 'handlebars'
 import 'virtual:svg-icons-register'
 
@@ -45,36 +47,43 @@ declare global {
 	type ConfiguredConfig = Config<
 		AmbientLightDocument,
 		ActiveEffect,
-		IronswornActor<any>,
-		ActorDirectory<IronswornActor<any>>,
-		ChatLog<ChatMessage<IronswornActor<any>>>,
-		ChatMessage<IronswornActor<any>>,
+		IronswornActor,
+		ActorDirectory<IronswornActor>,
+		ChatLog<ChatMessage<IronswornActor>>,
+		ChatMessage<IronswornActor>,
 		Combat,
-		Combatant<Combat | null, IronswornActor<any> | null>,
+		Combatant<Combat | null, IronswornActor | null>,
 		CombatTracker<Combat>,
 		CompendiumDirectory,
 		Hotbar,
-		IronswornItem<any>,
+		IronswornItem,
 		Macro,
 		MeasuredTemplateDocument,
 		TileDocument,
 		TokenDocument,
 		WallDocument<Scene | null>,
 		Scene,
-		User<IronswornActor<any>>,
+		User<IronswornActor>,
 		EffectsCanvasGroup,
 		IronswornJournalPage
-	>
+	> & {
+		Canvas: {
+			layers: Record<
+				string,
+				{ group: 'primary' | 'interface'; layerClass: Constructor<CanvasLayer> }
+			>
+		}
+	}
 	interface IronGame
 		extends Game<
-			IronswornActor<any>,
-			Actors<IronswornActor<any>>,
+			IronswornActor,
+			Actors<IronswornActor>,
 			ChatMessage,
 			Combat,
 			IronswornItem,
 			Macro,
 			Scene,
-			User<IronswornActor<any>>
+			User<IronswornActor>
 		> {}
 
 	interface ConfigIronsworn extends ConfiguredConfig {
@@ -92,8 +101,8 @@ declare global {
 
 		// eslint-disable-next-line no-var
 		var ui: FoundryUI<
-			IronswornActor<any>,
-			ActorDirectory<IronswornActor<any>>,
+			IronswornActor,
+			ActorDirectory<IronswornActor>,
 			IronswornItem,
 			ChatLog,
 			CompendiumDirectory

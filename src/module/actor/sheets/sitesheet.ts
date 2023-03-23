@@ -1,6 +1,6 @@
 import { VueActorSheet } from '../../vue/vueactorsheet'
 import siteSheetVue from '../../vue/site-sheet.vue'
-import type { IronswornItem } from '../../item/item'
+import { IronswornItem } from '../../item/item'
 import type { IronswornActor } from '../actor'
 
 export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
@@ -13,11 +13,11 @@ export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 	}
 
 	async _onDropItem<T extends IronswornItem>(
-		event: DragEvent,
+		event: ElementDragEvent,
 		data: DropCanvasData<'Item', T>
 	) {
 		// Fetch the item. We only want to override denizens (progress-type items)
-		const item = await Item.fromDropData<T>(data)
+		const item = await Item.fromDropData(data)
 		if (item == null) return false
 		if (item.type !== 'progress') {
 			return await super._onDropItem(event, data)
@@ -28,7 +28,7 @@ export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 			'.ironsworn__denizen__drop'
 		)[0]
 		if (!dropTarget) return false
-		const idx = parseInt(dropTarget.dataset.idx || '')
+		const idx = parseInt(dropTarget.dataset.idx ?? '')
 		const { denizens } = this.actor.system
 		if (!denizens[idx]) return false
 

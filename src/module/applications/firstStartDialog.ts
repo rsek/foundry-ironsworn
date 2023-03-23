@@ -3,10 +3,6 @@ import { SFSettingTruthsDialogVue } from './vueSfSettingTruthsDialog'
 import { WorldTruthsDialog } from './worldTruthsDialog'
 
 export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
-	constructor() {
-		super({})
-	}
-
 	static get defaultOptions(): FormApplicationOptions {
 		return mergeObject(super.defaultOptions, {
 			title: game.i18n.localize('IRONSWORN.First Start.Welcome'),
@@ -37,7 +33,7 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		ev.preventDefault()
 
 		// Character sheet
-		const setting = game.settings.get('core', 'sheetClasses')
+		const setting = game.settings.get('core', 'sheetClasses') as string[]
 		foundry.utils.mergeObject(setting, {
 			'Actor.character': 'ironsworn.IronswornCharacterSheetV2'
 		})
@@ -53,7 +49,7 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		ev.preventDefault()
 
 		// Character sheet
-		const setting = game.settings.get('core', 'sheetClasses')
+		const setting = game.settings.get('core', 'sheetClasses') as string[]
 		foundry.utils.mergeObject(setting, {
 			'Actor.character': 'ironsworn.StarforgedCharacterSheet'
 		})

@@ -12115,7 +12115,7 @@ index 1805dc2..905d709 100644
 +    type ItemUUID = WorldDocumentUUID<Item> | EmbeddedItemUUID | CompendiumUUID;
  }
 diff --git a/node_modules/foundry-types/client/documents/journal-entry-page.d.ts b/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
-index ee0011c..e634ead 100644
+index ee0011c..11536ed 100644
 --- a/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
 +++ b/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
 @@ -1,4 +1,4 @@
@@ -12154,6 +12154,12 @@ index ee0011c..e634ead 100644
      }
  
      interface JournalEntryPageHeading {
+@@ -84,3 +87,5 @@ declare global {
+         children: string[];
+     }
+ }
++
++type JournalEntryPageTypeMap = Record<string, JournalEntryPage>;
 diff --git a/node_modules/foundry-types/client/documents/journal-entry.d.ts b/node_modules/foundry-types/client/documents/journal-entry.d.ts
 index 47313dd..e56f5ac 100644
 --- a/node_modules/foundry-types/client/documents/journal-entry.d.ts
@@ -18574,6 +18580,18 @@ index 6c237a8..59a8899 100644
              core?: {
                  sourceId?: ItemUUID;
              };
+diff --git a/node_modules/foundry-types/common/documents/journal-entry-page.d.ts b/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
+index cfc0ce4..836b661 100644
+--- a/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
++++ b/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
+@@ -32,6 +32,7 @@ declare module foundry {
+         interface JournalEntryPageSource {
+             _id: string;
+             name: string;
++            type: string;
+             title: JournalEntryPageTitleData;
+             image: JournalEntryPageImageData;
+             text: JournalEntryPageTextData;
 diff --git a/node_modules/foundry-types/common/documents/journal-entry.d.ts b/node_modules/foundry-types/common/documents/journal-entry.d.ts
 index 4b7292b..dca9eda 100644
 --- a/node_modules/foundry-types/common/documents/journal-entry.d.ts
