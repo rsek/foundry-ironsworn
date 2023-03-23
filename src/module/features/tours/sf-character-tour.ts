@@ -8,6 +8,8 @@ export class SFCharacterTour extends IronswornTour {
 		const sheetSel = `.app[data-appid="${sheet?.appId}"]`
 
 		super({
+			namespace: 'foundry-ironsworn',
+			id: 'sf-character',
 			title: 'IRONSWORN.Tours.SFCharacter.Title',
 			description: 'IRONSWORN.Tours.SFCharacter.Description',
 			canBeResumed: false,

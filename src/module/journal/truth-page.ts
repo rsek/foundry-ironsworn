@@ -1,4 +1,6 @@
-export class TruthJournalPageSheet extends JournalPageSheet {
+export class TruthJournalPageSheet extends JournalPageSheet<
+	JournalEntryPage<JournalEntry, 'truth'>
+> {
 	// @ts-expect-error
 	isEditable: boolean
 

@@ -1,5 +1,5 @@
 import ChallengeResolutionDialogVue from '../vue/challenge-resolution-dialog.vue'
-import { VueAppMixin } from '../vue/vueapp.js'
+import { VueAppMixin, VueApplicationOptions } from '../vue/vueapp.js'
 
 declare global {
 	namespace Application {
@@ -49,7 +49,7 @@ export class ChallengeResolutionDialog extends VueAppMixin(Application) {
 		}) as any
 	}
 
-	getData(options?: Partial<ApplicationOptions> | undefined) {
+	getData(options?: Partial<VueApplicationOptions> | undefined) {
 		return {
 			...super.getData(options),
 			messageId: this.messageId

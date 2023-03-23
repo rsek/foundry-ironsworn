@@ -7,6 +7,7 @@ import type {
 import { starforged, ironsworn } from 'dataforged'
 import { compact } from 'lodash-es'
 import { getFoundryTableByDfId } from '../dataforged'
+import type { PackName } from './pack-cache'
 import { cachedDocumentsForPack } from './pack-cache'
 
 export interface IOracleTreeNode {
@@ -34,7 +35,7 @@ const emptyNode = () =>
 	} as IOracleTreeNode)
 
 async function createOracleTree(
-	compendium: string,
+	compendium: PackName<RollTable>,
 	categories: IOracleCategory[]
 ): Promise<IOracleTreeNode> {
 	const rootNode = emptyNode()

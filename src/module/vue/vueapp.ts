@@ -174,8 +174,9 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 		}
 
 		_dragHandler(html: JQuery) {
+			// HACK this should just be typed as ElementDragEvent, which inherits DragEvent. But typescript doesn't accept it -- perhaps related to https://github.com/microsoft/TypeScript/issues/50754
 			const dragHandler = (event: DragEvent) => {
-				this._onDragStart(event)
+				this._onDragStart(event as ElementDragEvent)
 			}
 			html.find('.item[data-draggable="true"]').each((i, li) => {
 				li.setAttribute('draggable', 'true') // this apparently requires a string, rather than a boolean

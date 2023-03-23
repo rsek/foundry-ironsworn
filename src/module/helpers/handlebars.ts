@@ -20,16 +20,13 @@ interface RollClassesOptions {
 	canceled: boolean
 	type: 'action' | 'challenge' | undefined
 }
-function classesForRoll(
-	r: Roll<RollClassesOptions>,
-	opts?: Partial<RollClassesOptions>
-) {
+function classesForRoll(r: Roll, opts?: Partial<RollClassesOptions>) {
 	const theOpts = {
 		...{ canceled: false, type: undefined },
 		...opts
 	}
 	const d = r.dice[0]
-	const maxRoll = d?.faces || SCORE_MAX
+	const maxRoll = d?.faces ?? SCORE_MAX
 	return [
 		d?.constructor.name.toLowerCase(),
 		d && `isiconbg-d${d.faces}-blank`,

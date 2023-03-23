@@ -41,18 +41,21 @@
 <script setup lang="ts">
 import { computed, inject, provide, reactive, watch, ref } from 'vue'
 import { $ItemKey, ItemKey } from './provisions'
-import type { BondsetDataPropertiesData } from '../item/itemtypes'
 import MceEditor from './components/mce-editor.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
+import type { IronswornItem } from '../item/item'
 
-const props = defineProps<{ data: { item: any } }>()
-provide(ItemKey, computed(() => props.data.item) as any)
-
-const $item = inject($ItemKey)
-
-const bonds = computed(
-	() => (props.data.item.system as BondsetDataPropertiesData).bonds
+const props = defineProps<{
+	data: { item: foundry.data.ItemSource<'bondset'> }
+}>()
+provide(
+	ItemKey,
+	computed(() => props.data.item)
 )
+
+const $item = inject($ItemKey) as IronswornItem<'bondset'>
+
+const bonds = computed(() => props.data.item.system.bonds)
 
 const data = reactive({
 	selectedBondIndex: -1,
@@ -72,12 +75,12 @@ function selectBondIndex(i: number) {
 }
 
 async function deleteBond(i) {
-	const system = props.data.item.system as BondsetDataPropertiesData
+	const system = props.data.item.system
 	const bonds = Object.values(system.bonds)
 	bonds.splice(i, 1)
 	await $item?.update({ system: { bonds } })
 
-	if (data.selectedBondIndex == i) {
+	if (data.selectedBondIndex === i) {
 		i--
 		if (bonds.length > 0 && i < 0) i = 0
 		selectBondIndex(i)
@@ -85,7 +88,7 @@ async function deleteBond(i) {
 }
 
 async function addBond() {
-	const system = props.data.item.system as BondsetDataPropertiesData
+	const system = props.data.item.system
 	const bonds = Object.values(system.bonds)
 	bonds.push({ name: '', notes: '' })
 	await $item?.update({ system: { bonds } })

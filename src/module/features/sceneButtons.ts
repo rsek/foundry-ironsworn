@@ -25,7 +25,7 @@ async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
 		if (existing != null) {
 			parentFolder = existing
 			directory = existing.children.map((child) => {
-				return child.folder /* v10 */ || child /* v9 */
+				return child.folder /* v10 */ ?? child /* v9 */
 			})
 			continue
 		}
@@ -58,7 +58,11 @@ async function dropToken(location: IronswornActor) {
 	const [x, y] = [(cx - t.tx) / scale.x, (cy - t.ty) / scale.y]
 
 	// Snap to viewport
-	const td = await location.getTokenData({ x, y })
+	const td = (await location.getTokenData({
+		/// @ts-expect-error for some reason it doesn't think 'x' is a property
+		x,
+		y
+	})) as Required<foundry.data.TokenData>
 	const hw = canvas.grid.w / 2
 	const hh = canvas.grid.h / 2
 	const pos = canvas.grid.getSnappedPosition(
@@ -70,7 +74,7 @@ async function dropToken(location: IronswornActor) {
 	// TODO: avoid dropping this on top of another token
 
 	// Create the token
-	const cls = getDocumentClass('Token')
+	const cls = getDocumentClass('Token') as any
 	await cls.create(td, { parent: canvas.scene })
 
 	// Move the user back to the token layer
@@ -85,18 +89,20 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 		'Locations',
 		game.scenes?.current?.name ?? '???'
 	)
-	const loc = (await IronswornActor.create({
+
+	const data: PreCreate<IronswornActor<'location'>['_source']> = {
 		type: 'location',
 		name,
-		data: { subtype },
+		system: { subtype },
 		token: {
 			displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
 			disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,
 			actorLink: true,
-			scale
-		},
-		folder: parentFolder?.id
-	})) as IronswornActor<'location'>
+			texture: { scaleX: scale, scaleY: scale }
+		} as any,
+		folder: parentFolder?.id ?? null
+	}
+	const loc = await IronswornActor.create<IronswornActor<'location'>>(data)
 	if (loc == null) return
 
 	await dropToken(loc)
@@ -135,7 +141,7 @@ export function activateSceneButtonListeners() {
 		group: 'primary'
 	}
 
-	Hooks.on('getSceneControlButtons', (controls: SceneControl[]) => {
+	Hooks.on('getSceneControlButtons', (controls) => {
 		const oracleButton: SceneControlTool = {
 			name: 'Oracles',
 			title: game.i18n.localize('IRONSWORN.ROLLTABLES.TypeOracle'),

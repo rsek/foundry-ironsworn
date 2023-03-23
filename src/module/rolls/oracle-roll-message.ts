@@ -90,7 +90,7 @@ export class OracleRollMessage {
 	}
 
 	static fromTableResults(
-		tableResults: Array<PreCreate<TableResult['_source']>>,
+		tableResults: foundry.data.TableResultData[],
 		title: string,
 		subtitle?: string
 	) {
@@ -228,14 +228,14 @@ export class OracleRollMessage {
 				roll: this.roll
 			}
 
-			const cls = CONFIG.ChatMessage.documentClass
-			const msg = await cls.create(messageData as any, {})
+			const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
+			const msg = await cls.create(messageData)
 			this.chatMessageId = msg?.id
 			return msg
 		}
 	}
 
-	toJSON(): any {
+	toJSON() {
 		return pick(this, [
 			'dfOracleId',
 			'tableUuid',

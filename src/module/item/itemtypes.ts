@@ -1,4 +1,4 @@
-import type { IMove } from 'dataforged'
+import type { IMove, RequireKey } from 'dataforged'
 import type { ChallengeRank } from '../constants'
 import type { IronswornItem } from './item'
 
@@ -97,7 +97,7 @@ export interface DelveSiteFeatureOrDanger<
 	T extends 'delve-site-danger' | 'delve-site-feature' =
 		| 'delve-site-danger'
 		| 'delve-site-feature'
-> extends ConstructorParameters<typeof TableResult> {
+> extends RequireKey<PreCreate<TableResult>, 'text' | 'range'> {
 	flags: {
 		'foundry-ironsworn': {
 			/**

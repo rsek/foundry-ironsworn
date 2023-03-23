@@ -12,7 +12,7 @@ export abstract class VueActorSheet<
 ) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ['ironsworn', 'actor']
+			classes: ['actor']
 		})
 	}
 
@@ -20,9 +20,10 @@ export abstract class VueActorSheet<
 		app.provide($ActorKey, this.actor)
 	}
 
-	override getData(...args) {
+	override async getData(...args) {
+		const data = await super.getData(...args)
 		return {
-			...super.getData(...args),
+			...data,
 			actor: this.actor.toObject()
 		} as ActorSheetData<T>
 	}
@@ -60,11 +61,13 @@ export abstract class VueActorSheet<
 		this.actor.setFlag('foundry-ironsworn', 'edit-mode', !currentValue)
 	}
 
-	protected async _onDrop(event: DragEvent) {
-		const data = (TextEditor as any).getDragEventData(event)
+	protected async _onDrop(event: ElementDragEvent) {
+		const data = TextEditor.getDragEventData(event) as any
 
-		if (data.type === 'AssetBrowserData') {
-			const document = (await fromUuid(data.uuid)) as IronswornItem | undefined
+		if (data?.type === 'AssetBrowserData') {
+			const document = (await fromUuid(data.uuid)) as
+				| IronswornItem<'asset'>
+				| undefined
 
 			if (document != null) {
 				await this.actor.createEmbeddedDocuments('Item', [document.toObject()])

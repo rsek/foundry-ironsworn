@@ -1,5 +1,5 @@
 export function registerCompendiumCategoryHook() {
-	Hooks.on('renderCompendium', async (_app, html: JQuery, opts) => {
+	Hooks.on('renderCompendium', async (_app, html, opts) => {
 		if (opts.documentCls !== 'rolltable') return
 
 		const collection = opts.collection

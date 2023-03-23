@@ -139,7 +139,7 @@ export class CreateActorDialog extends FormApplication<
 		)
 	}
 
-	async _createWithFolder<T extends IronswornActor['type']>(
+	async _createWithFolder<T extends ActorType>(
 		name: string,
 		type: T,
 		img: ImageFilePath,

@@ -6,7 +6,7 @@ import type { IronswornItem } from '../item/item'
 
 export interface DisplayAsset {
 	df?: IAsset
-	foundryItem: () => IronswornItem
+	foundryItem: () => IronswornItem<'asset'>
 }
 
 export interface DisplayCategory {
@@ -78,7 +78,7 @@ async function compendiumMoves(
 		for (const dfAsset of dfAssetType.Assets) {
 			const item = (await pack.getDocument(
 				hashLookup(dfAsset.$id)
-			)) as IronswornItem
+			)) as IronswornItem<'asset'>
 			cat.assets.push({
 				df: dfAsset,
 				foundryItem: () => item
@@ -93,15 +93,13 @@ async function compendiumMoves(
 
 async function augmentWithFolderContents(categories: DisplayCategory[]) {
 	const name = game.i18n.localize('IRONSWORN.Asset Categories.Custom')
-	const folder = (game.items?.directory as any)?.folders.find(
-		(x) => x.name === name
-	) as Folder | undefined
-	if (folder == null || folder.contents.length == 0) return
+	const folder = game.items?.directory?.folders.find((x) => x.name === name)
+	if (folder == null || folder.contents.length === 0) return
 
 	const customAssets = [] as DisplayAsset[]
 	for (const item of folder.contents) {
 		if (item.documentName !== 'Item' || item.type !== 'asset') continue
-		customAssets.push({ foundryItem: () => item })
+		customAssets.push({ foundryItem: () => item as IronswornItem<'asset'> })
 	}
 
 	categories.push({

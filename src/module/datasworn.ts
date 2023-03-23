@@ -134,7 +134,7 @@ interface RawFeatureOrDanger {
 function importDelveFeaturesOrDangers(
 	rawFeaturesOrDangers: RawFeatureOrDanger[],
 	type: 'feature' | 'danger',
-	sourceId: Item['id'] = null,
+	sourceId: Item['id'],
 	low = 1
 ) {
 	const result: DelveSiteFeatureOrDanger[] = []

@@ -5,8 +5,6 @@ import { IronswornSettings } from '../helpers/settings'
 import { localizeRank } from '../helpers/util'
 import type { IronswornItem } from '../item/item'
 
-type ChatMessageDataConstructorData = PreCreate<ChatMessage['_source']>
-
 type ActorTypeHandler = (actor: IronswornActor<any>, any) => string | undefined
 
 declare global {
@@ -25,7 +23,7 @@ export function registerChatAlertHooks() {
 				name: data.name
 			})
 		} else {
-			content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor, data)
+			content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor as IronswornActor, data)
 			if (!content) return
 		}
 
@@ -42,7 +40,7 @@ export function registerChatAlertHooks() {
 				name: data.name
 			})
 		} else {
-			content = ITEM_TYPE_HANDLERS[item.type]?.(item, data)
+			content = ITEM_TYPE_HANDLERS[item.type]?.(item as IronswornItem, data)
 		}
 		if (!content) return
 
@@ -50,17 +48,25 @@ export function registerChatAlertHooks() {
 		sendToChat(item.parent, `${itemName} ${content}`)
 	})
 
-	Hooks.on('preCreateItem', async (item, options, _userId: string) => {
-		if (!IronswornSettings.get('log-changes')) return
-		if (item.parent == null) return // No logging for unowned items, they don't matter
-		if (options.suppressLog) return
-		if (item.type === 'bondset') return // No need to log this
+	Hooks.on(
+		'preCreateItem',
+		async (
+			item: Item,
+			_data,
+			options: DocumentModificationContext<Item>,
+			_userId
+		) => {
+			if (!IronswornSettings.get('log-changes')) return
+			if (item.parent == null) return // No logging for unowned items, they don't matter
+			if (options.suppressLog) return
+			if (item.type === 'bondset') return // No need to log this
 
-		sendToChat(
-			item.parent,
-			game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
-		)
-	})
+			sendToChat(
+				item.parent,
+				game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
+			)
+		}
+	)
 
 	Hooks.on('preDeleteItem', async (item, options, _userId) => {
 		if (!IronswornSettings.get('log-changes')) return
@@ -375,7 +381,7 @@ async function sendToChat(speaker: Actor, msg: string) {
 		speaker.getFlag('foundry-ironsworn', 'muteBroadcast') ?? (false as boolean)
 	const whisper = whisperToCurrentUser ? compact([game.user?.id]) : undefined
 
-	const messageData: ChatMessageDataConstructorData = {
+	const messageData: PreCreate<foundry.data.ChatMessageSource> = {
 		whisper,
 		content: `<em>${msg}</em>`,
 		type: CONST.CHAT_MESSAGE_TYPES.EMOTE,
@@ -383,5 +389,5 @@ async function sendToChat(speaker: Actor, msg: string) {
 	}
 
 	const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
-	await cls.create(messageData as any)
+	await cls.create(messageData)
 }

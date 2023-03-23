@@ -14,7 +14,7 @@ async function everyActor(fn: (a: IronswornActor) => any) {
 
 	// Pack actors
 	for (const pack of game.packs.contents) {
-		if (pack.documentClass === Actor) {
+		if (pack.documentName === 'Actor') {
 			for (const thing of pack.contents) {
 				await fn(thing as IronswornActor)
 			}
@@ -29,7 +29,7 @@ async function everyItem(fn: (x: IronswornItem) => any) {
 
 	// Pack items
 	for (const pack of game.packs.contents) {
-		if (pack.documentClass === Item) {
+		if (pack.documentName === 'Item') {
 			for (const thing of pack.contents) {
 				await fn(thing as IronswornItem)
 			}

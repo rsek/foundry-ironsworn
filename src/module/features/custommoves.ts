@@ -1,7 +1,7 @@
 import type { IMove, IMoveCategory } from 'dataforged'
 import { ISMoveCategories, SFMoveCategories } from '../dataforged/data'
 import type { IronswornItem } from '../item/item'
-import type { SFMoveDataPropertiesData } from '../item/itemtypes'
+import type { PackName } from './pack-cache'
 import { cachedDocumentsForPack } from './pack-cache'
 
 export interface MoveCategory {
@@ -21,7 +21,7 @@ export interface Move {
 // For some reason, rollupJs mangles this
 
 async function createMoveTree(
-	compendiumName: string,
+	compendiumName: PackName<IronswornItem<'sfmove'>>,
 	categories: IMoveCategory[]
 ): Promise<MoveCategory[]> {
 	const ret = [] as MoveCategory[]
@@ -31,7 +31,7 @@ async function createMoveTree(
 
 	// Construct the base tree
 	for (const category of categories) {
-		ret.push(walkCategory(category, compendiumMoves as IronswornItem[]))
+		ret.push(walkCategory(category, compendiumMoves ?? []))
 	}
 
 	// Add custom moves from well-known folder
@@ -85,7 +85,7 @@ enum MoveCategoryColor {
 
 function walkCategory(
 	category: IMoveCategory,
-	compendiumMoves: IronswornItem[]
+	compendiumMoves: Array<IronswornItem<'sfmove'>>
 ): MoveCategory {
 	const newCategory: MoveCategory = {
 		// FIXME: revert to pulling directly from DF when it's fixed in 2.0
@@ -96,9 +96,7 @@ function walkCategory(
 	}
 
 	for (const move of category.Moves) {
-		const moveItem = compendiumMoves?.find(
-			(x) => (x.system as SFMoveDataPropertiesData).dfid === move.$id
-		)
+		const moveItem = compendiumMoves?.find((x) => x.system.dfid === move.$id)
 		if (moveItem != null) {
 			newCategory.moves.push({
 				color: category.Display.Color ?? null,
@@ -107,7 +105,7 @@ function walkCategory(
 					// TODO: ideally, alternate versions wouldn't have the same move at all! they'd be selectable within the move display. maybe a radio select, or expandable into its own tree? or displayed as a second text?
 					// 'alternate version' gets too long for a single line in many cases, so it gets trimmed
 					// move.Display.Title.replace(/alternate version/i, 'alt') ??
-					moveItem.name as string,
+					moveItem.name,
 				moveItem: () => moveItem
 			})
 		} else {
@@ -123,7 +121,7 @@ async function augmentWithFolderContents(categories: MoveCategory[]) {
 	const folder = (game.items?.directory as any)?.folders.find(
 		(x) => x.name === name
 	) as Folder | undefined
-	if (folder == null || folder.contents.length == 0) return
+	if (folder == null || folder.contents.length === 0) return
 
 	// @ts-expect-error Exists only in FVTT v10 API
 	const color = (folder.color ?? null) as string | null
@@ -134,7 +132,7 @@ async function augmentWithFolderContents(categories: MoveCategory[]) {
 		customMoves.push({
 			color,
 			displayName: moveItem.name ?? '(move)',
-			moveItem: () => moveItem
+			moveItem: () => moveItem as IronswornItem<'sfmove'>
 		})
 	}
 

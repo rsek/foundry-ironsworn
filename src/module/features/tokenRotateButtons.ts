@@ -1,6 +1,10 @@
 // https://github.com/zeel01/TokenHUDArtButton/blob/master/artbutton.js#L281
 
-function rotateTokenBy(ev: JQuery.ClickEvent, tokenData: any, angle: number) {
+function rotateTokenBy(
+	ev: JQuery.ClickEvent,
+	tokenData: foundry.data.TokenData,
+	angle: number
+) {
 	ev.preventDefault()
 	const token = canvas?.scene?.tokens.get(tokenData._id)
 	if (token == null) return

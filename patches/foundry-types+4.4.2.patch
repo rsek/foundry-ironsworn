@@ -794,7 +794,7 @@ index f91e3a6..05eab6e 100644
      }
  }
 diff --git a/node_modules/foundry-types/client/config.d.ts b/node_modules/foundry-types/client/config.d.ts
-index 271ace7..c4ab545 100644
+index 271ace7..4dbd354 100644
 --- a/node_modules/foundry-types/client/config.d.ts
 +++ b/node_modules/foundry-types/client/config.d.ts
 @@ -2,25 +2,27 @@ import type * as TinyMCE from "tinymce";
@@ -864,21 +864,25 @@ index 271ace7..c4ab545 100644
          };
  
          /** Configuration for the Combat document */
-@@ -133,7 +138,12 @@ declare global {
+@@ -131,9 +136,15 @@ declare global {
+             };
+         };
  
-         /** Configuration for the JournalEntry entity */
+-        /** Configuration for the JournalEntry entity */
++        /** Configuration for the JournalEntry document */
          JournalEntry: {
 -            documentClass: typeof JournalEntry;
 +            documentClass: {
 +                new (
-+                    data: PreCreate<TJournalEntryPage["_source"]>,
-+                    context?: DocumentConstructionContext<TJournalEntryPage["parent"]>
-+                ): TJournalEntryPage;
++                    data: PreCreate<JournalEntry["_source"]>,
++                    context?: DocumentConstructionContext<null>
++                ): JournalEntry;
 +            };
++            collection: Journal
              noteIcons: {
                  Anchor: string;
                  [key: string]: string;
-@@ -179,11 +189,20 @@ declare global {
+@@ -179,11 +190,20 @@ declare global {
          /*  Embedded Documents                          */
          /* -------------------------------------------- */
  
@@ -901,7 +905,7 @@ index 271ace7..c4ab545 100644
          };
  
          /** Configuration for the ActiveEffect embedded document type */
-@@ -216,23 +235,26 @@ declare global {
+@@ -216,23 +236,26 @@ declare global {
                  rect: string;
                  ray: string;
              };
@@ -935,7 +939,7 @@ index 271ace7..c4ab545 100644
              prototypeSheetClass: ConstructorOf<TTokenDocument["sheet"]>;
          };
  
-@@ -240,7 +262,7 @@ declare global {
+@@ -240,7 +263,7 @@ declare global {
          Wall: {
              documentClass: ConstructorOf<TWallDocument>;
              objectClass: ConstructorOf<Wall<TWallDocument>>;
@@ -944,7 +948,7 @@ index 271ace7..c4ab545 100644
          };
  
          /* -------------------------------------------- */
-@@ -290,6 +312,10 @@ declare global {
+@@ -290,6 +313,10 @@ declare global {
                  };
              };
              layers: {
@@ -955,7 +959,7 @@ index 271ace7..c4ab545 100644
                  drawings: {
                      group: "primary";
                      layerClass: typeof DrawingsLayer;
-@@ -300,11 +326,11 @@ declare global {
+@@ -300,11 +327,11 @@ declare global {
                  };
                  walls: {
                      group: "effects";
@@ -969,7 +973,7 @@ index 271ace7..c4ab545 100644
                  };
                  notes: {
                      group: "interface";
-@@ -312,11 +338,11 @@ declare global {
+@@ -312,11 +339,11 @@ declare global {
                  };
                  tokens: {
                      group: "primary";
@@ -984,7 +988,7 @@ index 271ace7..c4ab545 100644
                  };
                  sounds: {
                      group: "interface";
-@@ -324,7 +350,7 @@ declare global {
+@@ -324,7 +351,7 @@ declare global {
                  };
                  lighting: {
                      group: "effects";
@@ -993,7 +997,7 @@ index 271ace7..c4ab545 100644
                  };
                  controls: {
                      group: "interface";
-@@ -532,13 +558,13 @@ declare global {
+@@ -532,13 +559,13 @@ declare global {
          };
  
          ui: {
@@ -1046,10 +1050,10 @@ index e83430b..4455687 100644
          /**
           * Add a leaf node to the word tree index.
 diff --git a/node_modules/foundry-types/client/core/hooks.d.ts b/node_modules/foundry-types/client/core/hooks.d.ts
-index 1e898b7..cb729b0 100644
+index 1e898b7..3d6a3b9 100644
 --- a/node_modules/foundry-types/client/core/hooks.d.ts
 +++ b/node_modules/foundry-types/client/core/hooks.d.ts
-@@ -17,14 +17,7 @@ declare global {
+@@ -17,14 +17,12 @@ declare global {
      type HookParamsGetSceneControlButtons = HookParameters<"getSceneControlButtons", [SceneControl[]]>;
      type HookParamsHotbarDrop = HookParameters<"hotbarDrop", [Hotbar, unknown, string]>;
      type HookParamsLightingRefresh = HookParameters<"lightingRefresh", [LightingLayer]>;
@@ -1061,11 +1065,16 @@ index 1e898b7..cb729b0 100644
 -            string
 -        ]
 -    >;
-+    type HookParamsPreCreate<T extends Document, N extends string> = HookParameters<`preCreate${N}`, [PreCreate<T['_source']>, DocumentModificationContext<PreCreate<T['_source']>>, string]>
++    type HookParamsPreCreate<T extends foundry.abstract.Document, N extends string> = HookParameters<`preCreate${N}`, [
++      T, // @param document
++      PreCreate<T>, // @param data
++      DocumentModificationContext<T>, // @param options
++      string // @param userId
++    ]>;
      type HooksParamsPreUpdateCombat = HookParameters<
          "preUpdateCombat",
          [Combat, object, { diff: boolean; advanceTime: number; [key: string]: unknown }, string]
-@@ -33,24 +26,27 @@ declare global {
+@@ -33,24 +31,27 @@ declare global {
          "preUpdateToken",
          [
              Scene,
@@ -1098,7 +1107,7 @@ index 1e898b7..cb729b0 100644
      >;
      type HookParamsUpdateWorldTime = HookParameters<"updateWorldTime", [number, number]>;
  
-@@ -60,6 +56,7 @@ declare global {
+@@ -60,6 +61,7 @@ declare global {
           *
           * @param hook The unique name of the hooked event
           * @param fn   The callback function which should be triggered when the hook event occurs
@@ -1106,14 +1115,11 @@ index 1e898b7..cb729b0 100644
           */
          static on(...args: HookParamsSetup): number;
          static on(...args: HookParamsInit): number;
-@@ -72,17 +69,24 @@ declare global {
+@@ -72,17 +74,22 @@ declare global {
          static on(...args: HookParamsGetSceneControlButtons): number;
          static on(...args: HookParamsHotbarDrop): number;
          static on(...args: HookParamsLightingRefresh): number;
 -        static on(...args: HookParamsPreCreateItem): number;
-+        static on(...args: HookParamsPreCreate<Item, "Item">): number;
-+        static on(...args: HookParamsPreCreate<Actor, "Actor">): number;
-+        static on(...args: HookParamsPreCreate<JournalEntryPage, "JournalEntryPage">): number;
          static on(...args: HooksParamsPreUpdateCombat): number;
          static on(...args: HookParamsPreUpdateToken): number;
 +        static on(...args: HookParamsPreUpdate<Actor, 'Actor'>): number
@@ -1126,6 +1132,7 @@ index 1e898b7..cb729b0 100644
          static on(...args: HookParamsRender<ChatPopout, "ChatPopout">): number;
          static on(...args: HookParamsRender<CombatTrackerConfig, "CombatTrackerConfig">): number;
          static on(...args: HookParamsRender<CompendiumDirectory, "CompendiumDirectory">): number;
++        static on(...args: HookParamsRender<Compendium,'Compendium'>): number
          static on(...args: HookParamsRender<Dialog, "Dialog">): number;
 -        static on(...args: HookParamsRender<ActorDirectory<Actor<null>>, "ActorDirectory">): number;
 -        static on(...args: HookParamsRender<ItemDirectory<Item<null>>, "ItemDirectory">): number;
@@ -1134,7 +1141,7 @@ index 1e898b7..cb729b0 100644
          static on(...args: HookParamsRender<SceneControls, "SceneControls">): number;
          static on(...args: HookParamsRender<Settings, "Settings">): number;
          static on(...args: HookParamsRender<TokenHUD, "TokenHUD">): number;
-@@ -96,11 +100,21 @@ declare global {
+@@ -96,9 +103,19 @@ declare global {
              >
          ): number;
          static on(...args: HookParamsTargetToken): number;
@@ -1144,21 +1151,21 @@ index 1e898b7..cb729b0 100644
 +        static on(...args: HookParamsUpdate<Actor, 'Actor'>): number
 +		    static on(...args: HookParamsUpdate<Item, 'Item'>): number
          static on(...args: HookParamsUpdateWorldTime): number;
--        static on(...args: HookParameters<string, unknown[]>): number;
- 
-+
-+
++        static on(...args: HookParamsPreCreate<Item, "Item">): number;
++        static on(...args: HookParamsPreCreate<Actor, "Actor">): number;
++        static on(...args: HookParamsPreCreate<JournalEntryPage, "JournalEntryPage">): number;
 +        static on(
 +          ...args: HookParameters<'preDeleteItem', [Item, any, number]>
 +        ): number
 +
-+
-+        static on(...args: HookParameters<string, unknown[]>): number;
+         static on(...args: HookParameters<string, unknown[]>): number;
+ 
          /**
-          * Register a callback handler for an event which is only triggered once the first time the event occurs.
-          * After a "once" hook is triggered the hook is automatically removed.
-@@ -122,13 +136,13 @@ declare global {
-         static once(...args: HookParamsPreCreateItem): number;
+@@ -119,16 +136,15 @@ declare global {
+         static once(...args: HookParamsGetSceneControlButtons): number;
+         static once(...args: HookParamsHotbarDrop): number;
+         static once(...args: HookParamsLightingRefresh): number;
+-        static once(...args: HookParamsPreCreateItem): number;
          static once(...args: HookParamsPreUpdateToken): number;
          static once(...args: HookParamsRenderChatMessage): number;
 -        static once(...args: HookParamsRender<ActorDirectory<Actor<null>>, "ActorDirectory">): number;
@@ -1173,7 +1180,7 @@ index 1e898b7..cb729b0 100644
          static once(
              ...args: HookParamsRender<JournalPageSheet<JournalEntryPage<JournalEntry | null>>, "JournalPageSheet">
          ): number;
-@@ -145,6 +159,7 @@ declare global {
+@@ -145,6 +161,7 @@ declare global {
          static once(...args: HookParamsUpdate<Combat, "Combat">): number;
          static once(...args: HookParamsUpdate<Scene, "Scene">): number;
          static once(...args: HookParamsUpdateWorldTime): number;
@@ -1388,7 +1395,7 @@ index f7b1300..177b932 100644
 +    }
  }
 diff --git a/node_modules/foundry-types/client/documents/actor.d.ts b/node_modules/foundry-types/client/documents/actor.d.ts
-index 84ef296..9c4dff8 100644
+index 84ef296..3645dfe 100644
 --- a/node_modules/foundry-types/client/documents/actor.d.ts
 +++ b/node_modules/foundry-types/client/documents/actor.d.ts
 @@ -1,4 +1,4 @@
@@ -1500,7 +1507,7 @@ index 84ef296..9c4dff8 100644
              userId: string
          ): void;
  
-@@ -159,34 +171,57 @@ declare global {
+@@ -159,34 +171,58 @@ declare global {
          protected _onEmbeddedDocumentChange(embeddedName: "Item" | "ActiveEffect"): void;
      }
  
@@ -1572,6 +1579,7 @@ index 84ef296..9c4dff8 100644
      type ActorUUID = `Actor.${string}` | CompendiumUUID;
  }
 +
++type ActorTypeMap = Record<string, Actor>;
 +type ItemTypeMap = Record<string, Item>;
 diff --git a/node_modules/foundry-types/client/documents/ambient-light-document.d.ts b/node_modules/foundry-types/client/documents/ambient-light-document.d.ts
 index 5398f7f..9cb8634 100644
@@ -12115,7 +12123,7 @@ index 1805dc2..905d709 100644
 +    type ItemUUID = WorldDocumentUUID<Item> | EmbeddedItemUUID | CompendiumUUID;
  }
 diff --git a/node_modules/foundry-types/client/documents/journal-entry-page.d.ts b/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
-index ee0011c..11536ed 100644
+index ee0011c..db1083c 100644
 --- a/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
 +++ b/node_modules/foundry-types/client/documents/journal-entry-page.d.ts
 @@ -1,4 +1,4 @@
@@ -12133,7 +12141,7 @@ index ee0011c..11536ed 100644
          /** The table of contents for this JournalEntryPage. */
          get toc(): JournalEntryPageHeading;
  
-@@ -61,14 +61,17 @@ declare global {
+@@ -61,14 +61,19 @@ declare global {
  
          protected override _onUpdate(
              data: DeepPartial<this["_source"]>,
@@ -12144,17 +12152,19 @@ index ee0011c..11536ed 100644
      }
  
 -    interface JournalEntryPage<TParent extends JournalEntry | null> extends ClientBaseJournalEntryPage<TParent> {
-+    interface JournalEntryPage<TParent extends JournalEntry | null>
++    interface JournalEntryPage<TParent extends JournalEntry | null, TType extends string = string, TSystemSource extends object = object>
 +        extends BaseDocumentWithOmissions<foundry.documents.BaseJournalEntryPage<TParent>>,
 +            ClientDocument2<TParent> {
-+        readonly _source: foundry.documents.JournalEntryPageSource;
++        readonly _source: foundry.documents.JournalEntryPageSource<TType,TSystemSource>;
++
++        system: TSystemSource
 +
          get documentName(): "JournalEntryPage";
 -        get sheet(): JournalPageSheet<this>;
      }
  
      interface JournalEntryPageHeading {
-@@ -84,3 +87,5 @@ declare global {
+@@ -84,3 +89,5 @@ declare global {
          children: string[];
      }
  }
@@ -15865,7 +15875,7 @@ index 0000000..6325afe
 +}
 diff --git a/node_modules/foundry-types/common/data/data/actor-data.d.ts b/node_modules/foundry-types/common/data/data/actor-data.d.ts
 new file mode 100644
-index 0000000..42a19a5
+index 0000000..63827a7
 --- /dev/null
 +++ b/node_modules/foundry-types/common/data/data/actor-data.d.ts
 @@ -0,0 +1,42 @@
@@ -15892,15 +15902,14 @@ index 0000000..42a19a5
 +         * @property [flags={}]   An object of optional key/value flags
 +         */
 +        interface ActorSource<
-+            TType extends string = string,
-+            TSystemSource extends object = object,
++            TType extends keyof ActorTypeMap = keyof ActorTypeMap,
 +            TItemSource extends ItemSource = ItemSource
 +        > {
 +            _id: string;
 +            name: string;
 +            type: TType;
 +            img: ImageFilePath;
-+            system: TSystemSource;
++            system: ActorTypeMap[TType]['system'];
 +            prototypeToken: PrototypeTokenSource;
 +            items: TItemSource[];
 +            effects: ActiveEffectSource[];
@@ -15908,6 +15917,7 @@ index 0000000..42a19a5
 +            sort: number;
 +            ownership: Record<string, DocumentOwnershipLevel>;
 +            flags: documents.ActorFlags;
++            token: TokenSource | null
 +        }
 +    }
 +}
@@ -16576,7 +16586,7 @@ index 8c2c26a..5da1d4e 100644
 +import "./wall-data";
 diff --git a/node_modules/foundry-types/common/data/data/item-data.d.ts b/node_modules/foundry-types/common/data/data/item-data.d.ts
 new file mode 100644
-index 0000000..b31041f
+index 0000000..1bdf1c2
 --- /dev/null
 +++ b/node_modules/foundry-types/common/data/data/item-data.d.ts
 @@ -0,0 +1,33 @@
@@ -16599,12 +16609,12 @@ index 0000000..b31041f
 +         * @property [ownership] An object which configures user permissions to this Item
 +         * @property [flags={}]   An object of optional key/value flags
 +         */
-+        interface ItemSource<TType extends string = string, TSystemSource extends object = object> {
++        interface ItemSource<TType extends string = string> {
 +            _id: string;
 +            name: string;
 +            type: TType;
 +            img: ImageFilePath;
-+            system: TSystemSource;
++            system: ItemTypeMap[TType]['system'];
 +            effects: ActiveEffectSource[];
 +            folder?: string | null;
 +            sort: number;
@@ -17388,113 +17398,114 @@ index 0000000..5955fe1
 +}
 diff --git a/node_modules/foundry-types/common/data/data/token-data.d.ts b/node_modules/foundry-types/common/data/data/token-data.d.ts
 new file mode 100644
-index 0000000..24290a2
+index 0000000..d611f87
 --- /dev/null
 +++ b/node_modules/foundry-types/common/data/data/token-data.d.ts
-@@ -0,0 +1,128 @@
+@@ -0,0 +1,183 @@
 +declare module foundry {
 +    module data {
-+        /**
-+         * The data schema for a Token document.
-+         * @extends foundry.abstract.DocumentData
-+         * @memberof data
-+         *
-+         * @param data       Initial data used to construct the data object
-+         * @param [document] The document to which this data object belongs
-+         *
-+         * @property _id                  The Token _id which uniquely identifies it within its parent Scene
-+         * @property name                 The name used to describe the Token
-+         * @property [displayName=0]      The display mode of the Token nameplate, from CONST.TOKEN_DISPLAY_MODES
-+         * @property actorId              The _id of an Actor document which this Token represents
-+         * @property [actorLink=false]    Does this Token uniquely represent a singular Actor, or is it one of many?
-+         * @property [actorData]          Token-level data which overrides the base data of the associated Actor
-+         * @property [width=1]            The width of the Token in grid units
-+         * @property [height=1]           The height of the Token in grid units
-+         * @property [scale=1]            A scale factor applied to the Token image, between 0.25 and 3
-+         * @property [mirrorX=false]      Flip the Token image horizontally?
-+         * @property [mirrorY=false]      Flip the Token image vertically?
-+         * @property [x=0]                The x-coordinate of the top-left corner of the Token
-+         * @property [y=0]                The y-coordinate of the top-left corner of the Token
-+         * @property [elevation=0]        The vertical elevation of the Token, in distance units
-+         * @property [lockRotation=false] Prevent the Token image from visually rotating?
-+         * @property [rotation=0]         The rotation of the Token in degrees, from 0 to 360. A value of 0 represents a southward-facing Token.
-+         * @property [effects]            An array of effect icon paths which are displayed on the Token
-+         * @property [overlayEffect]      A single icon path which is displayed as an overlay on the Token
-+         * @property [hidden=false]       Is the Token currently hidden from player view?
-+         * @property [vision]             Is this Token a source of vision?
-+         * @property [dimSight=0]         How far in distance units the Token can naturally see as if in dim light
-+         * @property [brightSight=0]      How far in distance units the Token can naturally see as if in bright light
-+         * @property [sightAngle=360]     The angle at which this Token is able to see, if it has vision
-+         * @property [light]              The angle at which this Token is able to see, if it has vision
-+         * @property [dimLight=0]         How far in distance units this Token emits dim light
-+         * @property [brightLight=0]      How far in distance units this Token emits bright light
-+         * @property [lightAngle=360]     The angle at which this Token is able to emit light
-+         * @property [lightAnimation]     A data object which configures token light animation settings
-+         * @property [disposition=-1]     A displayed Token disposition from CONST.TOKEN_DISPOSITIONS
-+         * @property [displayBars=0]      The display mode of Token resource bars, from CONST.TOKEN_DISPLAY_MODES
-+         * @property [bar1]               The configuration of the Token's primary resource bar
-+         * @property [bar2]               The configuration of the Token's secondary resource bar
-+         * @property [flags={}]           An object of optional key/value flags
-+         */
-+        interface TokenSource extends TokenLightData {
++
++        interface TokenSource {
++            /** The Token _id which uniquely identifies it within its parent Scene */
 +            _id: string;
++            /** The name used to describe the Token */
 +            name: string;
-+
-+            // Navigation
-+            active: boolean;
-+            navigation: boolean;
-+            navOrder: number;
-+            navName: string;
-+
-+            actorId: string | null;
-+            actorLink: boolean;
-+            actorData: DeepPartial<ActorSource>;
-+            mirrorX: boolean;
-+            mirrorY: boolean;
-+            height: number;
-+            width: number;
-+            x: number;
-+            y: number;
-+            elevation: number;
-+            lockRotation: boolean;
-+            effects: VideoFilePath[];
-+            overlayEffect: string | null;
-+            vision: boolean;
-+            dimSight: number;
-+            brightSight: number;
-+            sightAngle: number;
-+            light: LightSource;
-+            hidden: boolean;
-+            texture: {
-+                src: VideoFilePath;
-+                scaleX: number;
-+                scaleY: number;
-+                offsetX: number;
-+                offsetY: number;
-+                rotation: number | null;
-+                tint: `#${string}`;
-+            };
-+
-+            lightAnimation: AnimationSource;
-+            disposition: TokenDisposition;
-+            displayName: TokenDisplayMode;
-+            displayBars: TokenDisplayMode;
-+            bar1: TokenBarSource;
-+            bar2: TokenBarSource;
++            /** The display mode of the Token nameplate, from CONST.TOKEN_DISPLAY_MODES */
++            displayName?: TokenDisplayMode
++            /** The _id of an Actor document which this Token represents */
++            actorId: string | null
++            /**  Does this Token uniquely represent a singular Actor, or is it one of many? */
++            actorLink?: boolean;
++            /** Token-level data which overrides the base data of the associated Actor */
++            actorData?: DeepPartial<ActorSource>;
++            /** The ActorDelta embedded document which stores the differences between this token and the base actor it represents. */
++            delta?: DeepPartial<ActorSource>
++            /** The token's texture on the canvas. */
++            texture: TextureData;
++            /**  The height of the Token in grid units
++             * @default 1
++             */
++            height?: number;
++            /** The width of the Token in grid units
++             * @default 1
++             */
++            width?: number;
++            /** The x-coordinate of the top-left corner of the Token
++             * @default 0
++            */
++            x?: number;
++            /**  The y-coordinate of the top-left corner of the Token
++             * @default 0
++            */
++          y?: number;
++            /** The vertical elevation of the Token, in distance units */
++            elevation?: number;
++            /** Prevent the Token image from visually rotating?
++             * @default false
++             */
++            lockRotation?: boolean;
++            /**
++             * Prevent the Token image from visually rotating?
++             * @default 0
++             */
++            rotation?: number
++            /** An array of effect icon paths which are displayed on the Token */
++            effects?: VideoFilePath[];
++            /** A single icon path which is displayed as an overlay on the Token */
++            overlayEffect?: VideoFilePath;
++            /** The opacity of the token image
++             * @default 1
++             */
++            alpha?: number
++            /** Is the Token currently hidden from player view?
++             * @default false
++             */
++            hidden?: boolean
++            /**
++             * A displayed Token disposition from CONST.TOKEN_DISPOSITIONS
++             * @default -1
++             */
++            disposition?: TokenDisposition;
++            /**
++             * The display mode of Token resource bars, from CONST.TOKEN_DISPLAY_MODES
++             * @default 0
++             */
++            displayBars?: TokenDisplayMode;
++            /**
++             * The configuration of the Token's primary resource bar
++             */
++            bar1?: TokenBarSource
++            /**
++             * The configuration of the Token's secondary resource bar
++             */
++            bar2?: TokenBarSource
++            /**
++             * Configuration of the light source that this Token emits
++             */
++            light?: TokenLightData
++            /**
++             * Configuration of sight and vision properties for the Token
++             */
++            sight: TokenSightData
++            /**
++             * An array of detection modes which are available to this Token
++             */
++            detectionModes?: TokenDetectionMode
++            /**
++             * An object of optional key/value flags
++             */
 +            flags: Record<string, Record<string, unknown>>;
 +        }
 +
 +        class TokenData<
 +            TDocument extends documents.BaseToken = documents.BaseToken
 +        > extends abstract.DocumentData<TDocument> {
-+            lightAnimation: AnimationData<TDocument>;
-+
 +            bar1: TokenBarData<TDocument>;
 +
 +            bar2: TokenBarData<TDocument>;
 +        }
 +
-+        interface TokenData extends Omit<TokenSource, "lightAnimation" | "light" | "bar1" | "bar2"> {
++        interface TokenData extends Omit<TokenSource, "light" | "bar1" | "bar2"> {
 +            readonly _source: TokenSource;
 +
 +            light: LightData<NonNullable<this["document"]>>;
@@ -17520,6 +17531,61 @@ index 0000000..24290a2
 +    };
 +    lightColor: string;
 +}
++
++declare interface TextureData {
++    src: VideoFilePath | null;
++    scaleX?: number;
++    scaleY?: number;
++    offsetX?: number;
++    offsetY?: number;
++    rotation?: number | null;
++    tint?: `#${string}`;
++}
++
++interface TokenSightData {
++  /**
++   * Should vision computation and rendering be active for this Token?
++  */
++  enabled: boolean
++  /**
++   * How far in distance units the Token can see without the aid of a light source
++  */
++  range: number
++  /**
++   * An angle at which the Token can see relative to their direction of facing
++   * @default 360
++  */
++  angle?: number
++  /**
++   * The vision mode which is used to render the appearance of the visible area
++   * @default 'basic'
++  */
++  visionMode?: string
++  /**
++   * A special color which applies a hue to the visible area
++  */
++  color?: string
++  /**
++   * A degree of attenuation which gradually fades the edges of the visible area
++  */
++  attenuation?: number
++  /**
++   * An advanced customization for the perceived brightness of the visible area
++   * @default 0
++  */
++  brightness?: number
++  /**
++   * An advanced customization of color saturation within the visible area
++   * @default 0
++  */
++  saturation?: number
++  /**
++   * An advanced customization for contrast within the visible area
++   * @default 0
++  */
++  contrast?: number
++}
+\ No newline at end of file
 diff --git a/node_modules/foundry-types/common/data/data/video-data.d.ts b/node_modules/foundry-types/common/data/data/video-data.d.ts
 index ff35543..1ae7b5b 100644
 --- a/node_modules/foundry-types/common/data/data/video-data.d.ts
@@ -18581,17 +18647,28 @@ index 6c237a8..59a8899 100644
                  sourceId?: ItemUUID;
              };
 diff --git a/node_modules/foundry-types/common/documents/journal-entry-page.d.ts b/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
-index cfc0ce4..836b661 100644
+index cfc0ce4..9d2acc4 100644
 --- a/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
 +++ b/node_modules/foundry-types/common/documents/journal-entry-page.d.ts
-@@ -32,6 +32,7 @@ declare module foundry {
-         interface JournalEntryPageSource {
+@@ -29,15 +29,16 @@ declare module foundry {
+          * @property [ownership]  An object which configures the ownership of this page.
+          * @property [flags]      An object of optional key/value flags.
+          */
+-        interface JournalEntryPageSource {
++        interface JournalEntryPageSource<TType extends string = string, TSystemSource extends object = object> {
              _id: string;
              name: string;
-+            type: string;
++            type: TType;
              title: JournalEntryPageTitleData;
              image: JournalEntryPageImageData;
              text: JournalEntryPageTextData;
+             video: JournalEntryPageVideoData;
+             src?: string | null;
+-            system: object; // will be filled out later
++            system: TSystemSource;
+             sort: number;
+             ownership?: Record<string, DocumentOwnershipLevel>;
+             flags: object; // will be filled out later
 diff --git a/node_modules/foundry-types/common/documents/journal-entry.d.ts b/node_modules/foundry-types/common/documents/journal-entry.d.ts
 index 4b7292b..dca9eda 100644
 --- a/node_modules/foundry-types/common/documents/journal-entry.d.ts
