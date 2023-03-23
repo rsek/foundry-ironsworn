@@ -49,6 +49,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 		async render(
 			...args: [boolean | undefined, RenderOptions | undefined]
 		): Promise<this> {
+			const [force, options] = args
 			const vueOptions = this.options
 			const data = await this.getData()
 
@@ -119,7 +120,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 				Hooks.onError('Application#render', err, {
 					msg: `An error occurred while rendering ${this.constructor.name} ${this.id}`,
 					log: 'error',
-					...args
+					data: { force, options }
 				})
 				console.error(
 					`An error occurred while rendering ${this.constructor.name} ${this.id}: ${err.message}`,

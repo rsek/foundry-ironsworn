@@ -201,7 +201,7 @@ export class IronswornRollMessage {
 			const speaker = ChatMessage.getSpeaker()
 			if (this.actor != null) {
 				speaker.actor = this.actor.id
-				speaker.alias = this.actor.name || undefined
+				speaker.alias = this.actor.name
 			}
 			const messageData = {
 				speaker,
@@ -210,8 +210,8 @@ export class IronswornRollMessage {
 				roll: this.roll.roll
 			}
 
-			const cls = CONFIG.ChatMessage.documentClass
-			const msg = await cls.create(messageData as any, {})
+			const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
+			const msg = await cls.create(messageData)
 			this.roll.chatMessageId = msg?.id
 			return msg
 		}

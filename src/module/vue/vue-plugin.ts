@@ -10,7 +10,7 @@ declare module '@vue/runtime-core' {
 		 * Without a `data` parameter: shortcut for {@link game.i18n.localize}.
 		 * With a `data` parameter: shortcut for {@link game.i18n.format}.
 		 */
-		$t: (stringId: string, data?: Record<string, unknown>) => string
+		$t: (...args: Parameters<typeof game.i18n.format>) => string
 		$capitalize: (string) => string
 		$concat: (...args: any[]) => string
 		$enrichMarkdown: (string) => string
@@ -19,10 +19,10 @@ declare module '@vue/runtime-core' {
 }
 
 export function enrichHtml(text) {
-	const rendered = TextEditor.enrichHTML(text, { async: false } as any)
+	const rendered = TextEditor.enrichHTML(text, { async: false })
 	return rendered.replace(
 		/\(\(rollplus (.*?)\)\)/g,
-		(_, stat) => `
+		(_, stat: string) => `
   <a class="inline-roll" data-param="${stat}">
     <i class="fas fa-dice-d6"></i>
     ${formatRollPlusStat(stat)}
@@ -41,7 +41,7 @@ export const IronswornVuePlugin: Plugin = {
 	install(app, ..._options) {
 		app.config.globalProperties.$t = (
 			stringId: string,
-			data?: Record<string, unknown>
+			data?: Record<string, string | number | boolean | null>
 		) =>
 			data != null
 				? game.i18n.format(stringId, data)

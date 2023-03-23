@@ -141,102 +141,113 @@ export function activateSceneButtonListeners() {
 		group: 'primary'
 	}
 
-	Hooks.on('getSceneControlButtons', (controls) => {
-		const oracleButton: SceneControlTool = {
-			name: 'Oracles',
-			title: game.i18n.localize('IRONSWORN.ROLLTABLES.TypeOracle'),
-			icon: 'isicon-oracle',
-			visible: true,
-			button: true,
-			onClick: async () => await theOracleWindow().render(true, { focus: true })
-		}
-		controls[0].tools.push(oracleButton)
-
-		if (IronswornSettings.starforgedToolsEnabled) {
-			const sfControl: SceneControl = {
-				name: 'Starforged',
-				title: game.i18n.localize('IRONSWORN.StarforgedTools'),
-				icon: 'isicon-logo-starforged-dk',
-				layer: 'ironsworn',
+	Hooks.on(
+		'getSceneControlButtons',
+		// @ts-expect-error TS gets cranky about this even though typings for this hook exist.
+		(controls) => {
+			const oracleButton: SceneControlTool = {
+				name: 'Oracles',
+				title: game.i18n.localize('IRONSWORN.ROLLTABLES.TypeOracle'),
+				icon: 'isicon-oracle',
 				visible: true,
-				activeTool: 'select',
-				tools: [oracleButton]
+				button: true,
+				onClick: async () =>
+					await theOracleWindow().render(true, { focus: true })
+			}
+			controls[0].tools.push(oracleButton)
+
+			if (IronswornSettings.starforgedToolsEnabled) {
+				const sfControl: SceneControl = {
+					name: 'Starforged',
+					title: game.i18n.localize('IRONSWORN.StarforgedTools'),
+					icon: 'isicon-logo-starforged-dk',
+					layer: 'ironsworn',
+					visible: true,
+					activeTool: 'select',
+					tools: [oracleButton]
+				}
+
+				if (game.user?.isGM) {
+					sfControl.tools.push(
+						{
+							name: 'edit',
+							visible: true,
+							icon: 'isicon-region-sf',
+							title: game.i18n.localize('IRONSWORN.EditSector'),
+							onClick: editSector
+						},
+						// { // TODO: maybe reenable this when we have a good way of doing it
+						//   name: 'sector',
+						//   icon: 'isicon-sector',
+						//   title: game.i18n.format('DOCUMENT.Create',{type: ('IRONSWORN.SCENE.TypeSector')}),
+						//   onClick: warn,
+						// },
+						{
+							name: 'star',
+							icon: 'isicon-stellar-object',
+							visible: true,
+							title: game.i18n.format('DOCUMENT.Create', {
+								type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeStar')
+							}),
+							onClick: newStar
+						},
+						{
+							name: 'planet',
+							icon: 'isicon-world',
+							visible: true,
+							title: game.i18n.format('DOCUMENT.Create', {
+								type: game.i18n.localize('IRONSWORN.ACTOR.SubtypePlanet')
+							}),
+							onClick: newPlanet
+						},
+						{
+							name: 'settlement',
+							icon: 'isicon-settlement-sf',
+							visible: true,
+							title: game.i18n.format('DOCUMENT.Create', {
+								type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
+							}),
+							onClick: newSettlement
+						},
+						{
+							name: 'derelict',
+							icon: 'isicon-derelict',
+							visible: true,
+							title: game.i18n.format('DOCUMENT.Create', {
+								type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeDerelict')
+							}),
+							onClick: newDerelict
+						},
+						{
+							name: 'vault',
+							icon: 'isicon-precursor-vault',
+							visible: true,
+							title: game.i18n.format('DOCUMENT.Create', {
+								type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeVault')
+							}),
+							onClick: newVault
+						}
+					)
+				}
+
+				controls.push(sfControl)
+			} else {
+				const isControl: SceneControl = {
+					name: 'Ironsworn',
+					title: game.i18n.localize('IRONSWORN.IronswornTools'),
+					icon: 'isicon-logo-ironsworn-dk',
+					layer: 'ironsworn',
+					visible: true,
+					activeTool: 'select',
+					tools: [oracleButton]
+				}
+
+				controls.push(isControl)
 			}
 
-			if (game.user?.isGM) {
-				sfControl.tools.push(
-					{
-						name: 'edit',
-						icon: 'isicon-region-sf',
-						title: game.i18n.localize('IRONSWORN.EditSector'),
-						onClick: editSector
-					},
-					// { // TODO: maybe reenable this when we have a good way of doing it
-					//   name: 'sector',
-					//   icon: 'isicon-sector',
-					//   title: game.i18n.format('DOCUMENT.Create',{type: ('IRONSWORN.SCENE.TypeSector')}),
-					//   onClick: warn,
-					// },
-					{
-						name: 'star',
-						icon: 'isicon-stellar-object',
-						title: game.i18n.format('DOCUMENT.Create', {
-							type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeStar')
-						}),
-						onClick: newStar
-					},
-					{
-						name: 'planet',
-						icon: 'isicon-world',
-						title: game.i18n.format('DOCUMENT.Create', {
-							type: game.i18n.localize('IRONSWORN.ACTOR.SubtypePlanet')
-						}),
-						onClick: newPlanet
-					},
-					{
-						name: 'settlement',
-						icon: 'isicon-settlement-sf',
-						title: game.i18n.format('DOCUMENT.Create', {
-							type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
-						}),
-						onClick: newSettlement
-					},
-					{
-						name: 'derelict',
-						icon: 'isicon-derelict',
-						title: game.i18n.format('DOCUMENT.Create', {
-							type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeDerelict')
-						}),
-						onClick: newDerelict
-					},
-					{
-						name: 'vault',
-						icon: 'isicon-precursor-vault',
-						title: game.i18n.format('DOCUMENT.Create', {
-							type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeVault')
-						}),
-						onClick: newVault
-					}
-				)
-			}
-
-			controls.push(sfControl)
-		} else {
-			const isControl: SceneControl = {
-				name: 'Ironsworn',
-				title: game.i18n.localize('IRONSWORN.IronswornTools'),
-				icon: 'isicon-logo-ironsworn-dk',
-				layer: 'ironsworn',
-				visible: true,
-				activeTool: 'select',
-				tools: [oracleButton]
-			}
-
-			controls.push(isControl)
+			return controls
 		}
-
-		return controls
-	})
+	)
 }
 
 // In v9 we can inherit directly from CanvasLayer and it's fine
