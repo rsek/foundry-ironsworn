@@ -108,7 +108,7 @@ index b2b01c1..0164294 100644
      }
  }
 diff --git a/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts b/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
-index fc10cc8..f9acdf0 100644
+index fc10cc8..631dc99 100644
 --- a/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
 +++ b/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
 @@ -2,16 +2,15 @@ export {};
@@ -160,6 +160,15 @@ index fc10cc8..f9acdf0 100644
  
          /**
           * Handle dropping of an Actor data onto another Actor sheet
+@@ -109,7 +108,7 @@ declare global {
+          * @param data  The data transfer extracted from the event
+          * @return A data object which describes the result of the drop
+          */
+-        protected _onDropItem(event: ElementDragEvent, data: DropCanvasData<"Item", TItem>): Promise<TItem[]>;
++        protected _onDropItem(event: ElementDragEvent, data: DropCanvasData<"Item", TItem>): Promise<TItem[]|boolean>;
+ 
+         /**
+          * Handle dropping of a Folder on an Actor Sheet.
 @@ -125,18 +124,13 @@ declare global {
           * This method is factored out to allow downstream classes the opportunity to override item creation behavior.
           * @param itemData The item data requested for creation
@@ -432,6 +441,37 @@ index b4423e5..51e35e4 100644
 +    actors: T["actor"][];
      dispositions: Record<string, string>;
      isGM: boolean;
+ }
+diff --git a/node_modules/foundry-types/client/application/hud/controls.d.ts b/node_modules/foundry-types/client/application/hud/controls.d.ts
+index f540e73..c20864f 100644
+--- a/node_modules/foundry-types/client/application/hud/controls.d.ts
++++ b/node_modules/foundry-types/client/application/hud/controls.d.ts
+@@ -16,6 +16,7 @@ declare interface SceneControl {
+     layer?: string;
+     visible: boolean;
+     tools: SceneControlTool[];
++    activeTool: string
+ }
+ 
+ /**
+diff --git a/node_modules/foundry-types/client/application/i18n.d.ts b/node_modules/foundry-types/client/application/i18n.d.ts
+index 0c75d00..b1a53b1 100644
+--- a/node_modules/foundry-types/client/application/i18n.d.ts
++++ b/node_modules/foundry-types/client/application/i18n.d.ts
+@@ -73,4 +73,14 @@ declare class Localization {
+      * game.i18n.format("MY_TEST_STRING", {name: "Andrew"}); // Produces "Your name is Andrew"
+      */
+     format(stringId: string, data?: { [key: string]: string | number | boolean | null }): string;
++
++    /**
++     * Return whether a certain string has a known translation defined.
++     * @param stringId     The string key being translated
++     * @param fallback  Allow fallback translations to count?
++     * @returns {boolean}
++     */
++    has(stringId: string,
++      /** @default true */
++      fallback?: boolean): boolean
  }
 diff --git a/node_modules/foundry-types/client/application/sidebar/sidebar-tab/chat-log.d.ts b/node_modules/foundry-types/client/application/sidebar/sidebar-tab/chat-log.d.ts
 index 4a44a85..851dfae 100644
@@ -1003,23 +1043,26 @@ index e83430b..4455687 100644
          /**
           * Add a leaf node to the word tree index.
 diff --git a/node_modules/foundry-types/client/core/hooks.d.ts b/node_modules/foundry-types/client/core/hooks.d.ts
-index 1e898b7..6055ebe 100644
+index 1e898b7..cb729b0 100644
 --- a/node_modules/foundry-types/client/core/hooks.d.ts
 +++ b/node_modules/foundry-types/client/core/hooks.d.ts
-@@ -19,11 +19,7 @@ declare global {
+@@ -17,14 +17,7 @@ declare global {
+     type HookParamsGetSceneControlButtons = HookParameters<"getSceneControlButtons", [SceneControl[]]>;
+     type HookParamsHotbarDrop = HookParameters<"hotbarDrop", [Hotbar, unknown, string]>;
      type HookParamsLightingRefresh = HookParameters<"lightingRefresh", [LightingLayer]>;
-     type HookParamsPreCreateItem = HookParameters<
-         "preCreateItem",
+-    type HookParamsPreCreateItem = HookParameters<
+-        "preCreateItem",
 -        [
 -            PreCreate<foundry.documents.ItemSource>,
 -            DocumentModificationContext<Actor<TokenDocument<Scene | null> | null> | null>,
 -            string
 -        ]
-+        [PreCreate<foundry.data.ItemSource>, DocumentModificationContext, string]
-     >;
+-    >;
++    type HookParamsPreCreate<T extends Document, N extends string> = HookParameters<`preCreate${N}`, [PreCreate<T['_source']>, DocumentModificationContext<PreCreate<T['_source']>>, string]>
      type HooksParamsPreUpdateCombat = HookParameters<
          "preUpdateCombat",
-@@ -33,8 +29,8 @@ declare global {
+         [Combat, object, { diff: boolean; advanceTime: number; [key: string]: unknown }, string]
+@@ -33,24 +26,27 @@ declare global {
          "preUpdateToken",
          [
              Scene,
@@ -1030,7 +1073,13 @@ index 1e898b7..6055ebe 100644
              { diff: boolean; [key: string]: unknown },
              string
          ]
-@@ -45,12 +41,12 @@ declare global {
+     >;
++    type HookParamsPreUpdate<T extends Document, N extends string> = HookParameters<`preUpdate${N}`, [T, DocumentUpdateData<T>, DocumentUpdateContext<T>, string]>
++    type HookParamsCreate<T extends Document, N extends string> = HookParameters<`create${N}`,[T,DocumentUpdateContext<T>, string]>
++
+     type HookParamsRender<T extends Application, N extends string> = HookParameters<
+         `render${N}`,
+         [T, JQuery, ReturnType<T["getData"]>]
      >;
      type HookParamsRenderChatMessage = HookParameters<
          "renderChatMessage",
@@ -1046,7 +1095,32 @@ index 1e898b7..6055ebe 100644
      >;
      type HookParamsUpdateWorldTime = HookParameters<"updateWorldTime", [number, number]>;
  
-@@ -81,8 +77,8 @@ declare global {
+@@ -60,6 +56,7 @@ declare global {
+          *
+          * @param hook The unique name of the hooked event
+          * @param fn   The callback function which should be triggered when the hook event occurs
++         * @returns An ID number of the hooked function which can be used to turn off the hook later
+          */
+         static on(...args: HookParamsSetup): number;
+         static on(...args: HookParamsInit): number;
+@@ -72,17 +69,24 @@ declare global {
+         static on(...args: HookParamsGetSceneControlButtons): number;
+         static on(...args: HookParamsHotbarDrop): number;
+         static on(...args: HookParamsLightingRefresh): number;
+-        static on(...args: HookParamsPreCreateItem): number;
++        static on(...args: HookParamsPreCreate<Item, "Item">): number;
++        static on(...args: HookParamsPreCreate<Actor, "Actor">): number;
++        static on(...args: HookParamsPreCreate<JournalEntryPage, "JournalEntryPage">): number;
+         static on(...args: HooksParamsPreUpdateCombat): number;
+         static on(...args: HookParamsPreUpdateToken): number;
++        static on(...args: HookParamsPreUpdate<Actor, 'Actor'>): number
++        static on(...args: HookParamsPreUpdate<Item, 'Item'>): number
++
++        static on(...args: HookParamsPreUpdate<SettingConfig, 'Setting'>): number
++
+         static on(...args: HookParamsRenderChatMessage): number;
+         static on(...args: HookParamsRender<ChatLog, "ChatLog">): number;
+         static on(...args: HookParamsRender<ChatPopout, "ChatPopout">): number;
          static on(...args: HookParamsRender<CombatTrackerConfig, "CombatTrackerConfig">): number;
          static on(...args: HookParamsRender<CompendiumDirectory, "CompendiumDirectory">): number;
          static on(...args: HookParamsRender<Dialog, "Dialog">): number;
@@ -1057,7 +1131,30 @@ index 1e898b7..6055ebe 100644
          static on(...args: HookParamsRender<SceneControls, "SceneControls">): number;
          static on(...args: HookParamsRender<Settings, "Settings">): number;
          static on(...args: HookParamsRender<TokenHUD, "TokenHUD">): number;
-@@ -122,13 +118,13 @@ declare global {
+@@ -96,11 +100,21 @@ declare global {
+             >
+         ): number;
+         static on(...args: HookParamsTargetToken): number;
++        static on(...args: HookParamsCreate<Actor, "Actor">): number
+         static on(...args: HookParamsUpdate<Combat, "Combat">): number;
+         static on(...args: HookParamsUpdate<Scene, "Scene">): number;
++        static on(...args: HookParamsUpdate<Actor, 'Actor'>): number
++		    static on(...args: HookParamsUpdate<Item, 'Item'>): number
+         static on(...args: HookParamsUpdateWorldTime): number;
+-        static on(...args: HookParameters<string, unknown[]>): number;
+ 
++
++
++        static on(
++          ...args: HookParameters<'preDeleteItem', [Item, any, number]>
++        ): number
++
++
++        static on(...args: HookParameters<string, unknown[]>): number;
+         /**
+          * Register a callback handler for an event which is only triggered once the first time the event occurs.
+          * After a "once" hook is triggered the hook is automatically removed.
+@@ -122,13 +136,13 @@ declare global {
          static once(...args: HookParamsPreCreateItem): number;
          static once(...args: HookParamsPreUpdateToken): number;
          static once(...args: HookParamsRenderChatMessage): number;
@@ -1073,6 +1170,24 @@ index 1e898b7..6055ebe 100644
          static once(
              ...args: HookParamsRender<JournalPageSheet<JournalEntryPage<JournalEntry | null>>, "JournalPageSheet">
          ): number;
+@@ -145,6 +159,7 @@ declare global {
+         static once(...args: HookParamsUpdate<Combat, "Combat">): number;
+         static once(...args: HookParamsUpdate<Scene, "Scene">): number;
+         static once(...args: HookParamsUpdateWorldTime): number;
++
+         static once(...args: HookParameters<string, unknown[]>): number;
+ 
+         /**
+diff --git a/node_modules/foundry-types/client/core/index.d.ts b/node_modules/foundry-types/client/core/index.d.ts
+index aeb1a50..0584b88 100644
+--- a/node_modules/foundry-types/client/core/index.d.ts
++++ b/node_modules/foundry-types/client/core/index.d.ts
+@@ -10,3 +10,4 @@ import "./socket";
+ import "./sorting";
+ import "./text-editor";
+ import "./video";
++import "./utils"
+\ No newline at end of file
 diff --git a/node_modules/foundry-types/client/core/sorting.d.ts b/node_modules/foundry-types/client/core/sorting.d.ts
 index 89580ad..806ba12 100644
 --- a/node_modules/foundry-types/client/core/sorting.d.ts
@@ -1114,6 +1229,21 @@ index 0ca6ed0..fbc9273 100644
  
          /**
           * Begin a Drag+Drop workflow for a dynamic content link
+diff --git a/node_modules/foundry-types/client/core/utils.d.ts b/node_modules/foundry-types/client/core/utils.d.ts
+new file mode 100644
+index 0000000..bc61839
+--- /dev/null
++++ b/node_modules/foundry-types/client/core/utils.d.ts
+@@ -0,0 +1,8 @@
++/**
++ * Return a reference to the Document class implementation which is configured for use.
++ * @param {string} documentName     The canonical Document name, for example "Actor"
++ * @returns {typeof ClientDocument} The configured Document class implementation
++ */
++function getDocumentClass<T extends keyof typeof CONFIG>(documentName: T): typeof CONFIG[T]['documentClass'] {
++  return CONFIG[documentName]?.documentClass;
++}
+\ No newline at end of file
 diff --git a/node_modules/foundry-types/client/documents/active-effect.d.ts b/node_modules/foundry-types/client/documents/active-effect.d.ts
 index f7b1300..177b932 100644
 --- a/node_modules/foundry-types/client/documents/active-effect.d.ts
@@ -11809,7 +11939,7 @@ index 15d54e7..fad0ac7 100644
          /** Obtain the fog of war exploration progress for a specific Scene and User. */
          static get<T extends FogExploration>(
 diff --git a/node_modules/foundry-types/client/documents/folder.d.ts b/node_modules/foundry-types/client/documents/folder.d.ts
-index c6d6081..2dcf1ee 100644
+index c6d6081..3bc1e54 100644
 --- a/node_modules/foundry-types/client/documents/folder.d.ts
 +++ b/node_modules/foundry-types/client/documents/folder.d.ts
 @@ -1,27 +1,27 @@
@@ -11854,7 +11984,21 @@ index c6d6081..2dcf1ee 100644
  
          /** The depth of this folder in its sidebar tree */
          depth: number;
-@@ -74,8 +74,8 @@ declare global {
+@@ -47,6 +47,13 @@ declare global {
+         /** Return the named Entity type for elements in this folder. */
+         get type(): string;
+ 
++        /**
++         * An array of other Folders which are the displayed children of this one. This differs from the results of
++         * {@link Folder.getSubfolders} because reports the subset of child folders which  are displayed to the current User
++         * in the UI.
++         */
++        children: Folder[]
++
+         /**
+          * Export all Documents contained in this Folder to a given Compendium pack.
+          * Optionally update existing Documents within the Pack by name, otherwise append all new entries.
+@@ -74,8 +81,8 @@ declare global {
           */
          getSubfolders(recursive?: boolean): this[];
  
@@ -14937,7 +15081,7 @@ index a0d02b0..a633492 100644
          /* -------------------------------------------- */
          /*  Interface Helpers                           */
 diff --git a/node_modules/foundry-types/client/ui/index.d.ts b/node_modules/foundry-types/client/ui/index.d.ts
-index 7801eae..cc81c3f 100644
+index 7801eae..a1ef89d 100644
 --- a/node_modules/foundry-types/client/ui/index.d.ts
 +++ b/node_modules/foundry-types/client/ui/index.d.ts
 @@ -9,9 +9,9 @@ import "./tour";
@@ -14952,8 +15096,15 @@ index 7801eae..cc81c3f 100644
          TChatLog extends ChatLog,
          TCompendiumDirectory extends CompendiumDirectory
      > {
+@@ -25,5 +25,6 @@ declare global {
+         settings: Settings;
+         tables: RollTableDirectory;
+         windows: Record<number, Application>;
++        sidebar: Sidebar;
+     }
+ }
 diff --git a/node_modules/foundry-types/client/ui/tour.d.ts b/node_modules/foundry-types/client/ui/tour.d.ts
-index 7010077..e63dedc 100644
+index 7010077..924abee 100644
 --- a/node_modules/foundry-types/client/ui/tour.d.ts
 +++ b/node_modules/foundry-types/client/ui/tour.d.ts
 @@ -6,7 +6,7 @@ declare global {
@@ -14961,7 +15112,7 @@ index 7010077..e63dedc 100644
       */
      class Tour {
 -        constructor(config: TourConfig, override: { id?: string; namspace?: string });
-+        constructor(config: TourConfig, override: { id?: string; namespace?: string });
++        constructor(config: TourConfig, override?: { id?: string; namespace?: string });
  
          static STATUS: {
              UNSTARTED: "unstarted";
@@ -19001,7 +19152,7 @@ index b5d8c90..74faf9f 100644
      }
  
 diff --git a/node_modules/foundry-types/common/documents/table-result.d.ts b/node_modules/foundry-types/common/documents/table-result.d.ts
-index 69ea92c..be5734a 100644
+index 69ea92c..6007731 100644
 --- a/node_modules/foundry-types/common/documents/table-result.d.ts
 +++ b/node_modules/foundry-types/common/documents/table-result.d.ts
 @@ -1,15 +1,13 @@
@@ -19024,7 +19175,7 @@ index 69ea92c..be5734a 100644
  
              override testUserPermission(
                  user: BaseUser,
-@@ -18,36 +16,10 @@ declare module foundry {
+@@ -18,36 +16,35 @@ declare module foundry {
              ): boolean;
          }
  
@@ -19061,6 +19212,31 @@ index 69ea92c..be5734a 100644
 -            range: [number, number];
 -            drawn: boolean;
 +            readonly parent: BaseRollTable | null;
++            /** The _id which uniquely identifies this TableResult embedded document */
++            _id: string
++            /** A result subtype from CONST.TABLE_RESULT_TYPES */
++            type?: typeof CONST.TABLE_RESULT_TYPES
++            /** The text which describes the table result */
++            text?: string
++            /** An image file url that represents the table result */
++            img?: ImageFilePath
++            /** A named collection from which this result is drawn */
++            documentCollection?: string
++            /** The _id of a Document within the collection this result references */
++            documentId?: string
++            /**
++             * The probabilistic weight of this result relative to other results
++             * @default 1
++             */
++            weight?: number
++            /** A length 2 array of ascending integers which defines the range of dice roll totals which produce this drawn result */
++            range?: [number,number]
++            /** Has this result already been drawn (without replacement)
++             * @default false
++             */
++            draw?: boolean
++            /** An object of optional key/value flags */
++            flags?: DocumentFlags
          }
  
          interface TableResultMetadata extends abstract.DocumentMetadata {
