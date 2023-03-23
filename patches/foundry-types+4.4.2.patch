@@ -1050,7 +1050,7 @@ index e83430b..4455687 100644
          /**
           * Add a leaf node to the word tree index.
 diff --git a/node_modules/foundry-types/client/core/hooks.d.ts b/node_modules/foundry-types/client/core/hooks.d.ts
-index 1e898b7..3d6a3b9 100644
+index 1e898b7..6476cbf 100644
 --- a/node_modules/foundry-types/client/core/hooks.d.ts
 +++ b/node_modules/foundry-types/client/core/hooks.d.ts
 @@ -17,14 +17,12 @@ declare global {
@@ -1180,14 +1180,30 @@ index 1e898b7..3d6a3b9 100644
          static once(
              ...args: HookParamsRender<JournalPageSheet<JournalEntryPage<JournalEntry | null>>, "JournalPageSheet">
          ): number;
-@@ -145,6 +161,7 @@ declare global {
+@@ -145,8 +161,23 @@ declare global {
          static once(...args: HookParamsUpdate<Combat, "Combat">): number;
          static once(...args: HookParamsUpdate<Scene, "Scene">): number;
          static once(...args: HookParamsUpdateWorldTime): number;
 +
          static once(...args: HookParameters<string, unknown[]>): number;
  
++        /**
++         * Notify subscribers that an error has occurred within foundry.
++         * @param {string} location                The method where the error was caught.
++         * @param {Error} error                    The error.
++         * @param {object} [options={}]            Additional options to configure behaviour.
++         * @param {string} [options.msg=""]        A message which should prefix the resulting error or notification.
++         * @param {?string} [options.log=null]     The level at which to log the error to console (if at all).
++         * @param {?string} [options.notify=null]  The level at which to spawn a notification in the UI (if at all).
++         * @param {object} [options.data={}]       Additional data to pass to the hook subscribers.
++         */
++        static onError(location: string, error: Error, options?: {
++          msg?: string, log?: string|null, notify?:string|null, data: object
++        })
++
          /**
+          * Unregister a callback handler for a particular hook event
+          *
 diff --git a/node_modules/foundry-types/client/core/index.d.ts b/node_modules/foundry-types/client/core/index.d.ts
 index aeb1a50..0584b88 100644
 --- a/node_modules/foundry-types/client/core/index.d.ts
@@ -17398,7 +17414,7 @@ index 0000000..5955fe1
 +}
 diff --git a/node_modules/foundry-types/common/data/data/token-data.d.ts b/node_modules/foundry-types/common/data/data/token-data.d.ts
 new file mode 100644
-index 0000000..d611f87
+index 0000000..3456b8e
 --- /dev/null
 +++ b/node_modules/foundry-types/common/data/data/token-data.d.ts
 @@ -0,0 +1,183 @@
@@ -17437,7 +17453,7 @@ index 0000000..d611f87
 +            /**  The y-coordinate of the top-left corner of the Token
 +             * @default 0
 +            */
-+          y?: number;
++             y?: number;
 +            /** The vertical elevation of the Token, in distance units */
 +            elevation?: number;
 +            /** Prevent the Token image from visually rotating?
