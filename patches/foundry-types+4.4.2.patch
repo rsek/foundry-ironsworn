@@ -108,7 +108,7 @@ index b2b01c1..0164294 100644
      }
  }
 diff --git a/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts b/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
-index fc10cc8..631dc99 100644
+index fc10cc8..780c1a1 100644
 --- a/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
 +++ b/node_modules/foundry-types/client/application/form-application/document-sheet/actor-sheet.d.ts
 @@ -2,16 +2,15 @@ export {};
@@ -160,9 +160,12 @@ index fc10cc8..631dc99 100644
  
          /**
           * Handle dropping of an Actor data onto another Actor sheet
-@@ -109,7 +108,7 @@ declare global {
+@@ -107,9 +106,9 @@ declare global {
+          * Handle dropping of an item reference or item data onto an Actor Sheet
+          * @param event The concluding DragEvent which contains drop data
           * @param data  The data transfer extracted from the event
-          * @return A data object which describes the result of the drop
+-         * @return A data object which describes the result of the drop
++         * @return A data object which describes the result of the drop, or false if the drop was not permitted.
           */
 -        protected _onDropItem(event: ElementDragEvent, data: DropCanvasData<"Item", TItem>): Promise<TItem[]>;
 +        protected _onDropItem(event: ElementDragEvent, data: DropCanvasData<"Item", TItem>): Promise<TItem[]|boolean>;
