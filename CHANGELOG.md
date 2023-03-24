@@ -2,7 +2,9 @@
 
 ## Next Release
 
-- Color theme and widget style are now separate settings, and changing the color theme no longer requires a restart ([#695](https://github.com/ben/foundry-ironsworn/pull/695#pullrequestreview-1350439536))
+## 1.20.30
+
+- Color scheme and decoration theme are now separate settings, and changing the color theme no longer requires a restart ([#695](https://github.com/ben/foundry-ironsworn/pull/695#pullrequestreview-1350439536))
 - Disable chat-message copy buttons (and add a tooltip) if access to the clipboard is restricted ([#678](https://github.com/ben/foundry-ironsworn/pull/678))
 - Better condition checkboxes ([#684](https://github.com/ben/foundry-ironsworn/pull/684))
 - Under the hood:
@@ -11,6 +13,7 @@
   - Improvements to the way asset controls are done ([#685](https://github.com/ben/foundry-ironsworn/pull/685), [#686](https://github.com/ben/foundry-ironsworn/pull/686), [#687](https://github.com/ben/foundry-ironsworn/pull/687))
   - Begin a migration to SASS for styles ([#683](https://github.com/ben/foundry-ironsworn/pull/683))
   - Dependency updates and code style ([#682](https://github.com/ben/foundry-ironsworn/pull/682))
+  - Fixed a problem that prevented installation under the Foundry v11dev1
 
 ## 1.20.29
 
