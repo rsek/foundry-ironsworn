@@ -1,5 +1,3 @@
-import { IronswornActor } from './actor/actor'
-import { IronswornItem } from './item/item.js'
 import type { DelveSiteFeatureOrDanger } from './item/itemtypes'
 
 const THEME_IMAGES = {

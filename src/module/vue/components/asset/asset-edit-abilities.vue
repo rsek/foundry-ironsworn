@@ -20,7 +20,7 @@
 							{{ $t('IRONSWORN.Clock') }}
 						</label>
 						<select
-							v-model="ability.clockMax"
+							v-model.number="ability.clockMax"
 							class="nogrow"
 							style="margin: 0.5rem 0"
 							@change="clockMaxChange(i)">
@@ -54,29 +54,27 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { computed, inject, onUnmounted } from 'vue'
-import type { AssetDataPropertiesData } from '../../../item/itemtypes'
+import { computed, inject } from 'vue'
 import { $ItemKey, ItemKey } from '../../provisions'
 import CollapseTransition from 'component:transition/collapse-transition.vue'
 import IronBtn from 'component:buttons/iron-btn.vue'
+import type { IronswornItem } from '../../../item/item'
 
-const item = inject(ItemKey) as Ref
-const $item = inject($ItemKey)
+const item = inject(ItemKey) as Ref<IronswornItemSource<'asset'>>
+const $item = inject($ItemKey) as undefined | IronswornItem<'asset'>
 
 const editMode = computed(
 	() => item.value?.flags['foundry-ironsworn']?.['edit-mode']
 )
 
 function deleteAbility(idx: number) {
-	const data = item.value?.data as AssetDataPropertiesData
-	const abilities = Object.values(data.abilities)
+	const abilities = Object.values(item.value.system.abilities)
 	abilities.splice(idx, 1)
 	$item?.update({ system: { abilities } })
 }
 
 function addAbility() {
-	const data = item.value?.data as AssetDataPropertiesData
-	const abilities = Object.values(data.abilities)
+	const abilities = Object.values(item.value.system.abilities)
 	abilities.push({
 		description: '',
 		enabled: false,
@@ -88,33 +86,31 @@ function addAbility() {
 }
 
 function markAbility(idx) {
-	const data = item.value?.data as AssetDataPropertiesData
-	const abilities = Object.values(data.abilities)
+	const abilities = Object.values(item.value.system.abilities)
 	abilities[idx] = { ...abilities[idx], enabled: !abilities[idx].enabled }
 	$item?.update({ system: { abilities } })
 }
 
 function enableClock(idx) {
-	const data = item.value?.data as AssetDataPropertiesData
-	const abilities = Object.values(data.abilities)
+	const abilities = Object.values(item.value.system.abilities)
 	abilities[idx] = { ...abilities[idx], hasClock: !abilities[idx].hasClock }
 	$item?.update({ system: { abilities } })
 }
 
 function clockMaxChange(idx: number) {
-	const abilities = Object.values(item.value?.data.abilities) as any[]
+	const abilities = Object.values(item.value.system.abilities)
 	abilities[idx].clockMax = parseInt(abilities[idx].clockMax)
 	$item?.update({ system: { abilities } })
 }
 
 function setClock(abilityIdx: number, clockTicks: number) {
-	const abilities = Object.values(item.value?.data.abilities) as any[]
+	const abilities = Object.values(item.value.system.abilities)
 	abilities[abilityIdx] = { ...abilities[abilityIdx], clockTicks }
 	$item?.update({ system: { abilities } })
 }
 
 function save() {
-	const { abilities } = item.value?.data
+	const { abilities } = item.value.system
 	$item?.update({ system: { abilities } })
 }
 </script>

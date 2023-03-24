@@ -145,9 +145,10 @@ import ProgressTrack from './components/progress/progress-track.vue'
 import CollapseTransition from './components/transition/collapse-transition.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
 import { localizeRank } from '../helpers/util'
+import type { IronswornItem } from '../item/item'
 
-const props = defineProps<{ data: { item: any } }>()
-const $item = inject($ItemKey)
+const props = defineProps<{ data: { item: IronswornItemSource<'progress'> } }>()
+const $item = inject($ItemKey) as IronswornItem<'progress'> | undefined
 
 provide(
 	ItemKey,

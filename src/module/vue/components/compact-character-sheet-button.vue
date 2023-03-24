@@ -21,11 +21,12 @@
 </template>
 
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { capitalize, computed, inject } from 'vue'
-import type { CharacterDataPropertiesData } from '../../actor/actortypes'
 import { IronswornPrerollDialog } from '../../rolls'
 import { $ActorKey, ActorKey } from '../provisions'
 import IronBtn from './buttons/iron-btn.vue'
+import type { IronswornActor } from '../../actor/actor'
 
 const { propKey } = defineProps<{
 	propKey: string
@@ -40,12 +41,12 @@ const tooltip = computed(() =>
 		: game.i18n.format('IRONSWORN.Roll +x', { stat: i18nStat })
 )
 
-const actor = inject(ActorKey)
-const actorSystem = computed(
-	() => (actor?.value as any)?.system as CharacterDataPropertiesData
-)
+const actor = inject(ActorKey) as Ref<
+	undefined | IronswornActorSource<'character'>
+>
+const actorSystem = computed(() => actor?.value?.system)
 const value = computed(() => actorSystem?.value?.[propKey])
-const $actor = inject($ActorKey)
+const $actor = inject($ActorKey) as undefined | IronswornActor<'character'>
 
 function increment(delta: number) {
 	$actor?.update({ system: { [propKey]: value.value + delta } })

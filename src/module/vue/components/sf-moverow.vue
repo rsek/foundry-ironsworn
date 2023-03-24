@@ -71,7 +71,6 @@ import Collapsible from './collapsible/collapsible.vue'
 import BtnOracle from './buttons/btn-oracle.vue'
 import { ItemKey, $ItemKey } from '../provisions.js'
 import { enrichMarkdown } from '../vue-plugin.js'
-import type { SFMoveDataPropertiesData } from '../../item/itemtypes'
 import { uniq } from 'lodash-es'
 
 const props = withDefaults(
@@ -110,10 +109,8 @@ const props = withDefaults(
 	}
 )
 
-const $item = computed(() => props.move.moveItem() as IronswornItem)
-const $itemSystem = computed(
-	() => $item.value?.system as SFMoveDataPropertiesData
-)
+const $item = computed(() => props.move.moveItem() as IronswornItem<'sfmove'>)
+const $itemSystem = computed(() => $item.value?.system)
 
 provide(ItemKey, computed(() => $item.value.toObject()) as any)
 provide($ItemKey, $item.value)

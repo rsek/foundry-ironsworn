@@ -14,7 +14,7 @@ export interface MoveCategory {
 export interface Move {
 	color: string | null
 	displayName: string
-	moveItem: () => IronswornItem
+	moveItem: () => IronswornItem<'sfmove'>
 	dataforgedMove?: IMove
 }
 

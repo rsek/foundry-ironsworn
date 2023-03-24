@@ -17,20 +17,18 @@
 </template>
 
 <script lang="ts" setup>
+import type { Ref } from 'vue'
 import { computed, inject } from 'vue'
 import { ActorKey } from '../../provisions.js'
 import ConditionMeterSlider from './condition-meter.vue'
 import { IronswornSettings } from '../../../helpers/settings.js'
-import type { CharacterDataPropertiesData } from '../../../actor/actortypes.js'
 
 const props = defineProps<{
 	labelPosition: 'left' | 'right'
 }>()
 
-const actor = inject(ActorKey)
-const actorSys = computed(
-	() => (actor?.value as any)?.system as CharacterDataPropertiesData
-)
+const actor = inject(ActorKey) as Ref<IronswornActorSource<'character'>>
+const actorSys = computed(() => actor?.value?.system)
 </script>
 <style lang="scss">
 .condition-meters {

@@ -7,14 +7,16 @@ import type { DelveSiteDanger, DelveSiteFeature } from './itemtypes'
 /**
  * Extend the base Item entity
  */
-export class IronswornItem<T extends ItemType = ItemType> extends Item<
-	IronswornActor<any>
-> {
+export class IronswornItem<
+	T extends ItemType = ItemType
+> extends Item<IronswornActor> {
 	get type(): T {
 		return super.type as T
 	}
 
-	system!: ItemSystemMap[T]['system']
+	data!: foundry.abstract.DocumentData & { _source: ItemSourceMap[T] }
+
+	system!: ItemBaseMap[T]['system']
 
 	protected override _onCreate(
 		data: this['_source'],
@@ -79,7 +81,7 @@ export class IronswornItem<T extends ItemType = ItemType> extends Item<
 		}
 
 		const progress = Math.floor(system.current / 4)
-		return IronswornPrerollDialog.showForProgress(
+		return await IronswornPrerollDialog.showForProgress(
 			this.name ?? '(progress)',
 			progress,
 			this.actor ?? undefined,
@@ -123,11 +125,5 @@ export class IronswornItem<T extends ItemType = ItemType> extends Item<
 		return system.Trigger.Options?.some(
 			(option) => option['Roll type'] === 'Progress roll'
 		)
-	}
-}
-
-declare global {
-	interface DocumentClassConfig {
-		Item: typeof IronswornItem
 	}
 }

@@ -53,9 +53,9 @@ async function noop() {
 // Migration 1: "formidible" -> "formidable"
 async function fixFormidableSpelling() {
 	// Iterate through everything that has a rank (sites, items, owned items), and change "formidible" to "formidable"
-	await everyItem(async (x) => {
-		if ((x?.system as any).rank === 'formidible') {
-			console.log(`Upgrading ${x.type} / ${x.name}`)
+	await everyItem(async (x: any) => {
+		if (x.system.rank === 'formidible') {
+			console.log(`Upgrading ${x.type as string} / ${x.name as string}`)
 			await x.update({ system: { rank: 'formidable' } })
 		}
 	})
@@ -66,7 +66,7 @@ async function everythingIsAProgress() {
 	await everyItem(async (x) => {
 		if (['progress', 'vow'].includes(x.type)) {
 			console.log(`Upgrading ${x.type} ${x.name}`)
-			await x.update({
+			await (x as IronswornItem<'progress'>).update({
 				type: 'progress',
 				system: { subtype: x.type }
 			})
@@ -104,9 +104,9 @@ async function normalizeDelveTableRows() {
 	await everyActor(async (actor) => {
 		const typeToMigrate = 'site'
 		const keyToMigrate = 'system.denizens'
-		if ((actor.type as any) === 'site') {
+		if (actor.type === 'site') {
 			const denizens = normalizeTableRows(actor, keyToMigrate, typeToMigrate)
-			await actor.update({
+			await (actor as IronswornActor<'site'>).update({
 				system: { denizens },
 				type: 'site'
 			})

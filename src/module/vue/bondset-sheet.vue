@@ -39,14 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, provide, reactive, watch, ref } from 'vue'
+import { computed, inject, provide, reactive } from 'vue'
 import { $ItemKey, ItemKey } from './provisions'
 import MceEditor from './components/mce-editor.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
 import type { IronswornItem } from '../item/item'
 
 const props = defineProps<{
-	data: { item: foundry.data.ItemSource<'bondset'> }
+	data: { item: IronswornItemSource<'bondset'> }
 }>()
 provide(
 	ItemKey,

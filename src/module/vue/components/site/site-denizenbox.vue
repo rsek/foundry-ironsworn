@@ -27,28 +27,27 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { reactive } from 'vue'
-import { inject } from 'vue'
-import { computed, ref } from 'vue'
+import { reactive, inject, computed, ref } from 'vue'
 import type {
 	DelveSiteDenizen,
-	SiteDataPropertiesData
+	IronswornDelveSiteSource
 } from '../../../actor/actortypes'
 import DropTarget from '../../drop-target.vue'
 import { $ActorKey, ActorKey } from '../../provisions'
+import type { IronswornActor } from '../../../actor/actor'
 
 const props = defineProps<{ idx: number }>()
 const data = reactive({ focused: false })
 
-const actor = inject(ActorKey) as Ref
-const $actor = inject($ActorKey)
+const actor = inject(ActorKey) as Ref<IronswornDelveSiteSource>
+const $actor = inject($ActorKey) as IronswornActor<'site'>
 
 const editMode = computed(() => {
 	return actor.value?.flags['foundry-ironsworn']?.['edit-mode']
 })
 
 const denizen = computed(() => {
-	return actor.value?.system.denizens[props.idx] as DelveSiteDenizen
+	return actor.value?.system?.denizens[props.idx]
 })
 
 /**
@@ -76,7 +75,7 @@ const frequencyLabel = computed(() =>
 
 function input(ev) {
 	const val = ev.currentTarget.value || ''
-	const data = $actor?.system as SiteDataPropertiesData | undefined
+	const data = $actor?.system
 	if (!data) return
 	const denizens = Object.values(data.denizens)
 	denizens[props.idx].text = val

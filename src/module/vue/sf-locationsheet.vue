@@ -143,16 +143,19 @@ import { $ActorKey, ActorKey } from './provisions'
 
 import MceEditor from './components/mce-editor.vue'
 import { OracleRollMessage } from '../rolls'
-import type { LocationDataProperties } from '../actor/actortypes'
 import SheetBasic from './sheet-basic.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
+import type { IronswornActor } from '../actor/actor'
 
 const props = defineProps<{
-	data: { actor: any }
+	data: { actor: IronswornActorSource<'location'> }
 }>()
 
-provide(ActorKey, computed(() => props.data.actor) as any)
-const $actor = inject($ActorKey)
+provide(
+	ActorKey,
+	computed(() => props.data.actor)
+)
+const $actor = inject($ActorKey) as IronswornActor<'location'>
 
 const sceneId = game.user?.viewedScene
 const scene = game.scenes?.get(sceneId ?? '')
@@ -647,7 +650,6 @@ async function rollOracle(oracle) {
 	if (!drawText) return
 
 	// Append to description
-	const actor = props.data.actor as LocationDataProperties
 	const parts = [
 		props.data.actor.system.description,
 		'<p><strong>',
@@ -663,15 +665,17 @@ function nameChange() {
 	updateAllTokens({ name: props.data.actor.name })
 }
 
-async function updateAllTokens(data) {
+async function updateAllTokens(
+	data: DocumentUpdateData<TokenDocument<IronswornActor>>
+) {
 	// Prototype token
-	await $actor?.data.token.update(data)
+	await $actor?.token?.update(data)
 
 	// All tokens in the scene
 	const activeTokens = $actor?.getActiveTokens()
 	const updates =
 		activeTokens?.map((at) => ({
-			_id: at.data._id,
+			_id: at._id,
 			...data
 		})) ?? []
 	await canvas?.scene?.updateEmbeddedDocuments('Token', updates)

@@ -65,6 +65,7 @@ import { OracleRollMessage, IronswornPrerollDialog } from '../../../rolls'
 import { $ActorKey, ActorKey } from '../../provisions'
 
 import SfMoverow from '../sf-moverow.vue'
+import { DelveSiteDanger } from '../../../item/itemtypes'
 
 const site = inject(ActorKey)
 const $site = inject($ActorKey) as IronswornActor<'site'> | undefined
@@ -129,12 +130,12 @@ async function revealADanger() {
 		...domainData.dangers,
 		// Omits the first two rows
 		...oracle.results.contents.slice(2)
-	]
+	] as DelveSiteDanger[]
 
 	const title = moves.revealADanger.moveItem().name ?? 'Reveal a Danger'
 	const subtitle = `${$site?.name} – ${theme.value?.name} ${domain.value?.name}`
 	const orm = await OracleRollMessage.fromTableResults(
-		tableResults as PreCreate<TableResult['_source']>[],
+		tableResults,
 		title,
 		subtitle
 	)

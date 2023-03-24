@@ -62,6 +62,7 @@ function destroy() {
 		title: game.i18n.format('DOCUMENT.Delete', {
 			type: game.i18n.localize('IRONSWORN.ITEM.TypeAsset')
 		}),
+		content: game.i18n.localize('AreYouSure'),
 		yes: () => $asset?.delete(),
 		defaultYes: false
 	})

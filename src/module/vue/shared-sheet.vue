@@ -31,20 +31,22 @@ import { $ActorKey, ActorKey } from './provisions'
 import Bonds from './components/bonds.vue'
 import MceEditor from './components/mce-editor.vue'
 import ActiveCompletedProgresses from 'component:progress/active-completed-progresses.vue'
-import type { BondsetDataPropertiesData } from '../item/itemtypes'
 import SheetBasic from './sheet-basic.vue'
 import ConditionMeter from './components/resource-meter/condition-meter.vue'
 import { IronswornSettings } from '../helpers/settings.js'
 
 const props = defineProps<{
-	data: { actor: any }
+	data: { actor: IronswornActorSource<'shared'> }
 }>()
-provide(ActorKey, computed(() => props.data.actor) as any)
+provide(
+	ActorKey,
+	computed(() => props.data.actor)
+)
 const $actor = inject($ActorKey)
 
 const hasBonds = computed(() => {
 	const bonds = props.data.actor.items.find((x) => x.type === 'bondset')
-		?.system as BondsetDataPropertiesData | undefined
+		?.system as IronswornItemSource<'bondset'>['system'] | undefined
 	const markedBonds = bonds?.bonds?.length
 	return markedBonds && markedBonds > 0
 })

@@ -1,7 +1,7 @@
 import type { ChallengeRank } from '../constants'
 import { IronswornActor } from './actor'
 
-interface CharacterSystem {
+interface IronswornCharacterSourceSystem {
 	biography: string
 	notes: string
 	edge: number
@@ -46,24 +46,17 @@ interface CharacterSystem {
 	xp: number
 }
 
-export interface CharacterDataPropertiesData extends CharacterSystem {
-	momentumMax: number
-	momentumReset: number
+export interface IronswornCharacterBase {
+	type: 'character'
+	system: IronswornCharacterSourceSystem
 }
 
-export interface CharacterDataProperties {
-	type: 'character'
-	system: CharacterDataPropertiesData
-}
-
-export interface IronswornCharacter {
-	type: 'character'
-	system: CharacterSystem
-}
+export type IronswornCharacterSource = foundry.data.ActorSource &
+	IronswornCharacterBase
 
 /// /////////////////////////////////////
 
-export interface IronswornShared {
+export interface IronswornSharedBase {
 	type: 'shared'
 	system: {
 		biography: string
@@ -71,19 +64,24 @@ export interface IronswornShared {
 	}
 }
 
+export type IronswornSharedSource = foundry.data.ActorSource &
+	IronswornSharedBase
+
 /// /////////////////////////////////////
 
-export interface IronswornFoe {
+export interface IronswornFoeBase {
 	type: 'foe'
 	system: Record<string, unknown>
 }
+export type IronswornFoeSource = foundry.data.ActorSource & IronswornFoeBase
 
 /// /////////////////////////////////////
 
 /**
  * Represents an entry in the delve site denizen matrix.
  */
-export interface DelveSiteDenizen extends TableResult {
+export interface DelveSiteDenizen extends Omit<TableResult, 'flags'> {
+	range: [number, number]
 	flags: {
 		'foundry-ironsworn': {
 			type: 'delve-site-denizen'
@@ -95,7 +93,7 @@ export interface DelveSiteDenizen extends TableResult {
 	}
 }
 
-export interface IronswornDelveSite {
+export interface IronswornDelveSiteBase {
 	type: 'site'
 	system: {
 		objective: string
@@ -107,9 +105,12 @@ export interface IronswornDelveSite {
 	}
 }
 
+export type IronswornDelveSiteSource = foundry.data.ActorSource &
+	IronswornDelveSiteBase
+
 /// /////////////////////////////////////
 
-export interface IronswornStarship {
+export interface IronswornStarshipBase {
 	type: 'starship'
 	system: {
 		health: number
@@ -120,9 +121,12 @@ export interface IronswornStarship {
 	}
 }
 
+export type IronswornStarshipSource = foundry.data.ActorSource &
+	IronswornStarshipBase
+
 /// /////////////////////////////////////
 
-export interface IronswornLocation {
+export interface IronswornLocationBase {
 	type: 'location'
 	system: {
 		subtype: string
@@ -131,21 +135,41 @@ export interface IronswornLocation {
 	}
 }
 
-/// /////////////////////////////////////
+export type IronswornLocationSource = foundry.data.ActorSource &
+	IronswornLocationBase
+
+/// //////////////////////////////////
 
 declare global {
+	type ActorType = keyof ActorBaseMap
+
 	// These are kept separate so they can be readily referenced without excessive recursion
-	interface ActorSystemMap {
-		character: IronswornCharacter
-		shared: IronswornShared
-		foe: IronswornFoe
-		site: IronswornDelveSite
-		starship: IronswornStarship
-		location: IronswornLocation
+	interface ActorBaseMap {
+		character: IronswornCharacterBase
+		shared: IronswornSharedBase
+		foe: IronswornFoeBase
+		site: IronswornDelveSiteBase
+		starship: IronswornStarshipBase
+		location: IronswornLocationBase
+	}
+	interface ActorSourceMap
+		extends Record<keyof ActorBaseMap, foundry.data.ActorSource> {
+		character: IronswornCharacterSource
+		shared: IronswornSharedSource
+		foe: IronswornFoeSource
+		site: IronswornDelveSiteSource
+		starship: IronswornStarshipSource
+		location: IronswornLocationSource
 	}
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	type ActorTypeMap = {
-		[K in keyof ActorSystemMap]?: ActorSystemMap[K] & IronswornActor
+		[K in keyof ActorBaseMap]: IronswornActor<K>
 	}
-	type ActorType = keyof ActorSystemMap
+
+	interface IronswornActorData<T extends ActorType>
+		extends foundry.abstract.DocumentData {
+		_source: ActorSourceMap[T]
+	}
+
+	type IronswornActorSource<T extends ActorType = ActorType> = ActorSourceMap[T]
 }

@@ -30,7 +30,7 @@ function click() {
 	const current = props.document.img
 	const fp = new FilePicker({
 		type: 'image',
-		current: current,
+		current,
 		callback: (img) => {
 			const doc = $item ?? $actor
 			doc?.update({ img })

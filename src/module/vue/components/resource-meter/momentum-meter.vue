@@ -30,11 +30,6 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue'
 import { computed, inject } from 'vue'
-import type { IronswornActor } from '../../../actor/actor.js'
-import type {
-	CharacterDataProperties,
-	CharacterDataPropertiesData
-} from '../../../actor/actortypes.js'
 import { ActorKey } from '../../provisions.js'
 import BtnMomentumburn from '../buttons/btn-momentumburn.vue'
 
@@ -48,12 +43,8 @@ const props = withDefaults(
 	{ sliderStyle: 'vertical', labelPosition: 'left' }
 )
 
-const actor = inject(ActorKey) as Ref<
-	ReturnType<typeof IronswornActor.prototype.toObject> & CharacterDataProperties
->
-const actorSys = computed(
-	() => (actor.value as any)?.system as CharacterDataPropertiesData
-)
+const actor = inject(ActorKey) as Ref<IronswornActorSource<'character'>>
+const actorSys = computed(() => actor.value?.system)
 </script>
 
 <style lang="scss">

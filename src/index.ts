@@ -2,7 +2,6 @@
  * A Foundry implementation of the Ironsworn family of systems, by Shawn Tomkin
  */
 
-import type { IronswornConfig } from './config'
 import { IRONSWORN } from './config'
 import { IronswornActor } from './module/actor/actor'
 import { IronswornCharacterSheetV2 } from './module/actor/sheets/charactersheet-v2'
@@ -37,78 +36,10 @@ import { JournalProgressPageSheet } from './module/journal/sheet/progress-page'
 import { TruthJournalPageSheet } from './module/journal/truth-page'
 import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
-import type { Constructor } from './module/vue/vueapp'
 
 import 'foundry-types'
 import 'handlebars'
 import 'virtual:svg-icons-register'
-
-declare global {
-	type ConfiguredConfig = Config<
-		AmbientLightDocument,
-		ActiveEffect,
-		IronswornActor,
-		ActorDirectory<IronswornActor>,
-		ChatLog<ChatMessage<IronswornActor>>,
-		ChatMessage<IronswornActor>,
-		Combat,
-		Combatant<Combat | null, IronswornActor | null>,
-		CombatTracker<Combat>,
-		CompendiumDirectory,
-		Hotbar,
-		IronswornItem,
-		Macro,
-		MeasuredTemplateDocument,
-		TileDocument,
-		TokenDocument,
-		WallDocument<Scene | null>,
-		Scene,
-		User<IronswornActor>,
-		EffectsCanvasGroup,
-		IronswornJournalPage
-	> & {
-		Canvas: {
-			layers: Record<
-				string,
-				{ group: 'primary' | 'interface'; layerClass: Constructor<CanvasLayer> }
-			>
-		}
-	}
-	interface IronGame
-		extends Game<
-			IronswornActor,
-			Actors<IronswornActor>,
-			ChatMessage,
-			Combat,
-			IronswornItem,
-			Macro,
-			Scene,
-			User<IronswornActor>
-		> {}
-
-	interface ConfigIronsworn extends ConfiguredConfig {
-		IRONSWORN: IronswornConfig
-	}
-
-	const CONFIG: ConfigIronsworn
-
-	namespace globalThis {
-		// eslint-disable-next-line no-var
-		var game: IronGame
-
-		// eslint-disable-next-line no-var
-		var canvas: Canvas
-
-		// eslint-disable-next-line no-var
-		var ui: FoundryUI<
-			IronswornActor,
-			ActorDirectory<IronswornActor>,
-			IronswornItem,
-			ChatLog,
-			CompendiumDirectory
-		>
-	}
-}
 
 Hooks.once('init', async () => {
 	console.log('Ironsworn | initializing system')

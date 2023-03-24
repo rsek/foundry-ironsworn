@@ -5,7 +5,7 @@
 		:data-tooltip="state.hintText"
 		class="flexrow"
 		:class="{ [$style.hint]: !!state.hintText, [$style.wrapper]: true }"
-		:checked="actor.system.debility[name]"
+		:checked="actor?.system.debility[name]"
 		:aria-labelledby="`label_${baseId}`"
 		:transition="IronswornSettings.deco.impact.transition"
 		@change="input($event)">
@@ -33,15 +33,17 @@ import { computed, capitalize, inject, nextTick, reactive } from 'vue'
 import type { Ref } from 'vue'
 import { actorsOrAssetsWithConditionEnabled } from '../../../helpers/globalConditions'
 import { IronswornSettings } from '../../../helpers/settings'
-import type { AssetDataPropertiesData } from '../../../item/itemtypes'
 import { $ActorKey, ActorKey } from '../../provisions'
 import IronCheckbox from '../input/iron-checkbox.vue'
 import FontIcon from '../icon/font-icon.vue'
+import type { IronswornActor } from '../../../actor/actor'
 
-const actor = inject(ActorKey) as Ref
-const $actor = inject($ActorKey)
+const actor = inject(ActorKey) as
+	| Ref<IronswornActorSource<'character' | 'starship'>>
+	| undefined
+const $actor = inject($ActorKey) as IronswornActor<'character' | 'starship'>
 
-const baseId = computed(() => `condition_${props.name}_${actor.value._id}`)
+const baseId = computed(() => `condition_${props.name}_${actor?.value._id}`)
 
 const props = defineProps<{
 	name: string
@@ -63,9 +65,9 @@ async function input(value: boolean) {
 	}
 	await $actor?.update(data)
 	await nextTick()
-	const numDebilitiesMarked = Object.values(actor.value.system.debility).filter(
-		(x) => x === true
-	).length
+	const numDebilitiesMarked = Object.values(
+		actor?.value.system.debility as Record<string, string | boolean>
+	).filter((x) => x === true).length
 	await $actor?.update({
 		system: {
 			momentumMax: 10 - numDebilitiesMarked,
@@ -106,8 +108,7 @@ function refreshGlobalHint() {
 	const names = [
 		...actors.map((x) => x.name),
 		...assets.map((x) => {
-			const assetData = x.system as AssetDataPropertiesData
-			const nameField = assetData.fields.find((x) => {
+			const nameField = x.system.fields.find((x) => {
 				const downcase = x.name.toLowerCase()
 				if (downcase === game.i18n.localize('Name').toLowerCase()) return true
 				if (downcase === 'name') return true
@@ -115,7 +116,7 @@ function refreshGlobalHint() {
 			})
 			return nameField?.value || x.name
 		})
-	].filter((x) => x !== actor.value.name)
+	].filter((x) => x !== actor?.value.name)
 
 	if (names.length == 0) {
 		state.hintText = undefined

@@ -125,30 +125,36 @@ import { createIronswornDenizenChat } from '../chat/chatrollhelpers'
 import ProgressTrack from './components/progress/progress-track.vue'
 import SiteMoves from './components/site/site-moves.vue'
 import { OracleRollMessage } from '../rolls'
-import type { DelveThemeDataSourceData } from '../item/itemtypes'
 import IronBtn from './components/buttons/iron-btn.vue'
-import type { SiteDataPropertiesData } from '../actor/actortypes'
 import { localizeRank } from '../helpers/util'
+import type { IronswornActor } from '../actor/actor'
 
 const props = defineProps<{
-	data: { actor: any }
+	data: { actor: IronswornActorSource<'site'> }
 }>()
 
-provide(ActorKey, computed(() => props.data.actor) as any)
+provide(
+	ActorKey,
+	computed(() => props.data.actor)
+)
 provide('toolset', 'ironsworn')
 
-const $actor = inject($ActorKey)
+const $actor = inject($ActorKey) as IronswornActor<'site'> | undefined
 
 const editMode = computed(() => {
 	return (props.data.actor.flags['foundry-ironsworn'] as any)?.['edit-mode']
 })
 
 const theme = computed(() => {
-	return props.data.actor.items.find((x) => x.type === 'delve-theme')
+	return props.data.actor.items.find(
+		(x) => x.type === 'delve-theme'
+	) as IronswornItemSource<'delve-theme'>
 })
 
 const domain = computed(() => {
-	return props.data.actor.items.find((x) => x.type === 'delve-domain')
+	return props.data.actor.items.find(
+		(x) => x.type === 'delve-domain'
+	) as IronswornItemSource<'delve-domain'>
 })
 
 function setRank(rank) {
@@ -169,7 +175,7 @@ const denizenRefs = ref<{ [k: number]: any }>({})
 async function randomDenizen() {
 	const roll = await new Roll('1d100').evaluate({ async: true })
 	const result = roll.total
-	const denizens = (props.data.actor.system as SiteDataPropertiesData).denizens
+	const denizens = props.data.actor.system.denizens
 	const denizen = denizens.find(
 		(x) => x.range[0] <= result && x.range[1] >= result
 	)
@@ -196,8 +202,8 @@ const hasThemeAndDomain = computed(() => {
 async function randomFeature() {
 	if (!hasThemeAndDomain.value) return
 
-	const themeData = (theme.value as any)?.system as DelveThemeDataSourceData
-	const domainData = (domain.value as any)?.system as DelveThemeDataSourceData
+	const themeData = theme.value?.system
+	const domainData = domain.value?.system
 	const title = game.i18n.localize('IRONSWORN.DELVESITE.Feature')
 	const subtitle = `${$actor?.name} – ${theme.value?.name} ${domain.value?.name}`
 	const orm = OracleRollMessage.fromTableResults(

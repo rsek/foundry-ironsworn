@@ -8,9 +8,7 @@ import {
 } from 'lodash-es'
 import { IronswornRoll } from '.'
 import type { IronswornActor } from '../actor/actor'
-import type { CharacterDataPropertiesData } from '../actor/actortypes'
 import { getFoundryTableByDfId } from '../dataforged'
-import { IronswornItem } from '../item/item'
 import { enrichMarkdown } from '../vue/vue-plugin'
 import { DfRollOutcome, RollOutcome } from './ironsworn-roll'
 import { renderRollGraphic } from './roll-graphic'
@@ -137,7 +135,10 @@ export function outcomeKey(
 }
 
 export class IronswornRollMessage {
-	constructor(public roll: IronswornRoll, public actor?: IronswornActor<any>) {
+	constructor(
+		public roll: IronswornRoll,
+		public actor?: IronswornActor<'character'>
+	) {
 		if (actor == null && roll.preRollOptions.actorId) {
 			this.actor = game.actors?.get(roll.preRollOptions.actorId)
 		}
@@ -162,8 +163,7 @@ export class IronswornRollMessage {
 
 	async burnMomentum() {
 		if (this.actor?.type !== 'character') return
-		const { momentum } = this.actor.system as CharacterDataPropertiesData
-
+		const { momentum } = this.actor.system
 		const [c1, c2] = this.roll.finalChallengeDice ?? []
 		if (c1 === undefined || c2 === undefined) return
 
@@ -262,8 +262,7 @@ export class IronswornRollMessage {
 		if (move?.type !== 'sfmove') return ret
 
 		const key = DfRollOutcome[theOutcome]
-		const moveSystem = (move as IronswornItem<'sfmove'>).system
-		let moveOutcome = moveSystem.Outcomes?.[key] as IOutcomeInfo
+		let moveOutcome = move.system.Outcomes?.[key] as IOutcomeInfo
 		if (this.roll.isMatch && moveOutcome?.['With a Match']?.Text)
 			moveOutcome = moveOutcome['With a Match']
 		if (moveOutcome) {
@@ -301,7 +300,7 @@ export class IronswornRollMessage {
 		const [c1, c2] = this.roll.finalChallengeDice ?? []
 		if (c1 === undefined || c2 === undefined) return {}
 
-		const { momentum } = this.actor.system as CharacterDataPropertiesData
+		const { momentum } = this.actor.system
 		const rawOutcome = this.roll.rawOutcome?.value
 		const momentumBurnOutcome = computeRollOutcome(momentum, c1.value, c2.value)
 
@@ -316,12 +315,11 @@ export class IronswornRollMessage {
 		return {}
 	}
 
-	private async oraclesData(): Promise<any> {
+	private async oraclesData(): Promise<{ nextOracles?: RollTable[] }> {
 		const move = await this.roll.moveItem
 		if (move?.type !== 'sfmove') return {}
 
-		const system = (move as IronswornItem<'sfmove'>).system
-		const dfIds = system.Oracles ?? []
+		const dfIds = move.system.Oracles ?? []
 		const nextOracles = compact(
 			await Promise.all(dfIds.map(getFoundryTableByDfId))
 		)

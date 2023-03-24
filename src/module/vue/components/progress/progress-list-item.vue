@@ -92,6 +92,8 @@ import ProgressTrack from './progress-track.vue'
 import FontIcon from '../icon/font-icon.vue'
 import { FontAwesome } from '../icon/icon-common'
 import type { ChallengeRank } from '../../../constants'
+import { IronswornActor } from '../../../actor/actor'
+import { IronswornItem } from '../../../item/item'
 
 const props = defineProps<{
 	item: any
@@ -105,7 +107,9 @@ const props = defineProps<{
 const actor = inject(ActorKey)
 const $actor = inject($ActorKey)
 
-const foundryItem = $actor?.items.get(props.item.id ?? props.item._id)
+const foundryItem = $actor?.items.get(props.item.id ?? props.item._id) as
+	| undefined
+	| IronswornItem<'progress'>
 
 provide(ItemKey, computed(() => foundryItem?.toObject()) as any)
 provide($ItemKey, foundryItem)

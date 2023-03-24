@@ -35,7 +35,7 @@ interface AssetCondition {
 	ticked: boolean
 }
 
-export interface IronswornAsset {
+export interface IronswornAssetBase {
 	type: 'asset'
 	system: {
 		category: string
@@ -55,10 +55,14 @@ export interface IronswornAsset {
 	}
 }
 
+export type IronswornAssetSource = foundry.data.ItemSource & IronswornAssetBase
+
 /// ////////////////////////////
 
+export type ProgressItemSubtype = 'vow' | 'bond' | 'progress' | 'foe'
+
 interface ProgressSystem extends ProgressBase {
-	subtype: string
+	subtype: ProgressItemSubtype
 	starred: boolean
 	hasTrack: boolean
 	hasClock: boolean
@@ -66,10 +70,13 @@ interface ProgressSystem extends ProgressBase {
 	clockMax: number
 }
 
-export interface IronswornProgress {
+export interface IronswornProgressBase {
 	type: 'progress'
 	system: ProgressSystem
 }
+
+export type IronswornProgressSource = foundry.data.ItemSource &
+	IronswornProgressBase
 
 /// ////////////////////////////
 
@@ -78,12 +85,15 @@ interface Bond {
 	notes: string
 }
 
-export interface IronswornBondset {
+export interface IronswornBondsetBase {
 	type: 'bondset'
 	system: {
 		bonds: Bond[]
 	}
 }
+
+export type IronswornBondsetSource = foundry.data.ItemSource &
+	IronswornBondsetBase
 
 /// ////////////////////////////
 
@@ -97,7 +107,9 @@ export interface DelveSiteFeatureOrDanger<
 	T extends 'delve-site-danger' | 'delve-site-feature' =
 		| 'delve-site-danger'
 		| 'delve-site-feature'
-> extends RequireKey<PreCreate<TableResult>, 'text' | 'range'> {
+> extends PreCreate<foundry.data.TableResultSource> {
+	range: [number, number]
+	text: string
 	flags: {
 		'foundry-ironsworn': {
 			/**
@@ -118,7 +130,7 @@ export interface DelveSiteFeature
 export interface DelveSiteDanger
 	extends DelveSiteFeatureOrDanger<'delve-site-danger'> {}
 
-export interface IronswornDelveTheme {
+export interface IronswornDelveThemeBase {
 	type: 'delve-theme'
 	system: {
 		summary: string
@@ -127,9 +139,12 @@ export interface IronswornDelveTheme {
 		dangers: DelveSiteDanger[]
 	}
 }
+
+export type IronswornDelveThemeSource = foundry.data.ItemSource &
+	IronswornDelveThemeBase
 /// ////////////////////////////
 
-export interface IronswornDelveDomain {
+export interface IronswornDelveDomainBase {
 	type: 'delve-domain'
 	system: {
 		summary: string
@@ -139,30 +154,49 @@ export interface IronswornDelveDomain {
 	}
 }
 
-/// ////////////////////////////
+export type IronswornDelveDomainSource = foundry.data.ItemSource &
+	IronswornDelveDomainBase
 
-export interface MoveSystem extends IMove {
+/// ////////////////////////////
+interface MoveSystem extends IMove {
 	dfid: string
 }
 
-export interface IronswornMove {
+export interface IronswornMoveBase {
 	type: 'sfmove'
 	system: MoveSystem
 }
 
+export type IronswornMoveSource = foundry.data.ItemSource & IronswornMoveBase
+
 /// ////////////////////////////
 
 declare global {
-	interface ItemSystemMap {
-		asset: IronswornAsset
-		progress: IronswornProgress
-		bondset: IronswornBondset
-		sfmove: IronswornMove
-		'delve-theme': IronswornDelveTheme
-		'delve-domain': IronswornDelveDomain
+	type ItemType = keyof ItemBaseMap
+
+	interface ItemBaseMap {
+		asset: IronswornAssetBase
+		progress: IronswornProgressBase
+		bondset: IronswornBondsetBase
+		sfmove: IronswornMoveBase
+		'delve-theme': IronswornDelveThemeBase
+		'delve-domain': IronswornDelveDomainBase
+	}
+	interface ItemSourceMap
+		extends Record<keyof ItemBaseMap, foundry.data.ItemSource> {
+		asset: IronswornAssetSource
+		progress: IronswornProgressSource
+		bondset: IronswornBondsetSource
+		sfmove: IronswornMoveSource
+		'delve-theme': IronswornDelveThemeSource
+		'delve-domain': IronswornDelveDomainSource
 	}
 	type ItemTypeMap = {
-		[K in keyof ItemSystemMap]: ItemSystemMap[K] & IronswornItem<K>
+		[K in keyof ItemBaseMap]: IronswornItem<K>
 	}
-	type ItemType = keyof ItemSystemMap
+	interface IronswornItemData<T extends ItemType>
+		extends foundry.abstract.DocumentData {
+		_source: ItemSourceMap[T]
+	}
+	type IronswornItemSource<T extends ItemType = ItemType> = ItemSourceMap[T]
 }

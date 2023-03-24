@@ -1,29 +1,40 @@
 import { CreateActorDialog } from '../applications/createActorDialog'
-import type { IronswornItem } from '../item/item'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 
 let CREATE_DIALOG: CreateActorDialog
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
- * @extends {Actor}
  */
 export class IronswornActor<T extends ActorType = ActorType> extends Actor<
-	TokenDocument<IronswornActor<T>>,
+	TokenDocument,
 	ItemTypeMap
 > {
+	// redclare some properties for stricter typings
 	get type(): T {
 		return super.type as T
 	}
 
-	system!: ActorSystemMap[T]['system']
+	system!: ActorBaseMap[T]['system']
 
-	override async createEmbeddedDocuments(
-		embeddedName: string,
-		data: Array<PreCreate<IronswornItem['_source']>>,
+	data!: IronswornActorData<T>
+
+	toObject(source?: true): this['_source']
+	toObject(source: false): RawObject<this['data']>
+	toObject(source?: boolean) {
+		return super.toObject(source)
+	}
+
+	override async createEmbeddedDocuments<TName extends 'Item' | 'ActiveEffect'>(
+		embeddedName: TName,
+		data: Array<PreCreate<DocumentSource<TName>>>,
 		context?: DocumentModificationContext<this> | undefined
-	): Promise<foundry.abstract.Document[]> {
-		return await super.createEmbeddedDocuments(embeddedName, data, context)
+	): Promise<Array<DocumentClass<TName>>> {
+		return (await super.createEmbeddedDocuments(
+			embeddedName,
+			data,
+			context
+		)) as Array<DocumentClass<TName>>
 	}
 
 	moveSheet?: SFCharacterMoveSheet
@@ -75,7 +86,7 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor<
 	get toolset(): 'ironsworn' | 'starforged' {
 		// We can't use IronswornSettings helpers here, it breaks the import orders
 		// First check if the toolbox is set to one or the other
-		const toolbox = game.settings.get('foundry-ironsworn', 'toolbox') as string
+		const toolbox = game.settings.get('foundry-ironsworn', 'toolbox')
 		if (toolbox === 'ironsworn') return 'ironsworn'
 		if (toolbox === 'starforged') return 'starforged'
 
@@ -87,17 +98,11 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor<
 		}
 
 		// Nope, now check the default character sheet class
-		const sheetClasses = game.settings.get('core', 'sheetClasses') as any
+		const sheetClasses = game.settings.get('core', 'sheetClasses')
 		return sheetClasses.Actor?.character ===
 			'ironsworn.StarforgedCharacterSheet'
 			? 'starforged'
 			: 'ironsworn'
-	}
-}
-
-declare global {
-	interface DocumentClassConfig {
-		Actor: typeof IronswornActor
 	}
 }
 

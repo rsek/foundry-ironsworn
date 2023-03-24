@@ -41,7 +41,7 @@ export const IronswornVuePlugin: Plugin = {
 	install(app, ..._options) {
 		app.config.globalProperties.$t = (
 			stringId: string,
-			data?: Record<string, string | number | boolean | null>
+			data?: Record<string, string | number | boolean | null | undefined>
 		) =>
 			data != null
 				? game.i18n.format(stringId, data)

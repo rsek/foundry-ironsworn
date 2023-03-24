@@ -18,6 +18,7 @@ import { createSfMoveChatMessage } from '../../../chat/sf-move-chat-message'
 import type { Move } from '../../../features/custommoves'
 import { $ItemKey } from '../../provisions.js'
 import IronBtn from './iron-btn.vue'
+import type { IronswornItem } from '../../../item/item'
 
 interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {
 	move: Move
@@ -25,7 +26,7 @@ interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {
 
 defineProps<Props>()
 
-const $item = inject($ItemKey)
+const $item = inject($ItemKey) as IronswornItem<'sfmove'>
 
 function sendToChat(e) {
 	if ($item) createSfMoveChatMessage($item)

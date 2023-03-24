@@ -15,6 +15,9 @@ import { FirstStartDialog } from './module/applications/firstStartDialog'
 import { SFSettingTruthsDialogVue } from './module/applications/vueSfSettingTruthsDialog'
 import { WorldTruthsDialog } from './module/applications/worldTruthsDialog'
 import { OracleWindow } from './module/applications/oracle-window'
+import type { Constructor } from './module/vue/vueapp'
+import type { IronswornItem } from './module/item/item'
+import type { IronswornJournalPage } from './module/journal/journal-entry-page'
 
 export interface EmitterEvents extends Record<EventType, unknown> {
 	highlightMove: string // Foundry UUID
@@ -48,6 +51,73 @@ export interface IronswornConfig {
 	dataforgedHelpers: typeof dataforgedHelpers
 
 	emitter: IronswornEmitter
+}
+
+declare global {
+	type ConfiguredConfig = Config<
+		AmbientLightDocument,
+		ActiveEffect,
+		IronswornActor,
+		ActorDirectory<IronswornActor>,
+		ChatLog<ChatMessage<IronswornActor>>,
+		ChatMessage<IronswornActor>,
+		Combat,
+		Combatant<Combat | null, IronswornActor | null>,
+		CombatTracker<Combat>,
+		CompendiumDirectory,
+		Hotbar,
+		IronswornItem,
+		Macro,
+		MeasuredTemplateDocument,
+		TileDocument,
+		TokenDocument,
+		WallDocument<Scene | null>,
+		Scene,
+		User<IronswornActor>,
+		EffectsCanvasGroup,
+		IronswornJournalPage
+	> & {
+		Canvas: {
+			layers: Record<
+				string,
+				{ group: 'primary' | 'interface'; layerClass: Constructor<CanvasLayer> }
+			>
+		}
+	}
+	interface IronGame
+		extends Game<
+			IronswornActor,
+			Actors<IronswornActor>,
+			ChatMessage,
+			Combat,
+			IronswornItem,
+			Macro,
+			Scene,
+			User<IronswornActor>
+		> {}
+
+	interface ConfigIronsworn extends ConfiguredConfig {
+		IRONSWORN: IronswornConfig
+	}
+
+	const CONFIG: ConfigIronsworn
+
+	namespace globalThis {
+		// eslint-disable-next-line no-var
+		var game: IronGame
+
+		// eslint-disable-next-line no-var
+		var canvas: Canvas
+
+		// eslint-disable-next-line no-var
+		var ui: FoundryUI<
+			IronswornActor,
+			ActorDirectory<IronswornActor>,
+			IronswornItem,
+			ChatLog,
+			CompendiumDirectory
+		>
+	}
 }
 
 export const IRONSWORN: IronswornConfig = {

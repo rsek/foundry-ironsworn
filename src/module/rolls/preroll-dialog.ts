@@ -15,7 +15,6 @@ import type {
 } from './ironsworn-roll'
 import { IronswornRoll } from './ironsworn-roll'
 import { renderRollGraphic } from './roll-graphic'
-import type { CharacterDataPropertiesData } from '../actor/actortypes'
 import { IronswornRollMessage } from '.'
 import { formatRollPlusStat } from './ironsworn-roll-message.js'
 import { ChallengeResolutionDialog } from './challenge-resolution-dialog'
@@ -360,17 +359,19 @@ export class IronswornPrerollDialog
 				label: `<span class=button-text>${label}</span>`,
 				icon: '<i class="isicon-d10-tilt juicy"></i>',
 				callback: (el: JQuery<HTMLElement>) => {
-					let rollingActor: IronswornActor
+					let rollingActor: IronswornActor<'character'>
 					if (allActors.length === 1) {
-						rollingActor = allActors[0]
+						rollingActor = allActors[0] as IronswornActor<'character'>
 					} else {
 						// Get the selected actor from the dialog
 						const actorId = el.find('#char').val() as string
-						rollingActor = game.actors?.get(actorId)!
+						rollingActor = game.actors?.get(
+							actorId
+						) as IronswornActor<'character'>
 					}
 
 					// Set up for the roll
-					const actorData = rollingActor.system as CharacterDataPropertiesData
+					const actorData = rollingActor.system
 					prerollOptions.momentum = actorData.momentum
 					prerollOptions.stat = chooseStatToRoll(mode, stats, rollingActor)
 

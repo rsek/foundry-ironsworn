@@ -34,7 +34,6 @@
 <script setup lang="ts">
 import { computed, inject, provide } from 'vue'
 import { RANK_INCREMENTS } from '../../../constants'
-import type { ProgressDataPropertiesData } from '../../../item/itemtypes'
 import { $ActorKey, $ItemKey, ActorKey } from '../../provisions'
 
 import IronBtn from 'component:buttons/iron-btn.vue'
@@ -43,17 +42,18 @@ import MceEditor from 'component:mce-editor.vue'
 import ProgressTrack from 'component:progress/progress-track.vue'
 import BtnRollprogress from 'component:buttons/btn-rollprogress.vue'
 import { localizeRank } from '../../../helpers/util'
+import type { IronswornItem } from '../../../item/item'
 
 const actor = inject(ActorKey)
 const $actor = inject($ActorKey)
 
-const props = defineProps<{ item: any }>()
-const $item = $actor?.items.get(props.item._id)
+const props = defineProps<{ item: IronswornItemSource<'progress'> }>()
+const $item = $actor?.items.get(props.item._id) as
+	| undefined
+	| IronswornItem<'progress'>
 provide($ItemKey, $item)
 
-const foeSystem = computed(
-	() => (props.item as any).system as ProgressDataPropertiesData
-)
+const foeSystem = computed(() => props.item.system)
 
 function setRank(rank) {
 	$item?.update({ system: { rank } })
@@ -65,13 +65,13 @@ function clearProgress() {
 
 const multipleUsers = (game.users?.contents?.length ?? 0) > 1
 const whisperIcon = computed(() =>
-	actor?.value?.flags?.['foundry-ironsworn']?.['muteBroadcast']
+	actor?.value?.flags?.['foundry-ironsworn']?.muteBroadcast
 		? 'fa:volume-xmark'
 		: 'fa:volume'
 )
 
 const whisperTooltip = computed(() =>
-	actor?.value?.flags?.['foundry-ironsworn']?.['muteBroadcast']
+	actor?.value?.flags?.['foundry-ironsworn']?.muteBroadcast
 		? 'IRONSWORN.ChatAlert.Muted'
 		: 'IRONSWORN.ChatAlert.Unmuted'
 )

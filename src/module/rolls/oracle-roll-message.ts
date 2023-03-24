@@ -7,6 +7,7 @@ import {
 	findPathToNodeByDfId,
 	findPathToNodeByTableId
 } from '../features/customoracles'
+import type { RequireKey } from 'dataforged'
 
 export interface TableRow {
 	low: number
@@ -90,19 +91,16 @@ export class OracleRollMessage {
 	}
 
 	static fromTableResults(
-		tableResults: foundry.data.TableResultData[],
+		tableResults: Array<{ range: [number, number]; text: string }>,
 		title: string,
 		subtitle?: string
 	) {
-		const tableRows = tableResults.map(
-			({ range: [low, high], text }) =>
-				({
-					low,
-					high,
-					text,
-					selected: false
-				} as TableRow)
-		)
+		const tableRows = tableResults.map(({ range: [low, high], text }) => ({
+			low,
+			high,
+			text,
+			selected: false
+		}))
 		return OracleRollMessage.fromRows(tableRows, title, subtitle)
 	}
 

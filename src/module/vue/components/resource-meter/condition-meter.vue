@@ -40,7 +40,7 @@ const props = withDefaults(
 		 * @see {$ActorKey}
 		 * @see {$ItemKey}
 		 */
-		documentType: DocumentType
+		documentType: 'Actor' | 'Item'
 		/**
 		 * When 'true' and documentType is set to "Actor", updates *all* actors of the 'shared' and 'character' types.
 		 */

@@ -27,18 +27,16 @@ import type { Ref } from 'vue'
 import { computed, inject } from 'vue'
 import LegacyTrack from '../legacy-track.vue'
 import ProgressListItem from '../progress/progress-list-item.vue'
-import type { ProgressDataPropertiesData } from '../../../item/itemtypes.js'
 import { ActorKey } from '../../provisions.js'
+import type { IronswornActor } from '../../../actor/actor'
 
-const actor = inject(ActorKey) as Ref
+const actor = inject(ActorKey) as Ref<IronswornActor['_source']>
 
 const starredProgresses = computed(() =>
 	// TODO: use $actor?.itemTypes.progress instead?
 
 	actor?.value.items.filter(
-		(item) =>
-			item.type === 'progress' &&
-			(item.system as unknown as ProgressDataPropertiesData)?.starred
+		(item) => item.type === 'progress' && (item.system as any)?.starred
 	)
 )
 </script>

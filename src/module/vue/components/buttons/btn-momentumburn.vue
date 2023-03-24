@@ -12,24 +12,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import type { ExtractPropTypes } from 'vue'
-import { inject } from 'vue'
-import type { CharacterDataPropertiesData } from '../../../actor/actortypes'
 import { $ActorKey } from '../../provisions'
 import IronBtn from './iron-btn.vue'
+import type { IronswornActor } from '../../../actor/actor'
 
 interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {}
 
 defineProps<Props>()
-const $actor = inject($ActorKey)
+const $actor = inject($ActorKey) as IronswornActor<'character'> | undefined
 
 const tooltip = computed(() => {
-	const { momentum, momentumReset } =
-		$actor?.system as CharacterDataPropertiesData
 	return game.i18n.format('IRONSWORN.BurnMomentumAndResetTo', {
-		value: momentum,
-		resetValue: momentumReset
+		value: $actor?.system.momentum ?? null,
+		resetValue: $actor?.system.momentumReset ?? null
 	})
 })
 

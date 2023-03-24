@@ -42,7 +42,6 @@
 import SfMovesheetmoves from './components/sf-movesheetmoves.vue'
 import SfMovesheetoracles from './components/sf-movesheetoracles.vue'
 import { computed, provide, ref } from 'vue'
-import type { CharacterDataProperties } from '../actor/actortypes'
 import { ActorKey } from './provisions.js'
 import TabSet from './components/tabs/tab-set.vue'
 import TabList from './components/tabs/tab-list.vue'
@@ -53,12 +52,15 @@ import IronIcon from './components/icon/iron-icon.vue'
 
 const props = defineProps<{
 	data: {
-		actor: CharacterDataProperties
+		actor: IronswornActorSource<'character'>
 		toolset: 'ironsworn' | 'starforged'
 	}
 }>()
 
-provide(ActorKey, computed(() => props.data.actor) as any)
+provide(
+	ActorKey,
+	computed(() => props.data.actor)
+)
 
 const $tabSet = ref<InstanceType<typeof TabSet>>()
 const movesTab = ref<InstanceType<typeof SfMovesheetmoves>>()

@@ -44,39 +44,40 @@ import type { IronswornActor } from '../../actor/actor'
 import { $ActorKey, ActorKey } from '../provisions'
 import IronBtn from './buttons/iron-btn.vue'
 import BtnCompendium from './buttons/btn-compendium.vue'
-import type { FoeDataProperties } from '../../actor/actortypes'
 import DropTarget from '../drop-target.vue'
 import ProgressItemDetail from 'component:progress/progress-item-detail.vue'
 
 const props = defineProps<{
 	data: {
-		actor: ReturnType<typeof IronswornActor.prototype.toObject> &
-			FoeDataProperties
+		actor: IronswornActorSource<'foe'>
 	}
 }>()
-provide(ActorKey, computed(() => props.data.actor) as any)
+provide(
+	ActorKey,
+	computed(() => props.data.actor)
+)
 const foe = computed(() => {
 	return props.data.actor.items.find((x) => x.type === 'progress')
 })
 
-const $actor = inject($ActorKey)
+const $actor = inject($ActorKey) as undefined | IronswornActor<'foe'>
 
 function addEmpty() {
 	Item.create(
-		{ name: 'NPC', type: 'progress', data: { subtype: 'foe' } },
+		{ name: 'NPC', type: 'progress', system: { subtype: 'foe' } },
 		{ parent: $actor }
 	)
 }
 
 const multipleUsers = (game.users?.contents?.length ?? 0) > 1
 const whisperIcon = computed(() =>
-	(props.data.actor.flags['foundry-ironsworn'] as any)?.['muteBroadcast']
+	props.data.actor.flags['foundry-ironsworn']?.muteBroadcast
 		? 'fa:volume-xmark'
 		: 'fa:volume'
 )
 
 const whisperTooltip = computed(() =>
-	(props.data.actor.flags['foundry-ironsworn'] as any)?.['muteBroadcast']
+	props.data.actor.flags['foundry-ironsworn']?.muteBroadcast
 		? 'IRONSWORN.ChatAlert.Muted'
 		: 'IRONSWORN.ChatAlert.Unmuted'
 )

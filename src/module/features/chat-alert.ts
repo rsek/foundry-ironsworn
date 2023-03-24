@@ -131,7 +131,12 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 			}
 		}
 
-		const debilities = [
+		type DebilityKey = Exclude<
+			keyof IronswornActorSource<'character'>['system']['debility'],
+			`custom${number}name`
+		>
+
+		const debilities: DebilityKey[] = [
 			'corrupted',
 			'cursed',
 			'encumbered',
