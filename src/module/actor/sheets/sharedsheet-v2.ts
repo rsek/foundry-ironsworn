@@ -1,6 +1,6 @@
 import sharedSheetVue from '../../vue/shared-sheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { IronswornActor } from '../actor'
+import type { IronswornActor } from '../actor'
 
 export class IronswornSharedSheetV2 extends VueActorSheet<
 	IronswornActor<'shared'>

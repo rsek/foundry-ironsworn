@@ -16,7 +16,7 @@ export async function getFoundryTableByDfId(
 		'foundry-ironsworn.starforgedoracles'
 	)
 	const matcher = (x) => x.id === hashLookup(dfid)
-	return (isd?.find(matcher) ?? sfd?.find(matcher)) as RollTable | undefined
+	return (isd?.find(matcher) ?? sfd?.find(matcher))
 }
 
 export async function getFoundryMoveByDfId(
@@ -28,7 +28,7 @@ export async function getFoundryMoveByDfId(
 		(await cachedDocumentsForPack('foundry-ironsworn.ironswornmoves')) ?? []
 	return [...sfDocuments, ...isDocuments]?.find(
 		(x) => x.id === hashLookup(dfid)
-	) as IronswornItem<'sfmove'> | undefined
+	) 
 }
 
 export async function getDFMoveByDfId(

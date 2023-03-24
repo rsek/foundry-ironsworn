@@ -1,6 +1,6 @@
 import { VueActorSheet } from '../../vue/vueactorsheet'
 import siteSheetVue from '../../vue/site-sheet.vue'
-import { IronswornItem } from '../../item/item'
+import type { IronswornItem } from '../../item/item'
 import type { IronswornActor } from '../actor'
 
 export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
@@ -24,7 +24,7 @@ export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 		}
 
 		// Find which denizen slot this is going into
-		const dropTarget = $(event.target as HTMLElement).parents(
+		const dropTarget = $(event.target ).parents(
 			'.ironsworn__denizen__drop'
 		)[0]
 		if (!dropTarget) return false

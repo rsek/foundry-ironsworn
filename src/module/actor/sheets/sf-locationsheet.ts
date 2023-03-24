@@ -1,6 +1,6 @@
 import sfLocationsheetVue from '../../vue/sf-locationsheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { IronswornActor } from '../actor'
+import type { IronswornActor } from '../actor'
 
 export class StarforgedLocationSheet extends VueActorSheet<
 	IronswornActor<'location'>

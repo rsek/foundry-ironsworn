@@ -1,5 +1,6 @@
 import ChallengeResolutionDialogVue from '../vue/challenge-resolution-dialog.vue'
-import { VueAppMixin, VueApplicationOptions } from '../vue/vueapp.js'
+import type { VueApplicationOptions } from '../vue/vueapp.js';
+import { VueAppMixin } from '../vue/vueapp.js'
 
 declare global {
 	namespace Application {

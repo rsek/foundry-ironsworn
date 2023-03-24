@@ -1,6 +1,6 @@
 import starshipSheetVue from '../../vue/starship-sheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { IronswornActor } from '../actor'
+import type { IronswornActor } from '../actor'
 
 export class StarshipSheet extends VueActorSheet<IronswornActor<'starship'>> {
 	static get defaultOptions() {

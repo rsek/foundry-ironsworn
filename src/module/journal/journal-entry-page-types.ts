@@ -1,6 +1,6 @@
-import { ISettingTruthOption } from 'dataforged'
+import type { ISettingTruthOption } from 'dataforged'
 import type { ChallengeRank } from '../constants'
-import { IronswornJournalPage } from './journal-entry-page'
+import type { IronswornJournalPage } from './journal-entry-page'
 
 interface CounterBase {
 	max: number

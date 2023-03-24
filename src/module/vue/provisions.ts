@@ -3,7 +3,7 @@ import type { enrichHtml, enrichMarkdown } from './vue-plugin'
 import type { IronswornActor } from '../actor/actor'
 import type { IronswornItem } from '../item/item'
 import type { Emitter, EventType } from 'mitt'
-import { IronswornJournalPage } from '../journal/journal-entry-page'
+import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 // Provided by the Vue plugin
 export const $EnrichHtmlKey = Symbol('$enrichHtml') as InjectionKey<

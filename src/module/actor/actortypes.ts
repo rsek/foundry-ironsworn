@@ -1,5 +1,5 @@
 import type { ChallengeRank } from '../constants'
-import { IronswornActor } from './actor'
+import type { IronswornActor } from './actor'
 
 interface IronswornCharacterSourceSystem {
 	biography: string

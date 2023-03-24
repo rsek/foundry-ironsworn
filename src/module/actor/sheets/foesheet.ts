@@ -1,6 +1,6 @@
 import foeSheetVue from '../../vue/components/foe-sheet.vue'
 import { VueActorSheet } from '../../vue/vueactorsheet'
-import { IronswornActor } from '../actor'
+import type { IronswornActor } from '../actor'
 
 export class FoeSheet extends VueActorSheet<IronswornActor<'foe'>> {
 	static get defaultOptions() {
