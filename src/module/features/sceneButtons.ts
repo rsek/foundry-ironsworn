@@ -7,6 +7,15 @@ function warn() {
 	ui.notifications?.warn('Soon™')
 }
 
+/**
+ * Return a reference to the Document class implementation which is configured for use.
+ * @param documentName The canonical Document name, for example "Actor"
+ * @returns The configured Document class implementation
+ */
+declare global {
+	function getDocumentClass<T extends DocType>(): DocumentClass<T>
+}
+
 // Make sure a folder exists, e.g. ['Locations', 'Sector 05']
 async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
 	let parentFolder: Folder | undefined

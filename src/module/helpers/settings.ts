@@ -19,6 +19,8 @@ async function closeAllMoveSheets() {
 }
 
 declare global {
+	interface SettingSubmenuConfig {}
+	interface SettingsMenuConstructor extends ConstructorOf<FormApplication> {}
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace ClientSettings {
 		/** Settings added here will be automatically typed throughout the game system. */
