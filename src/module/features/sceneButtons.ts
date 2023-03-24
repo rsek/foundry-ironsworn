@@ -135,6 +135,12 @@ function theOracleWindow() {
 	return ORACLE_WINDOW
 }
 
+declare global {
+	interface SceneControl {
+		activeTool: string
+	}
+}
+
 export function activateSceneButtonListeners() {
 	CONFIG.Canvas.layers.ironsworn = {
 		layerClass: IronswornCanvasLayer,
