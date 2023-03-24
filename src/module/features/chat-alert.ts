@@ -48,25 +48,17 @@ export function registerChatAlertHooks() {
 		sendToChat(item.parent, `${itemName} ${content}`)
 	})
 
-	Hooks.on(
-		'preCreateItem',
-		async (
-			item: Item,
-			_data,
-			options: DocumentModificationContext<Item>,
-			_userId
-		) => {
-			if (!IronswornSettings.get('log-changes')) return
-			if (item.parent == null) return // No logging for unowned items, they don't matter
-			if (options.suppressLog) return
-			if (item.type === 'bondset') return // No need to log this
+	Hooks.on('preCreateItem', async (item, _data, options, _userId) => {
+		if (!IronswornSettings.get('log-changes')) return
+		if (item.parent == null) return // No logging for unowned items, they don't matter
+		if (options.suppressLog) return
+		if (item.type === 'bondset') return // No need to log this
 
-			sendToChat(
-				item.parent,
-				game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
-			)
-		}
-	)
+		sendToChat(
+			item.parent,
+			game.i18n.format('IRONSWORN.ChatAlert.Added', { name: item.name })
+		)
+	})
 
 	Hooks.on('preDeleteItem', async (item, options, _userId) => {
 		if (!IronswornSettings.get('log-changes')) return

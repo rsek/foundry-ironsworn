@@ -1,4 +1,4 @@
-import type { IMove, RequireKey } from 'dataforged'
+import type { IMove } from 'dataforged'
 import type { ChallengeRank } from '../constants'
 import type { IronswornItem } from './item'
 

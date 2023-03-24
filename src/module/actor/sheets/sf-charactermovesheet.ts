@@ -39,9 +39,9 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 	}
 
 	get title() {
-		return `${game.i18n.localize('IRONSWORN.ITEMS.TypeMove')} — ${
-			this.actor.name
-		}`
+		return `${game.i18n.localize('IRONSWORN.ITEMS.TypeMove')} — ${<string>(
+			(this.actor as any).name
+		)}`
 	}
 
 	activateTab(tabKey: string) {

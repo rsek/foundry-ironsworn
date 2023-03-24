@@ -7,7 +7,6 @@ import {
 	findPathToNodeByDfId,
 	findPathToNodeByTableId
 } from '../features/customoracles'
-import type { RequireKey } from 'dataforged'
 
 export interface TableRow {
 	low: number

@@ -99,7 +99,9 @@ function enableClock(idx) {
 
 function clockMaxChange(idx: number) {
 	const abilities = Object.values(item.value.system.abilities)
-	abilities[idx].clockMax = parseInt(abilities[idx].clockMax)
+	if (typeof idx === 'string') {
+		idx = parseInt(abilities[idx].clockMax as any)
+	}
 	$item?.update({ system: { abilities } })
 }
 

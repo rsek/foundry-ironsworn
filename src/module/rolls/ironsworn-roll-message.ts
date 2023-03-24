@@ -200,8 +200,9 @@ export class IronswornRollMessage {
 		} else {
 			const speaker = ChatMessage.getSpeaker()
 			if (this.actor != null) {
-				speaker.actor = this.actor.id
-				speaker.alias = this.actor.name
+				// HACK tsc seems to be missing something in the type inheritance chain.
+				speaker.actor = (this.actor as any).id
+				speaker.alias = (this.actor as any).name
 			}
 			const messageData = {
 				speaker,
