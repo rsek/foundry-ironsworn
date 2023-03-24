@@ -37,7 +37,6 @@ import { TruthJournalPageSheet } from './module/journal/truth-page'
 import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
 
-import 'foundry-types'
 import 'handlebars'
 import 'virtual:svg-icons-register'
 
