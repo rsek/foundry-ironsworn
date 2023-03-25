@@ -52,7 +52,66 @@ export interface IronswornConfig {
 	emitter: IronswornEmitter
 }
 
+interface DocumentConfig<T, TTypes extends string | undefined> {
+	documentClass?: ConstructorOf<T>
+	typeLabels?: TTypes extends string
+		? Record<TTypes, string | undefined>
+		: never
+	typeIcons?: TTypes extends string ? Record<TTypes, string | undefined> : never
+	collection?: Collection<T>
+	sidebarIcon?: string
+	defaultType: string
+}
+
 declare global {
+	interface IronConfig<
+		TAmbientLightDocument extends AmbientLightDocument<TScene | null>,
+		TActiveEffect extends ActiveEffect<TActor | TItem | null>,
+		TActor extends Actor<TTokenDocument | null>,
+		TChatLog extends ChatLog,
+		TChatMessage extends ChatMessage,
+		TCombat extends Combat,
+		TCombatant extends Combatant<TCombat | null, TTokenDocument | null>,
+		TCombatTracker extends CombatTracker<TCombat | null>,
+		TCompendiumDirectory extends CompendiumDirectory,
+		THotbar extends Hotbar,
+		TItem extends Item<TActor | null>,
+		TMacro extends Macro,
+		TMeasuredTemplateDocument extends MeasuredTemplateDocument<TScene | null>,
+		TTileDocument extends TileDocument<TScene | null>,
+		TTokenDocument extends TokenDocument<TScene | null>,
+		TWallDocument extends WallDocument<TScene | null>,
+		TScene extends Scene,
+		TUser extends User,
+		TEffectsCanvasGroup extends EffectsCanvasGroup,
+		TJournalEntryPage extends JournalEntryPage
+	> extends Config<
+			TAmbientLightDocument,
+			TActiveEffect,
+			TActor,
+			TChatLog,
+			TChatMessage,
+			TCombat,
+			TCombatant,
+			TCombatTracker,
+			TCompendiumDirectory,
+			THotbar,
+			TItem,
+			TMacro,
+			TMeasuredTemplateDocument,
+			TTileDocument,
+			TTokenDocument,
+			TWallDocument,
+			TScene,
+			TUser,
+			TEffectsCanvasGroup
+		> {
+		/** Configuration for the JournalEntryPage embedded document type. */
+		JournalEntryPage: DocumentConfig<
+			TJournalEntryPage,
+			'pdf' | 'text' | 'image' | 'video'
+		>
+	}
 	type ConfiguredConfig = Config<
 		AmbientLightDocument,
 		ActiveEffect,
