@@ -8,7 +8,9 @@
 			"foundry-types",
 			"foundry-types/util",
 			"vite-plugin-svg-icons/client",
-			"@types/jquery"
+			"@types/jquery",
+			"./src/module/item/itemtypes.ts",
+			"./src/module/actor/actortypes.ts"
 		],
 		"moduleResolution": "node",
 		"sourceMap": true,
