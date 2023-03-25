@@ -5,7 +5,7 @@ import { VueAppMixin } from './vueapp.js'
 import type { IronswornItem } from '../item/item'
 
 export abstract class VueItemSheet<T extends IronswornItem> extends VueAppMixin(
-	ItemSheet
+	ItemSheet<IronswornItem>
 ) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {

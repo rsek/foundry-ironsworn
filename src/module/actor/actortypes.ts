@@ -1,7 +1,7 @@
 import type { ChallengeRank } from '../constants'
 import type { IronswornActor } from './actor'
 
-interface IronswornCharacterSourceSystem {
+interface CharacterSystemSource {
 	biography: string
 	notes: string
 	edge: number
@@ -46,41 +46,24 @@ interface IronswornCharacterSourceSystem {
 	xp: number
 }
 
-export interface IronswornCharacterBase {
-	type: 'character'
-	system: IronswornCharacterSourceSystem
-}
+/// /////////////////////////////////////
 
-export type IronswornCharacterSource = foundry.data.ActorSource &
-	IronswornCharacterBase
+interface SharedSystemSource {
+	biography: string
+	supply: number
+}
 
 /// /////////////////////////////////////
 
-export interface IronswornSharedBase {
-	type: 'shared'
-	system: {
-		biography: string
-		supply: number
-	}
-}
-
-export type IronswornSharedSource = foundry.data.ActorSource &
-	IronswornSharedBase
-
-/// /////////////////////////////////////
-
-export interface IronswornFoeBase {
-	type: 'foe'
-	system: Record<string, unknown>
-}
-export type IronswornFoeSource = foundry.data.ActorSource & IronswornFoeBase
+type FoeSystemSource = object
 
 /// /////////////////////////////////////
 
 /**
  * Represents an entry in the delve site denizen matrix.
  */
-export interface DelveSiteDenizen extends Omit<TableResult, 'flags'> {
+export interface DelveSiteDenizen
+	extends Omit<foundry.documents.TableResultSource, 'flags'> {
 	range: [number, number]
 	flags: {
 		'foundry-ironsworn': {
@@ -88,88 +71,64 @@ export interface DelveSiteDenizen extends Omit<TableResult, 'flags'> {
 			/**
 			 * The ID of the originating Actor.
 			 */
-			sourceId: Actor['id']
+			sourceId: IronswornActor['id']
 		}
 	}
 }
 
-export interface IronswornDelveSiteBase {
-	type: 'site'
-	system: {
-		objective: string
-		description: string
-		notes: string
-		rank: ChallengeRank
-		current: number
-		denizens: DelveSiteDenizen[]
-	}
+interface DelveSiteSystemSource {
+	objective: string
+	description: string
+	notes: string
+	rank: ChallengeRank
+	current: number
+	denizens: DelveSiteDenizen[]
 }
-
-export type IronswornDelveSiteSource = foundry.data.ActorSource &
-	IronswornDelveSiteBase
 
 /// /////////////////////////////////////
 
-export interface IronswornStarshipBase {
-	type: 'starship'
-	system: {
-		health: number
-		debility: {
-			battered: boolean
-			cursed: boolean
-		}
+interface StarshipSystemSource {
+	health: number
+	debility: {
+		battered: boolean
+		cursed: boolean
 	}
 }
-
-export type IronswornStarshipSource = foundry.data.ActorSource &
-	IronswornStarshipBase
 
 /// /////////////////////////////////////
 
-export interface IronswornLocationBase {
-	type: 'location'
-	system: {
-		subtype: string
-		klass: string
-		description: string
-	}
+interface LocationSystemSource {
+	subtype: string
+	klass: string
+	description: string
 }
-
-export type IronswornLocationSource = foundry.data.ActorSource &
-	IronswornLocationBase
 
 /// //////////////////////////////////
 
+export interface ActorSystemMap {
+	character: CharacterSystemSource
+	shared: SharedSystemSource
+	foe: FoeSystemSource
+	site: DelveSiteSystemSource
+	starship: StarshipSystemSource
+	location: LocationSystemSource
+}
+export type ActorSourceMap = {
+	[K in keyof ActorSystemMap]: foundry.documents.ActorSource<
+		K,
+		ActorSystemMap[K]
+	>
+}
+
+export interface IronswornActorData<T extends ActorType> {
+	_source: ActorSourceMap[T] & foundry.documents.ActorSource
+}
+
 declare global {
-	type ActorType = keyof ActorBaseMap
+	type ActorType = keyof ActorSystemMap
 
-	// These are kept separate so they can be readily referenced without excessive recursion
-	interface ActorBaseMap {
-		character: IronswornCharacterBase
-		shared: IronswornSharedBase
-		foe: IronswornFoeBase
-		site: IronswornDelveSiteBase
-		starship: IronswornStarshipBase
-		location: IronswornLocationBase
-	}
-	interface ActorSourceMap
-		extends Record<keyof ActorBaseMap, foundry.data.ActorSource> {
-		character: IronswornCharacterSource
-		shared: IronswornSharedSource
-		foe: IronswornFoeSource
-		site: IronswornDelveSiteSource
-		starship: IronswornStarshipSource
-		location: IronswornLocationSource
-	}
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	type ActorTypeMap = {
-		[K in keyof ActorBaseMap]: IronswornActor<K>
+		[K in keyof ActorSystemMap]: IronswornActor<K>
 	}
-
-	interface IronswornActorData<T extends ActorType>
-		extends foundry.abstract.DocumentData {
-		_source: ActorSourceMap[T]
-	}
-
 	type IronswornActorSource<T extends ActorType = ActorType> = ActorSourceMap[T]
 }

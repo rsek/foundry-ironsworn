@@ -32,45 +32,46 @@ interface ProgressTrack {
 	countdown?: Countdown
 }
 
-export interface ProgressTrackSystem extends ProgressTrack {}
-
-export interface ProgressTrackDataSource {
-	// distinguish progress types with different sheets?
-	type: 'progress'
-	system: ProgressTrackSystem
-}
+interface ProgressTrackSystemSource extends ProgressTrack {}
 
 /// //////// CLOCKS
 
-export interface ClockSystem extends CounterBase {
+export interface ClockSystemSource extends CounterBase {
 	clockType: 'tension' | 'campaign'
-}
-export interface ClockDataSource {
-	type: 'clock'
-	system: ClockSystem
 }
 
 /// /////// SETTING TRUTHS
 
-export interface SettingTruthOptionSystem extends ISettingTruthOption {}
-export interface SettingTruthOptionDataSource {
-	type: 'truth'
-	system: SettingTruthOptionSystem
+interface SettingTruthOptionSystemSource extends ISettingTruthOption {}
+
+/// ///////
+
+export interface JournalEntryPageSystemMap {
+	progress: ProgressTrackSystemSource
+	clock: ClockSystemSource
+	truth: SettingTruthOptionSystemSource
+	text: object
+	pdf: object
+	image: object
+	video: object
+}
+
+export type JournalEntryPageSourceMap = {
+	[K in keyof JournalEntryPageSystemMap]: foundry.documents.JournalEntryPageSource & {
+		type: K
+		system: JournalEntryPageSystemMap[K]
+	}
 }
 
 declare global {
-	type JournalEntryPageSystemMap = {
-		progress: ProgressTrackDataSource
-		clock: ClockDataSource
-		truth: SettingTruthOptionDataSource
-	} & {
-		[K in foundry.JournalEntryPageMetadata['coreTypes'][number]]: {
-			system: object
-		}
-	}
-	type JournalEntryPageTypeMap = {
-		[K in keyof JournalEntryPageSystemMap]: JournalEntryPageSystemMap[K] &
-			IronswornJournalPage
-	}
 	type JournalEntryPageType = keyof JournalEntryPageSystemMap
+	type JournalEntryPageTypeMap = {
+		[K in JournalEntryPageType]: IronswornJournalPage<K>
+	}
+	interface IronswornJournalEntryPageData<T extends JournalEntryPageType> {
+		_source: JournalEntryPageSourceMap[T]
+	}
+	type IronswornJournalEntryPageSource<
+		T extends JournalEntryPageType = JournalEntryPageType
+	> = JournalEntryPageSourceMap[T]
 }

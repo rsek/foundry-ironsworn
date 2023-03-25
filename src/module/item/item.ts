@@ -1,28 +1,27 @@
-import type { IronswornActor } from '../actor/actor'
 import { RANK_INCREMENTS } from '../constants'
 import { getFoundryMoveByDfId } from '../dataforged'
 import { IronswornPrerollDialog } from '../rolls'
-import type { DelveSiteDanger, DelveSiteFeature } from './itemtypes'
+import type {
+	DelveSiteDanger,
+	DelveSiteFeature,
+	IronswornItemData,
+	ItemSourceMap,
+	ItemSystemMap
+} from './itemtypes'
 
 /**
  * Extend the base Item entity
  */
-export class IronswornItem<
-	T extends ItemType = ItemType
-> extends Item<IronswornActor> {
+export class IronswornItem<T extends ItemType = ItemType> extends Item<any> {
 	get type(): T {
 		return super.type as T
 	}
 
-	data!: foundry.abstract.DocumentData & { _source: ItemSourceMap[T] }
+	system!: ItemSystemMap[T]
+	data!: IronswornItemData<T>
+	_source!: ItemSourceMap[T]
 
-	system!: ItemBaseMap[T]['system']
-
-	protected override _onCreate(
-		data: this['_source'],
-		options: DocumentModificationContext<this>,
-		userId: string
-	): void {
+	protected override _onCreate(data: this['_source'], options, userId) {
 		super._onCreate(data, options, userId)
 
 		switch (this.type) {
@@ -59,12 +58,11 @@ export class IronswornItem<
 		let newValue = system.current + increment
 		newValue = Math.min(newValue, 40)
 		newValue = Math.max(newValue, 0)
-		return await this.update({ 'system.current': newValue })
+		await this.update({ 'system.current': newValue })
 	}
 
 	async clearProgress() {
-		if (this.type !== 'progress') return
-		return await this.update({ 'system.current': 0 })
+		if (this.type !== 'progress') await this.update({ 'system.current': 0 })
 	}
 
 	async fulfill() {
@@ -92,7 +90,6 @@ export class IronswornItem<
 	/**
 	 * Bondset methods
 	 */
-
 	async writeEpilogue() {
 		if (this.type !== 'bondset') return
 		const system = (this as IronswornItem<'bondset'>).system

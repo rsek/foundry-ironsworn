@@ -64,77 +64,35 @@ interface DocumentConfig<T, TTypes extends string | undefined> {
 }
 
 declare global {
-	interface IronConfig<
-		TAmbientLightDocument extends AmbientLightDocument<TScene | null>,
-		TActiveEffect extends ActiveEffect<TActor | TItem | null>,
-		TActor extends Actor<TTokenDocument | null>,
-		TChatLog extends ChatLog,
-		TChatMessage extends ChatMessage,
-		TCombat extends Combat,
-		TCombatant extends Combatant<TCombat | null, TTokenDocument | null>,
-		TCombatTracker extends CombatTracker<TCombat | null>,
-		TCompendiumDirectory extends CompendiumDirectory,
-		THotbar extends Hotbar,
-		TItem extends Item<TActor | null>,
-		TMacro extends Macro,
-		TMeasuredTemplateDocument extends MeasuredTemplateDocument<TScene | null>,
-		TTileDocument extends TileDocument<TScene | null>,
-		TTokenDocument extends TokenDocument<TScene | null>,
-		TWallDocument extends WallDocument<TScene | null>,
-		TScene extends Scene,
-		TUser extends User,
-		TEffectsCanvasGroup extends EffectsCanvasGroup,
-		TJournalEntryPage extends JournalEntryPage
-	> extends Config<
-			TAmbientLightDocument,
-			TActiveEffect,
-			TActor,
-			TChatLog,
-			TChatMessage,
-			TCombat,
-			TCombatant,
-			TCombatTracker,
-			TCompendiumDirectory,
-			THotbar,
-			TItem,
-			TMacro,
-			TMeasuredTemplateDocument,
-			TTileDocument,
-			TTokenDocument,
-			TWallDocument,
-			TScene,
-			TUser,
-			TEffectsCanvasGroup
+	interface IronConfig
+		extends Omit<
+			Config<
+				AmbientLightDocument<any>,
+				ActiveEffect<any>,
+				IronswornActor,
+				ChatLog,
+				ChatMessage,
+				Combat,
+				Combatant<Combat, any>,
+				CombatTracker<Combat>,
+				CompendiumDirectory,
+				Hotbar,
+				IronswornItem,
+				Macro,
+				MeasuredTemplateDocument<any>,
+				TileDocument<any>,
+				TokenDocument<any>,
+				WallDocument<Scene>,
+				Scene,
+				User,
+				EffectsCanvasGroup
+			>,
+			'Canvas'
 		> {
+		IRONSWORN: IronswornConfig
+
 		/** Configuration for the JournalEntryPage embedded document type. */
-		JournalEntryPage: DocumentConfig<
-			TJournalEntryPage,
-			'pdf' | 'text' | 'image' | 'video'
-		>
-	}
-	type ConfiguredConfig = Config<
-		AmbientLightDocument,
-		ActiveEffect,
-		IronswornActor,
-		ActorDirectory<IronswornActor>,
-		ChatLog<ChatMessage<IronswornActor>>,
-		ChatMessage<IronswornActor>,
-		Combat,
-		Combatant<Combat | null, IronswornActor | null>,
-		CombatTracker<Combat>,
-		CompendiumDirectory,
-		Hotbar,
-		IronswornItem,
-		Macro,
-		MeasuredTemplateDocument,
-		TileDocument,
-		TokenDocument,
-		WallDocument<Scene | null>,
-		Scene,
-		User<IronswornActor>,
-		EffectsCanvasGroup,
-		IronswornJournalPage
-	> & {
+		JournalEntryPage: DocumentConfig<IronswornJournalPage, JournalEntryPageType>
 		Canvas: {
 			layers: Record<
 				string,
@@ -145,6 +103,7 @@ declare global {
 			>
 		}
 	}
+
 	interface IronGame
 		extends Game<
 			IronswornActor,
@@ -154,14 +113,10 @@ declare global {
 			IronswornItem,
 			Macro,
 			Scene,
-			User<IronswornActor>
+			User
 		> {}
 
-	interface ConfigIronsworn extends ConfiguredConfig {
-		IRONSWORN: IronswornConfig
-	}
-
-	const CONFIG: ConfigIronsworn
+	const CONFIG: IronConfig
 
 	namespace globalThis {
 		// eslint-disable-next-line no-var

@@ -7,6 +7,6 @@ export class AssetSheetV2 extends VueItemSheet<IronswornItem<'asset'>> {
 		return mergeObject(super.defaultOptions, {
 			width: 450,
 			rootComponent: assetSheetVue
-		}) as any
+		})
 	}
 }

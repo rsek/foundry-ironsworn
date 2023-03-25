@@ -1,24 +1,30 @@
 import { clamp } from 'lodash-es'
 import { ChallengeRank, RANK_INCREMENTS } from '../constants'
+import type {
+	JournalEntryPageSourceMap,
+	JournalEntryPageSystemMap
+} from './journal-entry-page-types'
+
+declare global {
+	interface MergeObjectOptions {
+		recursive?: boolean
+	}
+}
 
 /**
  * Extends the base {@link JournalEntryPage} document class.
  */
 export class IronswornJournalPage<
-	TType extends JournalEntryPageType = JournalEntryPageType
-> extends JournalEntryPage<
-	JournalEntry | null,
-	TType,
-	JournalEntryPageSystemMap[TType]['system']
-> {
-	system!: JournalEntryPageSystemMap[TType]['system']
-	get type(): TType {
-		return super.type as TType
-	}
+	T extends JournalEntryPageType = JournalEntryPageType
+> extends JournalEntryPage<JournalEntry | null> {
+	type!: T
+	data!: foundry.abstract.Document & { _source: JournalEntryPageSourceMap[T] }
+	system!: JournalEntryPageSystemMap[T]
+	_source!: JournalEntryPageSourceMap[T]
 
 	protected override async _preCreate(
 		data: PreDocumentId<this['_source']>,
-		options: DocumentModificationContext<this>,
+		options: DocumentModificationContext<JournalEntry>,
 		user: foundry.documents.BaseUser
 	): Promise<void> {
 		// FIXME: JEPs aren't initialized with proper defaults, so we DIY it.
@@ -52,23 +58,4 @@ export class IronswornJournalPage<
 		const newValue = clamp(oldTicks + increment, minTicks, maxTicks)
 		return await this.update({ 'system.ticks': newValue })
 	}
-}
-
-declare global {
-	interface DocumentClassConfig {
-		JournalEntryPage: typeof IronswornJournalPage
-	}
-	// namespace Game {
-	// 	interface SystemData<T> extends PackageData<T> {
-	// 		model: {
-	// 			JournalEntryPage: Record<string, Record<string, unknown>>
-	// 		}
-	// 		template: {
-	// 			JournalEntryPage?: {
-	// 				types: string[]
-	// 				templates?: Record<string, unknown>
-	// 			} & Record<string, unknown>
-	// 		}
-	// 	}
-	// }
 }

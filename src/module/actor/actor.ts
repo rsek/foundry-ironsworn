@@ -1,4 +1,5 @@
 import { CreateActorDialog } from '../applications/createActorDialog'
+import type { ActorSystemMap, IronswornActorData } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 
 let CREATE_DIALOG: CreateActorDialog
@@ -6,24 +7,22 @@ let CREATE_DIALOG: CreateActorDialog
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  */
-export class IronswornActor<T extends ActorType = ActorType> extends Actor<
-	TokenDocument,
-	ItemTypeMap
-> {
+export class IronswornActor<
+	T extends ActorType = ActorType
+> extends Actor<any> {
 	// redclare some properties for stricter typings
 	get type(): T {
 		return super.type as T
 	}
 
-	system!: ActorBaseMap[T]['system']
-
+	system!: ActorSystemMap[T]
 	data!: IronswornActorData<T>
 
-	toObject(source?: true): this['_source']
-	toObject(source: false): RawObject<this['data']>
-	toObject(source?: boolean) {
-		return super.toObject(source)
-	}
+	// toObject(source?: true): this['_source']
+	// toObject(source: false): RawObject<this['data']>
+	// toObject(source?: boolean) {
+	// 	return super.toObject(source)
+	// }
 
 	override async createEmbeddedDocuments<TName extends 'Item' | 'ActiveEffect'>(
 		embeddedName: TName,
@@ -41,7 +40,7 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor<
 
 	protected override _onCreate(
 		data: this['_source'],
-		options: DocumentModificationContext<this>,
+		options: DocumentModificationContext<null>,
 		userId: string
 	): void {
 		super._onCreate(data, options, userId)
@@ -64,11 +63,14 @@ export class IronswornActor<T extends ActorType = ActorType> extends Actor<
 		}
 	}
 
-	static async createDialog(data, _options = {}) {
+	static override async createDialog(
+		data: PreCreate<IronswornActor>,
+		_context
+	) {
 		if (!CREATE_DIALOG) CREATE_DIALOG = new CreateActorDialog()
-		CREATE_DIALOG.options.folder = data?.folder
+		if (data?.folder?._id) CREATE_DIALOG.options.folder = data.folder._id
 		CREATE_DIALOG.render(true)
-		return undefined
+		return null
 	}
 
 	async burnMomentum() {

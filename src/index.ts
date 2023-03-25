@@ -159,55 +159,55 @@ Hooks.once('init', async () => {
 		}
 	)
 
-	CONFIG.Item.typeLabels = mergeObject(CONFIG.Item.typeLabels, {
-		asset: 'IRONSWORN.ITEM.TypeAsset',
-		progress: 'IRONSWORN.ITEM.TypeProgressTrack',
-		bondset: 'IRONSWORN.ITEM.TypeBondset',
-		sfmove: 'IRONSWORN.ITEM.TypeMove',
-		'delve-domain': 'IRONSWORN.ITEM.TypeDelveDomain',
-		'delve-theme': 'IRONSWORN.ITEM.TypeDelveTheme'
-	})
-	CONFIG.Item.typeIcons = mergeObject(CONFIG.Item.typeIcons, {
-		asset: 'fa-solid fa-cards-blank',
-		progress: 'fa-solid fa-asterisk',
-		bondset: 'fa-solid fa-handshake',
-		sfmove: 'icon isicon-d10-tilt',
-		// FIXME ideally, these would be distinct from assets, but all three card types are abstract enough than an icon is tricky
-		'delve-domain': 'fa-duotone fa-cards-blank',
-		'delve-theme': 'fa-duotone fa-cards-blank'
-	})
-
-	CONFIG.Actor.typeLabels = mergeObject(CONFIG.Actor.typeLabels, {
-		character: 'IRONSWORN.ACTOR.TypeCharacter',
-		foe: 'IRONSWORN.ACTOR.TypeFoe',
-		location: 'IRONSWORN.ACTOR.TypeLocation',
-		shared: 'IRONSWORN.ACTOR.TypeShared',
-		site: 'IRONSWORN.ACTOR.TypeDelveSite',
-		starship: 'IRONSWORN.ACTOR.TypeStarship'
-	})
-	CONFIG.Actor.typeIcons = mergeObject(CONFIG.Actor.typeIcons, {
-		character: 'fa-solid fa-user-pen',
-		foe: 'fa-solid fa-masks-theater',
-		location: 'fa-solid fa-location-dot',
-		shared: 'fa-solid fa-people-group',
-		site: 'fa-solid fa-dungeon',
-		starship: 'fa-solid fa-starship-freighter'
+	CONFIG.Item = mergeObject(CONFIG.Item, {
+		typeLabels: {
+			asset: 'IRONSWORN.ITEM.TypeAsset',
+			progress: 'IRONSWORN.ITEM.TypeProgressTrack',
+			bondset: 'IRONSWORN.ITEM.TypeBondset',
+			sfmove: 'IRONSWORN.ITEM.TypeMove',
+			'delve-domain': 'IRONSWORN.ITEM.TypeDelveDomain',
+			'delve-theme': 'IRONSWORN.ITEM.TypeDelveTheme'
+		},
+		typeIcons: {
+			asset: 'fa-solid fa-cards-blank',
+			progress: 'fa-solid fa-asterisk',
+			bondset: 'fa-solid fa-handshake',
+			sfmove: 'icon isicon-d10-tilt',
+			// FIXME ideally, these would be distinct from assets, but all three card types are abstract enough than an icon is tricky
+			'delve-domain': 'fa-duotone fa-cards-blank',
+			'delve-theme': 'fa-duotone fa-cards-blank'
+		}
 	})
 
-	CONFIG.JournalEntryPage.typeLabels = mergeObject(
-		CONFIG.JournalEntryPage.typeLabels,
-		{
+	CONFIG.Actor = mergeObject(CONFIG.Actor, {
+		typeLabels: {
+			character: 'IRONSWORN.ACTOR.TypeCharacter',
+			foe: 'IRONSWORN.ACTOR.TypeFoe',
+			location: 'IRONSWORN.ACTOR.TypeLocation',
+			shared: 'IRONSWORN.ACTOR.TypeShared',
+			site: 'IRONSWORN.ACTOR.TypeDelveSite',
+			starship: 'IRONSWORN.ACTOR.TypeStarship'
+		},
+		typeIcons: {
+			character: 'fa-solid fa-user-pen',
+			foe: 'fa-solid fa-masks-theater',
+			location: 'fa-solid fa-location-dot',
+			shared: 'fa-solid fa-people-group',
+			site: 'fa-solid fa-dungeon',
+			starship: 'fa-solid fa-starship-freighter'
+		}
+	})
+
+	CONFIG.JournalEntryPage = mergeObject(CONFIG.JournalEntryPage, {
+		typeLabels: {
 			truth: 'IRONSWORN.JOURNALENTRYPAGE.TypeTruth',
 			progress: 'IRONSWORN.JOURNALENTRYPAGE.TypeProgressTrack'
-		}
-	)
-	CONFIG.JournalEntryPage.typeIcons = mergeObject(
-		CONFIG.JournalEntryPage.typeIcons,
-		{
+		},
+		typeIcons: {
 			truth: 'fa-solid fa-books',
 			progress: 'fa-solid fa-asterisk'
 		}
-	)
+	})
 
 	// Register Handlebars helpers
 	IronswornHandlebarsHelpers.registerHelpers()
