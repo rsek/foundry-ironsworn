@@ -1,4 +1,4 @@
-import { Hooks } from 'foundry-types/client/core/hooks'
+import type { Hooks } from 'foundry-types/client/core/hooks'
 
 function getIndexEntry(el: HTMLElement) {
 	const { documentId } = el.dataset

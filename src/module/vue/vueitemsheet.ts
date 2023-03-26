@@ -9,7 +9,7 @@ export abstract class VueItemSheet<T extends IronswornItem> extends VueAppMixin(
 ) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ['item'],
+			classes: ['item', 'ironsworn'],
 			width: 520,
 			height: 480
 		})

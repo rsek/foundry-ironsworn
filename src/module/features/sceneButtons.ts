@@ -1,4 +1,4 @@
-import { InteractionLayer } from 'foundry-types'
+import type { InteractionLayer } from 'foundry-types'
 import { IronswornActor } from '../actor/actor'
 import { OracleWindow } from '../applications/oracle-window'
 import { EditSectorDialog } from '../applications/sf/editSectorApp'

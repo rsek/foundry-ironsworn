@@ -4,7 +4,7 @@ import type { IronswornActor } from '../actor/actor'
 import { IronswornSettings } from '../helpers/settings'
 import { localizeRank } from '../helpers/util'
 import type { IronswornItem } from '../item/item'
-import { Hooks } from 'foundry-types/client/core/hooks'
+import type { Hooks } from 'foundry-types/client/core/hooks'
 
 type ActorTypeHandler<T extends ActorType> = (
 	actor: IronswornActor<T>,

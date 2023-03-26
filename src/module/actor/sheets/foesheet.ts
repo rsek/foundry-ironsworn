@@ -8,7 +8,7 @@ export class FoeSheet extends VueActorSheet<IronswornActor<'foe'>> {
 			width: 450,
 			height: 500,
 			rootComponent: foeSheetVue
-		}) as any
+		})
 	}
 
 	// Override

@@ -1,24 +1,26 @@
 import { CreateActorDialog } from '../applications/createActorDialog'
 import type { ActorSystemMap, IronswornActorData } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
-import { Hooks } from 'foundry-types/client/core/hooks'
+import type { Hooks } from 'foundry-types/client/core/hooks'
 
 let CREATE_DIALOG: CreateActorDialog
 
-/**
- * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
- */
+declare global {
+	interface IronswornActor<
+		T extends ActorType = ActorType,
+		TParent extends TokenDocument<Scene | null> | null = null
+	> extends Actor<TParent> {
+		type: T
+		system: ActorSystemMap[T]
+		data: IronswornActorData<T>
+	}
+}
+
 export class IronswornActor<
 	T extends ActorType = ActorType,
 	TParent extends TokenDocument<Scene | null> | null = null
 > extends Actor<TParent> {
 	// redclare some properties for stricter typings
-	get type(): T {
-		return super.type as T
-	}
-
-	system!: ActorSystemMap[T]
-	data!: IronswornActorData<T>
 
 	get itemTypes() {
 		return super.itemTypes as {

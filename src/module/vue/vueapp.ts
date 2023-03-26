@@ -7,7 +7,7 @@ import LoadingSpinner from './components/loading-spinner.vue'
 import { IronswornSettings } from '../helpers/settings.js'
 import { IronswornVuePlugin } from './vue-plugin.js'
 import { pickBy } from 'lodash-es'
-import { Hooks } from 'foundry-types/client/core/hooks'
+import type { Hooks } from 'foundry-types/client/core/hooks'
 
 export type Constructor<T = object> = abstract new (...args: any[]) => T
 

@@ -9,18 +9,16 @@ import type {
 	ItemSystemMap
 } from './itemtypes'
 
-/**
- * Extend the base Item entity
- */
-export class IronswornItem<T extends ItemType = ItemType> extends Item<any> {
-	get type(): T {
-		return super.type as T
+declare global {
+	interface IronswornItem<T extends ItemType = ItemType> extends Item<any> {
+		type: T
+		system: ItemSystemMap[T]
+		data: IronswornItemData<T>
+		_source: ItemSourceMap[T]
 	}
+}
 
-	system!: ItemSystemMap[T]
-	data!: IronswornItemData<T>
-	_source!: ItemSourceMap[T]
-
+export class IronswornItem<T extends ItemType = ItemType> extends Item<any> {
 	protected override _onCreate(data: this['_source'], options, userId) {
 		super._onCreate(data, options, userId)
 

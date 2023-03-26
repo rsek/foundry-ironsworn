@@ -14,7 +14,7 @@ export class IronswornCharacterSheetV2 extends VueActorSheet<
 			height: 800,
 			left: 50,
 			rootComponent: characterSheetVue
-		}) as any
+		})
 	}
 
 	activateTab(tabKey: string) {

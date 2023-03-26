@@ -9,6 +9,14 @@ declare global {
 	interface MergeObjectOptions {
 		recursive?: boolean
 	}
+	interface IronswornJournalPage<
+		T extends JournalEntryPageType = JournalEntryPageType
+	> extends JournalEntryPage<JournalEntry | null> {
+		type: T
+		data: foundry.abstract.Document & { _source: JournalEntryPageSourceMap[T] }
+		system: JournalEntryPageSystemMap[T]
+		_source: JournalEntryPageSourceMap[T]
+	}
 }
 
 /**
@@ -17,11 +25,6 @@ declare global {
 export class IronswornJournalPage<
 	T extends JournalEntryPageType = JournalEntryPageType
 > extends JournalEntryPage<JournalEntry | null> {
-	type!: T
-	data!: foundry.abstract.Document & { _source: JournalEntryPageSourceMap[T] }
-	system!: JournalEntryPageSystemMap[T]
-	_source!: JournalEntryPageSourceMap[T]
-
 	protected override async _preCreate(
 		data: PreDocumentId<this['_source']>,
 		options: DocumentModificationContext<JournalEntry>,

@@ -11,7 +11,7 @@ export class CompactPCSheet extends VueActorSheet<IronswornActor<'character'>> {
 			height: 210,
 			resizable: true,
 			rootComponent: CompactCharacterSheet
-		}) as any
+		})
 	}
 
 	_getHeaderButtons() {

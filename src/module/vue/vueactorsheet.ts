@@ -12,7 +12,7 @@ export abstract class VueActorSheet<
 ) {
 	static get defaultOptions() {
 		return mergeObject(super.defaultOptions, {
-			classes: ['actor']
+			classes: ['actor', 'ironsworn']
 		})
 	}
 

@@ -5,7 +5,7 @@ import { $ActorKey } from '../../vue/provisions'
 import type { VueApplicationOptions } from '../../vue/vueapp.js'
 import { VueAppMixin } from '../../vue/vueapp.js'
 import { MoveSheetTour } from '../../features/tours/move-sheet-tour'
-import { Hooks } from 'foundry-types/client/core/hooks'
+import type { Hooks } from 'foundry-types/client/core/hooks'
 
 export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 	constructor(
