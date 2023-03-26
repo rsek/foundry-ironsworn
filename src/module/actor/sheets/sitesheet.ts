@@ -9,9 +9,11 @@ export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 			width: 750,
 			height: 700,
 			rootComponent: siteSheetVue
-		}) as any
+		})
 	}
 
+	// TODO: write a type declaration fix for this
+	// @ts-expect-error
 	async _onDropItem<T extends IronswornItem>(
 		event: ElementDragEvent,
 		data: DropCanvasData<'Item', T>
@@ -24,9 +26,7 @@ export class IronswornSiteSheet extends VueActorSheet<IronswornActor<'site'>> {
 		}
 
 		// Find which denizen slot this is going into
-		const dropTarget = $(event.target ).parents(
-			'.ironsworn__denizen__drop'
-		)[0]
+		const dropTarget = $(event.target).parents('.ironsworn__denizen__drop')[0]
 		if (!dropTarget) return false
 		const idx = parseInt(dropTarget.dataset.idx ?? '')
 		const { denizens } = this.actor.system

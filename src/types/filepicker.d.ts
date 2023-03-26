@@ -1,11 +1,4 @@
-import 'foundry-types'
-
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-interface CONFIG {
-	IRONSWORN: import('../config').IronswornConfig
-}
-
-declare interface FilePickerOptions extends Partial<ApplicationOptions> {
+declare interface FilePickerOptions extends ApplicationOptions {
 	/**
 	 * A type of file to target, in "audio", "image", "video", "imagevideo", "folder", "font", "graphics", "text", or "any"
 	 * @default "any"
@@ -56,3 +49,5 @@ declare interface FilePickerOptions extends Partial<ApplicationOptions> {
 	 */
 	tileSize?: boolean
 }
+
+export {}

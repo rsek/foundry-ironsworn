@@ -18,6 +18,26 @@ import { OracleWindow } from './module/applications/oracle-window'
 import type { IronswornItem } from './module/item/item'
 import type { IronswornJournalPage } from './module/journal/journal-entry-page'
 
+/** Overrides foundry-types ClientSettings with a version that automatically provides setting types */
+interface IronClientSettings extends Omit<ClientSettings, 'settings'> {
+	settings: Map<string, SettingsConfig>
+	get: <
+		TModule extends keyof IronClientSettingsConfig,
+		TKey extends keyof IronClientSettingsConfig[TModule]
+	>(
+		module: TModule,
+		key: TKey
+	) => IronClientSettingsConfig[TModule][TKey]
+	set: <
+		TModule extends keyof IronClientSettingsConfig,
+		TKey extends keyof IronClientSettingsConfig[TModule]
+	>(
+		module: TModule,
+		key: TKey,
+		value: IronClientSettingsConfig[TModule][TKey]
+	) => Promise<unknown>
+}
+
 export interface EmitterEvents extends Record<EventType, unknown> {
 	highlightMove: string // Foundry UUID
 	highlightOracle: string // DF ID
@@ -64,57 +84,70 @@ interface DocumentConfig<T, TTypes extends string | undefined> {
 }
 
 declare global {
-	interface IronConfig
-		extends Omit<
-			Config<
-				AmbientLightDocument<any>,
-				ActiveEffect<any>,
-				IronswornActor,
-				ChatLog,
-				ChatMessage,
-				Combat,
-				Combatant<Combat, any>,
-				CombatTracker<Combat>,
-				CompendiumDirectory,
-				Hotbar,
-				IronswornItem,
-				Macro,
-				MeasuredTemplateDocument<any>,
-				TileDocument<any>,
-				TokenDocument<any>,
-				WallDocument<Scene>,
-				Scene,
-				User,
-				EffectsCanvasGroup
-			>,
-			'Canvas'
-		> {
+	type ConfigBase = Config<
+		AmbientLightDocument<any>,
+		ActiveEffect<any>,
+		IronswornActor,
+		ChatLog,
+		ChatMessage,
+		Combat,
+		Combatant<Combat, any>,
+		CombatTracker<Combat>,
+		CompendiumDirectory,
+		Hotbar,
+		IronswornItem,
+		Macro,
+		MeasuredTemplateDocument<any>,
+		TileDocument<any>,
+		TokenDocument<any>,
+		WallDocument<Scene>,
+		Scene,
+		User,
+		EffectsCanvasGroup
+	>
+	interface IronConfig extends Omit<ConfigBase, 'Canvas'> {
 		IRONSWORN: IronswornConfig
 
 		/** Configuration for the JournalEntryPage embedded document type. */
-		JournalEntryPage: DocumentConfig<IronswornJournalPage, JournalEntryPageType>
+		JournalEntryPage: DocumentConfig<
+			IronswornJournalPage,
+			JournalEntryPageType
+		> & { documentClass: typeof IronswornJournalPage }
 		Canvas: {
 			layers: Record<
 				string,
 				{
 					group: 'primary' | 'interface'
-					layerClass: ConstructorOf<CanvasLayer>
+					layerClass: typeof CanvasLayer
 				}
 			>
 		}
+		// more specific typings so we can access statics like CONFIG.Item.documentClass.create()
+		Item: ConfigBase['Item'] & { documentClass: typeof IronswornItem }
+		Actor: ConfigBase['Actor'] & { documentClass: typeof IronswornActor }
+		ChatMessage: ConfigBase['ChatMessage'] & {
+			documentClass: typeof ChatMessage
+		}
+		Token: ConfigBase['Token'] & { documentClass: typeof TokenDocument }
 	}
 
 	interface IronGame
-		extends Game<
-			IronswornActor,
-			Actors<IronswornActor>,
-			ChatMessage,
-			Combat,
-			IronswornItem,
-			Macro,
-			Scene,
-			User
-		> {}
+		extends Omit<
+			Game<
+				IronswornActor,
+				Actors<IronswornActor>,
+				ChatMessage,
+				Combat,
+				IronswornItem,
+				Macro,
+				Scene,
+				User
+			>,
+			'settings'
+		> {
+		settings: IronClientSettings
+		user: User & { character: IronswornActor | null }
+	}
 
 	const CONFIG: IronConfig
 

@@ -4,49 +4,74 @@ import type { IronswornActor } from '../actor/actor'
 import { IronswornSettings } from '../helpers/settings'
 import { localizeRank } from '../helpers/util'
 import type { IronswornItem } from '../item/item'
+import { Hooks } from 'foundry-types/client/core/hooks'
 
-type ActorTypeHandler = (actor: IronswornActor<any>, any) => string | undefined
+type ActorTypeHandler<T extends ActorType> = (
+	actor: IronswornActor<T>,
+	data: DeepPartial<IronswornActorSource<T>>
+) => string | undefined
 
 declare global {
-	interface DocumentModificationContext {
+	interface DocumentModificationContext<
+		TParent extends foundry.abstract.Document | null
+	> {
 		suppressLog?: boolean
 	}
 }
-export function registerChatAlertHooks() {
-	Hooks.on('preUpdateActor', async (actor, data, options, _userId) => {
-		if (!IronswornSettings.get('log-changes')) return
-		if (options.suppressLog) return
+export function registerChatAlertHooks<
+	TActor extends ActorType,
+	TItem extends ItemType
+>() {
+	Hooks.on(
+		'preUpdateActor',
+		async (
+			actor: IronswornActor<TActor>,
+			data: DeepPartial<IronswornActorSource<TActor>>,
+			options,
+			_userId
+		) => {
+			if (!IronswornSettings.get('log-changes')) return
+			if (options.suppressLog) return
 
-		let content: string | undefined
-		if (typeof data.name === 'string') {
-			content = game.i18n.format('IRONSWORN.ChatAlert.Renamed', {
-				name: data.name
-			})
-		} else {
-			content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor as IronswornActor, data)
+			let content: string | undefined
+			if (typeof data.name === 'string') {
+				content = game.i18n.format('IRONSWORN.ChatAlert.Renamed', {
+					name: data.name
+				})
+			} else {
+				content = ACTOR_TYPE_HANDLERS[actor.type]?.(actor, data)
+				if (!content) return
+			}
+
+			sendToChat(actor, content)
+		}
+	)
+
+	Hooks.on(
+		'preUpdateItem',
+		async (
+			item: IronswornItem<TItem>,
+			data: DeepPartial<IronswornItemSource<TItem>>,
+			_options,
+			_userId
+		) => {
+			if (!IronswornSettings.get('log-changes')) return
+			if (item.parent == null) return // No logging for unowned items, they don't matter
+
+			let content: string | undefined
+			if (typeof data.name === 'string') {
+				content = game.i18n.format('IRONSWORN.ChatAlert.renamed', {
+					name: data.name
+				})
+			} else {
+				content = ITEM_TYPE_HANDLERS[item.type]?.(item, data)
+			}
 			if (!content) return
+
+			const itemName: string = item.type === 'bondset' ? '' : item.name
+			sendToChat(item.parent, `${itemName} ${content}`)
 		}
-
-		sendToChat(actor, content)
-	})
-
-	Hooks.on('preUpdateItem', async (item, data, _options, _userId) => {
-		if (!IronswornSettings.get('log-changes')) return
-		if (item.parent == null) return // No logging for unowned items, they don't matter
-
-		let content: string | undefined
-		if (typeof data.name === 'string') {
-			content = game.i18n.format('IRONSWORN.ChatAlert.renamed', {
-				name: data.name
-			})
-		} else {
-			content = ITEM_TYPE_HANDLERS[item.type]?.(item as IronswornItem, data)
-		}
-		if (!content) return
-
-		const itemName: string = item.type === 'bondset' ? '' : item.name
-		sendToChat(item.parent, `${itemName} ${content}`)
-	})
+	)
 
 	Hooks.on('preCreateItem', async (item, _data, options, _userId) => {
 		if (!IronswornSettings.get('log-changes')) return
@@ -60,7 +85,7 @@ export function registerChatAlertHooks() {
 		)
 	})
 
-	Hooks.on('preDeleteItem', async (item, options, _userId) => {
+	Hooks.on('preDeleteItem', async (item: IronswornItem, options, _userId) => {
 		if (!IronswornSettings.get('log-changes')) return
 		if (item.parent == null) return // No logging for unowned items, they don't matter
 		if (options.suppressLog) return
@@ -72,15 +97,15 @@ export function registerChatAlertHooks() {
 	})
 }
 
-const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
-	character: (actor: IronswornActor<'character'>, data) => {
+const ACTOR_TYPE_HANDLERS: { [K in ActorType]?: ActorTypeHandler<K> } = {
+	character: (actor, data) => {
 		const characterData = actor.system
 		const gameIsStarforged = IronswornSettings.starforgedToolsEnabled
 
 		// Ironsworn XP
 		if (data.system?.xp !== undefined) {
 			const oldXp = characterData.xp
-			const newXp = data.system.xp as number
+			const newXp = data.system.xp
 			if (newXp > oldXp) {
 				return game.i18n.format('IRONSWORN.ChatAlert.MarkedXP', {
 					amt: newXp - oldXp
@@ -154,7 +179,10 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 				if (oldValue === newValue) continue
 				const i18nPath = `IRONSWORN.${conditionType.toUpperCase()}`
 				const i18nDebility = debility.startsWith('custom')
-					? (getProperty(characterData.debility, `${debility}name`) as string)
+					? (getProperty(
+							characterData.debility,
+							`${debility as string}name`
+					  ) as string)
 					: game.i18n.localize(`${i18nPath}.${capitalize(debility)}`)
 				const debilityLabel = `<b class='term ${conditionType}'>${i18nDebility}</b>`
 
@@ -177,7 +205,7 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 		return undefined
 	},
 
-	shared: (actor: IronswornActor<'shared'>, data) => {
+	shared: (actor, data) => {
 		const sharedData = actor.system
 
 		if (data.system?.supply !== undefined) {
@@ -195,7 +223,7 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 		return undefined
 	},
 
-	starship: (actor: IronswornActor<'starship'>, data) => {
+	starship: (actor, data) => {
 		const starshipData = actor.system
 		const impacts = ['cursed', 'battered']
 		for (const impact of impacts) {
@@ -217,7 +245,7 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 		return undefined
 	},
 
-	site: (actor: IronswornActor<'site'>, data) => {
+	site: (actor, data) => {
 		const siteData = actor.system
 
 		if (data.system?.rank) {
@@ -236,12 +264,12 @@ const ACTOR_TYPE_HANDLERS: Record<string, ActorTypeHandler> = {
 	}
 }
 
-type ItemTypeHandler = (
-	item: IronswornItem<any>,
-	data: any
+type ItemTypeHandler<T extends ItemType> = (
+	item: IronswornItem<T>,
+	data: DeepPartial<IronswornItemSource<T>>
 ) => string | undefined
-const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
-	progress: (item: IronswornItem<'progress'>, data) => {
+const ITEM_TYPE_HANDLERS: { [T in ItemType]?: ItemTypeHandler<T> } = {
+	progress: (item, data) => {
 		const progressData = item.system
 		if (data.system?.rank) {
 			return game.i18n.format('IRONSWORN.ChatAlert.rankChanged', {
@@ -297,13 +325,12 @@ const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
 		}
 		return undefined
 	},
-	vow: (item, data) => ITEM_TYPE_HANDLERS.progress(item, data),
 
-	asset: (item: IronswornItem<'asset'>, data) => {
+	asset: (item, data) => {
 		const assetData = item.system
 		if (data.system?.abilities !== undefined) {
 			const oldEnables = assetData.abilities.map((x) => x.enabled)
-			const newEnables = data.system.abilities.map((x) => x.enabled)
+			const newEnables = data.system.abilities.map((x) => x?.enabled)
 			for (let i = 0; i < oldEnables.length; i++) {
 				if (oldEnables[i] !== newEnables[i]) {
 					const descriptors = ['First', 'Second', 'Third', 'Fourth', 'Fifth']
@@ -332,10 +359,10 @@ const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
 
 		if (data.system?.exclusiveOptions !== undefined) {
 			const selectedOption = data.system.exclusiveOptions.find(
-				(x) => x.selected
+				(x) => x?.selected
 			)
 			return game.i18n.format('IRONSWORN.ChatAlert.MarkedOption', {
-				name: selectedOption.name
+				name: selectedOption?.name ?? null
 			})
 		}
 
@@ -343,10 +370,10 @@ const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
 			for (let i = 0; i < data.system.fields.length; i++) {
 				const newField = data.system.fields[i]
 				const oldField = assetData.fields[i]
-				if (oldField && oldField?.value !== newField.value) {
+				if (oldField && oldField?.value !== newField?.value) {
 					return game.i18n.format('IRONSWORN.ChatAlert.SetField', {
-						name: newField.name,
-						val: newField.value
+						name: newField?.name ?? null,
+						val: newField?.value ?? null
 					})
 				}
 			}
@@ -373,18 +400,19 @@ const ITEM_TYPE_HANDLERS: Record<string, ItemTypeHandler> = {
 	}
 }
 
-async function sendToChat(speaker: Actor, msg: string) {
+async function sendToChat(speaker: IronswornActor, msg: string) {
 	const whisperToCurrentUser =
-		speaker.getFlag('foundry-ironsworn', 'muteBroadcast') ?? (false as boolean)
+		speaker.getFlag('foundry-ironsworn', 'muteBroadcast') ?? false
 	const whisper = whisperToCurrentUser ? compact([game.user?.id]) : undefined
 
-	const messageData: PreCreate<foundry.data.ChatMessageSource> = {
+	const messageData: PreCreate<foundry.documents.ChatMessageSource> = {
 		whisper,
 		content: `<em>${msg}</em>`,
 		type: CONST.CHAT_MESSAGE_TYPES.EMOTE,
 		speaker: { actor: speaker.id }
 	}
 
-	const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
+	const cls = getDocumentClass('ChatMessage')
+
 	await cls.create(messageData)
 }

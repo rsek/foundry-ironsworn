@@ -1,6 +1,7 @@
 import { CreateActorDialog } from '../applications/createActorDialog'
 import type { ActorSystemMap, IronswornActorData } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
+import { Hooks } from 'foundry-types/client/core/hooks'
 
 let CREATE_DIALOG: CreateActorDialog
 
@@ -8,8 +9,9 @@ let CREATE_DIALOG: CreateActorDialog
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  */
 export class IronswornActor<
-	T extends ActorType = ActorType
-> extends Actor<any> {
+	T extends ActorType = ActorType,
+	TParent extends TokenDocument<Scene | null> | null = null
+> extends Actor<TParent> {
 	// redclare some properties for stricter typings
 	get type(): T {
 		return super.type as T
@@ -17,6 +19,12 @@ export class IronswornActor<
 
 	system!: ActorSystemMap[T]
 	data!: IronswornActorData<T>
+
+	get itemTypes() {
+		return super.itemTypes as {
+			[K in keyof ItemTypeMap]: Array<ItemTypeMap[K]>
+		}
+	}
 
 	// toObject(source?: true): this['_source']
 	// toObject(source: false): RawObject<this['data']>
@@ -40,7 +48,7 @@ export class IronswornActor<
 
 	protected override _onCreate(
 		data: this['_source'],
-		options: DocumentModificationContext<null>,
+		options: DocumentModificationContext<any>,
 		userId: string
 	): void {
 		super._onCreate(data, options, userId)
@@ -108,7 +116,7 @@ export class IronswornActor<
 	}
 }
 
-Hooks.on('createActor', async (actor, _ctx, _userId) => {
+Hooks.on('createActor', async (actor: IronswornActor, _ctx, _userId) => {
 	if (!['character', 'shared'].includes(actor.type)) return
 
 	await Item.createDocuments([{ type: 'bondset', name: 'bonds' }], {

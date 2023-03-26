@@ -1,3 +1,5 @@
+import { Hooks } from 'foundry-types/client/core/hooks'
+
 function getIndexEntry(el: HTMLElement) {
 	const { documentId } = el.dataset
 	const packId = $(el).parents('.compendium').data('pack')

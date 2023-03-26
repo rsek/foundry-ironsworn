@@ -17,7 +17,10 @@ import { registerChatAlertHooks } from './module/features/chat-alert'
 import { registerCompendiumCategoryHook } from './module/features/compendium-categories'
 import { registerDragAndDropHooks } from './module/features/drag-and-drop'
 import { primeCommonPackCaches } from './module/features/pack-cache'
-import { activateSceneButtonListeners } from './module/features/sceneButtons'
+import {
+	IronswornCanvasLayer,
+	activateSceneButtonListeners
+} from './module/features/sceneButtons'
 import { runStartupMacro } from './module/features/startup-macro'
 import { registerTokenHUDButtons } from './module/features/tokenRotateButtons'
 import * as IronColor from './module/features/ironcolor'
@@ -215,6 +218,13 @@ Hooks.once('init', async () => {
 	patchZIndex()
 	registerCompendiumCategoryHook()
 	await registerTokenHUDButtons()
+
+	CONFIG.Canvas.layers = mergeObject(CONFIG.Canvas.layers, {
+		ironsworn: {
+			layerClass: typeof IronswornCanvasLayer,
+			group: 'primary'
+		}
+	})
 	activateSceneButtonListeners()
 })
 

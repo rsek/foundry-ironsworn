@@ -7,6 +7,7 @@ import LoadingSpinner from './components/loading-spinner.vue'
 import { IronswornSettings } from '../helpers/settings.js'
 import { IronswornVuePlugin } from './vue-plugin.js'
 import { pickBy } from 'lodash-es'
+import { Hooks } from 'foundry-types/client/core/hooks'
 
 export type Constructor<T = object> = abstract new (...args: any[]) => T
 
@@ -123,7 +124,9 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 					data: { force, options }
 				})
 				console.error(
-					`An error occurred while rendering ${this.constructor.name} ${this.id}: ${err.message}`,
+					`An error occurred while rendering ${this.constructor.name} ${
+						this.id
+					}: ${err.message as string}`,
 					err
 				)
 			}
@@ -168,7 +171,7 @@ export function VueAppMixin<TBase extends Constructor<Application>>(
 		_onFocus(event: JQuery.FocusEvent) {
 			const target = event.currentTarget as Element | undefined
 			setTimeout(() => {
-				if (target && target == document.activeElement) {
+				if (target && target === document.activeElement) {
 					$(target).trigger('select')
 				}
 			}, 100)

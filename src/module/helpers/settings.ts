@@ -17,30 +17,23 @@ async function closeAllMoveSheets() {
 		actor.moveSheet = undefined
 	}
 }
-
 declare global {
-	interface SettingSubmenuConfig {}
-	interface SettingsMenuConstructor extends ConstructorOf<FormApplication> {}
-	// eslint-disable-next-line @typescript-eslint/no-namespace
-	namespace ClientSettings {
-		/** Settings added here will be automatically typed throughout the game system. */
-		interface Config {
-			'foundry-ironsworn': {
-				toolbox: 'ironsworn' | 'starforged' | 'sheet'
+	interface IronClientSettingsConfig {
+		'foundry-ironsworn': {
+			toolbox: 'ironsworn' | 'starforged' | 'sheet'
 
-				theme: keyof typeof IronTheme.THEMES
-				'color-scheme': 'zinc' | 'phosphor'
-				'progress-mark-animation': boolean
+			theme: keyof typeof IronTheme.THEMES
+			'color-scheme': 'zinc' | 'phosphor'
+			'progress-mark-animation': boolean
 
-				'log-changes': boolean
-				'prompt-world-truths': boolean
+			'log-changes': boolean
+			'prompt-world-truths': boolean
 
-				'shared-supply': boolean
+			'shared-supply': boolean
 
-				// Internal only
-				'first-run-tips-shown': boolean
-				'data-version': number
-			}
+			// Internal only
+			'first-run-tips-shown': boolean
+			'data-version': number
 		}
 	}
 }
@@ -145,7 +138,8 @@ export class IronswornSettings {
 			label: 'IRONSWORN.Settings.ConfigurationDialog.Label',
 			icon: 'fas fa-cog',
 			hint: 'IRONSWORN.Settings.ConfigurationDialog.Hint',
-			type: FirstStartDialog,
+			// Mar 25: foundry-types incorrectly requires a method, and complains here because it's missing
+			type: FirstStartDialog as any,
 			restricted: true
 		})
 		game.settings.registerMenu('foundry-ironsworn', 'is-truths-dialog', {
@@ -153,7 +147,7 @@ export class IronswornSettings {
 			label: 'IRONSWORN.Settings.ISTruthsDialog.Label',
 			icon: 'fas fa-feather',
 			hint: 'IRONSWORN.Settings.ISTruthsDialog.Hint',
-			type: WorldTruthsDialog,
+			type: WorldTruthsDialog as any,
 			restricted: true
 		})
 		game.settings.registerMenu('foundry-ironsworn', 'sf-truths-dialog', {
@@ -161,7 +155,7 @@ export class IronswornSettings {
 			label: 'IRONSWORN.Settings.SFTruthsDialog.Label',
 			icon: 'fas fa-feather',
 			hint: 'IRONSWORN.Settings.SFTruthsDialog.Hint',
-			type: SFSettingTruthsDialogVue,
+			type: SFSettingTruthsDialogVue as any,
 			restricted: true
 		})
 
@@ -197,7 +191,7 @@ export class IronswornSettings {
 	 * Wraps {@link game.settings.get} (within the `foundry-ironsworn` scope) to ensure that Vue always gets the updated value.
 	 * @param key The key of the setting within the `foundry-ironsworn` scope.
 	 */
-	static get<K extends keyof ClientSettings.Config['foundry-ironsworn']>(
+	static get<K extends keyof IronClientSettingsConfig['foundry-ironsworn']>(
 		key: K
 	) {
 		return game.settings.get('foundry-ironsworn', key)

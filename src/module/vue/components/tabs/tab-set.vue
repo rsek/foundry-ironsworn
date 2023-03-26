@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { forEach } from 'lodash-es'
+import { forEach, isEqual } from 'lodash-es'
 import { inject, onMounted, provide, reactive } from 'vue'
 import { $LocalEmitterKey } from '../../provisions'
 import type {
@@ -108,7 +108,7 @@ onMounted(() => {
 	const componentKeys = new Set(tabState.tabKeys.map((key) => key))
 	forEach(elements, (role, label) => {
 		switch (true) {
-			case role.equals(componentKeys):
+			case isEqual(role, componentKeys):
 				// Tabs OK!
 				break
 			default:

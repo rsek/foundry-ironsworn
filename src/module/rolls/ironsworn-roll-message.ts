@@ -211,7 +211,8 @@ export class IronswornRollMessage {
 				roll: this.roll.roll
 			}
 
-			const cls = CONFIG.ChatMessage.documentClass as typeof ChatMessage
+			const cls = getDocumentClass('ChatMessage')
+
 			const msg = await cls.create(messageData)
 			this.roll.chatMessageId = msg?.id
 			return msg

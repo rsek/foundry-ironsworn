@@ -55,7 +55,13 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ['*.ts', '*.js', '*.cjs'],
+			files: ['*.d.ts'],
+			rules: {
+				'no-var': 'off'
+			}
+		},
+		{
+			files: ['*.ts', '*.js', '*.cjs', '*.d.ts'],
 			parserOptions: { project: './tsconfig.json' }
 		},
 		{

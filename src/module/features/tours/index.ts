@@ -15,9 +15,9 @@ export async function registerTours() {
 	if (IronswornSettings.get('first-run-tips-shown')) return
 	console.log('Posting first-start messages...')
 
-	const gms = ChatMessage.getWhisperRecipients('GM')
-	const cm = ChatMessage.implementation
-	ChatMessage.create({
+	const cm = getDocumentClass('ChatMessage')
+	const gms = cm.getWhisperRecipients('GM').map((usr) => usr.id)
+	cm.create({
 		whisper: gms,
 		speaker: { alias: game.i18n.localize('IRONSWORN.Ironsworn') },
 		content: game.i18n.localize('IRONSWORN.Tours.ChatMessage')

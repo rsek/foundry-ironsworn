@@ -28,14 +28,16 @@ const $actor = inject($ActorKey, undefined)
 const $item = inject($ItemKey, undefined)
 function click() {
 	const current = props.document.img
-	const fp = new FilePicker({
+	const options = {
 		type: 'image',
 		current,
-		callback: (img) => {
+		callback: (img: ImageFilePath) => {
 			const doc = $item ?? $actor
 			doc?.update({ img })
 		}
-	})
+	}
+	/// @ts-expect-error FilePicker is incorrectly typed in foundry-types
+	const fp = new FilePicker(options)
 	return fp.browse(current)
 }
 </script>

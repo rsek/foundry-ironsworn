@@ -63,17 +63,21 @@ const mceConfig: RawEditorOptions = {
 
 	// TODO: this never gets called?
 	file_picker_callback(pickerCallback, _value, _meta) {
-		const filePicker = new FilePicker({
+		/// @ts-expect-error FilePicker is incorrectly typed
+		const opts: FilePickerOptions = {
 			type: 'image',
 			callback: (path) => {
 				pickerCallback(path)
 				// Reset our z-index for next open
 				$('.tox-tinymce-aux').css({ zIndex: '' })
 			}
-		})
+		}
+		const filePicker = new FilePicker(opts)
 		filePicker.render()
 		// Set the TinyMCE dialog to be below the FilePicker
+		/// @ts-expect-error _maxZ is provided by FVTT
 		$('.tox-tinymce-aux').css({ zIndex: Math.min(++_maxZ, 9999) })
+		// TODO: consider pointing at a css variable or something instead?
 	},
 
 	save_enablewhendirty: false,

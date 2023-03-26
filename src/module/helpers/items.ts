@@ -39,7 +39,7 @@ export function normalizeTableRows(
 
 export function toTableResult(
 	tableRow: TableRow | LegacyFeatureOrDanger,
-	flags?: Record<string, unknown>
+	flags?: DocumentFlags
 ): PreCreate<TableResult['_source']> {
 	const text =
 		(tableRow as LegacyFeatureOrDanger).description ??

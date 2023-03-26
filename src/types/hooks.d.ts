@@ -1,44 +1,10 @@
-import 'foundry-types'
+import type { Setting } from 'foundry-types'
+import 'foundry-types/client/core/hooks'
 
-declare module 'foundry-types' {
-	interface DocumentStats {
-		/** The package name of the system the Document was created in. */
-		systemId: string
-		/** The version of the system the Document was created in. */
-		systemVersion: string
-		/** The core version the Document was created in. */
-		coreVersion: string
-		/** A timestamp of when the Document was created. */
-		createdTime: number
-		/** A timestamp of when the Document was last modified. */
-		modifiedTime: number
-		/** The ID of the user who last modified the Document. */
-		lastModifiedBy: string
-	}
-
-	namespace Hooks {
-		type HookParamsPreCreate<
-			T extends foundry.abstract.Document,
-			N extends string
-		> = HookParameters<
-			`preCreate${N}`,
-			[T, PreCreate<T>, DocumentModificationContext<T>, string]
-		>
-		type HookParamsPreUpdate<
-			T extends foundry.abstract.Document,
-			N extends string
-		> = HookParameters<
-			`preUpdate${N}`,
-			[T, DocumentUpdateData<T>, DocumentUpdateContext<T>, string]
-		>
-		type HookParamsCreate<
-			T extends foundry.abstract.Document,
-			N extends string
-		> = HookParameters<`create${N}`, [T, DocumentUpdateContext<T>, string]>
-
-		// This is apparently how TS wants us to add static methods to existing class declarations.
-		// see: https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-namespaces-with-classes
-
+declare module 'foundry-types/client/core/hooks' {
+	// This looks weird, but it's apparently how typescript merges static methods to existing class declarations.
+	// see: https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-namespaces-with-classes
+	export namespace Hooks {
 		export function on(
 			...args: HookParamsPreUpdate<Actor<any>, 'Actor'>
 		): number
@@ -59,8 +25,11 @@ declare module 'foundry-types' {
 		): number
 		export function on(
 			...args: HookParameters<'preDeleteItem', [Item<any>, any, number]>
-		)
-		export function on(...args: HookParameters<any, any>): number
+		): number
+		export function on<
+			H extends string = string,
+			C extends unknown[] = unknown[]
+		>(...args: HookParameters<H, C>): number
 
 		/**
 		 * Notify subscribers that an error has occurred within foundry.
@@ -98,4 +67,25 @@ declare module 'foundry-types' {
 			}
 		): void
 	}
+
+	type HookParamsPreCreate<
+		T extends foundry.abstract.Document,
+		N extends string
+	> = HookParameters<
+		`preCreate${N}`,
+		[T, PreCreate<T>, DocumentModificationContext<T>, string]
+	>
+	type HookParamsPreUpdate<
+		T extends foundry.abstract.Document,
+		N extends string
+	> = HookParameters<
+		`preUpdate${N}`,
+		[T, DocumentUpdateData<T>, DocumentUpdateContext<T>, string]
+	>
+	type HookParamsCreate<
+		T extends foundry.abstract.Document,
+		N extends string
+	> = HookParameters<`create${N}`, [T, DocumentUpdateContext<T>, string]>
 }
+
+export {}

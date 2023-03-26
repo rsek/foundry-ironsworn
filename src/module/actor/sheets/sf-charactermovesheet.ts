@@ -5,6 +5,7 @@ import { $ActorKey } from '../../vue/provisions'
 import type { VueApplicationOptions } from '../../vue/vueapp.js'
 import { VueAppMixin } from '../../vue/vueapp.js'
 import { MoveSheetTour } from '../../features/tours/move-sheet-tour'
+import { Hooks } from 'foundry-types/client/core/hooks'
 
 export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 	constructor(
@@ -67,9 +68,9 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 }
 
 // When changing actor sheets, make sure we don't get a stale move sheet
-Hooks.on('preUpdateActor', (actor, data) => {
+Hooks.on('preUpdateActor', (actor: IronswornActor, data) => {
 	if (actor.type === 'character' && (data.flags as any)?.core?.sheetClass) {
-		;(actor as IronswornActor).moveSheet = undefined
+		actor.moveSheet = undefined
 	}
 })
 Hooks.on('preUpdateSetting', (setting, _) => {

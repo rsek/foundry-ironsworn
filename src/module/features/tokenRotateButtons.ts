@@ -2,13 +2,13 @@
 
 function rotateTokenBy(
 	ev: JQuery.ClickEvent,
-	tokenData: foundry.data.TokenData,
+	tokenData: foundry.documents.TokenSource,
 	angle: number
 ) {
 	ev.preventDefault()
 	const token = canvas?.scene?.tokens.get(tokenData._id)
 	if (token == null) return
-	const rotation = (token.data.rotation as number) + angle
+	const rotation = token.rotation + angle
 	canvas?.scene?.updateEmbeddedDocuments('Token', [{ _id: token.id, rotation }])
 }
 

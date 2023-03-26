@@ -1,3 +1,4 @@
+import { IronswornItem } from './item/item'
 import type { DelveSiteFeatureOrDanger } from './item/itemtypes'
 
 const THEME_IMAGES = {
@@ -132,7 +133,7 @@ interface RawFeatureOrDanger {
 function importDelveFeaturesOrDangers(
 	rawFeaturesOrDangers: RawFeatureOrDanger[],
 	type: 'feature' | 'danger',
-	sourceId: Item['id'],
+	sourceId: IronswornItem['id'],
 	low = 1
 ) {
 	const result: DelveSiteFeatureOrDanger[] = []

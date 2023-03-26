@@ -666,10 +666,10 @@ function nameChange() {
 }
 
 async function updateAllTokens(
-	data: DocumentUpdateData<TokenDocument<IronswornActor>>
+	data: DocumentUpdateData<IronswornActor<'character', TokenDocument<Scene>>>
 ) {
 	// Prototype token
-	await $actor?.token?.update(data)
+	await $actor?.prototypeToken?.update(data)
 
 	// All tokens in the scene
 	const activeTokens = $actor?.getActiveTokens()

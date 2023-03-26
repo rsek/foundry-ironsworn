@@ -65,7 +65,7 @@ async function fixFormidableSpelling() {
 async function everythingIsAProgress() {
 	await everyItem(async (x) => {
 		if (['progress', 'vow'].includes(x.type)) {
-			console.log(`Upgrading ${x.type} ${x.name}`)
+			console.log(`Upgrading ${x.type} ${x.name as string}`)
 			await (x as IronswornItem<'progress'>).update({
 				type: 'progress',
 				system: { subtype: x.type }

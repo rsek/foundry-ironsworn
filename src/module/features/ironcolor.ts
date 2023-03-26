@@ -22,11 +22,11 @@ export function colorSchemeSetup() {
  * Instantly updates the client's color scheme without reloading.
  */
 export function updateColorScheme(
-	newColorScheme: ClientSettings.Config['foundry-ironsworn']['color-scheme']
+	newColorScheme: IronClientSettingsConfig['foundry-ironsworn']['color-scheme']
 ) {
 	const colorSchemes = Object.keys(
-		game.settings.settings.get('foundry-ironsworn.color-scheme' as any)
-			?.choices as unknown as Record<string, unknown>
+		(game.settings.settings.get('foundry-ironsworn.color-scheme') as any)
+			?.choices as Record<string, unknown>
 	)
 
 	const classesToRemove = colorSchemes.map((str) => `${PREFIX}${str}`)

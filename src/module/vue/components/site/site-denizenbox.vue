@@ -28,10 +28,7 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { reactive, inject, computed, ref } from 'vue'
-import type {
-	DelveSiteDenizen,
-	IronswornDelveSiteSource
-} from '../../../actor/actortypes'
+import type { DelveSiteDenizen } from '../../../actor/actortypes'
 import DropTarget from '../../drop-target.vue'
 import { $ActorKey, ActorKey } from '../../provisions'
 import type { IronswornActor } from '../../../actor/actor'
@@ -39,7 +36,7 @@ import type { IronswornActor } from '../../../actor/actor'
 const props = defineProps<{ idx: number }>()
 const data = reactive({ focused: false })
 
-const actor = inject(ActorKey) as Ref<IronswornDelveSiteSource>
+const actor = inject(ActorKey) as Ref<IronswornActorSource<'site'>>
 const $actor = inject($ActorKey) as IronswornActor<'site'>
 
 const editMode = computed(() => {

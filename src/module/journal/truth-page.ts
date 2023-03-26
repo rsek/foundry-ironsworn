@@ -1,5 +1,7 @@
+import { IronswornJournalPage } from './journal-entry-page'
+
 export class TruthJournalPageSheet extends JournalPageSheet<
-	JournalEntryPage<JournalEntry, 'truth'>
+	IronswornJournalPage<'truth'>
 > {
 	// @ts-expect-error
 	isEditable: boolean

@@ -24,6 +24,7 @@ import {
 } from './data'
 import { DATAFORGED_ICON_MAP } from './images'
 import { renderMarkdown } from './rendering'
+import { IronswornJournalPage } from '../journal/journal-entry-page'
 
 export function cleanDollars(obj): any {
 	if (isArray(obj)) {
@@ -244,7 +245,7 @@ async function processISAssets() {
  */
 async function processOracle(
 	oracle: IOracle,
-	output: Array<PreCreate<RollTable['_source']>>
+	output: Array<PreCreate<foundry.documents.RollTableSource>>
 ) {
 	// Oracles JSON is a tree we wish to iterate through depth first adding
 	// parents prior to their children, and children in order
@@ -275,7 +276,7 @@ async function processOracle(
 					_id: hashLookup(tableRow.$id ?? ''),
 					range: [tableRow.Floor, tableRow.Ceiling],
 					text: tableRow.Result && renderLinksInStr(text)
-				} as PreCreate<TableResult['_source']>
+				} as PreCreate<foundry.documents.TableResultSource>
 			}).filter(
 				({ range }) => (range as [number | null, number | null])[0] !== null
 			)
@@ -286,7 +287,7 @@ async function processOracle(
 }
 async function processOracleCategory(
 	cat: IOracleCategory,
-	output: Array<PreCreate<RollTable['_source']>>
+	output: Array<PreCreate<foundry.documents.RollTableSource>>
 ) {
 	for (const oracle of cat.Oracles ?? []) await processOracle(oracle, output)
 	for (const child of cat.Categories ?? [])
@@ -294,7 +295,8 @@ async function processOracleCategory(
 }
 
 async function processSFOracles() {
-	const oraclesToCreate: Array<PreCreate<RollTable['_source']>> = []
+	const oraclesToCreate: Array<PreCreate<foundry.documents.RollTableSource>> =
+		[]
 
 	for (const category of SFOracleCategories) {
 		await processOracleCategory(category, oraclesToCreate)
@@ -306,7 +308,8 @@ async function processSFOracles() {
 }
 
 async function processISOracles() {
-	const oraclesToCreate: Array<PreCreate<RollTable['_source']>> = []
+	const oraclesToCreate: Array<PreCreate<foundry.documents.RollTableSource>> =
+		[]
 
 	for (const category of ISOracleCategories) {
 		await processOracleCategory(category, oraclesToCreate)
@@ -413,7 +416,7 @@ async function processTruths(
 		)
 
 		for (const entry of truth.Table) {
-			await JournalEntryPage.create(
+			await IronswornJournalPage.create(
 				{
 					type: 'truth',
 					name: entry.Result,
@@ -428,7 +431,7 @@ async function processTruths(
 			)
 		}
 
-		await JournalEntryPage.create(
+		await IronswornJournalPage.create(
 			{
 				name: 'Character Inspiration',
 				type: 'text',

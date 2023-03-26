@@ -23,9 +23,5 @@ type ExtractByType<TObject, TValue> = {
 		: never]: Required<TObject>[K] extends TValue ? TObject[K] : never
 }
 
-interface DocumentFlags {
-	'foundry-ironsworn'?: {
-		'edit-mode'?: boolean
-		muteBroadcast?: boolean
-	}
-}
+type DocSubtype<T extends DocType & keyof typeof game.system.documentTypes> =
+	(typeof game.system.documentTypes)[T][number]

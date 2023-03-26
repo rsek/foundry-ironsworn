@@ -1,3 +1,4 @@
+import { InteractionLayer } from 'foundry-types'
 import { IronswornActor } from '../actor/actor'
 import { OracleWindow } from '../applications/oracle-window'
 import { EditSectorDialog } from '../applications/sf/editSectorApp'
@@ -7,38 +8,61 @@ function warn() {
 	ui.notifications?.warn('Soon™')
 }
 
-/**
- * Return a reference to the Document class implementation which is configured for use.
- * @param documentName The canonical Document name, for example "Actor"
- * @returns The configured Document class implementation
- */
 declare global {
-	function getDocumentClass<T extends DocType>(): DocumentClass<T>
+	namespace foundry {
+		namespace documents {
+			interface TokenSource {
+				rotation: number
+			}
+		}
+	}
+	interface TokenDocument<TParent extends Scene | null>
+		extends Omit<
+			foundry.documents.TokenSource,
+			'light' | 'hidden' | 'actorLink' | '_id'
+		> {}
+	interface Folder<
+		TDocument extends EnfolderableDocument = EnfolderableDocument
+	> {
+		/**
+		 * An array of other Folders which are the displayed children of this one. This differs from the results of
+		 * {@link Folder.getSubfolders} because reports the subset of child folders which  are displayed to the current User
+		 * in the UI.
+		 */
+		children?: Array<Folder<TDocument>>
+	}
+
+	/**
+	 * Return a reference to the Document class implementation which is configured for use.
+	 * @param documentName The canonical Document name, for example "Actor"
+	 * @returns The configured Document class implementation
+	 */
+	function getDocumentClass<T extends DocType>(
+		documentName: T
+	): (typeof CONFIG)[T]['documentClass']
 }
 
 // Make sure a folder exists, e.g. ['Locations', 'Sector 05']
-async function ensureFolder(...path: string[]): Promise<Folder | undefined> {
-	let parentFolder: Folder | undefined
-	let directory: Folder[] | undefined = game.folders?.filter(
-		(x) => x.type === 'Actor'
-	)
-
+async function ensureFolder(
+	...path: string[]
+): Promise<Folder<IronswornActor> | undefined> {
+	let parentFolder: Folder<IronswornActor> | undefined
+	let directory: Array<Folder<IronswornActor>> | undefined =
+		game.folders?.filter((x) => x.type === 'Actor')
 	for (const name of path) {
 		if (directory === undefined) {
 			ui.notifications?.warn('Actor folders not found???')
 			return
 		}
-		const existing = directory.find((x) => x.name === name) as
-			| Folder<IronswornActor>
-			| undefined
+		const existing = directory.find((x) => x.name === name)
 		if (existing != null) {
 			parentFolder = existing
-			directory = existing.children.map((child) => {
+			directory = existing.children?.map((child) => {
 				return child.folder /* v10 */ ?? child /* v9 */
 			})
 			continue
 		}
-		parentFolder = await Folder.create({
+		parentFolder = await Folder.create<Folder<IronswornActor<any, any>>>({
 			type: 'Actor',
 			name,
 			parent: parentFolder?.id
@@ -55,7 +79,7 @@ function editSector() {
 	}
 }
 
-async function dropToken(location: IronswornActor) {
+async function dropToken(location: IronswornActor<any, any>) {
 	if (canvas?.scene == null || canvas.stage == null || canvas.grid == null)
 		return
 
@@ -67,11 +91,10 @@ async function dropToken(location: IronswornActor) {
 	const [x, y] = [(cx - t.tx) / scale.x, (cy - t.ty) / scale.y]
 
 	// Snap to viewport
-	const td = (await location.getTokenData({
-		/// @ts-expect-error for some reason it doesn't think 'x' is a property
+	const td = await location.getTokenDocument({
 		x,
 		y
-	})) as Required<foundry.data.TokenData>
+	})
 	const hw = canvas.grid.w / 2
 	const hh = canvas.grid.h / 2
 	const pos = canvas.grid.getSnappedPosition(
@@ -80,11 +103,16 @@ async function dropToken(location: IronswornActor) {
 	)
 	td.update(pos)
 
+	const ctx: DocumentModificationContext<Scene> = { parent: canvas.scene }
+
 	// TODO: avoid dropping this on top of another token
 
 	// Create the token
-	const cls = getDocumentClass('Token') as any
-	await cls.create(td, { parent: canvas.scene })
+	const cls = getDocumentClass('Token')
+	await cls.create<TokenDocument<Scene>>(
+		td as foundry.documents.TokenSource,
+		ctx
+	)
 
 	// Move the user back to the token layer
 	canvas.tokens?.activate()
@@ -99,10 +127,13 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 		game.scenes?.current?.name ?? '???'
 	)
 
-	const data: PreCreate<IronswornActor<'location'>['_source']> = {
+	const data: PreCreate<
+		IronswornActor<'location', TokenDocument<Scene>>['_source']
+	> = {
 		type: 'location',
 		name,
 		system: { subtype },
+		// FIXME: `token` doesn't appear to exist on Actor source data in Foundry's code, so it probably shouldn't be relied upon. Could this be done after token creation instead?
 		token: {
 			displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
 			disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,
@@ -110,8 +141,10 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 			texture: { scaleX: scale, scaleY: scale }
 		} as any,
 		folder: parentFolder?.id ?? null
-	}
-	const loc = await IronswornActor.create<IronswornActor<'location'>>(data)
+	} as any
+	const loc = await IronswornActor.create<
+		IronswornActor<'location', TokenDocument<Scene>>
+	>(data)
 	if (loc == null) return
 
 	await dropToken(loc)
@@ -151,11 +184,6 @@ declare global {
 }
 
 export function activateSceneButtonListeners() {
-	CONFIG.Canvas.layers.ironsworn = {
-		layerClass: IronswornCanvasLayer,
-		group: 'primary'
-	}
-
 	Hooks.on(
 		'getSceneControlButtons',
 		// @ts-expect-error TS gets cranky about this even though typings for this hook exist.
@@ -265,17 +293,7 @@ export function activateSceneButtonListeners() {
 	)
 }
 
-// In v9 we can inherit directly from CanvasLayer and it's fine
-// In v10 we have to use InteractionLayer
-
-let baseKlass: any = CanvasLayer
-// @ts-expect-error
-if (typeof InteractionLayer !== 'undefined') {
-	// @ts-expect-error
-	baseKlass = InteractionLayer
-}
-
-export class IronswornCanvasLayer extends baseKlass {
+export class IronswornCanvasLayer extends InteractionLayer {
 	static get layerOptions() {
 		return foundry.utils.mergeObject(super.layerOptions, {
 			zIndex: 180,

@@ -35,7 +35,7 @@ export class IronswornTour extends Tour {
 		await super._preStep()
 
 		if (this.currentStep?.sidebarTab) {
-			await ui.sidebar?.activateTab(this.currentStep.sidebarTab)
+			ui.sidebar.activateTab(this.currentStep.sidebarTab)
 		}
 
 		if (this.currentStep?.layer) {
