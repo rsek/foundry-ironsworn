@@ -2,20 +2,20 @@
 	<article
 		:class="{
 			[$style.card]: true,
-			[$style.decorated]: !!deco,
-			[$style.undecorated]: !deco
+			[$style.decorated]: !!IronswornSettings.deco.asset.header,
+			[$style.undecorated]: !IronswornSettings.deco.asset.header
 		}"
 		:aria-labelledby="titleId">
 		<slot name="deco">
 			<svg
-				v-if="deco"
+				v-if="IronswornSettings.deco.asset.header"
 				:class="$style.decoration"
 				tabindex="-1"
 				role="presentational"
 				aria-hidden="true"
-				:width="deco.width"
-				:height="deco.height">
-				<use :href="deco.href" />
+				:width="IronswornSettings.deco.asset.header.width"
+				:height="IronswornSettings.deco.asset.header.height">
+				<use :href="IronswornSettings.deco.asset.header.href" />
 			</svg>
 		</slot>
 
@@ -165,13 +165,6 @@ const baseId = computed(
 const bodyId = computed(() => `body_${baseId.value}`)
 
 const titleId = computed(() => `title_${baseId.value}`)
-
-const deco = computed(() => {
-	if (IronswornSettings.starforgedToolsEnabled) {
-		return { href: '#ironsworn-hex-deco', height: 28, width: 24 }
-	}
-	return undefined
-})
 
 const $emit = defineEmits<{
 	(name: 'toggleExpand', isExpanded: boolean): void
