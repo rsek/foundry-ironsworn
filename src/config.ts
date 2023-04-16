@@ -20,6 +20,7 @@ import {
 	registerOracleTree
 } from './module/features/customoracles'
 import { OracleTable } from './module/roll-table/oracle-table'
+import { dumpOracles } from './module/dataforged'
 
 export interface EmitterEvents extends Record<EventType, unknown> {
 	highlightMove: string // Foundry UUID
@@ -50,6 +51,7 @@ export interface IronswornConfig {
 
 	importFromDatasworn: typeof importFromDatasworn
 
+	dumpOracles: typeof dumpOracles
 	Dataforged: typeof starforged
 	dataforgedHelpers: typeof dataforgedHelpers
 
@@ -76,6 +78,7 @@ export const IRONSWORN: IronswornConfig = {
 	},
 
 	importFromDatasworn,
+	dumpOracles,
 
 	Dataforged: starforged,
 	dataforgedHelpers,

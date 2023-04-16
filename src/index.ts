@@ -46,6 +46,7 @@ import type {
 	DocumentSubTypes,
 	DocumentType
 } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
+import { IronFolder } from './module/folder/iron-folder'
 
 declare global {
 	interface LenientGlobalVariableTypes {
@@ -84,6 +85,8 @@ Hooks.once('init', async () => {
 	CONFIG.RollTable.documentClass = OracleTable
 	CONFIG.RollTable.resultIcon = 'icons/dice/d10black.svg'
 	CONFIG.TableResult.documentClass = OracleTableResult
+
+	CONFIG.Folder.documentClass = IronFolder
 
 	// CONFIG.RollTable.resultTemplate =
 	// 	'systems/foundry-ironsworn/templates/rolls/oracle-roll-message.hbs'

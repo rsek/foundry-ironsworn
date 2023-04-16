@@ -32,6 +32,7 @@ import {
 } from './data'
 import { DATAFORGED_ICON_MAP } from './images'
 import { renderMarkdown } from './rendering'
+import { IronFolder } from '../folder/iron-folder'
 
 export function cleanDollars(obj): any {
 	if (isArray(obj)) {
@@ -76,6 +77,13 @@ const PACKS = [
 	'foundry-ironsworn.ironswornmoves',
 	'foundry-ironsworn.ironsworntruths'
 ] as const
+
+export async function dumpOracles() {
+	// experimental: dump oracles to folders
+	for await (const cat of SFOracleCategories) {
+		await IronFolder.fromDfOracleBranch(cat)
+	}
+}
 
 /**
  * Converts JSON from dataforged resources into foundry packs. Requires packs to

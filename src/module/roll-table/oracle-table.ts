@@ -1,6 +1,6 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import type { IOracle, IOracleCategory, IRow } from 'dataforged'
+import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
 import { max } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
@@ -16,6 +16,11 @@ import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
 import type { ComputedTableType } from './roll-table-types'
+
+export type IOracleBranch =
+	| IOracleCategory
+	| RequireKey<Omit<IOracle, 'Table'>, 'Tables'>
+export type IOracleLeaf = RequireKey<Omit<IOracle, 'Tables'>, 'Table'>
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 export class OracleTable extends RollTable {
@@ -168,6 +173,7 @@ export class OracleTable extends RollTable {
 				'foundry-ironsworn': { dfid: oracle.$id, category: oracle.Category }
 			},
 			name: oracle.Name,
+			sort: oracle.Source.Page,
 			description,
 			formula: `d${maxRoll as number}`,
 			replacement: true,
