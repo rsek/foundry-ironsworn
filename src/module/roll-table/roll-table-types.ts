@@ -5,8 +5,29 @@ import type {
 	RollTableData,
 	TableResultData
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs'
+import type { Oracles } from './oracles'
+import type { IOracle, IOracleCategory, RequireKey } from 'dataforged'
+import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 
-// Ironsworn-specific augmentations
+// Ironsworn-specific types & augmentations
+
+/**
+ * A Dataforged oracle category with a Categories property. In other words, it has {@link IOracleCategory} children.
+ * @see {Oracles.isCategoryBranch} The corresponding type guard method.
+ */
+export type IOracleCategoryBranch = RequireKey<IOracleCategory, 'Categories'>
+/**
+ * A Dataforged oracle with an Oracles property. In other words, it has {@link IOracle} children.
+ * @see {Oracles.isBranch} The corresponding type guard method.
+ */
+export type IOracleBranch = RequireKey<IOracleCategory | IOracle, 'Oracles'>
+/**
+ * A Dataforged oracle with a Table property, which is necessary to build a valid {@link OracleTable}.
+ * @see {Oracles.isLeaf} The corresponding type guard method.
+ */
+export type IOracleLeaf = RequireKey<IOracle, 'Table'>
+
+export type OracleConstructorDataStub = Partial<RollTableDataConstructorData>
 
 /**
  * Used in some migrations and Vue components
@@ -49,6 +70,8 @@ declare global {
 				dfid?: string
 				/** The category associated with the Dataforged oracle. */
 				category?: string
+				/** The Dataforged ID associated with this oracle's parent. */
+				parentDfid?: string
 			}
 		}
 		TableResult: {
@@ -69,6 +92,7 @@ declare global {
 	interface DocumentClassConfig {
 		TableResult: typeof OracleTableResult
 		RollTable: typeof OracleTable
+		RollTables: typeof Oracles
 	}
 
 	interface RollTableDraw {

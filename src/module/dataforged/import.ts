@@ -78,13 +78,6 @@ const PACKS = [
 	'foundry-ironsworn.ironsworntruths'
 ] as const
 
-export async function dumpOracles() {
-	// experimental: dump oracles to folders
-	for await (const cat of SFOracleCategories) {
-		await IronFolder.fromDfOracleBranch(cat)
-	}
-}
-
 /**
  * Converts JSON from dataforged resources into foundry packs. Requires packs to
  * already exist, but will empty them prior to repopulating. In a perfect world

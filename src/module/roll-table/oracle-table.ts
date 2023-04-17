@@ -1,8 +1,15 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
+import type {
+	IOracle,
+	IOracleBase,
+	IOracleCategory,
+	IRow,
+	RequireKey
+} from 'dataforged'
 import { max } from 'lodash-es'
 import { marked } from 'marked'
+import { type } from 'os'
 import type { IronswornActor } from '../actor/actor'
 import { hashLookup, renderLinksInStr } from '../dataforged'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
@@ -15,17 +22,18 @@ import type { IronswornJournalEntry } from '../journal/journal-entry'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
-import type { ComputedTableType } from './roll-table-types'
-
-export type IOracleBranch =
-	| IOracleCategory
-	| RequireKey<Omit<IOracle, 'Table'>, 'Tables'>
-export type IOracleLeaf = RequireKey<Omit<IOracle, 'Tables'>, 'Table'>
-
+import type {
+	ComputedTableType,
+	IOracleLeaf,
+	OracleConstructorDataStub
+} from './roll-table-types'
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 export class OracleTable extends RollTable {
 	// missing from the LoFD types package
 	declare description: string
+
+	// TODO: _onCreateDocuments (plural!) => when importing from a pack, assign to an appropriate oracle folder, creating it if it's unavailable
+	// TODO: yo. so what if the storage mechanism for generating a template was a folder full of roll tables. with a method on the folder class
 
 	static DEFAULT_ICON = 'icons/dice/d10black.svg'
 
@@ -166,7 +174,7 @@ export class OracleTable extends RollTable {
 		const description = marked.parseInline(
 			renderLinksInStr(oracle.Description ?? '')
 		)
-		const maxRoll = max(oracle.Table.map((x) => x.Ceiling ?? 0)) // oracle.Table && maxBy(oracle.Table, (x) => x.Ceiling)?.Ceiling
+		const maxRoll = max(oracle.Table.map((x) => x.Ceiling ?? 0))
 		const data: RollTableDataConstructorData = {
 			_id: hashLookup(oracle.$id),
 			flags: {
@@ -178,7 +186,6 @@ export class OracleTable extends RollTable {
 			formula: `d${maxRoll as number}`,
 			replacement: true,
 			displayRoll: true,
-			/* folder: // would require using an additional module */
 			results: oracle.Table?.filter((x) => x.Floor !== null).map((tableRow) =>
 				OracleTableResult.getConstructorData(
 					tableRow as IRow & { Floor: number; Ceiling: number }
