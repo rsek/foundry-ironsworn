@@ -22,6 +22,9 @@ module.exports = {
 	},
 	plugins: ['@typescript-eslint'],
 	rules: {
+		// it's weird to me that ts-standard thinks that e.g. Array<SourceDataType<IronFolder>> is a better choice than SourceDataType<IronFolder>[]
+		// nesting *more* pointy brackets is  harder to read with most generics, IMO
+		'@typescript-eslint/array-type': 'off',
 		'@typescript-eslint/no-unused-vars': [1, { argsIgnorePattern: '^_' }],
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/ban-ts-comment': 'off',
