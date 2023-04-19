@@ -4,7 +4,8 @@ import type { IronswornActor } from '../actor/actor'
 import type { IronswornItem } from '../item/item'
 import type { Emitter, EventType } from 'mitt'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
-import { OracleTable } from '../roll-table/oracle-table'
+import type { OracleTable } from '../roll-table/oracle-table'
+import type { helpers } from '../../types/utils'
 
 // Provided by the Vue plugin
 export const $EnrichHtmlKey = Symbol('$enrichHtml') as InjectionKey<
@@ -27,20 +28,20 @@ export const $LocalEmitterKey = Symbol(
 // Sheets have to provide these
 export const $ActorKey = Symbol('$actor') as InjectionKey<IronswornActor>
 export const ActorKey = Symbol('actor') as InjectionKey<
-	Ref<ReturnType<typeof IronswornActor.prototype.toObject>>
+	Ref<helpers.SourceDataType<IronswornActor>>
 >
 
 export const $ItemKey = Symbol('$item') as InjectionKey<IronswornItem>
 export const ItemKey = Symbol('item') as InjectionKey<
-	Ref<ReturnType<typeof IronswornItem.prototype.toObject>>
+	Ref<helpers.SourceDataType<IronswornItem>>
 >
 
 export const $PageKey = Symbol('$page') as InjectionKey<IronswornJournalPage>
 export const PageKey = Symbol('page') as InjectionKey<
-	Ref<ReturnType<typeof IronswornJournalPage.prototype.toObject>>
+	Ref<helpers.SourceDataType<IronswornJournalPage>>
 >
 
 export const $OracleKey = Symbol('$oracle') as InjectionKey<OracleTable>
 export const OracleKey = Symbol('oracle') as InjectionKey<
-	Ref<ReturnType<typeof OracleTable.prototype.toObject>>
+	Ref<helpers.SourceDataType<OracleTable>>
 >
