@@ -12,7 +12,7 @@ import type {
 } from 'dataforged'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { starforged, ironsworn } from 'dataforged'
-import { isArray, isObject, max } from 'lodash-es'
+import { isArray, isObject, max, pick } from 'lodash-es'
 import { marked } from 'marked'
 import shajs from 'sha.js'
 import { renderLinksInMove, renderLinksInStr } from '.'
@@ -32,7 +32,6 @@ import {
 } from './data'
 import { DATAFORGED_ICON_MAP } from './images'
 import { renderMarkdown } from './rendering'
-import { IronFolder } from '../folder/iron-folder'
 
 export function cleanDollars(obj): any {
 	if (isArray(obj)) {
@@ -65,7 +64,7 @@ export function hash(str: string): string {
 	return shajs('sha256').update(str).digest('hex').substring(48)
 }
 
-const PACKS = [
+export const PACKS = [
 	'foundry-ironsworn.starforgedassets',
 	'foundry-ironsworn.starforgedencounters',
 	'foundry-ironsworn.starforgedmoves',
@@ -385,7 +384,8 @@ async function processTruths(
 			{
 				name: truth.Display.Title,
 				flags: {
-					'foundry-ironsworn': { dfid: truth.$id, type: 'truth-category' }
+					dataforged: pick(truth, 'Suggestions', '$id', 'Source'),
+					'foundry-ironsworn': { type: 'truth-category' }
 				}
 			},
 			{ pack: outputCompendium }
@@ -396,12 +396,14 @@ async function processTruths(
 				{
 					type: 'truth',
 					name: entry.Result,
+					// TODO -- consider managing this with pick() or sth similar ?
 					system: cleanDollars({
 						Subtable: [], // work around a Foundry bug
 						...entry,
 						Quest: entry['Quest Starter'],
 						'Quest Starter': undefined
-					})
+					}),
+					flags: { dataforged: pick(entry, '$id') }
 				},
 				{ parent: je }
 			)
@@ -416,9 +418,7 @@ async function processTruths(
 					format: 2 // JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
 				},
 				flags: {
-					'foundry-ironsworn': {
-						assets: truth.Suggestions?.Assets ?? []
-					}
+					dataforged: pick(truth, 'Suggestions')
 				}
 			},
 			{ parent: je }

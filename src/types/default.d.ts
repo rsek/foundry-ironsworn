@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-interface CONFIG {
+
+declare interface CONFIG {
 	IRONSWORN: import('../config').IronswornConfig
 }

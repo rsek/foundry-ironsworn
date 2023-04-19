@@ -5,6 +5,7 @@ import type {
 } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 import { OracleTable } from '../roll-table/oracle-table'
+import { Oracles } from '../roll-table/oracles'
 
 let CREATE_DIALOG: CreateActorDialog
 
@@ -51,7 +52,6 @@ export class IronswornActor extends Actor {
 
 	/** The delve site's computed Features table */
 	get features() {
-		// TODO: is there a good way to cache this?
 		if (this.type !== 'site' || this.theme == null || this.domain == null)
 			return undefined
 		return new OracleTable({
@@ -74,16 +74,12 @@ export class IronswornActor extends Actor {
 
 	/**
 	 * The delve site's computed Dangers table.
-	 * @remarks Ideally this would be a sync getter like its brothers, but currently it needs to grab results from a table by its Dataforged ID.
 	 */
-	async getDangers() {
+	get dangers() {
 		if (this.type !== 'site' || this.theme == null || this.domain == null)
 			return undefined
 
-		// TODO: is it worth trying to cache this?
-		const oracle = await OracleTable.getByDfId(
-			'Ironsworn/Oracles/Moves/Reveal_a_Danger'
-		)
+		const oracle = Oracles.findDfId('Ironsworn/Oracles/Moves/Reveal_a_Danger')
 		if (oracle == null) return
 
 		return new OracleTable({

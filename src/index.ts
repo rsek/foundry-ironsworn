@@ -16,7 +16,6 @@ import { IronswornChatCard } from './module/chat/cards'
 import { registerChatAlertHooks } from './module/features/chat-alert'
 import { registerCompendiumCategoryHook } from './module/features/compendium-categories'
 import { registerDragAndDropHooks } from './module/features/drag-and-drop'
-import { primeCommonPackCaches } from './module/features/pack-cache'
 import { activateSceneButtonListeners } from './module/features/sceneButtons'
 import { runStartupMacro } from './module/features/startup-macro'
 import { registerTokenHUDButtons } from './module/features/tokenRotateButtons'
@@ -47,6 +46,7 @@ import type {
 	DocumentType
 } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import { Oracles } from './module/roll-table/oracles'
+import { IronFolder } from './module/folder/folder'
 
 declare global {
 	interface LenientGlobalVariableTypes {
@@ -82,17 +82,15 @@ Hooks.once('init', async () => {
 	CONFIG.JournalEntry.documentClass = IronswornJournalEntry
 	CONFIG.JournalEntryPage.documentClass = IronswornJournalPage
 
+	CONFIG.Folder.documentClass = IronFolder
+
 	CONFIG.RollTable.documentClass = OracleTable
 	CONFIG.RollTable.collection = Oracles
-	// CONFIG.RollTable.compendiumIndexFields
-	CONFIG.RollTable.sidebarIcon = 'isicon-oracle'
+	CONFIG.RollTable.compendiumIndexFields.push('flags.dataforged.Source.Page')
+	// CONFIG.RollTable.sidebarIcon = 'icon isicon-oracle'
 	CONFIG.RollTable.resultIcon = 'icons/dice/d10black.svg'
-	// CONFIG.RollTable.resultTemplate
-	CONFIG.TableResult.documentClass = OracleTableResult
-
-	// CONFIG.ui.tables = RollTableDirectory
-
 	// CONFIG.RollTable.resultTemplate =
+	CONFIG.TableResult.documentClass = OracleTableResult
 	// 	'systems/foundry-ironsworn/templates/rolls/oracle-roll-message.hbs'
 
 	// Turn off Foundry defaults

@@ -1,8 +1,8 @@
 import { ChallengeRank } from '../constants'
 
-export function capitalize(txt: string) {
+export function capitalize<T extends string>(txt: T): Capitalize<T> {
 	const [first, ...rest] = txt
-	return `${first.toUpperCase()}${rest.join('')}`
+	return `${first.toUpperCase()}${rest.join('')}` as Capitalize<T>
 }
 
 /**

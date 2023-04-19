@@ -1,4 +1,5 @@
 import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs'
+import { ISettingTruth } from 'dataforged'
 import type { IronswornJournalEntry } from './journal-entry'
 
 // Type augments for base JournalEntry class
@@ -32,8 +33,8 @@ declare global {
 
 	interface FlagConfig {
 		JournalEntry: {
+			dataforged?: Pick<ISettingTruth, '$id' | 'Source' | 'Suggestions'>
 			'foundry-ironsworn'?: {
-				dfid?: string
 				type?: JournalEntryType
 			}
 		}

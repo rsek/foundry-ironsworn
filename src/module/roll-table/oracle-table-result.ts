@@ -1,7 +1,9 @@
 import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { IRow } from 'dataforged'
 import { inRange } from 'lodash-es'
+import type { helpers } from '../../types/utils'
 import { hashLookup, renderLinksInStr } from '../dataforged'
+import type { IRollableRow } from './roll-table-types'
 
 /** Extends FVTT's default TableResult with functionality specific to this system. */
 export class OracleTableResult extends TableResult {
@@ -61,11 +63,57 @@ export class OracleTableResult extends TableResult {
 		const _id =
 			tableRow.dfid ??
 			(tableRow as any).system?.dfid ??
-			(tableRow as any).flags?.['foundry-ironsworn']?.dfid ??
+			(tableRow as any).flags?.dataforged?.$id ??
 			tableRow.$id
 
 		if (_id != null) data._id = hashLookup(_id)
 
 		return data
+	}
+
+	/** Does the row data have a numeric range? */
+	static isRollableRow(row: IRow): row is IRollableRow {
+		return typeof row.Floor === 'number' && typeof row.Ceiling === 'number'
+	}
+
+	/**
+	 * Initialize one or more instances of OracleTable from Dataforged's data.
+	 * @param options Default constructor options for the tables.
+	 * @param context Default constructor context for the tables
+	 */
+	static async fromDataforged(
+		rowData: IRow,
+		options?: Partial<TableResultDataConstructorData>,
+		context?: DocumentModificationContext
+	): Promise<OracleTableResult | undefined>
+	static async fromDataforged(
+		rowData: IRow[],
+		options?: Partial<TableResultDataConstructorData>,
+		context?: DocumentModificationContext
+	): Promise<OracleTableResult[]>
+	static async fromDataforged(
+		rowData: IRow | IRow[],
+		options: Partial<TableResultDataConstructorData> = {},
+		context: DocumentModificationContext = {}
+	): Promise<OracleTableResult | OracleTableResult[] | undefined> {
+		if (!Array.isArray(rowData)) {
+			return await OracleTableResult.create(
+				mergeObject(
+					options,
+					OracleTableResult.getConstructorData(rowData)
+				) as TableResultDataConstructorData,
+				context
+			)
+		}
+		return await OracleTableResult.createDocuments(
+			rowData.map(
+				(row) =>
+					mergeObject(
+						options,
+						OracleTableResult.getConstructorData(row)
+					) as TableResultDataConstructorData
+			),
+			context
+		)
 	}
 }

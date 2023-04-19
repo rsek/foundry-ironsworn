@@ -9,7 +9,7 @@
 		<!-- Leaf node -->
 		<div v-if="isLeaf">
 			<h4 class="flexrow">
-				<BtnOracle :node="node" :text="node?.displayName">
+				<BtnOracle :oracleTable="oracleTable" :text="node?.displayName">
 					<template #icon>
 						<IronIcon name="oracle" :size="spacerSize" />
 					</template>

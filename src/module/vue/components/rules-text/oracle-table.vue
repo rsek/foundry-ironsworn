@@ -1,8 +1,8 @@
 <template>
 	<table class="oracle-table">
 		<caption
-			v-if="!noCaption && tableDescription"
-			v-html="enrichMarkdown(tableDescription ?? '')" />
+			v-if="!noCaption && oracleTable?.description"
+			v-html="enrichMarkdown(oracleTable.description ?? '')" />
 		<thead>
 			<tr>
 				<th scope="col" class="oracle-table-column-roll-range">
@@ -14,8 +14,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(row, i) in tableRows" :key="`row${i}`">
-				<td class="oracle-table-column-roll-range">{{ rangeString(row) }}</td>
+			<tr v-for="(row, i) in oracleTable?.results" :key="row._id ?? `row${i}`">
+				<td class="oracle-table-column-roll-range">
+					{{ rangeString(row.range) }}
+				</td>
 				<td
 					class="oracle-table-column-result-text"
 					v-html="$enrichHtml(row.text)"></td>
@@ -25,16 +27,17 @@
 </template>
 
 <script setup lang="ts">
-import type { LegacyTableRow } from '../../../roll-table/roll-table-types'
+import { inject } from 'vue'
+import { OracleKey } from '../../provisions'
 import { enrichMarkdown } from '../../vue-plugin.js'
 
-const props = defineProps<{
-	tableRows: LegacyTableRow[]
-	tableDescription: string
+const oracleTable = inject(OracleKey)
+
+defineProps<{
 	noCaption?: boolean
 }>()
 
-function rangeString({ low, high }: LegacyTableRow) {
+function rangeString([low, high]: [number, number]) {
 	if (low === high) {
 		return low.toString()
 	}

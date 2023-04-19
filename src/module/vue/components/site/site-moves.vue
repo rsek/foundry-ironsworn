@@ -24,7 +24,7 @@
 				:move="moves.revealADanger"
 				class="nogrow"
 				:oracle-disabled="!hasThemeAndDomain"
-				@oracleClick="revealADanger" />
+				@oracle-click="$site?.dangers?.draw()" />
 		</li>
 		<li class="list-block-item" :class="$style.listItem">
 			<SfMoverow
@@ -104,10 +104,6 @@ Promise.resolve().then(async () => {
 		)!
 	}
 })
-
-async function revealADanger() {
-	return (await $site?.getDangers())?.draw()
-}
 
 async function locateObjective() {
 	if (!$site) return

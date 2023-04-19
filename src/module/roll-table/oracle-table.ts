@@ -7,7 +7,7 @@ import type {
 	IRow,
 	RequireKey
 } from 'dataforged'
-import { max } from 'lodash-es'
+import { max, pick } from 'lodash-es'
 import { marked } from 'marked'
 import { type } from 'os'
 import type { IronswornActor } from '../actor/actor'
@@ -22,18 +22,43 @@ import type { IronswornJournalEntry } from '../journal/journal-entry'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
-import type {
-	ComputedTableType,
-	IOracleLeaf,
-	OracleConstructorDataStub
-} from './roll-table-types'
+import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
+import { PACKS } from '../dataforged/import'
+import { IronFolder } from '../folder/folder'
+import { Oracles } from './oracles'
+
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 export class OracleTable extends RollTable {
 	// missing from the LoFD types package
 	declare description: string
 
-	// TODO: _onCreateDocuments (plural!) => when importing from a pack, assign to an appropriate oracle folder, creating it if it's unavailable
-	// TODO: yo. so what if the storage mechanism for generating a template was a folder full of roll tables. with a method on the folder class
+	// static override async _onCreateDocuments(
+	// 	documents: OracleTable[],
+	// 	context: DocumentModificationContext
+	// ) {
+	// 	const oraclePacks = PACKS.filter((pack) => pack.includes('oracles'))
+
+	// 	if (oraclePacks.includes(context.pack as ValueOf<typeof PACKS>)) {
+	//     let foldersToCreate = []
+	// 		for (const oracle of documents) {
+	// 			if (oracle.dfid == null) continue
+	// 			let parent = game.folders?.find(
+	// 				(folder) => folder.dfid === oracle.parentDfid
+	// 			)
+	//       if (parent == null) {
+
+	//       }
+	// 		}
+	// 	}
+
+	// 	await super._onCreateDocuments(documents, context)
+	// }
+
+	override get visible() {
+		const flg = this.getFlag('foundry-ironsworn', 'visible')
+		if (typeof flg === 'boolean') return flg
+		return super.visible
+	}
 
 	static DEFAULT_ICON = 'icons/dice/d10black.svg'
 
@@ -86,21 +111,6 @@ export class OracleTable extends RollTable {
 		return ret
 	}
 
-	static async getByDfId(
-		dfid: string
-	): Promise<StoredDocument<OracleTable> | undefined> {
-		const isd = await cachedDocumentsForPack(
-			'foundry-ironsworn.ironswornoracles'
-		)
-		const sfd = await cachedDocumentsForPack(
-			'foundry-ironsworn.starforgedoracles'
-		)
-		const matcher = (x: { id: string }) => x.id === hashLookup(dfid)
-		return (isd?.find(matcher) ?? sfd?.find(matcher)) as
-			| StoredDocument<OracleTable>
-			| undefined
-	}
-
 	/**
 	 * "Ask the Oracle": Retrieve one or more oracle tables and immediately rolls on them.
 	 *
@@ -113,36 +123,23 @@ export class OracleTable extends RollTable {
 		const draws: RollTableDraw[] = []
 
 		for await (const id of ids) {
-			let tbl: OracleTable | undefined
+			let oracleTable: OracleTable | undefined
 			switch (true) {
-				case /^(ironsworn|starforged)\/oracles/i.test(id):
-					// A Dataforged ID
-					tbl = await OracleTable.getByDfId(id)
+				case /^(Ironsworn|Starforged)\/Oracles\//.test(id): // A Dataforged ID
+					oracleTable = Oracles.findDfId(id)
 					break
-				case /^(RollTable|Compendium)\./.test(id):
-					// A UUID
-					tbl = (await fromUuid(id)) as OracleTable | undefined
+				case game.tables?.has(id): // A table ID
+					oracleTable = game.tables?.get(id)
 					break
-				case game.tables?.has(id):
-					// check world tables
-					tbl = game.tables?.get(id)
-					break
-				default:
-					{
-						// fall back to oracle packs
-						const sfPack = game.packs.get('foundry-ironsworn.starforgedoracles')
-						const isPack = game.packs.get('foundry-ironsworn.ironswornoracles')
-						tbl = ((await sfPack?.getDocument(id)) ??
-							(await isPack?.getDocument(id))) as OracleTable | undefined
-					}
+				case /^(RollTable|Compendium)\./.test(id): // A UUID
+					oracleTable = fromUuidSync(id) as OracleTable | undefined
 					break
 			}
-			if (tbl == null) {
+			if (oracleTable instanceof OracleTable) {
+				draws.push(await oracleTable.draw(options))
+			} else {
 				logger.warn(`Couldn't find an oracle for ID: ${id}`)
 				continue
-			} else {
-				const result = await tbl.draw(options)
-				draws.push(result)
 			}
 		}
 		return draws
@@ -178,9 +175,11 @@ export class OracleTable extends RollTable {
 		const data: RollTableDataConstructorData = {
 			_id: hashLookup(oracle.$id),
 			flags: {
-				'foundry-ironsworn': { dfid: oracle.$id, category: oracle.Category }
+				dataforged: pick(oracle, '$id', 'Source', 'Category', 'Display')
 			},
 			name: oracle.Name,
+			// strip "Oracle XX: " from some ironsworn titles
+			// name: oracle.Display.Title.replace(/^Oracle [0-9+]: /, ''),
 			sort: oracle.Source.Page,
 			description,
 			formula: `d${maxRoll as number}`,
@@ -274,10 +273,10 @@ export class OracleTable extends RollTable {
 	}
 
 	/** Retrieve the originating document of a computed OracleTable.  */
-	async getSourceDocument() {
+	getSourceDocument() {
 		const uuid = this.getFlag('foundry-ironsworn', 'sourceId')
 		if (uuid == null) return undefined
-		return (await fromUuid(uuid)) as IronswornActor
+		return fromUuidSync(uuid) as IronswornActor
 	}
 
 	override async toMessage(
@@ -298,7 +297,7 @@ export class OracleTable extends RollTable {
 			case 'delve-site-dangers':
 			case 'delve-site-denizens':
 			case 'delve-site-features': // delve site oracles are attributed to the delve site
-				speakerOptions.actor = await this.getSourceDocument()
+				speakerOptions.actor = this.getSourceDocument()
 				break
 			default:
 				break
@@ -362,6 +361,7 @@ export class OracleTable extends RollTable {
 	/**
 	 * Retrieve a computed oracle table from its originating document. This allows rehydration of computed tables from e.g. chat message flags.
 	 * @param sourceId The UUID of the original source of the computed table, usually an Actor or Item.
+	 * @param type The expected type of the computed table
 	 */
 	static async getComputedTable(sourceId: string, type: ComputedTableType) {
 		const source = await fromUuid(sourceId)
@@ -369,7 +369,7 @@ export class OracleTable extends RollTable {
 		let table: OracleTable | undefined
 		switch (type) {
 			case 'delve-site-dangers':
-				table = await (source as IronswornActor).getDangers()
+				table = (source as IronswornActor).dangers
 				break
 			case 'delve-site-denizens':
 				table = (source as IronswornActor).denizens

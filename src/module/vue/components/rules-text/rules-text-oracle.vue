@@ -1,9 +1,10 @@
 <template>
-	<RulesText class="rules-text-oracle" :source="source" type="slot">
+	<RulesText
+		class="rules-text-oracle"
+		:source="oracleTable?.flags.dataforged?.Source"
+		type="slot">
 		<template #default>
-			<OracleTable
-				:table-description="tableDescription"
-				:table-rows="tableRows" />
+			<OracleTable />
 		</template>
 		<template #before-main>
 			<slot name="before-main"></slot>
@@ -20,12 +21,8 @@
 <script setup lang="ts">
 import RulesText from './rules-text.vue'
 import OracleTable from './oracle-table.vue'
-import type { ISource } from 'dataforged'
-import type { LegacyTableRow } from '../../../roll-table/roll-table-types'
+import { OracleKey } from '../../provisions'
+import { inject } from 'vue'
 
-const props = defineProps<{
-	tableRows: LegacyTableRow[]
-	tableDescription: string
-	source?: ISource
-}>()
+const oracleTable = inject(OracleKey)
 </script>

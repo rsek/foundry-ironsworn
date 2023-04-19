@@ -23,25 +23,35 @@
 		</div>
 
 		<div class="item-list scrollable flexcol" :class="$style.list">
-			<OracleTreeNode
-				v-for="node in treeRoot.children"
-				:key="node.displayName"
+			<!-- TODO: this should probably have some way of handling tables that don't have a folder. put them in a custom directory, perhaps? -->
+			<!-- TODO: this should respect the 'visible' property when it's not a dataforged oracle -->
+			<!-- TODO: is it worth stripping down OracleFolderNode so that it doesn't actually need a folder? -->
+			<OracleFolderNode
+				v-for="folder in toolsetFolders"
+				:key="folder.id"
 				ref="oracles"
-				:node="node" />
+				:folder-id="folder.id" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, provide, reactive, ref, watch } from 'vue'
+import { computed, nextTick, provide, reactive, ref, watch } from 'vue'
 import type { IOracleTreeNode } from '../../features/customoracles'
 import { getOracleTreeWithCustomOracles } from '../../features/customoracles'
+import { capitalize } from '../../helpers/util'
 import { OracleTable } from '../../roll-table/oracle-table'
+import { Oracles } from '../../roll-table/oracles'
 import IronBtn from './buttons/iron-btn.vue'
+import OracleFolderNode from './oracle-folder-node.vue'
 import OracleTreeNode from './oracle-tree-node.vue'
 
 const props = defineProps<{ toolset: 'ironsworn' | 'starforged' }>()
 provide('toolset', props.toolset)
+
+const toolsetFolders = computed(() =>
+	Oracles.getGameFolders(capitalize(props.toolset), true)
+)
 
 const tempTreeRoot = await getOracleTreeWithCustomOracles(props.toolset)
 

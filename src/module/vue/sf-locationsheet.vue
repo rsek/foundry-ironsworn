@@ -146,6 +146,7 @@ import type { LocationDataProperties } from '../actor/actortypes'
 import SheetBasic from './sheet-basic.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
 import { OracleTable } from '../roll-table/oracle-table'
+import { Oracles } from '../roll-table/oracles'
 
 const props = defineProps<{
 	data: { actor: any }
@@ -590,9 +591,7 @@ async function randomizeName() {
 		)
 		name = sample(json?.['Sample Names'] ?? [])
 	} else if (subtype === 'settlement') {
-		const table = await OracleTable.getByDfId(
-			'Starforged/Oracles/Settlements/Name'
-		)
+		const table = Oracles.findDfId('Starforged/Oracles/Settlements/Name')
 		name = await drawAndReturnResult(table)
 	}
 
@@ -616,7 +615,7 @@ async function randomizeKlass() {
 		tableKey = 'Starforged/Oracles/Vaults/Location'
 	}
 
-	const table = await OracleTable.getByDfId(tableKey)
+	const table = Oracles.findDfId(tableKey)
 	const rawText = await drawAndReturnResult(table)
 	if (!rawText) return
 
@@ -638,7 +637,7 @@ async function rollFirstLook() {
 }
 
 async function rollOracle(oracle) {
-	const table = await OracleTable.getByDfId(oracle.dfid)
+	const table = Oracles.findDfId(oracle.dfid)
 	const drawText = await drawAndReturnResult(table)
 	if (!drawText) return
 

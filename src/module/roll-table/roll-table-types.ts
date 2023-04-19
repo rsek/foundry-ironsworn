@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import type EmbeddedCollection from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/embedded-collection.mjs'
 import type { OracleTableResult } from './oracle-table-result'
 import type { OracleTable } from './oracle-table'
@@ -6,8 +7,8 @@ import type {
 	TableResultData
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs'
 import type { Oracles } from './oracles'
-import type { IOracle, IOracleCategory, RequireKey } from 'dataforged'
-import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
+import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
+import type { helpers } from '../../types/utils'
 
 // Ironsworn-specific types & augmentations
 
@@ -27,7 +28,9 @@ export type IOracleBranch = RequireKey<IOracleCategory | IOracle, 'Oracles'>
  */
 export type IOracleLeaf = RequireKey<IOracle, 'Table'>
 
-export type OracleConstructorDataStub = Partial<RollTableDataConstructorData>
+export type IRollableRow = RequireKey<IRow, 'Floor' | 'Ceiling'> & {
+	dfid?: string
+}
 
 /**
  * Used in some migrations and Vue components
@@ -59,6 +62,10 @@ export type ComputedTableType =
 declare global {
 	interface FlagConfig {
 		RollTable: {
+			dataforged?: Pick<
+				IOracleLeaf,
+				'$id' | 'Category' | 'Member of' | 'Source' | 'Display'
+			>
 			'foundry-ironsworn'?: {
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
@@ -66,15 +73,16 @@ declare global {
 				/** A subtitle to be included in smaller text above a chat message's header. Standard oracles default to displaying their category flag, so they don't need to set this unless an override is needed.
 				 */
 				subtitle?: string | null | undefined
-				/** The Dataforged ID associated with this oracle. */
-				dfid?: string
-				/** The category associated with the Dataforged oracle. */
-				category?: string
-				/** The Dataforged ID associated with this oracle's parent. */
-				parentDfid?: string
+				/**
+				 * Is this document visible in the sidebar directory?
+				 * @remarks This overrides `Document#visible`, and will fall back to that value if left unset.
+				 */
+				visible?: boolean
+				forceExpanded?: boolean
 			}
 		}
 		TableResult: {
+			dataforged?: Pick<IRow, '$id'>
 			'foundry-ironsworn'?: {
 				/** The UUID of the originating document, for computed TableResults */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
@@ -120,4 +128,22 @@ declare global {
 			| 'name'
 			| 'folder'
 		> {}
+	namespace RollTable {
+		/**
+		 * Perform follow-up operations when a set of Documents of this type are created.
+		 * This is where side effects of creation should be implemented.
+		 * Post-creation side effects are performed only for the client which requested the operation.
+		 * @param documents - The Document instances which were created
+		 * @param context  - The context for the modification operation
+		 *
+		 * @remarks The base implementation returns `void` but it is typed as
+		 * `unknown` to allow deriving classes to return whatever they want. The
+		 * return type is not meant to be used.
+		 */
+		function _onCreateDocuments<T extends typeof RollTable>(
+			this: T,
+			documents: Array<InstanceType<helpers.ConfiguredDocumentClass<T>>>,
+			context: DocumentModificationContext
+		): Promise<unknown>
+	}
 }
