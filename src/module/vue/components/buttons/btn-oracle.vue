@@ -1,7 +1,7 @@
 <template>
 	<IronBtn
 		class="oracle-roll"
-		:tooltip="$t('IRONSWORN.RollOracleTable', { title: oracleTable.name })"
+		:tooltip="$t('IRONSWORN.RollOracleTable', { title: name })"
 		icon="ironsworn:oracle"
 		v-bind="($props, $attrs)"
 		@click="rollOracle">
@@ -13,27 +13,18 @@
 
 <script setup lang="ts">
 import type { ExtractPropTypes } from 'vue'
-import { inject } from 'vue'
-import type { OracleTable } from '../../../roll-table/oracle-table'
 import IronBtn from './iron-btn.vue'
 
-interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {}
+interface Props extends Omit<ExtractPropTypes<typeof IronBtn>, 'tooltip'> {
+	name: string
+	/** The oracle function executed on click */
+	draw: (options?: RollTable.DrawOptions) => Promise<void | RollTableDraw>
+}
 
-const props = defineProps<{
-	oracleTable: OracleTable
-	tableDrawOptions?: RollTable.DrawOptions | undefined
-	overrideClick?: boolean
-	// Hack: if we declare `click` in the emits, there's no $attrs['onClick']
-	// This allows us to check for presence and still use $emit('click')
-	// https://github.com/vuejs/core/issues/4736#issuecomment-934156497
-	onClick?: Function
-}>()
-
-const toolset = inject<'ironsworn' | 'starforged'>('toolset')
-const $emit = defineEmits(['click'])
+const props = defineProps<Props>()
 
 async function rollOracle() {
-	if (props.overrideClick && props.onClick) return $emit('click')
-	return props.oracleTable.draw(props.tableDrawOptions)
+	if (props.disabled) return
+	return props.draw()
 }
 </script>
