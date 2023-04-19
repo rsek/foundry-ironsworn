@@ -14,12 +14,12 @@ import type { helpers } from '../../types/utils'
 
 /**
  * A Dataforged oracle category with a Categories property. In other words, it has {@link IOracleCategory} children.
- * @see {Oracles.isCategoryBranch} The corresponding type guard method.
+ * @see {Oracles.isCategoryBranch} The corresponding type guard.
  */
 export type IOracleCategoryBranch = RequireKey<IOracleCategory, 'Categories'>
 /**
  * A Dataforged oracle with an Oracles property. In other words, it has {@link IOracle} children.
- * @see {Oracles.isBranch} The corresponding type guard method.
+ * @see {Oracles.isBranch} The corresponding type guard.
  */
 export type IOracleBranch = RequireKey<IOracleCategory | IOracle, 'Oracles'>
 /**

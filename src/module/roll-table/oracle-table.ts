@@ -1,15 +1,8 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import type {
-	IOracle,
-	IOracleBase,
-	IOracleCategory,
-	IRow,
-	RequireKey
-} from 'dataforged'
+import type { IOracle, IOracleCategory, IRow } from 'dataforged'
 import { max, pick } from 'lodash-es'
 import { marked } from 'marked'
-import { type } from 'os'
 import type { IronswornActor } from '../actor/actor'
 import { hashLookup, renderLinksInStr } from '../dataforged'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
@@ -17,14 +10,11 @@ import {
 	findPathToNodeByTableUuid,
 	getOracleTreeWithCustomOracles
 } from '../features/customoracles'
-import { cachedDocumentsForPack } from '../features/pack-cache'
 import type { IronswornJournalEntry } from '../journal/journal-entry'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
 import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
-import { PACKS } from '../dataforged/import'
-import { IronFolder } from '../folder/folder'
 import { Oracles } from './oracles'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
