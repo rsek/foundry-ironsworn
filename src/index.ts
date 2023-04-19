@@ -90,8 +90,8 @@ Hooks.once('init', async () => {
 	// CONFIG.RollTable.sidebarIcon = 'icon isicon-oracle'
 	CONFIG.RollTable.resultIcon = 'icons/dice/d10black.svg'
 	// CONFIG.RollTable.resultTemplate =
-	CONFIG.TableResult.documentClass = OracleTableResult
 	// 	'systems/foundry-ironsworn/templates/rolls/oracle-roll-message.hbs'
+	CONFIG.TableResult.documentClass = OracleTableResult
 
 	// Turn off Foundry defaults
 	Actors.unregisterSheet('core', ActorSheet)

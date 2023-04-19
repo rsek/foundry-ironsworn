@@ -43,21 +43,26 @@ export class Oracles extends RollTables {
 	 * @param dfid The Dataforged ID to find.
 	 * @param includeFolders Should {@link IronFolder} results be included?
 	 */
-	static findDfId(dfid: string, includeFolders?: false): OracleTable | undefined
+	static findDfId(
+		dfid: string,
+		includeFolders?: false
+	): StoredDocument<OracleTable> | undefined
 	static findDfId(
 		dfid: string,
 		includeFolders: true
-	): OracleTable | IronFolder | undefined
+	): StoredDocument<Oracles.Node> | undefined
 	static findDfId(
 		dfid: string,
 		includeFolders = false
-	): OracleTable | IronFolder | undefined {
+	): StoredDocument<Oracles.Node> | undefined {
 		if (includeFolders) {
 			if (game.folders == null)
 				throw new Error('game.folders has not been initialized')
 			const folder = game.folders.find(
-				(tbl) => tbl.getFlag('dataforged', '$id') === dfid
-			)
+				(folder) =>
+					folder.type === 'RollTable' &&
+					folder.getFlag('dataforged', '$id') === dfid
+			) as StoredDocument<IronFolder & { type: 'RollTable' }>
 			if (folder != null) return folder
 		}
 
@@ -74,13 +79,42 @@ export class Oracles extends RollTables {
 		const target = Oracles.findDfId(dfid, true)
 		if (target == null) return null
 		const ancestors = [target]
-		let current: OracleTable | IronFolder | null = target
+		let current: Oracles.Node | null = target
 		while (current != null) {
 			if (current.parent != null)
-				ancestors.unshift(current.parent as IronFolder | OracleTable)
-			current = current.parent as IronFolder | OracleTable | null
+				ancestors.unshift(current.parent as StoredDocument<Oracles.Node>)
+			current = current.parent as Oracles.Node | null
 		}
 		return ancestors
+	}
+
+	/** Is the node a root node (e.g. without a parent folder?)  */
+	static isRootNode(node: Oracles.Node) {
+		return node.folder == null
+	}
+
+	/** Should the node be rendered in the oracle tree for this setting? */
+	static isShownForSetting(node: Oracles.Node, setting: DataforgedNamespace) {
+		const flg = node.getFlag('dataforged', '$id') as string | undefined
+		return flg == null || flg.startsWith(setting)
+	}
+
+	/** Returns the root nodes for a given setting */
+	static getRootNodes(setting: DataforgedNamespace) {
+		const rootFolders =
+			game.folders?.filter(
+				(folder) =>
+					folder.type === 'RollTable' &&
+					Oracles.isRootNode(folder) &&
+					Oracles.isShownForSetting(folder, setting)
+			) ?? []
+		// our tables don't do this, but user custom tables might
+		const rootTables =
+			game.tables?.filter(
+				(table) =>
+					Oracles.isRootNode(table) && Oracles.isShownForSetting(table, setting)
+			) ?? []
+		return [...rootFolders, ...rootTables]
 	}
 
 	/** Return all OracleTables that have a DFID associated with a specific game. */
@@ -234,7 +268,7 @@ export class Oracles extends RollTables {
 		tableContext = {}
 	}: Oracles.BuildTreeOptions) {
 		logger.info('Building oracle tree')
-		const result: Array<Folder | undefined> = []
+		const result: Array<IronFolder | undefined> = []
 		for (const branch of branches) {
 			if (!Oracles.isBranch(branch) || !Oracles.isCategoryBranch(branch))
 				throw new Error(
@@ -317,16 +351,19 @@ export class Oracles extends RollTables {
 		const folderData = mergeObject(
 			folderOptions as any,
 			Oracles.getFolderConstructorData(branch) as any
-		) as helpers.ConstructorDataType<Folder['data']>
+		) as helpers.ConstructorDataType<IronFolder['data']>
 
-		const folder = (await Folder.create(folderData, folderContext)) as Folder
+		const folder = (await IronFolder.create(
+			folderData,
+			folderContext
+		)) as IronFolder
 
 		if (folder == null)
 			throw new Error(
 				`Folder#create returned a nullish value for ${branch.$id} during Dataforged oracle tree construction`
 			)
 
-		const folders: Array<Folder | undefined> = [folder]
+		const folders: Array<IronFolder | undefined> = [folder]
 
 		const folderChildOptions = mergeObject(folderOptions, {
 			folder
@@ -401,4 +438,5 @@ export namespace Oracles {
 	export interface BuildTreeOptions extends Omit<BuildBranchOptions, 'branch'> {
 		branches: IOracleCategory[]
 	}
+	export type Node = IronFolder | OracleTable
 }
