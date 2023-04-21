@@ -26,6 +26,10 @@ export class OracleTable extends RollTable {
 		return Boolean(this.getFlag('foundry-ironsworn', 'canonical'))
 	}
 
+	get dfid() {
+		return this.getFlag('foundry-ironsworn', 'dataforged')?.dfid
+	}
+
 	// static override async _onCreateDocuments(
 	// 	documents: OracleTable[],
 	// 	context: DocumentModificationContext
@@ -120,7 +124,7 @@ export class OracleTable extends RollTable {
 			let oracleTable: OracleTable | undefined
 			switch (true) {
 				case /^(Ironsworn|Starforged)\/Oracles\//.test(id): // A Dataforged ID
-					oracleTable = Oracles.findDfId(id)
+					oracleTable = OracleTree.findDfId(id)
 					break
 				case game.tables?.has(id): // A table ID
 					oracleTable = game.tables?.get(id)

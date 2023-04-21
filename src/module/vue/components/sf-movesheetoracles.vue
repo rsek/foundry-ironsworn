@@ -26,7 +26,8 @@
 			<!-- TODO: this should probably have some way of handling tables that don't have a folder. put them in a custom directory, perhaps? -->
 			<!-- TODO: this should respect the 'visible' property when it's not a dataforged oracle -->
 			<!-- TODO: is it worth stripping down OracleFolderNode so that it doesn't actually need a folder? -->
-			<template v-for="node in Oracles.getRootNodes(capitalize(props.toolset))">
+			<template
+				v-for="node in OracleTree.getRootNodes(capitalize(props.toolset))">
 				<OracleFolderNode
 					v-if="node.documentName === 'Folder'"
 					:key="node.id"

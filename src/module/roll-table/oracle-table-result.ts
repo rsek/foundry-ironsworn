@@ -59,6 +59,12 @@ export class OracleTableResult extends TableResult {
 			range: [tableRow.Floor, tableRow.Ceiling],
 			text: tableRow.Result && renderLinksInStr(text)
 		}
+		if (tableRow.$id)
+			data.flags = {
+				'foundry-ironsworn': {
+					dataforged: { dfid: tableRow.$id }
+				}
+			}
 
 		const _id =
 			tableRow.dfid ??

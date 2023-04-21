@@ -7,7 +7,7 @@ import type {
 import { starforged, ironsworn } from 'dataforged'
 import { cloneDeep, compact } from 'lodash-es'
 import { OracleTable } from '../roll-table/oracle-table'
-import { Oracles } from '../roll-table/oracles'
+import { OracleTree } from '../roll-table/oracle-tree'
 import { cachedDocumentsForPack } from './pack-cache'
 
 export interface IOracleTreeNode {
@@ -96,7 +96,7 @@ export async function walkOracle(
 ): Promise<IOracleTreeNode> {
 	if (oracle == null) return emptyNode()
 
-	const table = Oracles.findDfId(oracle.$id)
+	const table = OracleTree.findDfId(oracle.$id)
 
 	const node: IOracleTreeNode = {
 		...emptyNode(),
@@ -116,7 +116,7 @@ export async function walkOracle(
 	for (const entry of oracle.Table ?? []) {
 		const name = entry.Result
 		if (entry.Subtable != null) {
-			const subtable = Oracles.findDfId(`${oracle.$id}/${name}`)
+			const subtable = OracleTree.findDfId(`${oracle.$id}/${name}`)
 			if (subtable != null) {
 				node.children.push({
 					...emptyNode(),

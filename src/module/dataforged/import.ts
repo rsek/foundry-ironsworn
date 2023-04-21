@@ -21,7 +21,6 @@ import type { IronswornItem } from '../item/item'
 import { OracleTable } from '../roll-table/oracle-table'
 import { IronswornJournalEntry } from '../journal/journal-entry'
 import { IronswornJournalPage } from '../journal/journal-entry-page'
-import { OracleTableResult } from '../roll-table/oracle-table-result'
 import {
 	ISAssetTypes,
 	ISMoveCategories,

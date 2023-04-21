@@ -5,7 +5,7 @@ import type {
 } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 import { OracleTable } from '../roll-table/oracle-table'
-import { Oracles } from '../roll-table/oracles'
+import { OracleTree } from '../roll-table/oracle-tree'
 
 let CREATE_DIALOG: CreateActorDialog
 
@@ -79,7 +79,9 @@ export class IronswornActor extends Actor {
 		if (this.type !== 'site' || this.theme == null || this.domain == null)
 			return undefined
 
-		const oracle = Oracles.findDfId('Ironsworn/Oracles/Moves/Reveal_a_Danger')
+		const oracle = OracleTree.findDfId(
+			'Ironsworn/Oracles/Moves/Reveal_a_Danger'
+		)
 		if (oracle == null) return
 
 		return new OracleTable({

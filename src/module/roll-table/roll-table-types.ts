@@ -15,17 +15,17 @@ import { DataforgedFlags } from '../dataforged'
 
 /**
  * A Dataforged oracle category with a Categories property. In other words, it has {@link IOracleCategory} children.
- * @see {Oracles.isCategoryBranch} The corresponding type guard.
+ * @see {OracleTree.isCategoryBranch} The corresponding type guard.
  */
 export type IOracleCategoryBranch = RequireKey<IOracleCategory, 'Categories'>
 /**
  * A Dataforged oracle with an Oracles property. In other words, it has {@link IOracle} children.
- * @see {Oracles.isBranch} The corresponding type guard.
+ * @see {OracleTree.isBranch} The corresponding type guard.
  */
 export type IOracleBranch = RequireKey<IOracleCategory | IOracle, 'Oracles'>
 /**
  * A Dataforged oracle with a Table property, which is necessary to build a valid {@link OracleTable}.
- * @see {Oracles.isLeaf} The corresponding type guard method.
+ * @see {OracleTree.isLeaf} The corresponding type guard method.
  */
 export type IOracleLeaf = RequireKey<IOracle, 'Table'>
 
@@ -83,7 +83,7 @@ declare global {
 		}
 		TableResult: {
 			'foundry-ironsworn'?: {
-				dataforged?: Pick<IRow, '$id'>
+				dataforged?: DataforgedFlags<IRow, '$id'>
 
 				/** The UUID of the originating document, for computed TableResults */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined

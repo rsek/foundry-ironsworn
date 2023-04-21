@@ -45,7 +45,7 @@ import type {
 	DocumentSubTypes,
 	DocumentType
 } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import { Oracles } from './module/roll-table/oracles'
+import { OracleTree } from './module/roll-table/oracle-tree'
 import { IronFolder } from './module/folder/folder'
 import { OracleDirectory } from './module/roll-table/oracle-directory'
 
@@ -87,7 +87,7 @@ Hooks.once('init', async () => {
 
 	CONFIG.ui.tables = OracleDirectory
 	CONFIG.RollTable.documentClass = OracleTable
-	CONFIG.RollTable.collection = Oracles
+	CONFIG.RollTable.collection = OracleTree
 	CONFIG.RollTable.compendiumIndexFields.push('flags.dataforged.Source.Page')
 	// CONFIG.RollTable.sidebarIcon = 'icon isicon-oracle'
 	CONFIG.RollTable.resultIcon = 'icons/dice/d10black.svg'
