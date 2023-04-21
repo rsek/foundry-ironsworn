@@ -1,0 +1,404 @@
+[
+	{
+		"_id": "a06b333b78c61e6e",
+		"name": "Action and Theme",
+		"type": "RollTable",
+		"sort": 174,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Action_and_Theme",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 174
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "e234710dfe2315ae",
+		"name": "Place",
+		"type": "RollTable",
+		"sort": 176,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Place",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 176
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "1a0cbf46c7e7fb26",
+		"name": "Settlement",
+		"type": "RollTable",
+		"sort": 178,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Settlement",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 178
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "32aa235a6ba13f03",
+		"name": "Quick Settlement Name Generator",
+		"type": "RollTable",
+		"description": "Use this oracle as a simpler alternative for settlement names. Roll once for the prefix, and once for the suffix. If the combination doesn’t quite work, look at adjacent rows or reverse the digits.",
+		"sort": 180,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Settlement/Quick_Name",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 180
+					},
+					"Category": "Ironsworn/Oracles/Settlement"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "1a0cbf46c7e7fb26"
+	},
+	{
+		"_id": "aa60f0d1adbed892",
+		"name": "Character",
+		"type": "RollTable",
+		"sort": 182,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Character",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 182
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "0ea3b5b59a92d1f2",
+		"name": "Name",
+		"type": "RollTable",
+		"sort": 184,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Name",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 184
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "b0fddae6a7491958",
+		"name": "Ironlander Names",
+		"type": "RollTable",
+		"description": "Use this oracle to quickly generate a name for an Ironlander character. Roll on either table. Surnames are not used in the Ironlands, and names are often gender-neutral.",
+		"sort": 184,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Name/Ironlander",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 184
+					},
+					"Category": "Ironsworn/Oracles/Name"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "0ea3b5b59a92d1f2"
+	},
+	{
+		"_id": "7c9db0bc5d87be12",
+		"name": "Other Names",
+		"type": "RollTable",
+		"description": "Use this oracle to generate names for other firstborn characters.",
+		"sort": 187,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Name/Other",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 187
+					},
+					"Category": "Ironsworn/Oracles/Name"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "0ea3b5b59a92d1f2"
+	},
+	{
+		"_id": "b4c697d8bd353315",
+		"name": "Turning Point",
+		"type": "RollTable",
+		"sort": 188,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Turning_Point",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 188
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "cca4346acb34d271",
+		"name": "Challenge Rank",
+		"type": "RollTable",
+		"description": "Use this oracle when you want to randomly determine the challenge rank of a quest, journey, or foe.",
+		"sort": 190,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Turning_Point/Challenge_Rank",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 190
+					},
+					"Category": "Ironsworn/Oracles/Turning_Point"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "b4c697d8bd353315"
+	},
+	{
+		"_id": "06986fcc791b64bc",
+		"name": "Moves",
+		"type": "RollTable",
+		"sort": 0,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Moves",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"]
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "e7e8324f007f0cc7",
+		"name": "Ask the Oracle",
+		"type": "RollTable",
+		"sort": 107,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Moves/Ask_the_Oracle",
+					"Source": {
+						"Title": "Ironsworn Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 107
+					},
+					"Category": "Ironsworn/Oracles/Moves"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "06986fcc791b64bc"
+	},
+	{
+		"_id": "3605702de63e5d0b",
+		"name": "Delve the Depths",
+		"type": "RollTable",
+		"sort": 21,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Moves/Delve_the_Depths",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 21
+					},
+					"Category": "Ironsworn/Oracles/Moves"
+				},
+				"canonical": true
+			}
+		},
+		"folder": "06986fcc791b64bc"
+	},
+	{
+		"_id": "d47d8d81af367061",
+		"name": "Feature",
+		"type": "RollTable",
+		"description": "Use the Aspect and Focus oracles to answer questions or provide inspiration for a location or event within a site.",
+		"sort": 204,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Feature",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 204
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "f6b92bad160107de",
+		"name": "Site Name",
+		"type": "RollTable",
+		"description": "Give a site a name or learn more about its characteristics and history.",
+		"sort": 206,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Site_Name",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 206
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "62509c23920c5583",
+		"name": "Site Nature",
+		"type": "RollTable",
+		"description": "Randomly select a theme and domain for a perilous location.",
+		"sort": 212,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Site_Nature",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 212
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "feaab449f5044ca1",
+		"name": "Monstrosity",
+		"type": "RollTable",
+		"description": "Discover the nature of a nightspawn or other frightful creature within your world.",
+		"sort": 214,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Monstrosity",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 214
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "7cacf574e6356672",
+		"name": "Trap",
+		"type": "RollTable",
+		"description": "Identify the characteristics and effects of a trap within a site.",
+		"sort": 217,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Trap",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 217
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "be65c6dd40adde91",
+		"name": "Combat Event",
+		"type": "RollTable",
+		"description": "Determine the actions of a character, creature, or force during a fight.",
+		"sort": 218,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Combat_Event",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 218
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "b42117d1724e54e9",
+		"name": "Threat",
+		"type": "RollTable",
+		"description": "In support of the optional threat mechanics, use these oracles to introduce a threat and determine its actions within your world.",
+		"sort": 220,
+		"flags": {
+			"foundry-ironsworn": {
+				"dataforged": {
+					"dfid": "Ironsworn/Oracles/Threat",
+					"Source": {
+						"Title": "Ironsworn: Delve",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 220
+					}
+				},
+				"canonical": true
+			}
+		}
+	}
+]

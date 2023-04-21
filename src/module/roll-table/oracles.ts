@@ -7,8 +7,10 @@ import type {
 } from './roll-table-types'
 import { OracleTable } from './oracle-table'
 import { IronFolder } from '../folder/folder'
-import { compact, pick } from 'lodash-es'
+import { compact, pick, pickBy } from 'lodash-es'
 import type { helpers } from '../../types/utils'
+import { writeFileSync } from 'fs'
+import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
 
 type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -197,26 +199,23 @@ export class Oracles extends RollTables {
 	 * @see Oracles#loadTree
 	 * @internal
 	 */
-	static async saveTree(
-		game: DataforgedNamespace,
-		branches: IOracleCategory[]
-	) {
+	static async saveTree(folders: IronFolder[], game: DataforgedNamespace) {
 		const path = Oracles.FOLDER_DATA_PATH[game]
-		const folderTree = compact(
-			await Oracles.buildTree({
-				branches,
-				mode: 'folders-only',
-				folderContext: { temporary: true }
+
+		const data = folders.map((folder) =>
+			pickBy(folder.toObject(), (v, k) => {
+				const omitKeys = ['_stats', 'sorting']
+				if (v == null) return false
+				if (typeof v === 'string' && v.length === 0) return false
+				if (omitKeys.includes(k)) return false
+				return true
 			})
 		)
-		try {
-			// @ts-expect-error
-			await fs.writeFile(path, JSON.stringify(folderTree))
-		} catch (error) {
-			logger.error(`Couldn't save oracle folder tree to ${path}`)
-			return
-		}
-		logger.info(`Saved oracle folder tree to ${path}`)
+
+		console.log(data)
+		// writeFileSync(path, JSON.stringify(data))
+
+		// logger.info(`Saved oracle folder tree to ${path}`)
 	}
 
 	/**
@@ -288,7 +287,7 @@ export class Oracles extends RollTables {
 	 * ```
 	 */
 	static async buildTree({
-		branches = CONFIG.IRONSWORN.Dataforged['Oracle Categories'],
+		branches = [...SFOracleCategories, ...ISOracleCategories],
 		mode = 'all',
 		folderOptions = {},
 		folderContext = { keepId: true },
@@ -297,7 +296,7 @@ export class Oracles extends RollTables {
 	}: Oracles.BuildTreeOptions) {
 		logger.info('Building oracle tree')
 
-		// await this.flushOracles()
+		await this.flushOracles()
 
 		const result: Array<IronFolder | undefined> = []
 		for (const branch of branches) {
@@ -351,7 +350,7 @@ export class Oracles extends RollTables {
 
 		return {
 			_id: hashLookup(data.$id),
-			name: data.Display.Title,
+			name: data.Display.Title.replace(/^Oracle [0-9]+: /, ''),
 			type: 'RollTable',
 			description: data.Description,
 			sort: data.Source.Page,
