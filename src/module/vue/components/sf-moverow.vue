@@ -71,7 +71,7 @@ import { ItemKey, $ItemKey } from '../provisions.js'
 import { enrichMarkdown } from '../vue-plugin.js'
 import type { SFMoveDataPropertiesData } from '../../item/itemtypes'
 import { compact, uniq } from 'lodash-es'
-import { Oracles } from '../../roll-table/oracles'
+import { OracleTree } from '../../roll-table/oracle-tree'
 
 const props = withDefaults(
 	defineProps<{

@@ -6,7 +6,7 @@ import type {
 	RollTableData,
 	TableResultData
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs'
-import type { Oracles } from './oracles'
+import type { OracleTree } from './oracle-tree'
 import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
 import type { helpers } from '../../types/utils'
 import { DataforgedFlags } from '../dataforged'

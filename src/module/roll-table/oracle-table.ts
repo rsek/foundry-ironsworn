@@ -15,7 +15,7 @@ import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
 import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
-import { Oracles } from './oracles'
+import { OracleTree } from './oracle-tree'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 export class OracleTable extends RollTable {
