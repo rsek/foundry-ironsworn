@@ -25,8 +25,8 @@ interface FolderTypeMap extends Record<FolderType, IHasId> {
 declare global {
 	interface FlagConfig {
 		Folder: {
-			dataforged?: ValueOf<FolderTypeMap>
 			'foundry-ironsworn'?: {
+				dataforged?: ValueOf<FolderTypeMap>
 				forceExpanded?: boolean
 				type?: FolderType
 				/**

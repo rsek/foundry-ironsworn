@@ -384,8 +384,10 @@ async function processTruths(
 			{
 				name: truth.Display.Title,
 				flags: {
-					dataforged: pick(truth, 'Suggestions', '$id', 'Source'),
-					'foundry-ironsworn': { type: 'truth-category' }
+					'foundry-ironsworn': {
+						type: 'truth-category',
+						dataforged: pick(truth, 'Suggestions', '$id', 'Source')
+					}
 				}
 			},
 			{ pack: outputCompendium }
@@ -403,7 +405,7 @@ async function processTruths(
 						Quest: entry['Quest Starter'],
 						'Quest Starter': undefined
 					}),
-					flags: { dataforged: pick(entry, '$id') }
+					flags: { 'foundry-ironsworn': { dataforged: pick(entry, '$id') } }
 				},
 				{ parent: je }
 			)
@@ -418,7 +420,7 @@ async function processTruths(
 					format: 2 // JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
 				},
 				flags: {
-					dataforged: pick(truth, 'Suggestions')
+					'foundry-ironsworn': { dataforged: pick(truth, 'Suggestions') }
 				}
 			},
 			{ parent: je }

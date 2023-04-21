@@ -11,7 +11,7 @@ export function registerCompendiumCategoryHook() {
 			)) as OracleTable
 			const catFlag = table.getFlag('foundry-ironsworn', 'category')
 			if (catFlag != null) {
-				const cat = catFlag
+				const cat = (catFlag as string)
 					.replace(/(Starforged|Ironsworn)\/Oracles\//, '')
 					.replace(/_/g, ' ')
 				$(el).append(

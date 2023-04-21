@@ -165,7 +165,9 @@ export class OracleTable extends RollTable {
 		const data: RollTableDataConstructorData = {
 			_id: hashLookup(oracle.$id),
 			flags: {
-				dataforged: pick(oracle, '$id', 'Source', 'Category', 'Display')
+				'foundry-ironsworn': {
+					dataforged: pick(oracle, '$id', 'Source', 'Category', 'Display')
+				}
 			},
 			name: oracle.Name,
 			// strip "Oracle XX: " from some ironsworn titles

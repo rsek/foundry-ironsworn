@@ -62,11 +62,11 @@ export type ComputedTableType =
 declare global {
 	interface FlagConfig {
 		RollTable: {
-			dataforged?: Pick<
-				IOracleLeaf,
-				'$id' | 'Category' | 'Member of' | 'Source' | 'Display'
-			>
 			'foundry-ironsworn'?: {
+				dataforged?: Pick<
+					IOracleLeaf,
+					'$id' | 'Category' | 'Member of' | 'Source' | 'Display'
+				>
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
 				type?: ComputedTableType
@@ -82,8 +82,9 @@ declare global {
 			}
 		}
 		TableResult: {
-			dataforged?: Pick<IRow, '$id'>
 			'foundry-ironsworn'?: {
+				dataforged?: Pick<IRow, '$id'>
+
 				/** The UUID of the originating document, for computed TableResults */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
 				type?: ComputedTableResultType

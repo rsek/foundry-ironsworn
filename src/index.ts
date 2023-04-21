@@ -258,7 +258,7 @@ Hooks.once('ready', async () => {
 	registerDragAndDropHooks()
 	registerChatAlertHooks()
 
-	await registerDefaultOracleTrees()
+	// await registerDefaultOracleTrees()
 
 	await FirstStartDialog.maybeShow()
 	await registerTours()

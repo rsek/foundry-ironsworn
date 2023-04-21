@@ -38,9 +38,9 @@ export async function cachedDocumentsForPack(packName: string) {
 
 export async function primeCommonPackCaches() {
 	const commonPackNames = [
-		'foundry-ironsworn.starforgedoracles',
-		'foundry-ironsworn.starforgedmoves',
-		'foundry-ironsworn.ironswornoracles'
+		// 'foundry-ironsworn.starforgedoracles',
+		'foundry-ironsworn.starforgedmoves'
+		// 'foundry-ironsworn.ironswornoracles'
 	]
 	await Promise.all(commonPackNames.map(cachedDocumentsForPack))
 

@@ -112,9 +112,11 @@ declare global {
 	}
 	interface FlagConfig {
 		JournalEntryPage: {
-			dataforged?:
-				| Pick<ISettingTruthOption, '$id'>
-				| Pick<ISettingTruthOption, 'Suggestions'>
+			'foundry-ironsworn': {
+				dataforged?:
+					| Pick<ISettingTruthOption, '$id'>
+					| Pick<ISettingTruthOption, 'Suggestions'>
+			}
 		}
 	}
 
