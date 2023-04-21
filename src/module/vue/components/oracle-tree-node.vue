@@ -2,14 +2,14 @@
 	<div
 		ref="$el"
 		class="flexcol nogrow movesheet-row"
-		:class="{ hidden: node?.forceHidden, highlighted: state.highlighted }"
+		:class="{ highlighted: state.highlighted }"
 		data-tooltip-direction="LEFT"
-		:data-tourid="`oracle-${node.dataforgedNode?.$id}`">
+		:data-tourid="`oracle-${$node?.getFlag('dataforged', '$id')}`">
 		<!-- TODO: split this into two components, yo -->
 		<!-- Leaf node -->
-		<div v-if="isLeaf">
+		<div v-if="$node?.documentName === 'RollTable'">
 			<h4 class="flexrow">
-				<BtnOracle :oracleTable="oracleTable" :text="node?.displayName">
+				<BtnOracle :draw="$node.draw" :name="node.name">
 					<template #icon>
 						<IronIcon name="oracle" :size="spacerSize" />
 					</template>
@@ -18,15 +18,12 @@
 					nogrow
 					class="show-oracle-info"
 					icon="fa:eye"
-					@click="toggleDescription()" />
+					@click="state.expanded = !state.expanded" />
 			</h4>
 			<CollapseTransition>
 				<RulesTextOracle
-					v-if="state.descriptionExpanded"
+					v-if="state.expanded"
 					:class="$style.content"
-					:table-rows="state.tableRows"
-					:table-description="state.tableDescription"
-					:source="node.dataforgedNode?.Source"
 					@moveclick="moveclick"
 					@oracleclick="oracleclick" />
 			</CollapseTransition>
@@ -35,29 +32,26 @@
 		<!-- Branch node -->
 		<div v-else>
 			<h4 class="flexrow">
-				<IronBtn :text="node?.displayName" @click="toggleManually()">
+				<IronBtn :text="node.name" @click="state.expanded = !state.expanded">
 					<template #icon>
 						<FontIcon
 							nogrow
 							:class="$style.fontIcon"
 							name="caret-right"
 							:rotate="
-								state.manuallyExpanded ? FontAwesome.Rotate['90deg'] : undefined
+								state.expanded ? FontAwesome.Rotate['90deg'] : undefined
 							" />
 					</template>
 				</IronBtn>
 			</h4>
 
 			<CollapseTransition>
-				<div
-					v-show="state.manuallyExpanded"
-					class="flexcol"
-					:class="$style.indent">
+				<div v-show="state.expanded" class="flexcol" :class="$style.indent">
 					<oracle-tree-node
-						v-for="child in node?.children"
-						:key="child.displayName"
+						v-for="child in $node?.contents"
+						:key="(child.id as string)"
 						ref="children"
-						:node="child"
+						:node="(child as OracleTable | IronFolder).toObject()"
 						@oracleclick="oracleclick" />
 				</div>
 			</CollapseTransition>
@@ -66,8 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref } from 'vue'
-import type { IOracleTreeNode } from '../../features/customoracles'
+import { reactive, ref } from 'vue'
 import { FontAwesome } from './icon/icon-common'
 import BtnOracle from './buttons/btn-oracle.vue'
 import type { IronswornItem } from '../../item/item'
@@ -76,42 +69,21 @@ import CollapseTransition from './transition/collapse-transition.vue'
 import IronBtn from './buttons/iron-btn.vue'
 import FontIcon from './icon/font-icon.vue'
 import IronIcon from './icon/iron-icon.vue'
-import type { OracleTable } from '../../roll-table/oracle-table'
-import type { LegacyTableRow } from '../../roll-table/roll-table-types'
+import { OracleTable } from '../../roll-table/oracle-table'
+import { IronFolder } from '../../folder/folder'
+import type { helpers } from '../../../types/utils'
 
-const props = defineProps<{ node: IOracleTreeNode }>()
+const props = defineProps<{
+	node: helpers.SourceDataType<OracleTable | IronFolder>
+}>()
 
-const state = reactive({
-	manuallyExpanded: props.node.forceExpanded ?? false,
-	descriptionExpanded: false,
-	tableRows: [] as Array<LegacyTableRow>,
-	tableDescription: '',
-	highlighted: false
-})
+const $node =
+	game.tables?.get(props.node._id as string) ??
+	game.folders?.get(props.node._id as string)
 
 const spacerSize = '18px'
 
-const isLeaf = computed(() => {
-	return props.node.tables.length > 0
-})
-
-async function toggleDescription() {
-	if (!state.tableDescription) {
-		const table = (await fromUuid(props.node.tables[0])) as OracleTable
-		state.tableRows = table.results.map((row: any) => ({
-			low: row.range[0],
-			high: row.range[1],
-			text: row.text,
-			selected: false
-		}))
-		state.tableDescription = (table as any).description ?? ''
-		await nextTick()
-	}
-	state.descriptionExpanded = !state.descriptionExpanded
-}
-function toggleManually() {
-	state.manuallyExpanded = !state.manuallyExpanded
-}
+const state = reactive({ highlighted: false, expanded: false })
 
 // Click on a move link: broadcast event
 function moveclick(item: IronswornItem) {
@@ -125,19 +97,18 @@ function oracleclick(dfid) {
 const children = ref([] as any[])
 
 function collapse() {
-	state.manuallyExpanded = false
-	state.descriptionExpanded = false
+	state.expanded = false
 	for (const child of children.value ?? []) {
 		child.collapse()
 	}
 }
 function expand() {
-	state.manuallyExpanded = true
+	state.expanded = true
 }
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if (props.node.dataforgedNode?.$id === dfid) {
+	if ($node?.getFlag('dataforged', '$id') === dfid) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
@@ -150,7 +121,7 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
 })
 
 defineExpose({
-	dfid: () => props.node.dataforgedNode?.$id,
+	dfid: () => $node?.getFlag('dataforged', '$id'),
 	expand,
 	collapse
 })
@@ -166,9 +137,9 @@ defineExpose({
 }
 
 .fontIcon {
-	font-size: v-bind(spacerSize);
-	height: v-bind(spacerSize);
 	width: v-bind(spacerSize);
+	height: v-bind(spacerSize);
+	font-size: v-bind(spacerSize);
 }
 </style>
 

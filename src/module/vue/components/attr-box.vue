@@ -27,11 +27,9 @@ import { $ActorKey, ActorKey } from '../provisions'
 
 const props = defineProps<{ attr: string }>()
 const $actor = inject($ActorKey)
-const actor = inject(ActorKey) as Ref<
-	ReturnType<typeof IronswornActor.prototype.toObject>
->
+const actor = inject(ActorKey)
 const actorSys = computed(
-	() => (actor.value as any)?.system as CharacterDataPropertiesData
+	() => (actor?.value as any)?.system as CharacterDataPropertiesData
 )
 
 const classes = computed(() => ({
@@ -40,7 +38,7 @@ const classes = computed(() => ({
 }))
 const i18nKey = computed(() => `IRONSWORN.${capitalize(props.attr)}`)
 const editMode = computed(
-	() => !!(actor.value.flags as any)['foundry-ironsworn']?.['edit-mode']
+	() => !!(actor?.value.flags as any)['foundry-ironsworn']?.['edit-mode']
 )
 
 function click() {

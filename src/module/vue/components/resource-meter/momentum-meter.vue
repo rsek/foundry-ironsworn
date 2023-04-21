@@ -30,6 +30,7 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue'
 import { computed, inject } from 'vue'
+import { helpers } from '../../../../types/utils'
 import type { IronswornActor } from '../../../actor/actor.js'
 import type {
 	CharacterDataProperties,
@@ -49,7 +50,7 @@ const props = withDefaults(
 )
 
 const actor = inject(ActorKey) as Ref<
-	ReturnType<typeof IronswornActor.prototype.toObject> & CharacterDataProperties
+	helpers.SourceDataType<IronswornActor> & CharacterDataProperties
 >
 const actorSys = computed(
 	() => (actor.value as any)?.system as CharacterDataPropertiesData

@@ -44,8 +44,8 @@
 				@moveclick="moveClick">
 				<template #after-footer>
 					<OracleTreeNode
-						v-for="node of data.oracles"
-						:key="node.displayName"
+						v-for="node of oracles"
+						:key="node._id"
 						:class="$style.oracle"
 						:node="node" />
 				</template>
@@ -59,7 +59,6 @@ import type { ExtractPropTypes } from 'vue'
 import { computed, provide, reactive, ref } from 'vue'
 import type { Move } from '../../features/custommoves'
 import type { IOracleTreeNode } from '../../features/customoracles'
-import { walkOracle } from '../../features/customoracles'
 import type { IronswornItem } from '../../item/item'
 import { moveHasRollableOptions } from '../../rolls/preroll-dialog'
 import BtnRollmove from './buttons/btn-rollmove.vue'
@@ -71,8 +70,8 @@ import BtnOracle from './buttons/btn-oracle.vue'
 import { ItemKey, $ItemKey } from '../provisions.js'
 import { enrichMarkdown } from '../vue-plugin.js'
 import type { SFMoveDataPropertiesData } from '../../item/itemtypes'
-import { uniq } from 'lodash-es'
-import { OracleTable } from '../../roll-table/oracle-table'
+import { compact, uniq } from 'lodash-es'
+import { Oracles } from '../../roll-table/oracles'
 
 const props = withDefaults(
 	defineProps<{
@@ -149,15 +148,11 @@ const toggleTooltip = computed(() =>
 
 const moveId = computed(() => props.move.moveItem().id)
 
-const oracleIds = uniq([
-	...($itemSystem.value?.Oracles ?? []),
-	...(props.move.dataforgedMove?.Oracles ?? [])
-])
-Promise.all(oracleIds.map(OracleTable.getDFOracleByDfId)).then(
-	async (dfOracles) => {
-		const nodes = await Promise.all(dfOracles.map(walkOracle))
-		data.oracles.push(...nodes)
-	}
+const oracles = compact(
+	uniq([
+		...($itemSystem.value?.Oracles ?? []),
+		...(props.move.dataforgedMove?.Oracles ?? [])
+	]).map((id) => Oracles.findDfId(id)?.toObject())
 )
 
 // Outbound link clicks: broadcast events

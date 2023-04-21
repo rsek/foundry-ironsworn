@@ -37,7 +37,7 @@ defineProps<{
 	noCaption?: boolean
 }>()
 
-function rangeString([low, high]: [number, number]) {
+function rangeString([low, high]: number[]) {
 	if (low === high) {
 		return low.toString()
 	}

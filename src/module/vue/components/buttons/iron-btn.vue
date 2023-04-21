@@ -51,7 +51,7 @@ const props = withDefaults(
 		/**
 		 *  The button text/label, which appears as the default content for the "text" slot.
 		 */
-		text?: string
+		text?: string | null
 		/**
 		 * A simple way to specify an icon with default settings. For something weirder, you can override it with the "icon" slot.
 		 */
