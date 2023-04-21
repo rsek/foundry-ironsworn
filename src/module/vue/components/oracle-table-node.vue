@@ -71,7 +71,7 @@ function expand() {
 }
 
 defineExpose({
-	dfid: () => oracleTable.value?.flags?.dataforged?.$id,
+	dfid: () => oracleTable.value?.flags?.['foundry-ironsworn']?.dataforged?.$id,
 	expand,
 	collapse
 })
