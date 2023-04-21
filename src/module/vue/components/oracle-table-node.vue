@@ -1,7 +1,10 @@
 <template>
 	<article :class="$style.wrapper">
 		<h4 class="flexrow">
-			<BtnOracle :oracle-table="$oracleTable!" :text="oracleTable?.name">
+			<BtnOracle
+				:draw="$oracleTable?.draw"
+				:name="oracleTable?.name"
+				:text="oracleTable?.name">
 				<template #icon>
 					<IronIcon name="oracle" :size="spacerSize" />
 				</template>
@@ -71,7 +74,7 @@ function expand() {
 }
 
 defineExpose({
-	dfid: () => oracleTable.value?.flags?.['foundry-ironsworn']?.dataforged?.$id,
+	dfid: () => oracleTable.value?.flags?.['foundry-ironsworn']?.dataforged?.dfid,
 	expand,
 	collapse
 })

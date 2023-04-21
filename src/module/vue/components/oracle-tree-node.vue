@@ -4,7 +4,9 @@
 		class="flexcol nogrow movesheet-row"
 		:class="{ highlighted: state.highlighted }"
 		data-tooltip-direction="LEFT"
-		:data-tourid="`oracle-${$node?.getFlag('dataforged', '$id')}`">
+		:data-tourid="`oracle-${
+			$node?.getFlag('foundry-ironsworn', 'dataforged')?.dfid
+		}`">
 		<!-- TODO: split this into two components, yo -->
 		<!-- Leaf node -->
 		<div v-if="$node?.documentName === 'RollTable'">
@@ -108,7 +110,7 @@ function expand() {
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if ($node?.getFlag('dataforged', '$id') === dfid) {
+	if ($node?.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
@@ -121,7 +123,7 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
 })
 
 defineExpose({
-	dfid: () => $node?.getFlag('dataforged', '$id'),
+	dfid: () => $node?.getFlag('foundry-ironsworn', 'dataforged')?.dfid,
 	expand,
 	collapse
 })

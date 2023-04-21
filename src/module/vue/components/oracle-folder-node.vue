@@ -69,8 +69,8 @@ const folderChildren = computed(() =>
 		...($folder.value!.contents as OracleTable[])
 	].sort(
 		(a: any, b: any) =>
-			(b.getFlag('dataforged', 'Source')?.Page ?? 0) -
-			(a.getFlag('dataforged', 'Source')?.Page ?? 0)
+			(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
+			(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
 	)
 )
 
@@ -98,7 +98,9 @@ function expand() {
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if ($folder.value?.getFlag('dataforged', '$id') === dfid) {
+	if (
+		$folder.value?.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
+	) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
@@ -111,7 +113,7 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
 })
 
 defineExpose({
-	dfid: () => $folder.value?.getFlag('dataforged', '$id'),
+	dfid: () => $folder.value?.getFlag('foundry-ironsworn', 'dataforged')?.dfid,
 	expand,
 	collapse
 })

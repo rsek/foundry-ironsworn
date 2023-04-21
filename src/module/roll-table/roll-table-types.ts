@@ -9,6 +9,7 @@ import type {
 import type { Oracles } from './oracles'
 import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
 import type { helpers } from '../../types/utils'
+import { DataforgedFlags } from '../dataforged'
 
 // Ironsworn-specific types & augmentations
 
@@ -63,7 +64,7 @@ declare global {
 	interface FlagConfig {
 		RollTable: {
 			'foundry-ironsworn'?: {
-				dataforged?: Pick<
+				dataforged?: DataforgedFlags<
 					IOracleLeaf,
 					'$id' | 'Category' | 'Member of' | 'Source' | 'Display'
 				>
@@ -74,10 +75,9 @@ declare global {
 				 */
 				subtitle?: string | null | undefined
 				/**
-				 * Is this document visible in the sidebar directory?
-				 * @remarks This overrides `Document#visible`, and will fall back to that value if left unset.
+				 * Is this a canonical table?
 				 */
-				visible?: boolean
+				canonical?: boolean
 				forceExpanded?: boolean
 			}
 		}

@@ -1,6 +1,7 @@
 import type { FOLDER_DOCUMENT_TYPES } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/constants.mjs'
 import type { ConfiguredDocumentClassForName } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import type { IAssetType, IHasId, IMoveCategory } from 'dataforged'
+import type { DataforgedFlags, StripDollars } from '../dataforged'
 import type {
 	IOracleBranch,
 	IOracleCategoryBranch
@@ -13,13 +14,13 @@ export type FolderableDocument = InstanceType<
 
 export type FolderType = 'oracles' | 'moves' | 'assets'
 
-interface FolderTypeMap extends Record<FolderType, IHasId> {
-	oracles: Pick<
+interface FolderTypeMap extends Record<FolderType, StripDollars<IHasId>> {
+	oracles: DataforgedFlags<
 		IOracleBranch | IOracleCategoryBranch,
 		'$id' | 'Source' | 'Category'
 	>
-	moves: Pick<IMoveCategory, '$id' | 'Source'>
-	assets: Pick<IAssetType, '$id' | 'Source'>
+	moves: DataforgedFlags<IMoveCategory, '$id' | 'Source'>
+	assets: DataforgedFlags<IAssetType, '$id' | 'Source'>
 }
 
 declare global {
@@ -30,10 +31,9 @@ declare global {
 				forceExpanded?: boolean
 				type?: FolderType
 				/**
-				 * Is this document visible in the sidebar directory?
-				 * @remarks This overrides `Document#visible`, and will fall back to that value if left unset.
+				 * Does this folder represent a canonical category?
 				 */
-				visible?: boolean
+				canonical?: boolean
 			}
 		}
 	}

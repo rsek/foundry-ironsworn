@@ -4,7 +4,7 @@ import type { IOracle, IOracleCategory, IRow } from 'dataforged'
 import { max, pick } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
-import { hashLookup, renderLinksInStr } from '../dataforged'
+import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
 import {
 	findPathToNodeByTableUuid,
@@ -21,6 +21,10 @@ import { Oracles } from './oracles'
 export class OracleTable extends RollTable {
 	// missing from the LoFD types package
 	declare description: string
+
+	get canonical() {
+		return Boolean(this.getFlag('foundry-ironsworn', 'canonical'))
+	}
 
 	// static override async _onCreateDocuments(
 	// 	documents: OracleTable[],
@@ -45,8 +49,8 @@ export class OracleTable extends RollTable {
 	// }
 
 	override get visible() {
-		const flg = this.getFlag('foundry-ironsworn', 'visible')
-		if (typeof flg === 'boolean') return flg
+		const flg = this.getFlag('foundry-ironsworn', 'canonical')
+		if (flg === true) return false
 		return super.visible
 	}
 
@@ -166,7 +170,13 @@ export class OracleTable extends RollTable {
 			_id: hashLookup(oracle.$id),
 			flags: {
 				'foundry-ironsworn': {
-					dataforged: pick(oracle, '$id', 'Source', 'Category', 'Display')
+					dataforged: pickDataforged(
+						oracle,
+						'$id',
+						'Source',
+						'Category',
+						'Display'
+					)
 				}
 			},
 			name: oracle.Name,
@@ -249,11 +259,15 @@ export class OracleTable extends RollTable {
 				// @ts-expect-error exists in v10
 				async: true
 			}),
-			result: mergeObject(result.toObject(false), {
-				text: result.getChatText(),
-				icon: result.icon,
-				displayRows: result.displayRows.map((row) => row?.toObject())
-			}),
+			result: mergeObject(
+				result.toObject(false),
+				{
+					text: result.getChatText(),
+					icon: result.icon,
+					displayRows: result.displayRows.map((row) => row?.toObject())
+				},
+				{ inplace: false }
+			),
 			roll: roll?.toJSON(),
 			table: this,
 			subtitle:
@@ -333,7 +347,8 @@ export class OracleTable extends RollTable {
 				sound: roll != null ? CONFIG.sounds.dice : null,
 				flags
 			},
-			messageData
+			messageData,
+			{ inplace: false }
 		)
 
 		// console.log('messageData', messageData)
@@ -408,11 +423,15 @@ export class OracleTable extends RollTable {
 
 		const templateData = await oracleTable._prepareTemplateData(results, roll)
 
-		const flags = foundry.utils.mergeObject(msg.toObject().flags, {
-			'foundry-ironsworn': {
-				rerolls: [...rerolls, roll.total]
-			}
-		}) as ConfiguredFlags<'ChatMessage'>
+		const flags = foundry.utils.mergeObject(
+			msg.toObject().flags,
+			{
+				'foundry-ironsworn': {
+					rerolls: [...rerolls, roll.total]
+				}
+			},
+			{ inplace: false }
+		) as ConfiguredFlags<'ChatMessage'>
 
 		// trigger sound + 3d dice manually because updating the message won't
 		if (game.dice3d) void game.dice3d.showForRoll(roll, game.user, true)

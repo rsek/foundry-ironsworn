@@ -47,6 +47,7 @@ import type {
 } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import { Oracles } from './module/roll-table/oracles'
 import { IronFolder } from './module/folder/folder'
+import { OracleDirectory } from './module/roll-table/oracle-directory'
 
 declare global {
 	interface LenientGlobalVariableTypes {
@@ -84,6 +85,7 @@ Hooks.once('init', async () => {
 
 	CONFIG.Folder.documentClass = IronFolder
 
+	CONFIG.ui.tables = OracleDirectory
 	CONFIG.RollTable.documentClass = OracleTable
 	CONFIG.RollTable.collection = Oracles
 	CONFIG.RollTable.compendiumIndexFields.push('flags.dataforged.Source.Page')

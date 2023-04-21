@@ -1,5 +1,5 @@
 import type { GameDataRoot, IOracleBase, IOracleCategory } from 'dataforged'
-import { hashLookup } from '../dataforged'
+import { hashLookup, pickDataforged } from '../dataforged'
 import type {
 	IOracleBranch,
 	IOracleCategoryBranch,
@@ -17,6 +17,20 @@ type DataforgedNamespace = 'Starforged' | 'Ironsworn'
  * @remarks This is a singleton at runtime, but it intentionally implements its Ironsworn-specific static methods so that they're available as (e.g.) `Oracles.findDfId()` instead of `game.tables?.findDfId()`.
  */
 export class Oracles extends RollTables {
+	static async flushOracles() {
+		for (const table of game.tables?.contents ?? []) {
+			const isCanonical =
+				table.getFlag('foundry-ironsworn', 'canonical') ?? false
+			if (isCanonical) void table.delete()
+		}
+		for (const folder of game.folders?.contents ?? []) {
+			const isCanonical =
+				folder.getFlag('foundry-ironsworn', 'canonical') ?? false
+
+			if (folder.type === 'RollTable' && isCanonical) void folder.delete()
+		}
+	}
+
 	fromCompendium(
 		...[document, options]: Parameters<RollTables['fromCompendium']>
 	) {
@@ -60,14 +74,16 @@ export class Oracles extends RollTables {
 			const folder = game.folders.find(
 				(folder) =>
 					folder.type === 'RollTable' &&
-					folder.getFlag('dataforged', '$id') === dfid
+					folder.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
 			) as StoredDocument<IronFolder & { type: 'RollTable' }>
 			if (folder != null) return folder
 		}
 
 		if (game.tables == null)
 			throw new Error('game.tables has not been initialized')
-		return game.tables.find((tbl) => tbl.getFlag('dataforged', '$id') === dfid)
+		return game.tables.find(
+			(tbl) => tbl.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
+		)
 	}
 
 	/**
@@ -94,7 +110,9 @@ export class Oracles extends RollTables {
 
 	/** Should the node be rendered in the oracle tree for this setting? */
 	static isShownForSetting(node: Oracles.Node, setting: DataforgedNamespace) {
-		const flg = node.getFlag('dataforged', '$id') as string | undefined
+		const flg = node.getFlag('foundry-ironsworn', 'dataforged')?.dfid as
+			| string
+			| undefined
 		return flg == null || flg.startsWith(setting)
 	}
 
@@ -122,7 +140,7 @@ export class Oracles extends RollTables {
 			Boolean(
 				tbl
 					.getFlag('foundry-ironsworn', 'dataforged')
-					?.$id.startsWith(`${setting}/Oracles`)
+					?.dfid.startsWith(`${setting}/Oracles`)
 			)
 		)
 	}
@@ -141,15 +159,16 @@ export class Oracles extends RollTables {
 				Boolean(
 					folder
 						.getFlag('foundry-ironsworn', 'dataforged')
-						?.$id.startsWith(root)
+						?.dfid.startsWith(root)
 				) &&
-				!(folder.getFlag('foundry-ironsworn', 'dataforged') as any)?.Category
+				!((folder.getFlag('foundry-ironsworn', 'dataforged') as any)
+					?.Category as string | undefined)
 		else
 			testFn = (folder) =>
 				Boolean(
 					folder
 						.getFlag('foundry-ironsworn', 'dataforged')
-						?.$id.startsWith(root)
+						?.dfid.startsWith(root)
 				)
 
 		return game.folders.filter(
@@ -187,7 +206,6 @@ export class Oracles extends RollTables {
 			await Oracles.buildTree({
 				branches,
 				mode: 'folders-only',
-				folderOptions: { flags: { 'foundry-ironsworn': { visible: false } } },
 				folderContext: { temporary: true }
 			})
 		)
@@ -270,17 +288,20 @@ export class Oracles extends RollTables {
 	 * ```
 	 */
 	static async buildTree({
-		branches,
+		branches = CONFIG.IRONSWORN.Dataforged['Oracle Categories'],
 		mode = 'all',
 		folderOptions = {},
-		folderContext = {},
+		folderContext = { keepId: true },
 		tableOptions = {},
-		tableContext = {}
+		tableContext = { keepId: true }
 	}: Oracles.BuildTreeOptions) {
 		logger.info('Building oracle tree')
+
+		// await this.flushOracles()
+
 		const result: Array<IronFolder | undefined> = []
 		for (const branch of branches) {
-			if (!Oracles.isBranch(branch) || !Oracles.isCategoryBranch(branch))
+			if (!Oracles.isBranch(branch) && !Oracles.isCategoryBranch(branch))
 				throw new Error(
 					`Dataforged ID "${branch.$id}" doesn't appear to be a valid oracle branch.`
 				)
@@ -303,10 +324,12 @@ export class Oracles extends RollTables {
 	static isCategoryBranch(
 		oracle: IOracleBase
 	): oracle is IOracleCategoryBranch {
+		if (Array.isArray(oracle.Table)) return false
 		return Array.isArray(oracle.Categories)
 	}
 
 	static isBranch(oracle: IOracleBase): oracle is IOracleBranch {
+		if (Array.isArray(oracle.Table)) return false
 		return Array.isArray(oracle.Oracles)
 	}
 
@@ -324,7 +347,7 @@ export class Oracles extends RollTables {
 		data: IOracleCategoryBranch | IOracleBranch
 	): helpers.ConstructorDataType<Folder['data']> {
 		const parentDfId = data['Member of'] ?? data.Category
-		const parent = parentDfId != null ? hashLookup(parentDfId) : null
+		const parentFolder = parentDfId != null ? hashLookup(parentDfId) : null
 
 		return {
 			_id: hashLookup(data.$id),
@@ -334,11 +357,17 @@ export class Oracles extends RollTables {
 			sort: data.Source.Page,
 			flags: {
 				'foundry-ironsworn': {
-					dataforged: pick(data, '$id', 'Source', 'Category', 'Member of')
+					dataforged: pickDataforged(
+						data,
+						'$id',
+						'Source',
+						'Category',
+						'Member of'
+					)
 				}
 			},
 			color: data.Display.Color,
-			parent
+			parent: parentFolder
 		}
 	}
 
@@ -360,15 +389,15 @@ export class Oracles extends RollTables {
 		// folders still need to go through the motions, but shouldn't be stored to db
 		if (mode === 'tables-only') folderContext.temporary = true
 
-		const folderData = mergeObject(
-			folderOptions as any,
-			Oracles.getFolderConstructorData(branch) as any
-		) as helpers.ConstructorDataType<IronFolder['data']>
+		const folderData = this.getFolderConstructorData(branch)
+		setProperty(folderData, 'flags.foundry-ironsworn.canonical', true)
 
 		const folder = (await IronFolder.create(
-			folderData,
+			{ ...folderOptions, ...folderData },
 			folderContext
 		)) as IronFolder
+
+		// await folder.setFlag('foundry-ironsworn', 'canonical', true)
 
 		if (folder == null)
 			throw new Error(
@@ -377,37 +406,38 @@ export class Oracles extends RollTables {
 
 		const folders: Array<IronFolder | undefined> = [folder]
 
-		const folderChildOptions = mergeObject(folderOptions, {
-			folder
-		}) as helpers.ConstructorDataType<Folder['data']>
-
-		const folderChildContext: DocumentModificationContext = {
-			...folderContext,
-			parent: folder
+		const folderChildOptions: Partial<
+			helpers.ConstructorDataType<Folder['data']>
+		> = {
+			color: folderData.color,
+			...folderOptions,
+			parent: folderData._id
 		}
 
-		const tableChildOptions = mergeObject(tableOptions, {
-			folder
-		}) as helpers.ConstructorDataType<RollTable['data']>
+		const tableChildOptions: Partial<
+			helpers.ConstructorDataType<RollTable['data']>
+		> = { ...tableOptions, folder: folderData._id }
+		setProperty(tableChildOptions, 'flags.foundry-ironsworn.canonical', true)
 
-		const heritableKeys = ['color', 'flags.dataforged.Source']
 		// inherit some properties from parent if they're not already set by Dataforged.
-		for (const key of heritableKeys) {
-			for (const childOptions of [folderChildOptions, tableChildOptions]) {
-				if (foundry.utils.hasProperty(childOptions, key)) {
-					setProperty(childOptions, key, getProperty(childOptions, key))
-				}
+		for (const childOptions of [folderChildOptions, tableChildOptions]) {
+			const key = 'flags.foundry-ironsworn.dataforged.Source'
+			if (foundry.utils.hasProperty(childOptions, key)) {
+				setProperty(childOptions, key, getProperty(childOptions, key))
 			}
 		}
 
-		const buildChildFolder = async (child: IOracleBase) => {
-			if (Oracles.isBranch(child) || Oracles.isCategoryBranch(child))
+		const buildChildFolder = async (folderChild: IOracleBase) => {
+			if (
+				Oracles.isBranch(folderChild) ||
+				Oracles.isCategoryBranch(folderChild)
+			)
 				folders.push(
 					...(await Oracles.buildBranch({
-						branch: child,
+						branch: folderChild,
 						mode,
 						folderOptions: folderChildOptions,
-						folderContext: folderChildContext,
+						folderContext,
 						tableOptions: tableChildOptions,
 						tableContext
 					}))
@@ -421,18 +451,20 @@ export class Oracles extends RollTables {
 
 		const tablesData: IOracleLeaf[] = []
 		if (Oracles.isBranch(branch)) {
-			for (const child of branch.Oracles) {
-				if (Oracles.isBranch(child)) await buildChildFolder(child)
-				if (mode !== 'folders-only' && Oracles.isLeaf(child))
-					tablesData.push(child)
+			for (const tableChild of branch.Oracles) {
+				if (Oracles.isBranch(tableChild)) await buildChildFolder(tableChild)
+				else if (mode !== 'folders-only' && Oracles.isLeaf(tableChild))
+					tablesData.push(tableChild)
 			}
 		}
-		if (mode !== 'folders-only')
-			await OracleTable.fromDataforged(
+		if (mode !== 'folders-only') {
+			// these don't need to be awaited
+			void OracleTable.fromDataforged(
 				tablesData,
 				tableChildOptions,
 				tableContext
 			)
+		}
 		return folders
 	}
 }

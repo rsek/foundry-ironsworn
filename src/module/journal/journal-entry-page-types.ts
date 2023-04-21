@@ -1,5 +1,6 @@
 import type { ISettingTruthOption } from 'dataforged'
 import type { ChallengeRank } from '../constants'
+import { DataforgedFlags } from '../dataforged'
 import type { IronswornJournalPage } from './journal-entry-page'
 
 interface CounterBase {
@@ -114,8 +115,8 @@ declare global {
 		JournalEntryPage: {
 			'foundry-ironsworn': {
 				dataforged?:
-					| Pick<ISettingTruthOption, '$id'>
-					| Pick<ISettingTruthOption, 'Suggestions'>
+					| DataforgedFlags<ISettingTruthOption, '$id'>
+					| DataforgedFlags<ISettingTruthOption, 'Suggestions'>
 			}
 		}
 	}

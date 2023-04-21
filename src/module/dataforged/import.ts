@@ -33,7 +33,22 @@ import {
 import { DATAFORGED_ICON_MAP } from './images'
 import { renderMarkdown } from './rendering'
 
-export function cleanDollars(obj): any {
+type StripDollarKey<K> = K extends `$${infer P}` ? `df${P}` : K
+export type StripDollars<T> = { [K in keyof T as StripDollarKey<K>]: T[K] }
+/**
+ * Picks keys, and replaces any keys starting with '$' with 'df'
+ */
+export type DataforgedFlags<T, K extends keyof T> = StripDollars<Pick<T, K>>
+
+export function pickDataforged<T extends object, K extends keyof T>(
+	obj: T,
+	...keys: K[]
+) {
+	const newObj = pick(obj, ...keys)
+	return cleanDollars(newObj) as DataforgedFlags<T, K>
+}
+
+export function cleanDollars(obj) {
 	if (isArray(obj)) {
 		const ret = [] as any[]
 		for (const item of obj) {
@@ -386,7 +401,7 @@ async function processTruths(
 				flags: {
 					'foundry-ironsworn': {
 						type: 'truth-category',
-						dataforged: pick(truth, 'Suggestions', '$id', 'Source')
+						dataforged: pickDataforged(truth, 'Suggestions', '$id', 'Source')
 					}
 				}
 			},
@@ -405,7 +420,9 @@ async function processTruths(
 						Quest: entry['Quest Starter'],
 						'Quest Starter': undefined
 					}),
-					flags: { 'foundry-ironsworn': { dataforged: pick(entry, '$id') } }
+					flags: {
+						'foundry-ironsworn': { dataforged: pickDataforged(entry, '$id') }
+					}
 				},
 				{ parent: je }
 			)
@@ -420,7 +437,9 @@ async function processTruths(
 					format: 2 // JOURNAL_ENTRY_PAGE_FORMATS.MARKDOWN
 				},
 				flags: {
-					'foundry-ironsworn': { dataforged: pick(truth, 'Suggestions') }
+					'foundry-ironsworn': {
+						dataforged: pickDataforged(truth, 'Suggestions')
+					}
 				}
 			},
 			{ parent: je }

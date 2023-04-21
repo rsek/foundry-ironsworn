@@ -63,7 +63,7 @@ export class OracleTableResult extends TableResult {
 		const _id =
 			tableRow.dfid ??
 			(tableRow as any).system?.dfid ??
-			(tableRow as any).flags?.dataforged?.$id ??
+			(tableRow as any).flags?.['foundry-ironsworn'].dataforged?.dfid ??
 			tableRow.$id
 
 		if (_id != null) data._id = hashLookup(_id)
