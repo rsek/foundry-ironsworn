@@ -9,7 +9,6 @@ import { OracleTable } from './oracle-table'
 import { IronFolder } from '../folder/folder'
 import { compact, pick } from 'lodash-es'
 import type { helpers } from '../../types/utils'
-import { writeFile } from 'fs/promises'
 
 type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -121,7 +120,9 @@ export class Oracles extends RollTables {
 	static getGameTables(setting: DataforgedNamespace) {
 		return game.tables?.filter((tbl) =>
 			Boolean(
-				tbl.getFlag('dataforged', '$id')?.startsWith(`${setting}/Oracles`)
+				tbl
+					.getFlag('foundry-ironsworn', 'dataforged')
+					?.$id.startsWith(`${setting}/Oracles`)
 			)
 		)
 	}
@@ -137,11 +138,19 @@ export class Oracles extends RollTables {
 		if (topLevelOnly)
 			testFn = (folder) =>
 				// check if it has a matching id *and* no provided category parent id
-				Boolean(folder.getFlag('dataforged', '$id')?.startsWith(root)) &&
-				!folder.getFlag('dataforged', 'Category')
+				Boolean(
+					folder
+						.getFlag('foundry-ironsworn', 'dataforged')
+						?.$id.startsWith(root)
+				) &&
+				!(folder.getFlag('foundry-ironsworn', 'dataforged') as any)?.Category
 		else
 			testFn = (folder) =>
-				Boolean(folder.getFlag('dataforged', '$id')?.startsWith(root))
+				Boolean(
+					folder
+						.getFlag('foundry-ironsworn', 'dataforged')
+						?.$id.startsWith(root)
+				)
 
 		return game.folders.filter(
 			(folder) => folder.type === this.documentName && testFn(folder)
@@ -183,7 +192,8 @@ export class Oracles extends RollTables {
 			})
 		)
 		try {
-			await writeFile(path, JSON.stringify(folderTree))
+			// @ts-expect-error
+			await fs.writeFile(path, JSON.stringify(folderTree))
 		} catch (error) {
 			logger.error(`Couldn't save oracle folder tree to ${path}`)
 			return
@@ -323,7 +333,9 @@ export class Oracles extends RollTables {
 			description: data.Description,
 			sort: data.Source.Page,
 			flags: {
-				dataforged: pick(data, '$id', 'Source', 'Category', 'Member of')
+				'foundry-ironsworn': {
+					dataforged: pick(data, '$id', 'Source', 'Category', 'Member of')
+				}
 			},
 			color: data.Display.Color,
 			parent
