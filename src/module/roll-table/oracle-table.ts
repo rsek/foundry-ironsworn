@@ -1,7 +1,7 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import type { IOracle, IOracleCategory, IRow } from 'dataforged'
-import { max, pick } from 'lodash-es'
+import { max } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
 import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
@@ -27,7 +27,7 @@ export class OracleTable extends RollTable {
 	}
 
 	get dfid() {
-		return this.getFlag('foundry-ironsworn', 'dataforged')?.dfid
+		return this.getFlag('foundry-ironsworn', 'dfid')
 	}
 
 	// static override async _onCreateDocuments(
@@ -174,13 +174,8 @@ export class OracleTable extends RollTable {
 			_id: hashLookup(oracle.$id),
 			flags: {
 				'foundry-ironsworn': {
-					dataforged: pickDataforged(
-						oracle,
-						'$id',
-						'Source',
-						'Category',
-						'Display'
-					)
+					dfid: oracle.$id,
+					dataforged: pickDataforged(oracle, 'Source', 'Category', 'Display')
 				}
 			},
 			name: oracle.Name,
@@ -438,7 +433,7 @@ export class OracleTable extends RollTable {
 		) as ConfiguredFlags<'ChatMessage'>
 
 		// trigger sound + 3d dice manually because updating the message won't
-		if (game.dice3d) void game.dice3d.showForRoll(roll, game.user, true)
+		if (game.dice3d != null) void game.dice3d.showForRoll(roll, game.user, true)
 		else void AudioHelper.play({ src: CONFIG.sounds.dice })
 
 		return await msg.update({

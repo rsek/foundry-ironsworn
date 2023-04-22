@@ -114,9 +114,8 @@ declare global {
 	interface FlagConfig {
 		JournalEntryPage: {
 			'foundry-ironsworn': {
-				dataforged?:
-					| DataforgedFlags<ISettingTruthOption, '$id'>
-					| DataforgedFlags<ISettingTruthOption, 'Suggestions'>
+				dfid?: string
+				dataforged?: DataforgedFlags<ISettingTruthOption, 'Suggestions'>
 			}
 		}
 	}

@@ -29,10 +29,6 @@ export type IOracleBranch = RequireKey<IOracleCategory | IOracle, 'Oracles'>
  */
 export type IOracleLeaf = RequireKey<IOracle, 'Table'>
 
-export type IRollableRow = RequireKey<IRow, 'Floor' | 'Ceiling'> & {
-	dfid?: string
-}
-
 /**
  * Used in some migrations and Vue components
  * @deprecated
@@ -64,9 +60,10 @@ declare global {
 	interface FlagConfig {
 		RollTable: {
 			'foundry-ironsworn'?: {
+				dfid?: string
 				dataforged?: DataforgedFlags<
 					IOracleLeaf,
-					'$id' | 'Category' | 'Member of' | 'Source' | 'Display'
+					'Category' | 'Member of' | 'Source' | 'Display'
 				>
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
@@ -101,7 +98,7 @@ declare global {
 	interface DocumentClassConfig {
 		TableResult: typeof OracleTableResult
 		RollTable: typeof OracleTable
-		RollTables: typeof Oracles
+		RollTables: typeof OracleTree
 	}
 
 	interface RollTableDraw {
@@ -147,4 +144,8 @@ declare global {
 			context: DocumentModificationContext
 		): Promise<unknown>
 	}
+	// interface RollTableDirectory<
+	// 	Options extends SidebarDirectory.Options = SidebarDirectory.Options
+	// > extends SidebarDirectory<'RollTable', Options> {}
+	// namespace RollTableDirectory {}
 }

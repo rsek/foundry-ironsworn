@@ -98,9 +98,7 @@ function expand() {
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if (
-		$folder.value?.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
-	) {
+	if ($folder.value?.getFlag('foundry-ironsworn', 'dfid') === dfid) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
@@ -113,7 +111,7 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
 })
 
 defineExpose({
-	dfid: () => $folder.value?.getFlag('foundry-ironsworn', 'dataforged')?.dfid,
+	dfid: () => $folder.value?.getFlag('foundry-ironsworn', 'dfid'),
 	expand,
 	collapse
 })

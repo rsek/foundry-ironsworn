@@ -1,9 +1,8 @@
 import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
-import type { IRow } from 'dataforged'
+import type { IRow, RequireKey } from 'dataforged'
 import { inRange } from 'lodash-es'
 import type { helpers } from '../../types/utils'
 import { hashLookup, renderLinksInStr } from '../dataforged'
-import type { IRollableRow } from './roll-table-types'
 
 /** Extends FVTT's default TableResult with functionality specific to this system. */
 export class OracleTableResult extends TableResult {
@@ -48,7 +47,7 @@ export class OracleTableResult extends TableResult {
 
 	/** Converts a Dataforged IRow object into OracleTableResult constructor data. */
 	static getConstructorData(
-		tableRow: IRow & { Floor: number; Ceiling: number; dfid?: string }
+		tableRow: OracleTableResult.IRollableRow
 	): TableResultDataConstructorData {
 		let text: string
 		if (tableRow.Result && tableRow.Summary) {
@@ -78,8 +77,12 @@ export class OracleTableResult extends TableResult {
 	}
 
 	/** Does the row data have a numeric range? */
-	static isRollableRow(row: IRow): row is IRollableRow {
+	static isRollableRow(row: IRow): row is OracleTableResult.IRollableRow {
 		return typeof row.Floor === 'number' && typeof row.Ceiling === 'number'
+	}
+
+	static isEmbeddedRow(row: IRow): row is OracleTableResult.IEmbeddedRow {
+		return typeof (row as OracleTableResult.IEmbeddedRow)?.dfid === 'string'
 	}
 
 	/**
@@ -88,17 +91,17 @@ export class OracleTableResult extends TableResult {
 	 * @param context Default constructor context for the tables
 	 */
 	static async fromDataforged(
-		rowData: IRow,
+		rowData: OracleTableResult.IRollableRow,
 		options?: Partial<TableResultDataConstructorData>,
 		context?: DocumentModificationContext
 	): Promise<OracleTableResult | undefined>
 	static async fromDataforged(
-		rowData: IRow[],
+		rowData: OracleTableResult.IRollableRow[],
 		options?: Partial<TableResultDataConstructorData>,
 		context?: DocumentModificationContext
 	): Promise<OracleTableResult[]>
 	static async fromDataforged(
-		rowData: IRow | IRow[],
+		rowData: OracleTableResult.IRollableRow | OracleTableResult.IRollableRow[],
 		options: Partial<TableResultDataConstructorData> = {},
 		context: DocumentModificationContext = {}
 	): Promise<OracleTableResult | OracleTableResult[] | undefined> {
@@ -121,5 +124,12 @@ export class OracleTableResult extends TableResult {
 			),
 			context
 		)
+	}
+}
+
+export namespace OracleTableResult {
+	export type IEmbeddedRow = IRow & { dfid: string }
+	export type IRollableRow = RequireKey<IRow, 'Floor' | 'Ceiling'> & {
+		dfid?: string
 	}
 }

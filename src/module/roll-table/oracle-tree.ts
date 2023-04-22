@@ -88,7 +88,7 @@ export class OracleTree extends RollTables {
 			const folder = game.folders.find(
 				(folder) =>
 					folder.type === 'RollTable' &&
-					folder.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
+					folder.getFlag('foundry-ironsworn', 'dfid') === dfid
 			) as StoredDocument<IronFolder & { type: 'RollTable' }>
 			if (folder != null) return folder
 		}
@@ -96,7 +96,7 @@ export class OracleTree extends RollTables {
 		if (game.tables == null)
 			throw new Error('game.tables has not been initialized')
 		return game.tables.find(
-			(tbl) => tbl.getFlag('foundry-ironsworn', 'dataforged')?.dfid === dfid
+			(tbl) => tbl.getFlag('foundry-ironsworn', 'dfid') === dfid
 		)
 	}
 
@@ -127,9 +127,10 @@ export class OracleTree extends RollTables {
 		node: OracleTree.Node,
 		setting: DataforgedNamespace
 	) {
-		const flg = node.getFlag('foundry-ironsworn', 'dataforged')?.dfid as
-			| string
-			| undefined
+		const flg = (node as OracleTable).getFlag(
+			'foundry-ironsworn',
+			'dataforged'
+		)?.dfid
 		return flg == null || flg.startsWith(setting)
 	}
 
@@ -371,13 +372,8 @@ export class OracleTree extends RollTables {
 			sort: data.Source.Page,
 			flags: {
 				'foundry-ironsworn': {
-					dataforged: pickDataforged(
-						data,
-						'$id',
-						'Source',
-						'Category',
-						'Member of'
-					)
+					dfid: data.$id,
+					dataforged: pickDataforged(data, 'Source', 'Category', 'Member of')
 				}
 			},
 			color: data.Display.Color,
@@ -484,7 +480,7 @@ export class OracleTree extends RollTables {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace Oracles {
+export namespace OracleTree {
 	export interface BuildBranchOptions {
 		branch: IOracleBranch | IOracleCategoryBranch
 		mode?: 'omit-tables' | 'omit-folders' | 'all'

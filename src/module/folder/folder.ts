@@ -13,7 +13,7 @@ export class IronFolder extends Folder {
 
 	/** The Dataforged ID of the node represented by this folder, if any */
 	get dfid() {
-		return this.getFlag('foundry-ironsworn', 'dataforged')?.dfid
+		return this.getFlag('foundry-ironsworn', 'dfid')
 	}
 
 	// fromOracleTableStub(oracleTable: OracleTable) {

@@ -78,7 +78,9 @@ Hooks.once('init', async () => {
 
 	// Define custom Entity classes
 	CONFIG.Actor.documentClass = IronswornActor
+
 	CONFIG.Item.documentClass = IronswornItem
+	CONFIG.Item.compendiumIndexFields.push('system.dfid')
 
 	CONFIG.JournalEntry.documentClass = IronswornJournalEntry
 	CONFIG.JournalEntryPage.documentClass = IronswornJournalPage
@@ -88,7 +90,10 @@ Hooks.once('init', async () => {
 	CONFIG.ui.tables = OracleDirectory
 	CONFIG.RollTable.documentClass = OracleTable
 	CONFIG.RollTable.collection = OracleTree
-	CONFIG.RollTable.compendiumIndexFields.push('flags.dataforged.Source.Page')
+	CONFIG.RollTable.compendiumIndexFields.push(
+		'flags.foundry-ironsworn.dataforged.Source.Page',
+		'flags.foundry-ironsworn.dfid'
+	)
 	// CONFIG.RollTable.sidebarIcon = 'icon isicon-oracle'
 	CONFIG.RollTable.resultIcon = 'icons/dice/d10black.svg'
 	// CONFIG.RollTable.resultTemplate =

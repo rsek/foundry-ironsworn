@@ -116,7 +116,7 @@ export const FOE_IMAGES = {
 	Tempest: 'icons/magic/lightning/bolts-salvo-clouds-sky.webp'
 } as const
 
-const PACKS = [
+export const PACKS = [
 	'foundry-ironsworn.ironsworndelvethemes',
 	'foundry-ironsworn.ironsworndelvedomains',
 	'foundry-ironsworn.ironswornfoes',

@@ -35,10 +35,8 @@ declare global {
 	interface FlagConfig {
 		JournalEntry: {
 			'foundry-ironsworn': {
-				dataforged?: DataforgedFlags<
-					ISettingTruth,
-					'$id' | 'Source' | 'Suggestions'
-				>
+				dfid?: string
+				dataforged?: DataforgedFlags<ISettingTruth, 'Source' | 'Suggestions'>
 				type?: JournalEntryType
 			}
 		}

@@ -14,19 +14,20 @@ export type FolderableDocument = InstanceType<
 
 export type FolderType = 'oracles' | 'moves' | 'assets'
 
-interface FolderTypeMap extends Record<FolderType, StripDollars<IHasId>> {
+interface FolderTypeMap extends Record<FolderType, object> {
 	oracles: DataforgedFlags<
 		IOracleBranch | IOracleCategoryBranch,
-		'$id' | 'Source' | 'Category'
+		'Source' | 'Category' | 'Member of'
 	>
-	moves: DataforgedFlags<IMoveCategory, '$id' | 'Source'>
-	assets: DataforgedFlags<IAssetType, '$id' | 'Source'>
+	moves: DataforgedFlags<IMoveCategory, 'Source'>
+	assets: DataforgedFlags<IAssetType, 'Source'>
 }
 
 declare global {
 	interface FlagConfig {
 		Folder: {
 			'foundry-ironsworn'?: {
+				dfid?: string
 				dataforged?: ValueOf<FolderTypeMap>
 				forceExpanded?: boolean
 				type?: FolderType

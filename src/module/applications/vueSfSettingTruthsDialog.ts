@@ -45,7 +45,7 @@ export class SFSettingTruthsDialogVue extends VueAppMixin(FormApplication) {
 		const truths = dfTruths.map((df) => ({
 			df,
 			je: documents.find(
-				(x) => x.getFlag('foundry-ironsworn', 'dataforged')?.dfid === df.$id
+				(x) => x.getFlag('foundry-ironsworn', 'dfid') === df.$id
 			)
 		}))
 

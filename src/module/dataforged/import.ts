@@ -400,7 +400,8 @@ async function processTruths(
 				flags: {
 					'foundry-ironsworn': {
 						type: 'truth-category',
-						dataforged: pickDataforged(truth, 'Suggestions', '$id', 'Source')
+						dfid: truth.$id,
+						dataforged: pickDataforged(truth, 'Suggestions', 'Source')
 					}
 				}
 			},
@@ -420,7 +421,7 @@ async function processTruths(
 						'Quest Starter': undefined
 					}),
 					flags: {
-						'foundry-ironsworn': { dataforged: pickDataforged(entry, '$id') }
+						'foundry-ironsworn': { dfid: entry.$id }
 					}
 				},
 				{ parent: je }
