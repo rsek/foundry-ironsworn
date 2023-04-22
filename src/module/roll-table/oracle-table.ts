@@ -1,15 +1,10 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import type { IOracle, IOracleCategory, IRow } from 'dataforged'
+import type { IOracle, IRow } from 'dataforged'
 import { max } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
 import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
-import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
-import {
-	findPathToNodeByTableUuid,
-	getOracleTreeWithCustomOracles
-} from '../features/customoracles'
 import type { IronswornJournalEntry } from '../journal/journal-entry'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
@@ -22,6 +17,14 @@ export class OracleTable extends RollTable {
 	// missing from the LoFD types package
 	declare description: string
 
+	/** Rolls on the table and returns the text of the first result. */
+	async drawText(options: RollTable.DrawOptions = {}) {
+		const {
+			results: [result]
+		} = await this.draw(options)
+		return result.getChatText()
+	}
+
 	get canonical() {
 		return Boolean(this.getFlag('foundry-ironsworn', 'canonical'))
 	}
@@ -30,32 +33,8 @@ export class OracleTable extends RollTable {
 		return this.getFlag('foundry-ironsworn', 'dfid')
 	}
 
-	// static override async _onCreateDocuments(
-	// 	documents: OracleTable[],
-	// 	context: DocumentModificationContext
-	// ) {
-	// 	const oraclePacks = PACKS.filter((pack) => pack.includes('oracles'))
-
-	// 	if (oraclePacks.includes(context.pack as ValueOf<typeof PACKS>)) {
-	//     let foldersToCreate = []
-	// 		for (const oracle of documents) {
-	// 			if (oracle.dfid == null) continue
-	// 			let parent = game.folders?.find(
-	// 				(folder) => folder.dfid === oracle.parentDfid
-	// 			)
-	//       if (parent == null) {
-
-	//       }
-	// 		}
-	// 	}
-
-	// 	await super._onCreateDocuments(documents, context)
-	// }
-
-	override get visible() {
-		const flg = this.getFlag('foundry-ironsworn', 'canonical')
-		if (flg === true) return false
-		return super.visible
+	get dataforged() {
+		return this.getFlag('foundry-ironsworn', 'dataforged')
 	}
 
 	static DEFAULT_ICON = 'icons/dice/d10black.svg'
@@ -63,51 +42,6 @@ export class OracleTable extends RollTable {
 	/** The custom template used for rendering oracle results */
 	static resultTemplate =
 		'systems/foundry-ironsworn/templates/rolls/oracle-roll-message.hbs'
-
-	static getDFOracleByDfId(
-		dfid: string
-	): IOracle | IOracleCategory | undefined {
-		const nodes = OracleTable.findOracleWithIntermediateNodes(dfid)
-		return nodes[nodes.length - 1]
-	}
-
-	static findOracleWithIntermediateNodes(
-		dfid: string
-	): Array<IOracle | IOracleCategory> {
-		const ret: Array<IOracle | IOracleCategory> = []
-
-		function walkCategory(cat: IOracleCategory): boolean {
-			ret.push(cat)
-
-			if (cat.$id === dfid) return true
-			for (const oracle of cat.Oracles ?? []) {
-				if (walkOracle(oracle)) return true
-			}
-			for (const childCat of cat.Categories ?? []) {
-				if (walkCategory(childCat)) return true
-			}
-
-			ret.pop()
-			return false
-		}
-
-		function walkOracle(oracle: IOracle): boolean {
-			ret.push(oracle)
-
-			if (oracle.$id === dfid) return true
-			for (const childOracle of oracle.Oracles ?? []) {
-				if (walkOracle(childOracle)) return true
-			}
-
-			ret.pop()
-			return false
-		}
-
-		for (const cat of [...SFOracleCategories, ...ISOracleCategories]) {
-			walkCategory(cat)
-		}
-		return ret
-	}
 
 	/**
 	 * "Ask the Oracle": Retrieve one or more oracle tables and immediately rolls on them.
@@ -145,21 +79,11 @@ export class OracleTable extends RollTable {
 
 	/**
 	 * @returns a string representing the path this table in the Ironsworn oracle tree (not including this table) */
-	async getDfPath() {
-		const starforgedRoot = await getOracleTreeWithCustomOracles('starforged')
-		const ironswornRoot = await getOracleTreeWithCustomOracles('ironsworn')
-
-		const pathElements =
-			findPathToNodeByTableUuid(starforgedRoot, this.uuid) ??
-			findPathToNodeByTableUuid(ironswornRoot, this.uuid)
-
-		const pathNames = pathElements.map((x) => x.displayName)
-		// root node (0) has no display name
-		pathNames.shift()
-		// last node is *this* node
-		pathNames.pop()
-
-		return pathNames.join(' / ')
+	getDfPath() {
+		if (this.dfid == null) return null
+		const parts = this.dfid.split('/')
+		parts.pop()
+		return parts.join(' / ').replaceAll('_', ' ')
 	}
 
 	/** Transforms a Dataforged IOracle table into RollTable constructor data. */
@@ -175,7 +99,14 @@ export class OracleTable extends RollTable {
 			flags: {
 				'foundry-ironsworn': {
 					dfid: oracle.$id,
-					dataforged: pickDataforged(oracle, 'Source', 'Category', 'Display')
+					dataforged: pickDataforged(
+						oracle,
+						'Category',
+						'Member of',
+						'Source',
+						'Display',
+						'Usage'
+					)
 				}
 			},
 			name: oracle.Name,
@@ -270,8 +201,7 @@ export class OracleTable extends RollTable {
 			roll: roll?.toJSON(),
 			table: this,
 			subtitle:
-				this.getFlag('foundry-ironsworn', 'subtitle') ??
-				(await this.getDfPath()),
+				this.getFlag('foundry-ironsworn', 'subtitle') ?? this.getDfPath(),
 			rollTableType: this.getFlag('foundry-ironsworn', 'type'),
 			sourceId: this.getFlag('foundry-ironsworn', 'sourceId')
 		}

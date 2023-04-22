@@ -88,6 +88,7 @@ Hooks.once('init', async () => {
 	CONFIG.Folder.documentClass = IronFolder
 
 	CONFIG.ui.tables = OracleDirectory
+
 	CONFIG.RollTable.documentClass = OracleTable
 	CONFIG.RollTable.collection = OracleTree
 	CONFIG.RollTable.compendiumIndexFields.push(

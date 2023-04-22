@@ -63,7 +63,7 @@ declare global {
 				dfid?: string
 				dataforged?: DataforgedFlags<
 					IOracleLeaf,
-					'Category' | 'Member of' | 'Source' | 'Display'
+					'Category' | 'Member of' | 'Source' | 'Display' | 'Usage'
 				>
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined

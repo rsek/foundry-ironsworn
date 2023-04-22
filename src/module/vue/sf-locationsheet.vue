@@ -137,16 +137,17 @@
 
 <script setup lang="ts">
 import SheetHeaderBasic from './sheet-header-basic.vue'
-import { camelCase, capitalize, flatten, sample } from 'lodash-es'
+import { capitalize, flatten, sample } from 'lodash-es'
 import { provide, computed, reactive, inject } from 'vue'
 import { $ActorKey, ActorKey } from './provisions'
 
 import MceEditor from './components/mce-editor.vue'
-import type { LocationDataProperties } from '../actor/actortypes'
 import SheetBasic from './sheet-basic.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
-import { OracleTable } from '../roll-table/oracle-table'
+import type { OracleTable } from '../roll-table/oracle-table'
 import { OracleTree } from '../roll-table/oracle-tree'
+import type { IronFolder } from '../folder/folder'
+import type { IOracleCategoryBranch } from '../roll-table/roll-table-types'
 
 const props = defineProps<{
 	data: { actor: any }
@@ -490,10 +491,8 @@ const canRandomizeName = computed(() => {
 
 	if (subtype === 'planet') {
 		const kc = capitalize(klass)
-		const json = OracleTable.getDFOracleByDfId(
-			`Starforged/Oracles/Planets/${kc}`
-		)
-		if (json) return true
+		const folder = OracleTree.findDfId(`Starforged/Oracles/Planets/${kc}`, true)
+		if (folder) return true
 	} else if (subtype === 'settlement') {
 		return true
 	}
@@ -569,30 +568,23 @@ async function saveKlass(klass) {
 	await updateAllTokens({ img })
 }
 
-async function drawAndReturnResult(
-	table?: OracleTable
-): Promise<string | undefined> {
-	if (!table) return undefined
-
-	const {
-		results: [result]
-	} = await table.draw()
-
-	return result?.text
-}
-
 async function randomizeName() {
 	const { subtype, klass } = props.data.actor.system
 	let name
 	if (subtype === 'planet') {
 		const kc = capitalize(klass)
-		const json = await OracleTable.getDFOracleByDfId(
-			`Starforged/Oracles/Planets/${kc}`
-		)
-		name = sample(json?.['Sample Names'] ?? [])
+		const json = OracleTree.findDfId(
+			`Starforged/Oracles/Planets/${kc}`,
+			true
+		) as IronFolder<OracleTable>
+		const df = json.getFlag(
+			'foundry-ironsworn',
+			'dataforged'
+		) as Partial<IOracleCategoryBranch>
+		name = sample(df?.['Sample Names'] ?? [])
 	} else if (subtype === 'settlement') {
 		const table = OracleTree.findDfId('Starforged/Oracles/Settlements/Name')
-		name = await drawAndReturnResult(table)
+		name = await table?.drawText()
 	}
 
 	if (name) {
@@ -616,7 +608,7 @@ async function randomizeKlass() {
 	}
 
 	const table = OracleTree.findDfId(tableKey)
-	const rawText = await drawAndReturnResult(table)
+	const rawText = await table?.drawText()
 	if (!rawText) return
 
 	const lctext = rawText.toLowerCase()
@@ -636,13 +628,11 @@ async function rollFirstLook() {
 	}
 }
 
-async function rollOracle(oracle) {
-	const table = OracleTree.findDfId(oracle.dfid)
-	const drawText = await drawAndReturnResult(table)
+async function rollOracle(oracle: OracleSpec) {
+	const drawText = await OracleTree.findDfId(oracle.dfid)?.drawText()
 	if (!drawText) return
 
 	// Append to description
-	const actor = props.data.actor as LocationDataProperties
 	const parts = [
 		props.data.actor.system.description,
 		'<p><strong>',

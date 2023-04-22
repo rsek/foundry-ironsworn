@@ -1,12 +1,16 @@
-import { OracleTable } from '../roll-table/oracle-table'
-import { FolderableDocument } from './folder-types'
+import type { FolderableDocument } from './folder-types'
 
-export class IronFolder extends Folder {
-	// override get visible() {
-	// 	const flg = this.getFlag('foundry-ironsworn', 'canonical')
-	// 	if (flg === true) return false
-	// 	return super.visible
-	// }
+export class IronFolder<
+	T extends FolderableDocument = FolderableDocument
+> extends Folder {
+	override get parentFolder() {
+		return super.parentFolder as this | null
+	}
+
+	override get type() {
+		return super.type as T['documentName']
+	}
+
 	get canonical() {
 		return Boolean(this.getFlag('foundry-ironsworn', 'canonical'))
 	}
@@ -15,8 +19,4 @@ export class IronFolder extends Folder {
 	get dfid() {
 		return this.getFlag('foundry-ironsworn', 'dfid')
 	}
-
-	// fromOracleTableStub(oracleTable: OracleTable) {
-
-	// }
 }

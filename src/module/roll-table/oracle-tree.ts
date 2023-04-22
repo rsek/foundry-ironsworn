@@ -1,4 +1,9 @@
-import type { GameDataRoot, IOracleBase, IOracleCategory } from 'dataforged'
+import type {
+	GameDataRoot,
+	IOracleBase,
+	IOracleCategory,
+	RequireKey
+} from 'dataforged'
 import { hashLookup, pickDataforged } from '../dataforged'
 import type {
 	IOracleBranch,
@@ -11,6 +16,7 @@ import { compact, pick, pickBy } from 'lodash-es'
 import type { helpers } from '../../types/utils'
 import { writeFileSync } from 'fs'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
+import { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 
 type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -31,7 +37,7 @@ export class OracleTree extends RollTables {
 				const isCanonical =
 					table.getFlag('foundry-ironsworn', 'canonical') ?? false
 				const hasSetting =
-					setting == null ? true : table.dfid?.startsWith(setting)
+					setting == null ? true : table.dfid?.startsWith(setting) ?? false
 				if (isCanonical && hasSetting) void table.delete()
 			}
 		if (mode !== 'omit-folders')
@@ -39,30 +45,10 @@ export class OracleTree extends RollTables {
 				const isCanonical =
 					folder.getFlag('foundry-ironsworn', 'canonical') ?? false
 				const hasSetting =
-					setting == null ? true : folder.dfid?.startsWith(setting)
+					setting == null ? true : folder.dfid?.startsWith(setting) ?? false
 				if (folder.type === 'RollTable' && isCanonical && hasSetting)
 					void folder.delete()
 			}
-	}
-
-	fromCompendium(
-		...[document, options]: Parameters<RollTables['fromCompendium']>
-	) {
-		return super.fromCompendium(document, options)
-	}
-
-	prepareForImport(data: helpers.SourceDataType<RollTable>) {
-		return super.prepareForImport(data)
-	}
-	// TODO: strip DFIDs when imported from compendium or clone?
-	// TODO: reassemble tree when importing from pack
-
-	async importFromCompendium(
-		...[pack, id, updateData, options]: Parameters<
-			RollTables['importFromCompendium']
-		>
-	) {
-		return await super.importFromCompendium(pack, id, updateData, options)
 	}
 
 	/**
@@ -86,18 +72,14 @@ export class OracleTree extends RollTables {
 			if (game.folders == null)
 				throw new Error('game.folders has not been initialized')
 			const folder = game.folders.find(
-				(folder) =>
-					folder.type === 'RollTable' &&
-					folder.getFlag('foundry-ironsworn', 'dfid') === dfid
-			) as StoredDocument<IronFolder & { type: 'RollTable' }>
+				(folder) => folder.type === 'RollTable' && folder.dfid === dfid
+			) as StoredDocument<IronFolder<OracleTable>>
 			if (folder != null) return folder
 		}
 
 		if (game.tables == null)
 			throw new Error('game.tables has not been initialized')
-		return game.tables.find(
-			(tbl) => tbl.getFlag('foundry-ironsworn', 'dfid') === dfid
-		)
+		return game.tables.find((tbl) => tbl.dfid === dfid)
 	}
 
 	/**
@@ -127,10 +109,7 @@ export class OracleTree extends RollTables {
 		node: OracleTree.Node,
 		setting: DataforgedNamespace
 	) {
-		const flg = (node as OracleTable).getFlag(
-			'foundry-ironsworn',
-			'dataforged'
-		)?.dfid
+		const flg = node.dfid
 		return flg == null || flg.startsWith(setting)
 	}
 
@@ -140,8 +119,11 @@ export class OracleTree extends RollTables {
 			game.folders?.filter(
 				(folder) =>
 					folder.type === 'RollTable' &&
-					OracleTree.isRootNode(folder) &&
-					OracleTree.isShownForSetting(folder, setting)
+					OracleTree.isRootNode(folder as IronFolder<OracleTable>) &&
+					OracleTree.isShownForSetting(
+						folder as IronFolder<OracleTable>,
+						setting
+					)
 			) ?? []
 		// our tables don't do this, but user custom tables might
 		const rootTables =
@@ -156,11 +138,7 @@ export class OracleTree extends RollTables {
 	/** Return all OracleTables that have a DFID associated with a specific game. */
 	static getGameTables(setting: DataforgedNamespace) {
 		return game.tables?.filter((tbl) =>
-			Boolean(
-				tbl
-					.getFlag('foundry-ironsworn', 'dataforged')
-					?.dfid.startsWith(`${setting}/Oracles`)
-			)
+			Boolean(tbl.dfid?.startsWith(`${setting}/Oracles`))
 		)
 	}
 
@@ -175,20 +153,9 @@ export class OracleTree extends RollTables {
 		if (topLevelOnly)
 			testFn = (folder) =>
 				// check if it has a matching id *and* no provided category parent id
-				Boolean(
-					folder
-						.getFlag('foundry-ironsworn', 'dataforged')
-						?.dfid.startsWith(root)
-				) &&
-				!((folder.getFlag('foundry-ironsworn', 'dataforged') as any)
-					?.Category as string | undefined)
-		else
-			testFn = (folder) =>
-				Boolean(
-					folder
-						.getFlag('foundry-ironsworn', 'dataforged')
-						?.dfid.startsWith(root)
-				)
+				Boolean(folder.dfid?.startsWith(root)) &&
+				Boolean(folder.parentFolder?.dfid)
+		else testFn = (folder) => Boolean(folder.dfid?.startsWith(root))
 
 		return game.folders.filter(
 			(folder) => folder.type === this.documentName && testFn(folder)
@@ -364,18 +331,45 @@ export class OracleTree extends RollTables {
 		const parentDfId = data['Member of'] ?? data.Category
 		const parentFolder = parentDfId != null ? hashLookup(parentDfId) : null
 
+		const flags: RequireKey<ConfiguredFlags<'Folder'>, 'foundry-ironsworn'> = {
+			'foundry-ironsworn': {
+				dfid: data.$id
+			}
+		}
+		if (this.isBranch(data))
+			flags['foundry-ironsworn'].dataforged = pickDataforged(
+				data,
+				'Display',
+				'Source',
+				'Category',
+				'Member of',
+				'Aliases',
+				'Usage'
+			)
+		else if (this.isCategoryBranch(data))
+			flags['foundry-ironsworn'].dataforged = pickDataforged(
+				data,
+				'Display',
+				'Source',
+				'Category',
+				'Member of',
+				'Aliases',
+				'Usage',
+				'Sample Names'
+			)
+
+		// strip redundant flags
+		setProperty(flags, 'foundry-ironsworn.dataforged.Display.Title', undefined)
+		setProperty(flags, 'foundry-ironsworn.dataforged.Display.Color', undefined)
+
 		return {
 			_id: hashLookup(data.$id),
+			// remove "Oracle XX: " from some classic oracle titles
 			name: data.Display.Title.replace(/^Oracle [0-9]+: /, ''),
 			type: 'RollTable',
 			description: data.Description,
 			sort: data.Source.Page,
-			flags: {
-				'foundry-ironsworn': {
-					dfid: data.$id,
-					dataforged: pickDataforged(data, 'Source', 'Category', 'Member of')
-				}
-			},
+			flags,
 			color: data.Display.Color,
 			parent: parentFolder
 		}
@@ -492,5 +486,5 @@ export namespace OracleTree {
 	export interface BuildTreeOptions extends Omit<BuildBranchOptions, 'branch'> {
 		branches: IOracleCategory[]
 	}
-	export type Node = IronFolder | OracleTable
+	export type Node = IronFolder<OracleTable> | OracleTable
 }
