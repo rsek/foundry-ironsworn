@@ -190,22 +190,13 @@ export class OracleTree extends RollTables {
 
 		// add tables to compendium
 		for await (const table of tables)
-			await pack
-				.importDocument(table, {
-					clearPermissions: true,
-					keepId: true,
-					clearSort: false,
-					clearState: true
-				})
-				// unset canonical flag, so that users importing it don't create collisions (the tree setup method flips it back on again)
-				.then(
-					async (packTable) =>
-						await (packTable as StoredDocument<OracleTable>)?.setFlag(
-							'foundry-ironsworn',
-							'canonical',
-							undefined
-						)
-				)
+			await pack.importDocument(table, {
+				clearPermissions: true,
+				keepId: true,
+				clearSort: false,
+				clearState: true
+			})
+		// TODO: figure out a way to ensure that user-imported tables arent canonical by default
 
 		// TODO: is there a way that tables could be brought in on-demand, using the index?
 
