@@ -152,7 +152,7 @@ const oracles = compact(
 	uniq([
 		...($itemSystem.value?.Oracles ?? []),
 		...(props.move.dataforgedMove?.Oracles ?? [])
-	]).map((id) => OracleTree.findDfId(id)?.toObject())
+	]).map((id) => OracleTree.find(id)?.toObject())
 )
 
 // Outbound link clicks: broadcast events

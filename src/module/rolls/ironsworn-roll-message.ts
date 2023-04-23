@@ -323,7 +323,7 @@ export class IronswornRollMessage {
 
 		const system = move.system as SFMoveDataPropertiesData
 		const dfids = system.Oracles ?? []
-		const nextOracles = compact(dfids.map((id) => OracleTree.findDfId(id)))
+		const nextOracles = compact(dfids.map((id) => OracleTree.find(id)))
 		return { nextOracles }
 	}
 }

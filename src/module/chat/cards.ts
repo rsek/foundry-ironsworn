@@ -30,7 +30,7 @@ export class IronswornChatCard {
 
 			const system = fItem.system as SFMoveDataPropertiesData
 			const oracleIds = system.Oracles ?? []
-			return oracleIds.map((dfid) => OracleTree.findDfId(dfid))
+			return oracleIds.map((dfid) => OracleTree.find(dfid))
 		})
 		const tables = compact(flatten(await Promise.all(maybeTablePromises)))
 		if (tables.length === 0) return

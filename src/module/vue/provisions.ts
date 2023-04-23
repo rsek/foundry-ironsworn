@@ -6,6 +6,7 @@ import type { Emitter, EventType } from 'mitt'
 import type { IronswornJournalPage } from '../journal/journal-entry-page'
 import type { OracleTable } from '../roll-table/oracle-table'
 import type { helpers } from '../../types/utils'
+import { OracleTree } from '../roll-table/oracle-tree'
 
 // Provided by the Vue plugin
 export const $EnrichHtmlKey = Symbol('$enrichHtml') as InjectionKey<
@@ -45,3 +46,10 @@ export const $OracleKey = Symbol('$oracle') as InjectionKey<OracleTable>
 export const OracleKey = Symbol('oracle') as InjectionKey<
 	Ref<helpers.SourceDataType<OracleTable>>
 >
+
+// export const $OracleNodesKey = Symbol('$oracleNodes') as InjectionKey<
+// 	OracleTree.Node[]
+// >
+// export const OracleNodes = Symbol('oracleNodes') as InjectionKey<
+// 	Ref<helpers.SourceDataType<OracleTree.Node>[]>
+// >

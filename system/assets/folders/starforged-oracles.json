@@ -1,108 +1,42 @@
 [
 	{
-		"_id": "5a9ded9c6cdc7583",
-		"name": "Access",
-		"type": "RollTable",
-		"sort": 352,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Access",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 352
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "d985dae3484a0e5b",
-		"name": "Ask the Oracle",
-		"type": "RollTable",
-		"sort": 229,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Moves/Ask_the_Oracle",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 229
-					},
-					"Category": "Starforged/Oracles/Moves"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "adcc4cbc5484a254"
-	},
-	{
-		"_id": "3c4c763fbc099c60",
-		"name": "Basic Form",
-		"type": "RollTable",
-		"description": "Roll for a basic form, and flesh out the creature’s appearance using the First Look table.",
-		"sort": 337,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Creatures/Basic_Form",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 337
-					},
-					"Category": "Starforged/Oracles/Creatures"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "5b1e2f2fead08924"
-	},
-	{
-		"_id": "2c017ba0d0ff0e12",
-		"name": "Chaotic",
-		"type": "RollTable",
-		"description": "Reality is corrupted or warped in this place.",
-		"sort": 372,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Chaotic",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 372
-					},
-					"Category": "Starforged/Oracles/Location_Themes"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "40c330364b963a81"
-	},
-	{
 		"_id": "b582a7b95b531a60",
 		"name": "Character Creation",
 		"type": "RollTable",
-		"sort": 0,
+		"sort": 105,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Character_Creation",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Character_Creation",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
-					}
+						"Page": 105
+					},
+					"Aliases": ["Creation"]
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "dfc71f2bbd43cfc1",
+		"name": "Characters",
+		"type": "RollTable",
+		"description": "Don’t try to build a fully formed understanding character when you first encounter them; instead, focus on what your character learns or perceives as a first impression using oracles such as First Look and Initial Disposition. Then envision or generate additional details over time.",
+		"sort": 330,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Characters",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 330
+					},
+					"Aliases": ["NPC"]
 				},
 				"canonical": true
 			}
@@ -116,15 +50,19 @@
 		"sort": 333,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Characters/Name",
+				"parentDfid": "Starforged/Oracles/Characters",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Characters/Name",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 333
 					},
-					"Category": "Starforged/Oracles/Characters"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false
+					}
 				},
 				"canonical": true
 			}
@@ -132,60 +70,19 @@
 		"folder": "dfc71f2bbd43cfc1"
 	},
 	{
-		"_id": "dfc71f2bbd43cfc1",
-		"name": "Characters",
-		"type": "RollTable",
-		"description": "Don’t try to build a fully formed understanding character when you first encounter them; instead, focus on what your character learns or perceives as a first impression using oracles such as First Look and Initial Disposition. Then envision or generate additional details over time.",
-		"sort": 0,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Characters",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
-					}
-				},
-				"canonical": true
-			}
-		}
-	},
-	{
-		"_id": "106a2830d69bfa64",
-		"name": "Community",
-		"type": "RollTable",
-		"sort": 353,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Community",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 353
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
 		"_id": "312c7e84afc43125",
 		"name": "Core Oracles",
 		"type": "RollTable",
-		"sort": 0,
+		"sort": 296,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Core",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Core",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 296
 					}
 				},
 				"canonical": true
@@ -197,15 +94,16 @@
 		"name": "Creatures",
 		"type": "RollTable",
 		"description": "Roll for a basic form, and flesh out the creature’s appearance using this Creature First Look table. Then, roll on the Encountered Behavior table to envision this creature’s motivation and frame how the encounter begins.",
-		"sort": 0,
+		"sort": 336,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Creatures",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Creatures",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 336
 					}
 				},
 				"canonical": true
@@ -213,21 +111,89 @@
 		}
 	},
 	{
-		"_id": "fd281eb30bcd3e2e",
-		"name": "Derelict Zones",
+		"_id": "3c4c763fbc099c60",
+		"name": "Basic Form",
 		"type": "RollTable",
-		"sort": 351,
+		"description": "Roll for a basic form, and flesh out the creature’s appearance using the First Look table.",
+		"sort": 337,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Creatures/Basic_Form",
+				"parentDfid": "Starforged/Oracles/Creatures",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Zones",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 351
+						"Page": 337
 					},
-					"Category": "Starforged/Oracles/Derelicts"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Environment"
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "5b1e2f2fead08924"
+	},
+	{
+		"_id": "fd19a02fbd5f71e6",
+		"name": "Derelicts",
+		"type": "RollTable",
+		"description": "Derelicts are the forsaken relics of human endeavors. Use these First Look tables for your initial survey of the derelict. To reveal more about the look and original function or nature of the site, roll on appropriate tables in the Starship or Settlement oracles. If you explore the depths of a derelict, you may use the zone oracles on the following pages to help envision what you find.",
+		"sort": 348,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 348
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "5a9ded9c6cdc7583",
+		"name": "Access",
+		"type": "RollTable",
+		"sort": 352,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Access",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Access.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 352
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Access"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -235,47 +201,39 @@
 		"folder": "fd19a02fbd5f71e6"
 	},
 	{
-		"_id": "fd19a02fbd5f71e6",
-		"name": "Derelicts",
+		"_id": "106a2830d69bfa64",
+		"name": "Community",
 		"type": "RollTable",
-		"description": "Derelicts are the forsaken relics of human endeavors. Use these First Look tables for your initial survey of the derelict. To reveal more about the look and original function or nature of the site, roll on appropriate tables in the Starship or Settlement oracles. If you explore the depths of a derelict, you may use the zone oracles on the following pages to help envision what you find.",
-		"sort": 0,
+		"sort": 353,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Community",
+				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Community.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 353
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Community"]
+								}
+							]
+						}
 					}
 				},
 				"canonical": true
 			}
-		}
-	},
-	{
-		"_id": "ba1bbe7871538aad",
-		"name": "Desert World",
-		"type": "RollTable",
-		"description": "A pitiless planet of searing heat, blowing sand, and sunbaked rock.",
-		"sort": 308,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Desert",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 308
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
 		},
-		"folder": "99ee8a161d0857f8"
+		"folder": "fd19a02fbd5f71e6"
 	},
 	{
 		"_id": "9851eb5306cbb8fc",
@@ -284,15 +242,274 @@
 		"sort": 354,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Engineering",
+				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Engineering",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Engineering.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 354
 					},
-					"Category": "Starforged/Oracles/Derelicts"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Engineering"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "026e85bc4b8047b8",
+		"name": "Living",
+		"type": "RollTable",
+		"sort": 355,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Living",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Living.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 355
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Living"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "1a41c444d69ea97d",
+		"name": "Medical",
+		"type": "RollTable",
+		"sort": 356,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Medical",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Medical.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 356
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Medical"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "44fbf1f6c622b0b2",
+		"name": "Operations",
+		"type": "RollTable",
+		"sort": 357,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Operations",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Operations.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 357
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Operations"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "2fbcd3395fd34f5d",
+		"name": "Production",
+		"type": "RollTable",
+		"sort": 358,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Production",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Production.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 358
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Production"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "9987a5b1c316f884",
+		"name": "Research",
+		"type": "RollTable",
+		"sort": 359,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Research",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Research.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 359
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Zone",
+									"Values": ["Research"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "8b3958b3ed0189b7",
+		"name": "Type (by Location)",
+		"type": "RollTable",
+		"sort": 348,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Type",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 348
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location"
+								}
+							]
+						},
+						"Sets": [
+							{
+								"Key": "Derelict Type"
+							}
+						]
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "fd19a02fbd5f71e6"
+	},
+	{
+		"_id": "fd281eb30bcd3e2e",
+		"name": "Derelict Zones",
+		"type": "RollTable",
+		"sort": 351,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Derelicts/Zones",
+				"parentDfid": "Starforged/Oracles/Derelicts",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 351
+					},
+					"Usage": {
+						"Repeatable": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Derelict Type"
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -303,20 +520,78 @@
 		"_id": "b6fe3d35ff56995d",
 		"name": "Factions",
 		"type": "RollTable",
-		"sort": 0,
+		"sort": 340,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Factions",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Factions",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 340
 					}
 				},
 				"canonical": true
 			}
 		}
+	},
+	{
+		"_id": "40c330364b963a81",
+		"name": "Location Themes",
+		"type": "RollTable",
+		"description": "Themes help you envision atmosphere, features, and encounters within an unusual, aberrant, or important location.\n\nEach theme on the following pages includes a set of oracles.\n\n  * **Feature:** Use this table to reveal a new aspect of the location.\n  * **Peril:** Use this table to help envision a complication or hazard.\n  * **Opportunity:** Use this table to help envision a beneficial encounter or event, such as when rolling a strong hit with a match in a location.\n\nYou can answer questions about a place using only the tables provided for a theme, such as when delving into an **Infested** cave. Or pair a theme with other location oracles for more flavor and variety; for example, you might explore a **Haunted Grave World**, a **Ruined Derelict**, a **Sacred Precursor Vault**, or an **Inhabited Settlement**.\n\nWhen mixing-and-matching a theme with another set of tables, use the techniques described for an **oracle array** (page 384) to determine which oracle you reference for that question or phase of your exploration.",
+		"sort": 370,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 370
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "2c017ba0d0ff0e12",
+		"name": "Chaotic",
+		"type": "RollTable",
+		"description": "Reality is corrupted or warped in this place.",
+		"sort": 372,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Chaotic",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
+				"dataforged": {
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Chaotic.svg"
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 372
+					},
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Chaotic"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "40c330364b963a81"
 	},
 	{
 		"_id": "b004bd768a2a6c15",
@@ -326,66 +601,33 @@
 		"sort": 373,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Fortified",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Fortified",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Fortified.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 373
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Fortified"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "40c330364b963a81"
-	},
-	{
-		"_id": "91ce34721ba5cce8",
-		"name": "Furnace World",
-		"type": "RollTable",
-		"description": "A planet with relentless volcanic activity, wreathed in fire and ash.",
-		"sort": 309,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Furnace",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 309
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "caa4a9957ef73507",
-		"name": "Grave World",
-		"type": "RollTable",
-		"description": "A once-thriving world—now a grim monument to a fallen civilization.",
-		"sort": 310,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Grave",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 310
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "7b6a3ac881ac8211",
@@ -395,43 +637,33 @@
 		"sort": 374,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Haunted",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Haunted",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Haunted.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 374
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Haunted"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "40c330364b963a81"
-	},
-	{
-		"_id": "402fa1e3f9e7707c",
-		"name": "Ice World",
-		"type": "RollTable",
-		"description": "A rugged, frozen world—locked in an unending winter.",
-		"sort": 311,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Ice",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 311
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "4289e90998719500",
@@ -441,15 +673,28 @@
 		"sort": 375,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Infested",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Infested",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Infested.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 375
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Infested"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -464,132 +709,33 @@
 		"sort": 376,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Inhabited",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Inhabited",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Inhabited.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 376
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Inhabited"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "40c330364b963a81"
-	},
-	{
-		"_id": "b4d058fedc071ce9",
-		"name": "Interior",
-		"type": "RollTable",
-		"description": "If you enter the site, check the Inner First Look table for initial impressions of what lies within. If you explore further, use the Interior Feature table to define what you find or encounter. If you Undertake an Expedition within a vault, check this table if you want help setting the scene for a waypoint.",
-		"sort": 360,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Vaults/Interior",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 360
-					},
-					"Category": "Starforged/Oracles/Vaults"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "2c4fe25ee600037f"
-	},
-	{
-		"_id": "22e197c635fbf259",
-		"name": "Jovian World",
-		"type": "RollTable",
-		"description": "A massive planet with vast layers of dense gases surrounding a rocky core.",
-		"sort": 312,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Jovian",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 312
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "2a431921f3dabd4b",
-		"name": "Jungle World",
-		"type": "RollTable",
-		"description": "A humid, rain-soaked planet that keeps its secrets under a thick canopy of vegetation.",
-		"sort": 313,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Jungle",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 313
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "026e85bc4b8047b8",
-		"name": "Living",
-		"type": "RollTable",
-		"sort": 355,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Living",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 355
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "40c330364b963a81",
-		"name": "Location Themes",
-		"type": "RollTable",
-		"description": "Themes help you envision atmosphere, features, and encounters within an unusual, aberrant, or important location.\n\nEach theme on the following pages includes a set of oracles.\n\n  * **Feature:** Use this table to reveal a new aspect of the location.\n  * **Peril:** Use this table to help envision a complication or hazard.\n  * **Opportunity:** Use this table to help envision a beneficial encounter or event, such as when rolling a strong hit with a match in a location.\n\nYou can answer questions about a place using only the tables provided for a theme, such as when delving into an **Infested** cave. Or pair a theme with other location oracles for more flavor and variety; for example, you might explore a **Haunted Grave World**, a **Ruined Derelict**, a **Sacred Precursor Vault**, or an **Inhabited Settlement**.\n\nWhen mixing-and-matching a theme with another set of tables, use the techniques described for an **oracle array** (page 384) to determine which oracle you reference for that question or phase of your exploration.",
-		"sort": 370,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 370
-					}
-				},
-				"canonical": true
-			}
-		}
 	},
 	{
 		"_id": "573c3e802c340f34",
@@ -599,301 +745,33 @@
 		"sort": 377,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Mechanical",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Mechanical",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Mechanical.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 377
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Mechanical"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "40c330364b963a81"
-	},
-	{
-		"_id": "1a41c444d69ea97d",
-		"name": "Medical",
-		"type": "RollTable",
-		"sort": 356,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Medical",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 356
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "ffb24a823c4adb09",
-		"name": "Miscellaneous",
-		"type": "RollTable",
-		"sort": 380,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Misc",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 380
-					}
-				},
-				"canonical": true
-			}
-		}
-	},
-	{
-		"_id": "adcc4cbc5484a254",
-		"name": "Moves",
-		"type": "RollTable",
-		"sort": 0,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Moves",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
-					}
-				},
-				"canonical": true
-			}
-		}
-	},
-	{
-		"_id": "d053017f6e8f47f0",
-		"name": "Ocean World",
-		"type": "RollTable",
-		"description": "A planet completely or almost entirely covered by a boundless ocean.",
-		"sort": 314,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Ocean",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 314
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "44fbf1f6c622b0b2",
-		"name": "Operations",
-		"type": "RollTable",
-		"sort": 357,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Operations",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 357
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "99ee8a161d0857f8",
-		"name": "Planets",
-		"type": "RollTable",
-		"sort": 0,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
-					}
-				},
-				"canonical": true
-			}
-		}
-	},
-	{
-		"_id": "06b044a72e05ed6e",
-		"name": "Planetside Opportunity",
-		"type": "RollTable",
-		"description": "Choose or roll on this table when you want inspiration for a beneficial encounter or event on a planetside journey, such as when you roll a strong hit with a match as you Undertake an Expedition, or if you Explore a Waypoint and find an opportunity.",
-		"sort": 321,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Opportunity",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 321
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "83f8169fbabaecbc",
-		"name": "Planetside Peril",
-		"type": "RollTable",
-		"description": "Choose or roll on this table when you want inspiration for a trouble during planetside exploration or a planetside expedition.",
-		"sort": 320,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Peril",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 320
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
-	},
-	{
-		"_id": "e1aa8a2704d1412a",
-		"name": "Population",
-		"type": "RollTable",
-		"sort": 322,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Settlements/Population",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 322
-					},
-					"Category": "Starforged/Oracles/Settlements"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "5f78c3140a6e8eaf"
-	},
-	{
-		"_id": "2c4fe25ee600037f",
-		"name": "Precursor Vaults",
-		"type": "RollTable",
-		"description": "When you first come upon a vault, use the tables on the previous two pages to help envision its form and nature. For a more abstract prompt, just use the Descriptor oracle. In either case—if that’s enough detail for the role of the vault in your story—stop there.",
-		"sort": 360,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Vaults",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 360
-					}
-				},
-				"canonical": true
-			}
-		}
-	},
-	{
-		"_id": "2fbcd3395fd34f5d",
-		"name": "Production",
-		"type": "RollTable",
-		"sort": 358,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Production",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 358
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "9987a5b1c316f884",
-		"name": "Research",
-		"type": "RollTable",
-		"sort": 359,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Research",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 359
-					},
-					"Category": "Starforged/Oracles/Derelicts"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "bed6f29dbba73147",
-		"name": "Rocky World",
-		"type": "RollTable",
-		"description": "A rugged planet scarred by eons of destructive asteroid impacts.",
-		"sort": 315,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Rocky",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 315
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "41a0a952f57f45cf",
@@ -903,15 +781,28 @@
 		"sort": 378,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Ruined",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Ruined",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Ruined.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 378
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Ruined"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -926,15 +817,28 @@
 		"sort": 379,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Location_Themes/Sacred",
+				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Location_Themes/Sacred",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Sacred.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 379
 					},
-					"Category": "Starforged/Oracles/Location_Themes"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Location Theme",
+									"Values": ["Sacred"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -942,71 +846,129 @@
 		"folder": "40c330364b963a81"
 	},
 	{
-		"_id": "c80cfc9efec8dc33",
-		"name": "Sanctum",
+		"_id": "ffb24a823c4adb09",
+		"name": "Miscellaneous",
 		"type": "RollTable",
-		"description": "As you delve deeper into a vault, the corruption and strangeness of the place takes hold. Use the Sanctum Feature table to represent the aberrant nature of a vault’s depths.",
-		"sort": 360,
+		"sort": 380,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Misc",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Vaults/Sanctum",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 360
-					},
-					"Category": "Starforged/Oracles/Vaults"
+						"Page": 380
+					}
 				},
 				"canonical": true
 			}
-		},
-		"folder": "2c4fe25ee600037f"
+		}
 	},
 	{
-		"_id": "158580c8f9018e58",
-		"name": "Sector Name",
+		"_id": "adcc4cbc5484a254",
+		"name": "Moves",
 		"type": "RollTable",
-		"sort": 302,
+		"sort": 141,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Moves",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Space/Sector_Name",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 302
-					},
-					"Category": "Starforged/Oracles/Space"
+						"Page": 141
+					}
 				},
 				"canonical": true
 			}
-		},
-		"folder": "a17a6892a4e03f3f"
+		}
 	},
 	{
-		"_id": "2383c084a372a335",
-		"name": "Settlements",
+		"_id": "d985dae3484a0e5b",
+		"name": "Ask the Oracle",
 		"type": "RollTable",
-		"sort": 314,
+		"sort": 229,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Moves/Ask_the_Oracle",
+				"parentDfid": "Starforged/Oracles/Moves",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Ocean/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 314
+						"Page": 229
 					},
-					"Category": "Starforged/Oracles/Planets/Ocean"
+					"Aliases": ["Ask"],
+					"Usage": {}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "d053017f6e8f47f0"
+		"folder": "adcc4cbc5484a254"
+	},
+	{
+		"_id": "99ee8a161d0857f8",
+		"name": "Planets",
+		"type": "RollTable",
+		"sort": 306,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 306
+					},
+					"Aliases": ["World"]
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "ba1bbe7871538aad",
+		"name": "Desert World",
+		"type": "RollTable",
+		"description": "A pitiless planet of searing heat, blowing sand, and sunbaked rock.",
+		"sort": 308,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Desert",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Desert-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Desert-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 308
+					},
+					"Aliases": ["Desert Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Desert"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "2f700e3e6f50bf89",
@@ -1015,15 +977,30 @@
 		"sort": 308,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Desert/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Desert",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Desert/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 308
 					},
-					"Category": "Starforged/Oracles/Planets/Desert"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Desert"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -1031,89 +1008,44 @@
 		"folder": "ba1bbe7871538aad"
 	},
 	{
-		"_id": "4adfe9fc794d193e",
-		"name": "Settlements",
+		"_id": "91ce34721ba5cce8",
+		"name": "Furnace World",
 		"type": "RollTable",
-		"sort": 310,
+		"description": "A planet with relentless volcanic activity, wreathed in fire and ash.",
+		"sort": 309,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Furnace",
+				"parentDfid": "Starforged/Oracles/Planets",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Grave/Settlements",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 310
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Furnace-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Furnace-02.webp"
+						]
 					},
-					"Category": "Starforged/Oracles/Planets/Grave"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "caa4a9957ef73507"
-	},
-	{
-		"_id": "564383da6917aec5",
-		"name": "Settlements",
-		"type": "RollTable",
-		"sort": 317,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Tainted/Settlements",
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 317
+						"Page": 309
 					},
-					"Category": "Starforged/Oracles/Planets/Tainted"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "98454829527950a0"
-	},
-	{
-		"_id": "5a302d8239fb8905",
-		"name": "Settlements",
-		"type": "RollTable",
-		"sort": 318,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Vital/Settlements",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 318
-					},
-					"Category": "Starforged/Oracles/Planets/Vital"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "93ecb6acb6a3ea17"
-	},
-	{
-		"_id": "5f78c3140a6e8eaf",
-		"name": "Settlements",
-		"type": "RollTable",
-		"sort": 0,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Settlements",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+					"Aliases": ["Furnace Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Furnace"]
+								}
+							]
+						}
 					}
 				},
 				"canonical": true
 			}
-		}
+		},
+		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "63ed8b1845e91c2a",
@@ -1122,15 +1054,30 @@
 		"sort": 309,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Furnace/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Furnace",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Furnace/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 309
 					},
-					"Category": "Starforged/Oracles/Planets/Furnace"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Furnace"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -1138,70 +1085,121 @@
 		"folder": "91ce34721ba5cce8"
 	},
 	{
-		"_id": "9eec63e7a51b6e9a",
-		"name": "Settlements",
+		"_id": "caa4a9957ef73507",
+		"name": "Grave World",
 		"type": "RollTable",
-		"sort": 312,
+		"description": "A once-thriving world—now a grim monument to a fallen civilization.",
+		"sort": 310,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Grave",
+				"parentDfid": "Starforged/Oracles/Planets",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Jovian/Settlements",
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Grave-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Grave-02.webp"
+						]
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 312
+						"Page": 310
 					},
-					"Category": "Starforged/Oracles/Planets/Jovian"
+					"Aliases": ["Grave Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Grave"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "22e197c635fbf259"
+		"folder": "99ee8a161d0857f8"
 	},
 	{
-		"_id": "a853dd7c20363ff3",
+		"_id": "4adfe9fc794d193e",
 		"name": "Settlements",
 		"type": "RollTable",
-		"sort": 316,
+		"sort": 310,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Grave/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Grave",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Shattered/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 316
+						"Page": 310
 					},
-					"Category": "Starforged/Oracles/Planets/Shattered"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Grave"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "656eb2b3e3476a48"
+		"folder": "caa4a9957ef73507"
 	},
 	{
-		"_id": "abd583c659906198",
-		"name": "Settlements",
+		"_id": "402fa1e3f9e7707c",
+		"name": "Ice World",
 		"type": "RollTable",
-		"sort": 313,
+		"description": "A rugged, frozen world—locked in an unending winter.",
+		"sort": 311,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Ice",
+				"parentDfid": "Starforged/Oracles/Planets",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Jungle/Settlements",
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Ice-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Ice-02.webp"
+						]
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 313
+						"Page": 311
 					},
-					"Category": "Starforged/Oracles/Planets/Jungle"
+					"Aliases": ["Ice Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Ice"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "2a431921f3dabd4b"
+		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "af540e4e4b0e10f6",
@@ -1210,20 +1208,306 @@
 		"sort": 311,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Ice/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Ice",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Ice/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 311
 					},
-					"Category": "Starforged/Oracles/Planets/Ice"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Ice"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "402fa1e3f9e7707c"
+	},
+	{
+		"_id": "22e197c635fbf259",
+		"name": "Jovian World",
+		"type": "RollTable",
+		"description": "A massive planet with vast layers of dense gases surrounding a rocky core.",
+		"sort": 312,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Jovian",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Jovian-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Jovian-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 312
+					},
+					"Aliases": ["Jovian Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Jovian"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "9eec63e7a51b6e9a",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 312,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Jovian/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Jovian",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 312
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Jovian"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "22e197c635fbf259"
+	},
+	{
+		"_id": "2a431921f3dabd4b",
+		"name": "Jungle World",
+		"type": "RollTable",
+		"description": "A humid, rain-soaked planet that keeps its secrets under a thick canopy of vegetation.",
+		"sort": 313,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Jungle",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Jungle-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Jungle-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 313
+					},
+					"Aliases": ["Jungle Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Jungle"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "abd583c659906198",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 313,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Jungle/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Jungle",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 313
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Jungle"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "2a431921f3dabd4b"
+	},
+	{
+		"_id": "d053017f6e8f47f0",
+		"name": "Ocean World",
+		"type": "RollTable",
+		"description": "A planet completely or almost entirely covered by a boundless ocean.",
+		"sort": 314,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Ocean",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Ocean-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Ocean-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 314
+					},
+					"Aliases": ["Ocean Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Ocean"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "2383c084a372a335",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 314,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Ocean/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Ocean",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 314
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Ocean"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "d053017f6e8f47f0"
+	},
+	{
+		"_id": "bed6f29dbba73147",
+		"name": "Rocky World",
+		"type": "RollTable",
+		"description": "A rugged planet scarred by eons of destructive asteroid impacts.",
+		"sort": 315,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Rocky",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Rocky-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Rocky-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 315
+					},
+					"Aliases": ["Rocky Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Rocky"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
 	},
 	{
 		"_id": "c3ef88efafb41aa4",
@@ -1232,15 +1516,30 @@
 		"sort": 315,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Rocky/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Rocky",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Rocky/Settlements",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 315
 					},
-					"Category": "Starforged/Oracles/Planets/Rocky"
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Rocky"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -1255,15 +1554,32 @@
 		"sort": 316,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Shattered",
+				"parentDfid": "Starforged/Oracles/Planets",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Shattered",
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Shattered-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Shattered-02.webp"
+						]
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 316
 					},
-					"Category": "Starforged/Oracles/Planets"
+					"Aliases": ["Shattered Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Shattered"]
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -1271,18 +1587,336 @@
 		"folder": "99ee8a161d0857f8"
 	},
 	{
-		"_id": "a17a6892a4e03f3f",
-		"name": "Space Encounters",
+		"_id": "a853dd7c20363ff3",
+		"name": "Settlements",
 		"type": "RollTable",
-		"sort": 0,
+		"sort": 316,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Shattered/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Shattered",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Space",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 316
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Shattered"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "656eb2b3e3476a48"
+	},
+	{
+		"_id": "98454829527950a0",
+		"name": "Tainted World",
+		"type": "RollTable",
+		"description": "A foul planet wracked by a poisonous climate and virulent growths.",
+		"sort": 317,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Tainted",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Tainted-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Tainted-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 317
+					},
+					"Aliases": ["Tainted Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Tainted"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "564383da6917aec5",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 317,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Tainted/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Tainted",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 317
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Tainted"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "98454829527950a0"
+	},
+	{
+		"_id": "93ecb6acb6a3ea17",
+		"name": "Vital World",
+		"type": "RollTable",
+		"description": "This diverse, life-bearing planet might provide some small measure of hope.",
+		"sort": 318,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Vital",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {
+						"Images": [
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Vital-01.webp",
+							"systems/foundry-ironsworn/assets/planets/Starforged-Planet-Token-Vital-02.webp"
+						]
+					},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 318
+					},
+					"Aliases": ["Vital Planet"],
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Planetary Class",
+									"Values": ["Vital"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "5a302d8239fb8905",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 318,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Vital/Settlements",
+				"parentDfid": "Starforged/Oracles/Planets/Vital",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 318
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								},
+								{
+									"Key": "Planetary Class",
+									"Values": ["Vital"]
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "93ecb6acb6a3ea17"
+	},
+	{
+		"_id": "83f8169fbabaecbc",
+		"name": "Planetside Peril",
+		"type": "RollTable",
+		"description": "Choose or roll on this table when you want inspiration for a trouble during planetside exploration or a planetside expedition.",
+		"sort": 320,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Peril",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 320
+					},
+					"Usage": {
+						"Repeatable": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Life"
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "06b044a72e05ed6e",
+		"name": "Planetside Opportunity",
+		"type": "RollTable",
+		"description": "Choose or roll on this table when you want inspiration for a beneficial encounter or event on a planetside journey, such as when you roll a strong hit with a match as you Undertake an Expedition, or if you Explore a Waypoint and find an opportunity.",
+		"sort": 321,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Planets/Opportunity",
+				"parentDfid": "Starforged/Oracles/Planets",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 321
+					},
+					"Usage": {
+						"Repeatable": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Life"
+								}
+							]
+						}
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "99ee8a161d0857f8"
+	},
+	{
+		"_id": "5f78c3140a6e8eaf",
+		"name": "Settlements",
+		"type": "RollTable",
+		"sort": 322,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Settlements",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 322
+					}
+				},
+				"canonical": true
+			}
+		}
+	},
+	{
+		"_id": "e1aa8a2704d1412a",
+		"name": "Population",
+		"type": "RollTable",
+		"sort": 322,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Settlements/Population",
+				"parentDfid": "Starforged/Oracles/Settlements",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 322
+					},
+					"Usage": {
+						"Initial": true,
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								}
+							]
+						},
+						"Sets": [
+							{
+								"Key": "Population"
+							}
+						]
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "5f78c3140a6e8eaf"
+	},
+	{
+		"_id": "a17a6892a4e03f3f",
+		"name": "Space Encounters",
+		"type": "RollTable",
+		"sort": 300,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Space",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 300
 					}
 				},
 				"canonical": true
@@ -1297,20 +1931,77 @@
 		"sort": 300,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Space/Sighting",
+				"parentDfid": "Starforged/Oracles/Space",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Space/Sighting",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 300
 					},
-					"Category": "Starforged/Oracles/Space"
+					"Usage": {
+						"Repeatable": true,
+						"Allow duplicates": true,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
 		},
 		"folder": "a17a6892a4e03f3f"
+	},
+	{
+		"_id": "158580c8f9018e58",
+		"name": "Sector Name",
+		"type": "RollTable",
+		"sort": 302,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Space/Sector_Name",
+				"parentDfid": "Starforged/Oracles/Space",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 302
+					},
+					"Usage": {
+						"Allow duplicates": false
+					}
+				},
+				"canonical": true
+			}
+		},
+		"folder": "a17a6892a4e03f3f"
+	},
+	{
+		"_id": "eea3419c88a919cd",
+		"name": "Starships",
+		"type": "RollTable",
+		"sort": 326,
+		"flags": {
+			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Starships",
+				"dataforged": {
+					"Display": {},
+					"Source": {
+						"Title": "Ironsworn: Starforged Rulebook",
+						"Authors": ["Shawn Tomkin"],
+						"Page": 326
+					},
+					"Aliases": ["Ship"]
+				},
+				"canonical": true
+			}
+		}
 	},
 	{
 		"_id": "576cfdeddb886db1",
@@ -1320,15 +2011,25 @@
 		"sort": 328,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Starships/Mission",
+				"parentDfid": "Starforged/Oracles/Starships",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Starships/Mission",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
 						"Page": 328
 					},
-					"Category": "Starforged/Oracles/Starships"
+					"Usage": {
+						"Allow duplicates": false,
+						"Requires": {
+							"Attributes": [
+								{
+									"Key": "Region"
+								}
+							]
+						}
+					}
 				},
 				"canonical": true
 			}
@@ -1336,18 +2037,20 @@
 		"folder": "eea3419c88a919cd"
 	},
 	{
-		"_id": "eea3419c88a919cd",
-		"name": "Starships",
+		"_id": "2c4fe25ee600037f",
+		"name": "Precursor Vaults",
 		"type": "RollTable",
-		"sort": 0,
+		"description": "When you first come upon a vault, use the tables on the previous two pages to help envision its form and nature. For a more abstract prompt, just use the Descriptor oracle. In either case—if that’s enough detail for the role of the vault in your story—stop there.",
+		"sort": 360,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Vaults",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Starships",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622"
+						"Page": 360
 					}
 				},
 				"canonical": true
@@ -1355,71 +2058,53 @@
 		}
 	},
 	{
-		"_id": "98454829527950a0",
-		"name": "Tainted World",
+		"_id": "b4d058fedc071ce9",
+		"name": "Interior",
 		"type": "RollTable",
-		"description": "A foul planet wracked by a poisonous climate and virulent growths.",
-		"sort": 317,
+		"description": "If you enter the site, check the Inner First Look table for initial impressions of what lies within. If you explore further, use the Interior Feature table to define what you find or encounter. If you Undertake an Expedition within a vault, check this table if you want help setting the scene for a waypoint.",
+		"sort": 360,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Vaults/Interior",
+				"parentDfid": "Starforged/Oracles/Vaults",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Tainted",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Vaults/Interior.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 317
-					},
-					"Category": "Starforged/Oracles/Planets"
+						"Page": 360
+					}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "99ee8a161d0857f8"
+		"folder": "2c4fe25ee600037f"
 	},
 	{
-		"_id": "8b3958b3ed0189b7",
-		"name": "Type (by Location)",
+		"_id": "c80cfc9efec8dc33",
+		"name": "Sanctum",
 		"type": "RollTable",
-		"sort": 348,
+		"description": "As you delve deeper into a vault, the corruption and strangeness of the place takes hold. Use the Sanctum Feature table to represent the aberrant nature of a vault’s depths.",
+		"sort": 360,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Starforged/Oracles/Vaults/Sanctum",
+				"parentDfid": "Starforged/Oracles/Vaults",
 				"dataforged": {
-					"dfid": "Starforged/Oracles/Derelicts/Type",
+					"Display": {
+						"Icon": "systems/foundry-ironsworn/assets/icons/Vaults/Sanctum.svg"
+					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
 						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 348
-					},
-					"Category": "Starforged/Oracles/Derelicts"
+						"Page": 360
+					}
 				},
 				"canonical": true
 			}
 		},
-		"folder": "fd19a02fbd5f71e6"
-	},
-	{
-		"_id": "93ecb6acb6a3ea17",
-		"name": "Vital World",
-		"type": "RollTable",
-		"description": "This diverse, life-bearing planet might provide some small measure of hope.",
-		"sort": 318,
-		"flags": {
-			"foundry-ironsworn": {
-				"dataforged": {
-					"dfid": "Starforged/Oracles/Planets/Vital",
-					"Source": {
-						"Title": "Ironsworn: Starforged Rulebook",
-						"Authors": ["Shawn Tomkin"],
-						"Date": "050622",
-						"Page": 318
-					},
-					"Category": "Starforged/Oracles/Planets"
-				},
-				"canonical": true
-			}
-		},
-		"folder": "99ee8a161d0857f8"
+		"folder": "2c4fe25ee600037f"
 	}
 ]

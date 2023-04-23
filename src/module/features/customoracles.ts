@@ -96,7 +96,7 @@ export async function walkOracle(
 ): Promise<IOracleTreeNode> {
 	if (oracle == null) return emptyNode()
 
-	const table = OracleTree.findDfId(oracle.$id)
+	const table = OracleTree.find(oracle.$id)
 
 	const node: IOracleTreeNode = {
 		...emptyNode(),
@@ -116,7 +116,7 @@ export async function walkOracle(
 	for (const entry of oracle.Table ?? []) {
 		const name = entry.Result
 		if (entry.Subtable != null) {
-			const subtable = OracleTree.findDfId(`${oracle.$id}/${name}`)
+			const subtable = OracleTree.find(`${oracle.$id}/${name}`)
 			if (subtable != null) {
 				node.children.push({
 					...emptyNode(),

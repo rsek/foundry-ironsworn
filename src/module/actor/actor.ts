@@ -79,9 +79,7 @@ export class IronswornActor extends Actor {
 		if (this.type !== 'site' || this.theme == null || this.domain == null)
 			return undefined
 
-		const oracle = OracleTree.findDfId(
-			'Ironsworn/Oracles/Moves/Reveal_a_Danger'
-		)
+		const oracle = OracleTree.find('Ironsworn/Oracles/Moves/Reveal_a_Danger')
 		if (oracle == null) return
 
 		return new OracleTable({

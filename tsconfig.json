@@ -10,7 +10,10 @@
 			"@types/node/fs",
 			"@types/node/path"
 		],
-		"typeRoots": ["./src/types"],
+		"typeRoots": [
+			"./src/types",
+			"node_modules/@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/primitives"
+		],
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"strict": true,

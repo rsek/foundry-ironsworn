@@ -4,7 +4,7 @@
 		:tooltip="$t('IRONSWORN.RollOracleTable', { title: name })"
 		icon="ironsworn:oracle"
 		v-bind="($props, $attrs)"
-		@click="rollOracle">
+		@click="rollOracle()">
 		<template v-for="(_, slot) of $slots" #[slot]="scope">
 			<slot :name="slot" v-bind="scope" />
 		</template>

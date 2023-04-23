@@ -46,8 +46,7 @@ const nonTruthPages = props
 	.je()
 	?.pages.filter((p) => p.type !== 'truth') as NonTruthPage[]
 
-const dfid = props.je().getFlag('foundry-ironsworn', 'dataforged')
-	?.dfid as string
+const dfid = props.je().getFlag('foundry-ironsworn', 'dfid') as string
 
 const state = reactive<{
 	title?: string

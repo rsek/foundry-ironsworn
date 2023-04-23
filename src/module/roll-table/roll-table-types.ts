@@ -9,7 +9,7 @@ import type {
 import type { OracleTree } from './oracle-tree'
 import type { IOracle, IOracleCategory, IRow, RequireKey } from 'dataforged'
 import type { helpers } from '../../types/utils'
-import { DataforgedFlags } from '../dataforged'
+import type { DataforgedFlags } from '../dataforged'
 
 // Ironsworn-specific types & augmentations
 
@@ -61,9 +61,10 @@ declare global {
 		RollTable: {
 			'foundry-ironsworn'?: {
 				dfid?: string
+				parentDfid?: string
 				dataforged?: DataforgedFlags<
 					IOracleLeaf,
-					'Category' | 'Member of' | 'Source' | 'Display' | 'Usage'
+					'Category' | 'Member of' | 'Source' | 'Display' | 'Usage' | 'Aliases'
 				>
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
@@ -125,7 +126,9 @@ declare global {
 			| 'permission'
 			| 'name'
 			| 'folder'
-		> {}
+		> {
+		description: string
+	}
 	namespace RollTable {
 		/**
 		 * Perform follow-up operations when a set of Documents of this type are created.

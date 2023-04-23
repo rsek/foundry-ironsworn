@@ -12,20 +12,131 @@ import type {
 } from './roll-table-types'
 import { OracleTable } from './oracle-table'
 import { IronFolder } from '../folder/folder'
-import { compact, pick, pickBy } from 'lodash-es'
+import { compact, pickBy } from 'lodash-es'
 import type { helpers } from '../../types/utils'
-import { writeFileSync } from 'fs'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
-import { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
+import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 
-type DataforgedNamespace = 'Starforged' | 'Ironsworn'
+export type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
 /**
  * Extends FVTT's {@link RollTables} to manage the Dataforged oracle tree.
  * @remarks This is a singleton at runtime, but it intentionally implements its Ironsworn-specific static methods so that they're available as (e.g.) `OracleTree.findDfId()` instead of `game.tables?.findDfId()`.
  */
 export class OracleTree extends RollTables {
-	static async flushOracles({
+	/**
+	 * Find an oracle tree node by its Dataforged ID.
+	 * @param dfid The Dataforged ID to find.
+	 * @param includeFolders Should {@link IronFolder} results be included?
+	 */
+	static find(
+		dfid: string,
+		includeFolders?: false
+	): StoredDocument<OracleTable> | undefined
+	static find(
+		dfid: string,
+		includeFolders: true
+	): StoredDocument<OracleTree.Node> | undefined
+	static find(
+		dfid: string,
+		includeFolders = false
+	): StoredDocument<OracleTree.Node> | undefined {
+		if (includeFolders) {
+			if (game.folders == null)
+				throw new Error('game.folders has not been initialized')
+			const folder = game.folders.find(
+				(folder) => folder.type === 'RollTable' && folder.dfid === dfid
+			) as StoredDocument<IronFolder<OracleTable>>
+			if (folder != null) return folder
+		}
+
+		if (game.tables == null)
+			throw new Error('game.tables has not been initialized')
+		return game.tables.find((tbl) => tbl.dfid === dfid)
+	}
+
+	static query(q: string, setting: DataforgedNamespace) {
+		let pattern: RegExp | null
+		try {
+			pattern = new RegExp(q, 'i')
+		} catch {
+			pattern = null
+		}
+		if (q == null || pattern == null) return
+
+		const results = new Set<OracleTree.Node>()
+		// Walk the tree and test each name.
+		// Force expanded on all parent nodes leading to a match
+		// iterate tables first
+		const queryNode = (node: OracleTree.Node) => {
+			// console.log(node)
+			if (node == null) return false
+			if (![setting, undefined].includes(node.setting)) return false
+
+			const matchableNames: string[] = []
+
+			const df = node.dataforged as { Aliases?: string[] }
+
+			if (df?.Aliases != null) matchableNames.push(...df.Aliases)
+			if (node.name != null) matchableNames.push(node.name)
+
+			// console.log(namesToTest)
+
+			if (!matchableNames.some((alias) => pattern?.test(alias))) return false
+
+			results.add(node)
+
+			for (const ancestor of node.ancestors) results.add(ancestor)
+
+			if (node.documentName === 'Folder')
+				for (const content of node.contents) results.add(content)
+
+			return true
+		}
+
+		for (const node of game.tables ?? []) queryNode(node)
+		for (const node of (game.folders ?? []) as IronFolder<OracleTable>[])
+			queryNode(node)
+
+		return Array.from(results).sort((a, b) => a.sort - b.sort)
+	}
+
+	static getNodes(
+		setting?: DataforgedNamespace,
+		rootOnly = false,
+		fn?: (node: OracleTree.Node) => boolean
+	): (OracleTree.Node & { id: string })[] {
+		const tests: ((node: unknown) => boolean)[] = []
+
+		if (setting != null)
+			tests.push((node) => OracleTree.isSettingNode(node, setting))
+		if (rootOnly) tests.push(OracleTree.isRootNode)
+		if (tests.length === 0) tests.push(OracleTree.isNode)
+		// the previous type guards should ensure the type here
+		if (fn != null) tests.push(fn as (node: unknown) => boolean)
+		const allNodes = [
+			...(game.tables ?? []),
+			...(game.folders ?? [])
+		] as (OracleTree.Node & { id: string })[]
+
+		if (tests.length === 0) return allNodes
+
+		return allNodes
+			.filter((node) => tests.every((test) => test(node)))
+			.sort((a, b) => a.sort - b.sort)
+	}
+
+	/*********************************
+	 * Dataforged adaption
+	 *********************************/
+
+	static readonly FOLDER_DATA_PATH = {
+		Starforged:
+			'systems/foundry-ironsworn/assets/folders/starforged-oracles.json',
+		Ironsworn: 'systems/foundry-ironsworn/assets/folders/ironsworn-oracles.json'
+	} as const
+
+	static async sweepCanonical({
 		setting,
 		mode = 'all'
 	}: {
@@ -51,131 +162,58 @@ export class OracleTree extends RollTables {
 			}
 	}
 
-	/**
-	 * Find an oracle tree node by its Dataforged ID.
-	 * @param dfid The Dataforged ID to find.
-	 * @param includeFolders Should {@link IronFolder} results be included?
-	 */
-	static findDfId(
-		dfid: string,
-		includeFolders?: false
-	): StoredDocument<OracleTable> | undefined
-	static findDfId(
-		dfid: string,
-		includeFolders: true
-	): StoredDocument<OracleTree.Node> | undefined
-	static findDfId(
-		dfid: string,
-		includeFolders = false
-	): StoredDocument<OracleTree.Node> | undefined {
-		if (includeFolders) {
-			if (game.folders == null)
-				throw new Error('game.folders has not been initialized')
-			const folder = game.folders.find(
-				(folder) => folder.type === 'RollTable' && folder.dfid === dfid
-			) as StoredDocument<IronFolder<OracleTable>>
-			if (folder != null) return folder
-		}
+	static async emptySettingPack(setting: DataforgedNamespace) {
+		const packId = `foundry-ironsworn.${setting.toLowerCase()}oracles`
+		const pack = game.packs.get(packId)
+		if (pack == null) throw new Error(`Pack ${packId} not found`)
 
-		if (game.tables == null)
-			throw new Error('game.tables has not been initialized')
-		return game.tables.find((tbl) => tbl.dfid === dfid)
+		// unlock pack and begin deleting
+		await pack.configure({ locked: false })
+
+		if (!pack.indexed) await pack.getIndex()
+
+		const keys = Array.from(pack.index.keys())
+		if (keys.length === 0) throw new Error('No keys to delete')
+		await OracleTable.deleteDocuments(keys, {
+			pack: packId
+		})
+		return pack
 	}
 
-	/**
-	 * Returns an array of a Dataforged oracle tree node  with its ancestor folders, or `null` if no matching node is found.
-	 * @returns An array ordered by distance from the identified oracle node, beginning with it's "top-level" folder ancestor and ending with the node itself.
-	 */
-	static findWithAncestors(dfid: string) {
-		const target = OracleTree.findDfId(dfid, true)
-		if (target == null) return null
-		const ancestors = [target]
-		let current: OracleTree.Node | null = target
-		while (current != null) {
-			if (current.parent != null)
-				ancestors.unshift(current.parent as StoredDocument<OracleTree.Node>)
-			current = current.parent as OracleTree.Node | null
-		}
-		return ancestors
-	}
+	/** Saves all canonical tables to the appropriate pack. */
+	static async saveToPack(setting: DataforgedNamespace) {
+		const tables = game.tables?.filter((table) => table.setting === setting)
+		if (tables == null || tables.length === 0)
+			throw new Error(`No tables available for setting ${setting}`)
 
-	/** Is the node a root node (e.g. without a parent folder?)  */
-	static isRootNode(node: OracleTree.Node) {
-		return node.folder == null
-	}
+		const pack = await OracleTree.emptySettingPack(setting)
 
-	/** Should the node be rendered in the oracle tree for this setting? */
-	static isShownForSetting(
-		node: OracleTree.Node,
-		setting: DataforgedNamespace
-	) {
-		const flg = node.dfid
-		return flg == null || flg.startsWith(setting)
-	}
+		// add tables to compendium
+		for await (const table of tables)
+			await pack
+				.importDocument(table, {
+					clearPermissions: true,
+					keepId: true,
+					clearSort: false,
+					clearState: true
+				})
+				// unset canonical flag, so that users importing it don't create collisions (the tree setup method flips it back on again)
+				.then(
+					async (packTable) =>
+						await (packTable as StoredDocument<OracleTable>)?.setFlag(
+							'foundry-ironsworn',
+							'canonical',
+							undefined
+						)
+				)
 
-	/** Returns the root nodes for a given setting */
-	static getRootNodes(setting: DataforgedNamespace) {
-		const rootFolders =
-			game.folders?.filter(
-				(folder) =>
-					folder.type === 'RollTable' &&
-					OracleTree.isRootNode(folder as IronFolder<OracleTable>) &&
-					OracleTree.isShownForSetting(
-						folder as IronFolder<OracleTable>,
-						setting
-					)
-			) ?? []
-		// our tables don't do this, but user custom tables might
-		const rootTables =
-			game.tables?.filter(
-				(table) =>
-					OracleTree.isRootNode(table) &&
-					OracleTree.isShownForSetting(table, setting)
-			) ?? []
-		return [...rootFolders, ...rootTables]
-	}
+		// TODO: is there a way that tables could be brought in on-demand, using the index?
 
-	/** Return all OracleTables that have a DFID associated with a specific game. */
-	static getGameTables(setting: DataforgedNamespace) {
-		return game.tables?.filter((tbl) =>
-			Boolean(tbl.dfid?.startsWith(`${setting}/Oracles`))
+		await pack.configure({ locked: true })
+		logger.info(
+			`Finished rebuilding ${pack.name} with ${tables.length} OracleTables`
 		)
 	}
-
-	static getGameFolders(setting: DataforgedNamespace, topLevelOnly = false) {
-		if (game.folders == null)
-			throw new Error(
-				'The Oracles collection tried to access the Folders collection before initialization.'
-			)
-		const root = `${setting}/Oracles`
-		let testFn: (folder: IronFolder) => boolean
-
-		if (topLevelOnly)
-			testFn = (folder) =>
-				// check if it has a matching id *and* no provided category parent id
-				Boolean(folder.dfid?.startsWith(root)) &&
-				Boolean(folder.parentFolder?.dfid)
-		else testFn = (folder) => Boolean(folder.dfid?.startsWith(root))
-
-		return game.folders.filter(
-			(folder) => folder.type === this.documentName && testFn(folder)
-		)
-	}
-
-	/** Gets an array of all RollTable folders. */
-	get folders() {
-		if (game.folders == null)
-			throw new Error(
-				'The Oracles collection tried to access the Folders collection before initialization.'
-			)
-		return game.folders.filter((folder) => folder.type === this.documentName)
-	}
-
-	static readonly FOLDER_DATA_PATH = {
-		Starforged:
-			'systems/foundry-ironsworn/assets/folders/starforged-oracles.json',
-		Ironsworn: 'systems/foundry-ironsworn/assets/folders/ironsworn-oracles.json'
-	} as const
 
 	/**
 	 * Writes the oracle category hierarchy to a JSON file so that it can later be rehydrated as a folder tree.
@@ -184,8 +222,6 @@ export class OracleTree extends RollTables {
 	 * @internal
 	 */
 	static async saveTree(folders: IronFolder[], game: DataforgedNamespace) {
-		const path = OracleTree.FOLDER_DATA_PATH[game]
-
 		const data = folders.map((folder) =>
 			pickBy(folder.toObject(), (v, k) => {
 				const omitKeys = ['_stats', 'sorting']
@@ -217,7 +253,7 @@ export class OracleTree extends RollTables {
 				await fetch(path)
 			).json()) as helpers.SourceDataType<IronFolder>[]
 
-			await this.flushOracles({ setting })
+			await OracleTree.sweepCanonical({ setting })
 			await IronFolder.createDocuments(branches, {
 				keepId: true,
 				keepEmbeddedIds: true
@@ -234,7 +270,7 @@ export class OracleTree extends RollTables {
 	 * Load a Dataforged JSON file containing oracle tree data. The deserialized JSON's schema must conform to {@link GameDataRoot}, or else an array of {@link IOracleCategory}
 	 * @returns
 	 */
-	async loadDataforged(url: string) {
+	static async loadDataforged(url: string) {
 		const json = (await foundry.utils.fetchJsonWithTimeout(url, {
 			method: 'GET'
 		})) as GameDataRoot | IOracleCategory[]
@@ -279,7 +315,7 @@ export class OracleTree extends RollTables {
 	}: OracleTree.BuildTreeOptions) {
 		logger.info('Building oracle tree')
 
-		await this.flushOracles({ mode })
+		await OracleTree.sweepCanonical({ mode })
 
 		const result: Array<IronFolder | undefined> = []
 		for (const branch of branches) {
@@ -303,64 +339,100 @@ export class OracleTree extends RollTables {
 		return result
 	}
 
-	static isCategoryBranch(
-		oracle: IOracleBase
-	): oracle is IOracleCategoryBranch {
-		if (Array.isArray(oracle.Table)) return false
-		return Array.isArray(oracle.Categories)
-	}
-
-	static isBranch(oracle: IOracleBase): oracle is IOracleBranch {
-		if (Array.isArray(oracle.Table)) return false
-		return Array.isArray(oracle.Oracles)
-	}
-
-	static isLeaf(oracle: IOracleBase): oracle is IOracleLeaf {
-		return Array.isArray(oracle.Table)
-	}
-
-	static getParentDfId(dfid: string) {
-		const sep = '/'
-		return dfid.split(sep).slice(0, -2).join(sep)
-	}
-
 	/** Convert a Dataforged oracle tree branch into Folder source data.  */
 	static getFolderConstructorData(
 		data: IOracleCategoryBranch | IOracleBranch
 	): helpers.ConstructorDataType<Folder['data']> {
-		const parentDfId = data['Member of'] ?? data.Category
-		const parentFolder = parentDfId != null ? hashLookup(parentDfId) : null
+		const parentDfid = data['Member of'] ?? data.Category
+		const parentFolder = parentDfid != null ? hashLookup(parentDfid) : null
 
 		const flags: RequireKey<ConfiguredFlags<'Folder'>, 'foundry-ironsworn'> = {
 			'foundry-ironsworn': {
-				dfid: data.$id
+				dfid: data.$id,
+				parentDfid
 			}
 		}
-		if (this.isBranch(data))
+
+		// HACK: infer a page number if the category doesn't specify one
+		// these won't be 100% correct but are good enough to provide a sensible sort order
+		if (typeof data.Source.Page === 'undefined') {
+			const childPages = [...(data.Categories ?? []), ...(data.Oracles ?? [])]
+				.filter((child) => child.Source.Title === data.Source.Title)
+				.map((child) => child.Source.Page)
+			// inference: lowest page is closest to start of category section
+			data.Source.Page = Math.min(...compact(childPages))
+		}
+
+		if (OracleTree.isBranch(data))
 			flags['foundry-ironsworn'].dataforged = pickDataforged(
 				data,
 				'Display',
 				'Source',
-				'Category',
-				'Member of',
 				'Aliases',
 				'Usage'
 			)
-		else if (this.isCategoryBranch(data))
+		else if (OracleTree.isCategoryBranch(data))
 			flags['foundry-ironsworn'].dataforged = pickDataforged(
 				data,
 				'Display',
 				'Source',
-				'Category',
-				'Member of',
 				'Aliases',
 				'Usage',
 				'Sample Names'
 			)
 
-		// strip redundant flags
-		setProperty(flags, 'foundry-ironsworn.dataforged.Display.Title', undefined)
-		setProperty(flags, 'foundry-ironsworn.dataforged.Display.Color', undefined)
+		// strip unneeded/redundant flags
+		const toStrip = [
+			'Display.Title',
+			'Display.Color',
+			'Display.Table',
+			'Source.Date'
+		]
+		toStrip.forEach((key) =>
+			setProperty(flags, `foundry-ironsworn.dataforged.${key}`, undefined)
+		)
+
+		if (flags['foundry-ironsworn'].dataforged?.Display.Images != null) {
+			flags['foundry-ironsworn'].dataforged.Display.Images = flags[
+				'foundry-ironsworn'
+			].dataforged.Display.Images.map((img) =>
+				img.replace(
+					/^.*img\/raster\/webp\/planet\//,
+					'systems/foundry-ironsworn/assets/planets/'
+				)
+			)
+		}
+
+		if (flags['foundry-ironsworn'].dataforged?.Display.Icon != null) {
+			flags['foundry-ironsworn'].dataforged.Display.Icon = flags[
+				'foundry-ironsworn'
+			].dataforged.Display.Icon.replace(
+				/^.*img\/vector\//,
+				'systems/foundry-ironsworn/assets/icons/'
+			)
+		}
+
+		let sort: number = data.Source.Page ?? 0
+
+		// HACK: lazy way to bump delve content to the end. it'd be better to genericize this so it can gracefully handle future content
+		if (data.Source.Title === 'Ironsworn: Delve') sort += 1000
+
+		// More specific/opinionated sorting
+		switch (data.$id) {
+			case 'Starforged/Oracles/Core':
+				sort = 1
+				break
+			case 'Starforged/Oracles/Vaults/Interior':
+			case 'Starforged/Oracles/Vaults/Sanctum':
+				sort += 10
+				break
+			case 'Starforged/Oracles/Moves':
+			case 'Ironsworn/Oracles/Moves':
+				sort += 2000
+				break
+			default:
+				break
+		}
 
 		return {
 			_id: hashLookup(data.$id),
@@ -368,7 +440,7 @@ export class OracleTree extends RollTables {
 			name: data.Display.Title.replace(/^Oracle [0-9]+: /, ''),
 			type: 'RollTable',
 			description: data.Description,
-			sort: data.Source.Page,
+			sort,
 			flags,
 			color: data.Display.Color,
 			parent: parentFolder
@@ -393,7 +465,7 @@ export class OracleTree extends RollTables {
 		// folders still need to go through the motions, but shouldn't be stored to db
 		if (mode === 'omit-folders') folderContext.temporary = true
 
-		const folderData = this.getFolderConstructorData(branch)
+		const folderData = OracleTree.getFolderConstructorData(branch)
 		setProperty(folderData, 'flags.foundry-ironsworn.canonical', true)
 
 		const folder = (await IronFolder.create(
@@ -471,9 +543,54 @@ export class OracleTree extends RollTables {
 		}
 		return folders
 	}
+
+	/*********************************
+	 * Type guards
+	 *********************************/
+
+	static isCategoryBranch(
+		oracle: IOracleBase
+	): oracle is IOracleCategoryBranch {
+		if (Array.isArray(oracle.Table)) return false
+		return Array.isArray(oracle.Categories)
+	}
+
+	static isBranch(oracle: IOracleBase): oracle is IOracleBranch {
+		if (Array.isArray(oracle.Table)) return false
+		return Array.isArray(oracle.Oracles)
+	}
+
+	static isLeaf(oracle: IOracleBase): oracle is IOracleLeaf {
+		return Array.isArray(oracle.Table)
+	}
+
+	/** Is the node a root node (e.g. without a parent folder?)  */
+	static isRootNode(
+		node: unknown
+	): node is OracleTree.Node & { id: string; folder: null } {
+		const parent = (node as any)?.folder ?? (node as any)?.parentFolder
+		return OracleTree.isNode(node) && parent == null
+	}
+
+	/** Should the node be rendered in the oracle tree for this setting? */
+	static isSettingNode(
+		node: unknown,
+		setting: DataforgedNamespace
+	): node is OracleTree.Node {
+		if (!OracleTree.isNode(node)) return false
+		return [setting, undefined].includes(node.setting)
+	}
+
+	static isNode(node: unknown): node is OracleTree.Node & { id: string } {
+		return (
+			(node instanceof IronFolder &&
+				node.type === 'RollTable' &&
+				typeof node.id === 'string') ||
+			(node instanceof OracleTable && typeof node.id === 'string')
+		)
+	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace OracleTree {
 	export interface BuildBranchOptions {
 		branch: IOracleBranch | IOracleCategoryBranch

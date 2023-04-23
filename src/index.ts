@@ -93,6 +93,7 @@ Hooks.once('init', async () => {
 	CONFIG.RollTable.collection = OracleTree
 	CONFIG.RollTable.compendiumIndexFields.push(
 		'flags.foundry-ironsworn.dataforged.Source.Page',
+		'flags.foundry-ironsworn.dataforged.Source.Title',
 		'flags.foundry-ironsworn.dfid'
 	)
 	// CONFIG.RollTable.sidebarIcon = 'icon isicon-oracle'

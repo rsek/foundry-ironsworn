@@ -19,25 +19,15 @@ declare global {
 		Folder: {
 			'foundry-ironsworn'?: {
 				dfid?: string
+				parentDfid?: string
 				dataforged?:
 					| DataforgedFlags<
 							IOracleBranch,
-							| 'Display'
-							| 'Source'
-							| 'Category'
-							| 'Member of'
-							| 'Aliases'
-							| 'Usage'
+							'Display' | 'Source' | 'Aliases' | 'Usage'
 					  >
 					| DataforgedFlags<
 							IOracleCategoryBranch,
-							| 'Display'
-							| 'Source'
-							| 'Category'
-							| 'Member of'
-							| 'Aliases'
-							| 'Usage'
-							| 'Sample Names'
+							'Display' | 'Source' | 'Aliases' | 'Usage' | 'Sample Names'
 					  >
 					| DataforgedFlags<IMoveCategory, 'Display' | 'Source'>
 					| DataforgedFlags<IAssetType, 'Display' | 'Source'>

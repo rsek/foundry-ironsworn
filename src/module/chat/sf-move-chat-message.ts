@@ -8,7 +8,7 @@ export async function createSfMoveChatMessage(move: IronswornItem) {
 	const { dfid, Oracles: oracleIds } = move.system as SFMoveDataPropertiesData
 	const dfMove = await getDFMoveByDfId(dfid)
 	const dfids = oracleIds ?? dfMove?.Oracles ?? []
-	const nextOracles = compact(dfids.map((id) => OracleTree.findDfId(id)))
+	const nextOracles = compact(dfids.map((id) => OracleTree.find(id)))
 
 	const params = { move, nextOracles }
 	const content = await renderTemplate(

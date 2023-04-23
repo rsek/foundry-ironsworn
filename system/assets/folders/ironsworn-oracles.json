@@ -6,8 +6,9 @@
 		"sort": 174,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Action_and_Theme",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Action_and_Theme",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -25,8 +26,9 @@
 		"sort": 176,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Place",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Place",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -44,8 +46,9 @@
 		"sort": 178,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Settlement",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Settlement",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -64,14 +67,19 @@
 		"sort": 180,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Settlement/Quick_Name",
+				"parentDfid": "Ironsworn/Oracles/Settlement",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Settlement/Quick_Name",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 180
 					},
-					"Category": "Ironsworn/Oracles/Settlement"
+					"Aliases": ["8", "Oracle 8", "Quick Settlement Name Generator"],
+					"Usage": {
+						"Allow duplicates": false
+					}
 				},
 				"canonical": true
 			}
@@ -85,8 +93,9 @@
 		"sort": 182,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Character",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Character",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -104,8 +113,9 @@
 		"sort": 184,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Name",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Name",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -124,14 +134,17 @@
 		"sort": 184,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Name/Ironlander",
+				"parentDfid": "Ironsworn/Oracles/Name",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Name/Ironlander",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 184
 					},
-					"Category": "Ironsworn/Oracles/Name"
+					"Aliases": ["13", "Oracle 13", "Ironlander Names"],
+					"Usage": {}
 				},
 				"canonical": true
 			}
@@ -146,14 +159,17 @@
 		"sort": 187,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Name/Other",
+				"parentDfid": "Ironsworn/Oracles/Name",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Name/Other",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 187
 					},
-					"Category": "Ironsworn/Oracles/Name"
+					"Aliases": ["15", "Oracle 15", "Other Names"],
+					"Usage": {}
 				},
 				"canonical": true
 			}
@@ -167,8 +183,9 @@
 		"sort": 188,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Turning_Point",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Turning_Point",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
@@ -187,14 +204,17 @@
 		"sort": 190,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Turning_Point/Challenge_Rank",
+				"parentDfid": "Ironsworn/Oracles/Turning_Point",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Turning_Point/Challenge_Rank",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 190
 					},
-					"Category": "Ironsworn/Oracles/Turning_Point"
+					"Aliases": ["19", "Oracle 19"],
+					"Usage": {}
 				},
 				"canonical": true
 			}
@@ -205,14 +225,16 @@
 		"_id": "06986fcc791b64bc",
 		"name": "Moves",
 		"type": "RollTable",
-		"sort": 0,
+		"sort": 91,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Moves",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Moves",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
-						"Authors": ["Shawn Tomkin"]
+						"Authors": ["Shawn Tomkin"],
+						"Page": 91
 					}
 				},
 				"canonical": true
@@ -226,14 +248,17 @@
 		"sort": 107,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Moves/Ask_the_Oracle",
+				"parentDfid": "Ironsworn/Oracles/Moves",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Moves/Ask_the_Oracle",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn Rulebook",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 107
 					},
-					"Category": "Ironsworn/Oracles/Moves"
+					"Aliases": ["Ask"],
+					"Usage": {}
 				},
 				"canonical": true
 			}
@@ -244,17 +269,19 @@
 		"_id": "3605702de63e5d0b",
 		"name": "Delve the Depths",
 		"type": "RollTable",
-		"sort": 21,
+		"sort": 1021,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Moves/Delve_the_Depths",
+				"parentDfid": "Ironsworn/Oracles/Moves",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Moves/Delve_the_Depths",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
 						"Page": 21
 					},
-					"Category": "Ironsworn/Oracles/Moves"
+					"Usage": {}
 				},
 				"canonical": true
 			}
@@ -266,11 +293,12 @@
 		"name": "Feature",
 		"type": "RollTable",
 		"description": "Use the Aspect and Focus oracles to answer questions or provide inspiration for a location or event within a site.",
-		"sort": 204,
+		"sort": 1204,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Feature",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Feature",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -286,11 +314,12 @@
 		"name": "Site Name",
 		"type": "RollTable",
 		"description": "Give a site a name or learn more about its characteristics and history.",
-		"sort": 206,
+		"sort": 1206,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Site_Name",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Site_Name",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -306,11 +335,12 @@
 		"name": "Site Nature",
 		"type": "RollTable",
 		"description": "Randomly select a theme and domain for a perilous location.",
-		"sort": 212,
+		"sort": 1212,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Site_Nature",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Site_Nature",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -326,11 +356,12 @@
 		"name": "Monstrosity",
 		"type": "RollTable",
 		"description": "Discover the nature of a nightspawn or other frightful creature within your world.",
-		"sort": 214,
+		"sort": 1214,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Monstrosity",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Monstrosity",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -346,11 +377,12 @@
 		"name": "Trap",
 		"type": "RollTable",
 		"description": "Identify the characteristics and effects of a trap within a site.",
-		"sort": 217,
+		"sort": 1217,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Trap",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Trap",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -366,11 +398,12 @@
 		"name": "Combat Event",
 		"type": "RollTable",
 		"description": "Determine the actions of a character, creature, or force during a fight.",
-		"sort": 218,
+		"sort": 1218,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Combat_Event",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Combat_Event",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],
@@ -386,11 +419,12 @@
 		"name": "Threat",
 		"type": "RollTable",
 		"description": "In support of the optional threat mechanics, use these oracles to introduce a threat and determine its actions within your world.",
-		"sort": 220,
+		"sort": 1220,
 		"flags": {
 			"foundry-ironsworn": {
+				"dfid": "Ironsworn/Oracles/Threat",
 				"dataforged": {
-					"dfid": "Ironsworn/Oracles/Threat",
+					"Display": {},
 					"Source": {
 						"Title": "Ironsworn: Delve",
 						"Authors": ["Shawn Tomkin"],

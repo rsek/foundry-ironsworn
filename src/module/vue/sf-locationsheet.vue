@@ -491,7 +491,7 @@ const canRandomizeName = computed(() => {
 
 	if (subtype === 'planet') {
 		const kc = capitalize(klass)
-		const folder = OracleTree.findDfId(`Starforged/Oracles/Planets/${kc}`, true)
+		const folder = OracleTree.find(`Starforged/Oracles/Planets/${kc}`, true)
 		if (folder) return true
 	} else if (subtype === 'settlement') {
 		return true
@@ -573,7 +573,7 @@ async function randomizeName() {
 	let name
 	if (subtype === 'planet') {
 		const kc = capitalize(klass)
-		const json = OracleTree.findDfId(
+		const json = OracleTree.find(
 			`Starforged/Oracles/Planets/${kc}`,
 			true
 		) as IronFolder<OracleTable>
@@ -583,7 +583,7 @@ async function randomizeName() {
 		) as Partial<IOracleCategoryBranch>
 		name = sample(df?.['Sample Names'] ?? [])
 	} else if (subtype === 'settlement') {
-		const table = OracleTree.findDfId('Starforged/Oracles/Settlements/Name')
+		const table = OracleTree.find('Starforged/Oracles/Settlements/Name')
 		name = await table?.drawText()
 	}
 
@@ -607,7 +607,7 @@ async function randomizeKlass() {
 		tableKey = 'Starforged/Oracles/Vaults/Location'
 	}
 
-	const table = OracleTree.findDfId(tableKey)
+	const table = OracleTree.find(tableKey)
 	const rawText = await table?.drawText()
 	if (!rawText) return
 
@@ -629,7 +629,7 @@ async function rollFirstLook() {
 }
 
 async function rollOracle(oracle: OracleSpec) {
-	const drawText = await OracleTree.findDfId(oracle.dfid)?.drawText()
+	const drawText = await OracleTree.find(oracle.dfid)?.drawText()
 	if (!drawText) return
 
 	// Append to description

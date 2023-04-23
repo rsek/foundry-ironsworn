@@ -23,115 +23,87 @@
 		</div>
 
 		<div class="item-list scrollable flexcol" :class="$style.list">
-			<!-- TODO: this should probably have some way of handling tables that don't have a folder. put them in a custom directory, perhaps? -->
 			<!-- TODO: this should respect the 'visible' property when it's not a dataforged oracle -->
-			<!-- TODO: is it worth stripping down OracleFolderNode so that it doesn't actually need a folder? -->
-			<template
-				v-for="node in OracleTree.getRootNodes(capitalize(props.toolset))">
+			<template v-for="node in rootDataNodes">
 				<OracleFolderNode
 					v-if="node.documentName === 'Folder'"
+					v-show="isNodeVisible(node)"
 					:key="node.id"
-					ref="oracles"
-					:folder-id="node.id" />
+					ref="children"
+					class="nogrow"
+					:filter="isNodeVisible"
+					:folder="node.toObject()" />
 				<OracleTableNode
-					v-else-if="node.documentName === 'RollTable'"
+					v-else
+					v-show="isNodeVisible(node)"
 					:key="(node.id as any)"
-					ref="oracles"
-					:oracle-table-id="node.id" />
+					ref="children"
+					class="nogrow"
+					:oracle-table="node.toObject()" />
 			</template>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, provide, reactive, ref, watch } from 'vue'
-import type { IOracleTreeNode } from '../../features/customoracles'
-import { getOracleTreeWithCustomOracles } from '../../features/customoracles'
+import { computed, nextTick, provide, reactive, ref } from 'vue'
 import { capitalize } from '../../helpers/util'
-import { OracleTable } from '../../roll-table/oracle-table'
 import { OracleTree } from '../../roll-table/oracle-tree'
 import IronBtn from './buttons/iron-btn.vue'
 import OracleFolderNode from './oracle-folder-node.vue'
 import OracleTableNode from './oracle-table-node.vue'
-import OracleTreeNode from './oracle-tree-node.vue'
 
 const props = defineProps<{ toolset: 'ironsworn' | 'starforged' }>()
 provide('toolset', props.toolset)
 
-const tempTreeRoot = await getOracleTreeWithCustomOracles(props.toolset)
-
-const treeRoot = reactive<IOracleTreeNode>(tempTreeRoot)
-type ReactiveNode = typeof treeRoot
-
 const search = reactive({ q: '' })
-watch(search, ({ q }) => {
-	// If it's not a real regex, cancel the search
-	let re
-	try {
-		re = new RegExp(q, 'i')
-	} catch {}
 
-	if (q && re) {
-		// Walk the tree and test each name.
-		// Force expanded on all parent nodes leading to a match
-		const searchWalk = (node: ReactiveNode, parentMatch: boolean): boolean => {
-			// Match against current name (i18n) but also aliases in Dataforged
-			let thisMatch = re.test(node.displayName)
-			for (const alias of node.dataforgedNode?.Aliases ?? []) {
-				thisMatch ||= re.test(alias)
-			}
-
-			// Check for descendant matches
-			let childMatch = false
-			for (const child of node.children) {
-				childMatch ||= searchWalk(child, thisMatch || parentMatch)
-			}
-
-			// Expanded if part of a tree with a match
-			node.forceExpanded = parentMatch || thisMatch || childMatch
-			// Hidden if not
-			node.forceHidden = !node.forceExpanded
-
-			// Pass match up to ancestors
-			return thisMatch || childMatch
-		}
-		searchWalk(treeRoot, false)
-	} else {
-		// Walk the tree setting all force flags to false
-		function resetflags(node) {
-			node.forceExpanded = node.forceHidden = false
-			for (const child of node.children) resetflags(child)
-		}
-		resetflags(treeRoot)
-	}
-})
 function clearSearch() {
 	search.q = ''
 }
 
-const oracles = ref<InstanceType<typeof OracleTreeNode>[]>([])
+function isNodeVisible(node: OracleTree.Node) {
+	if (search.q.length === 0 || filteredTreeData.value == null) return true
+	return Boolean(filteredTreeData.value?.has(node))
+}
+
+const filteredTreeData = computed(() => {
+	if (search.q.length !== 0)
+		return OracleTree.query(search.q, capitalize(props.toolset))
+	return undefined
+})
+
+const rootDataNodes = computed(() =>
+	OracleTree.getNodes(capitalize(props.toolset), true)
+)
+
+const children = ref<
+	InstanceType<typeof OracleFolderNode | typeof OracleTableNode>[]
+>([])
 
 function collapseAll() {
-	for (const node of oracles.value) {
-		node.collapse()
+	for (const child of children.value) {
+		child.collapse()
 	}
 }
 
 CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
 	clearSearch()
+	const dfOracle = OracleTree.find(dfid)
+	if (dfOracle == null) return
 
 	// Find the path in the data tree
-	const dfOraclePath = OracleTable.findOracleWithIntermediateNodes(dfid)
+	const dfOraclePath = [...dfOracle.ancestors, dfOracle]
 
 	// Wait for children to be present
-	while (!oracles.value) {
+	while (!children.value) {
 		await nextTick()
 	}
 
 	// Walk the component tree, expanding as we go
-	let children = oracles.value
-	for (const dataNode of dfOraclePath) {
-		const child = children?.find((x: any) => x.dfid() === dataNode.$id)
+	let children = children.value
+	for (const node of dfOraclePath) {
+		const child = children?.find((x: any) => x.dfid() === node.dfid)
 		if (!child) break
 		child.expand()
 		await nextTick()

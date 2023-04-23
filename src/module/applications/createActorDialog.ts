@@ -159,12 +159,8 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 	}
 
 	async _ironlanderNameTables(): Promise<OracleTable[] | undefined> {
-		const tableA = OracleTree.findDfId(
-			'Ironsworn/Oracles/Name/Ironlander/A'
-		) as any
-		const tableB = OracleTree.findDfId(
-			'Ironsworn/Oracles/Name/Ironlander/B'
-		) as any
+		const tableA = OracleTree.find('Ironsworn/Oracles/Name/Ironlander/A') as any
+		const tableB = OracleTree.find('Ironsworn/Oracles/Name/Ironlander/B') as any
 		if (tableA && tableB) return [tableA, tableB]
 		return undefined
 	}

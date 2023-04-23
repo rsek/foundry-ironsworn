@@ -1,17 +1,17 @@
 <template>
 	<article :class="$style.wrapper">
-		<h4 class="flexrow">
+		<h4 class="flexrow" :class="$style.toggleWrapper">
 			<BtnOracle
-				:draw="$oracleTable?.draw"
-				:name="oracleTable?.name"
-				:text="oracleTable?.name">
+				:draw="() => OracleTable.ask($oracleTable.dfid ?? oracleTable._id)"
+				:name="oracleTable.name"
+				:text="oracleTable.name">
 				<template #icon>
 					<IronIcon name="oracle" :size="spacerSize" />
 				</template>
 			</BtnOracle>
 			<IronBtn
 				nogrow
-				:class="$style.showOracleInfo"
+				:class="$style.toggle"
 				icon="fa:eye"
 				@click="state.descriptionExpanded = !state.descriptionExpanded" />
 		</h4>
@@ -26,10 +26,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { Ref } from 'vue'
 import { computed, provide, reactive } from 'vue'
+import type { helpers } from '../../../types/utils'
 import type { IronswornItem } from '../../item/item'
-import type { OracleTable } from '../../roll-table/oracle-table'
+import { OracleTable } from '../../roll-table/oracle-table'
 import { $OracleKey, OracleKey } from '../provisions'
 import BtnOracle from './buttons/btn-oracle.vue'
 import IronBtn from './buttons/iron-btn.vue'
@@ -37,21 +37,28 @@ import IronIcon from './icon/iron-icon.vue'
 import RulesTextOracle from './rules-text/rules-text-oracle.vue'
 import CollapseTransition from './transition/collapse-transition.vue'
 
-const props = defineProps<{ oracleTableId: string }>()
+const props = defineProps<{
+	oracleTable: helpers.SourceDataType<OracleTable>
+}>()
 
 const $oracleTable = computed(
-	() => game.tables?.get(props.oracleTableId) as OracleTable | undefined
+	() =>
+		game.tables?.get(
+			props.oracleTable._id as string
+		) as StoredDocument<OracleTable>
 )
-const oracleTable = computed(() => $oracleTable.value?.toObject())
 
-provide(OracleKey, oracleTable as Ref<typeof oracleTable.value>)
+provide(
+	OracleKey,
+	computed(() => props.oracleTable)
+)
 provide($OracleKey, $oracleTable.value)
 
 const spacerSize = '18px'
 
 const state = reactive({
 	manuallyExpanded:
-		oracleTable.value?.flags?.['foundry-ironsworn']?.forceExpanded ?? false,
+		props.oracleTable.flags?.['foundry-ironsworn']?.forceExpanded ?? false,
 	descriptionExpanded: false,
 	highlighted: false
 })
@@ -74,7 +81,7 @@ function expand() {
 }
 
 defineExpose({
-	dfid: () => oracleTable.value?.flags?.['foundry-ironsworn']?.dataforged?.dfid,
+	dfid: () => $oracleTable.value.dfid,
 	expand,
 	collapse
 })
@@ -88,7 +95,14 @@ defineExpose({
 	margin: var(--ironsworn-spacer-sm);
 }
 
-.showOracleInfo {
-	// padding: 4px;
+.toggleWrapper {
+	margin: 0;
+	height: min-content;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.toggle {
+	padding: 4px;
 }
 </style>

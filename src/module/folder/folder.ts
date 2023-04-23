@@ -1,14 +1,28 @@
+import type { FolderData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs'
+import { DataforgedNamespace } from '../roll-table/oracle-tree'
 import type { FolderableDocument } from './folder-types'
 
+// @ts-expect-error IDFK you want from me, typescript. IronFolder<T> should be a valid narrowing of Folder
 export class IronFolder<
 	T extends FolderableDocument = FolderableDocument
 > extends Folder {
-	override get parentFolder() {
-		return super.parentFolder as this | null
+	get ancestors() {
+		const ancestors: IronFolder<T>[] = []
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		// if (this.parentFolder == null) return ancestors
+
+		while (
+			ancestors.length >= CONST.FOLDER_MAX_DEPTH &&
+			ancestors[0]?.parentFolder != null
+		)
+			ancestors.unshift(ancestors[0].parentFolder)
+
+		return ancestors
 	}
 
-	override get type() {
-		return super.type as T['documentName']
+	get setting() {
+		if (this.dfid == null) return undefined
+		return this.dfid.split('/')[0] as DataforgedNamespace
 	}
 
 	get canonical() {
@@ -19,4 +33,21 @@ export class IronFolder<
 	get dfid() {
 		return this.getFlag('foundry-ironsworn', 'dfid')
 	}
+
+	get dataforged() {
+		return this.getFlag('foundry-ironsworn', 'dataforged')
+	}
+}
+
+// @ts-expect-error
+export interface IronFolder<T extends FolderableDocument = FolderableDocument>
+	extends Folder {
+	get parentFolder(): IronFolder<T> | null
+	get folder(): IronFolder<T> | null
+	get type(): T['documentName']
+
+	data: FolderData & { type: T['documentName'] }
+	sort: number
+
+	getSubfolders: (recursive?: boolean) => IronFolder<T>[]
 }

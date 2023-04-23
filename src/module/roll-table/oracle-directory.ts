@@ -20,7 +20,9 @@ export class OracleDirectory<
 		) as IronFolder[]
 
 		// Assign Documents
-		this.documents = this.collection.filter((e) => e.visible && !e.canonical)
+		this.documents = OracleDirectory.collection.filter(
+			(e) => e.visible && !e.canonical
+		)
 
 		// Build Tree
 		this.tree = OracleDirectory.setupFolders(this.folders, this.documents)

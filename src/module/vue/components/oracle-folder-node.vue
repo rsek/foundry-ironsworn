@@ -1,7 +1,10 @@
 <template>
 	<article :class="$style.wrapper">
-		<h4 class="flexrow">
-			<IronBtn :text="folder?.name" @click="toggleManually()">
+		<h4 class="flexrow" :class="$style.toggleWrapper">
+			<IronBtn
+				:text="folder.name"
+				:class="$style.toggle"
+				@click="toggleManually()">
 				<template #icon>
 					<FontIcon
 						nogrow
@@ -17,23 +20,24 @@
 		<CollapseTransition>
 			<div
 				v-show="state.manuallyExpanded"
-				class="flexcol"
+				class="flexcol nogrow"
 				:class="$style.indent">
-				<template v-for="child in folderChildren">
-					<template v-if="child.documentName === 'Folder'">
-						<oracle-folder-node
-							:key="(child.id as string)"
-							ref="children"
-							:folder-id="(child.id as string)"
-							@oracleclick="oracleclick" />
-					</template>
-					<template v-else-if="child.documentName === 'RollTable'">
-						<OracleTableNode
-							:key="(child.id as string)"
-							ref="children"
-							:oracle-table-id="(child.id as string)"
-							@oracleclick="oracleclick" />
-					</template>
+				<template v-for="node in childrenData">
+					<oracle-folder-node
+						v-if="node.documentName === 'Folder'"
+						v-show="isNodeVisible(node)"
+						:key="(node.id as string)"
+						ref="treeNodes"
+						class="nogrow"
+						:filter="isNodeVisible"
+						:folder="node.toObject()" />
+					<OracleTableNode
+						v-else
+						v-show="isNodeVisible(node)"
+						:key="(node.id as any)"
+						ref="treeNodes"
+						class="nogrow"
+						:oracle-table="node.toObject()" />
 				</template>
 			</div>
 		</CollapseTransition>
@@ -49,30 +53,49 @@ import FontIcon from './icon/font-icon.vue'
 import type { IronFolder } from '../../folder/folder'
 import type { OracleTable } from '../../roll-table/oracle-table'
 import OracleTableNode from './oracle-table-node.vue'
+import type { helpers } from '../../../types/utils'
+import type { OracleTree } from '../../roll-table/oracle-tree'
 
-const props = defineProps<{ folderId: string }>()
+const props = defineProps<{
+	folder: helpers.SourceDataType<IronFolder>
+	filter?: (node: OracleTree.Node) => boolean
+}>()
 
 const $folder = computed(
-	() => game.folders?.get(props.folderId) as IronFolder | undefined
+	() => game.folders?.get(props.folder._id as string) as IronFolder<OracleTable>
 )
-const folder = computed(() => $folder.value?.toObject())
+
+function isNodeVisible(node: OracleTree.Node) {
+	if (props.filter == null) return true
+	return props.filter(node)
+}
+
+const childrenData = computed(() =>
+	[...$folder.value.getSubfolders(false), ...$folder.value.contents].sort(
+		(a, b) => a.sort - b.sort
+	)
+)
 
 const state = reactive({
 	manuallyExpanded:
-		$folder.value?.getFlag('foundry-ironsworn', 'forceExpanded') ?? false,
+		$folder.value.getFlag('foundry-ironsworn', 'forceExpanded') ?? false,
 	highlighted: false
 })
 
-const folderChildren = computed(() =>
-	[
-		...($folder.value!.getSubfolders() as IronFolder[]),
-		...($folder.value!.contents as OracleTable[])
-	].sort(
-		(a: any, b: any) =>
-			(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
-			(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
+function sortNode(a: any, b: any) {
+	return (
+		(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
+		(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
 	)
-)
+}
+
+// const children = computed(() =>
+// 	[...$folder.value.getSubfolders(), ...$folder.value.contents].sort(
+// 		(a: any, b: any) =>
+// 			(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
+// 			(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
+// 	)
+// )
 
 const spacerSize = '18px'
 
@@ -98,7 +121,7 @@ function expand() {
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if ($folder.value?.getFlag('foundry-ironsworn', 'dfid') === dfid) {
+	if ($folder.value.dfid === dfid) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
@@ -111,7 +134,7 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
 })
 
 defineExpose({
-	dfid: () => $folder.value?.getFlag('foundry-ironsworn', 'dfid'),
+	dfid: () => $folder.value.dfid,
 	expand,
 	collapse
 })
@@ -131,30 +154,15 @@ defineExpose({
 	height: v-bind(spacerSize);
 	font-size: v-bind(spacerSize);
 }
-</style>
-
-<style lang="scss" scoped>
-.show-oracle-info {
-	// padding: 4px;
-}
-
-.movesheet-row {
-	transition: all 0.4s ease;
-}
-
-h4 {
+.toggleWrapper {
 	margin: 0;
 	height: min-content;
 	line-height: 1;
-
-	button {
-		height: min-content;
-		text-transform: uppercase;
-		line-height: 1;
-	}
+	text-transform: uppercase;
 }
-
-.hidden {
-	display: none;
+.toggle {
+	height: min-content;
+	text-transform: inherit;
+	line-height: 1;
 }
 </style>
