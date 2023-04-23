@@ -64,7 +64,7 @@ declare global {
 				parentDfid?: string
 				dataforged?: DataforgedFlags<
 					IOracleLeaf,
-					'Category' | 'Member of' | 'Source' | 'Display' | 'Usage' | 'Aliases'
+					'Source' | 'Display' | 'Usage' | 'Aliases'
 				>
 				/** The UUID of the originating document, for computed RollTables */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined
@@ -81,7 +81,11 @@ declare global {
 		}
 		TableResult: {
 			'foundry-ironsworn'?: {
-				dataforged?: DataforgedFlags<IRow, '$id'>
+				dfid?: string
+				dataforged?: DataforgedFlags<
+					IRow,
+					'Attributes' | 'Suggestions' | 'Game objects' | 'Oracle rolls'
+				>
 
 				/** The UUID of the originating document, for computed TableResults */
 				sourceId?: Actor['uuid'] | Item['uuid'] | null | undefined

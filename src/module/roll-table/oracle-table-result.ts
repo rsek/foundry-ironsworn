@@ -2,7 +2,7 @@ import type { TableResultDataConstructorData } from '@league-of-foundry-develope
 import type { IRow, RequireKey } from 'dataforged'
 import { inRange } from 'lodash-es'
 import type { helpers } from '../../types/utils'
-import { hashLookup, renderLinksInStr } from '../dataforged'
+import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
 
 /** Extends FVTT's default TableResult with functionality specific to this system. */
 export class OracleTableResult extends TableResult {
@@ -56,22 +56,35 @@ export class OracleTableResult extends TableResult {
 
 		const data: TableResultDataConstructorData = {
 			range: [tableRow.Floor, tableRow.Ceiling],
-			text: tableRow.Result && renderLinksInStr(text)
-		}
-		if (tableRow.$id)
-			data.flags = {
+			text: tableRow.Result && renderLinksInStr(text),
+			flags: {
 				'foundry-ironsworn': {
-					dataforged: { dfid: tableRow.$id }
+					dfid: tableRow.$id ?? undefined
 				}
 			}
+		}
 
-		const _id =
+		const dataforged = pickDataforged(
+			tableRow,
+			'Attributes',
+			'Suggestions',
+			'Oracle rolls',
+			'Game objects'
+		)
+		// TODO: extract color + icon from IRow.Display
+		if (
+			Object.keys(dataforged).length > 0 &&
+			data.flags?.['foundry-ironsworn'] != null
+		)
+			data.flags['foundry-ironsworn'].dataforged = dataforged
+
+		const rawId =
 			tableRow.dfid ??
 			(tableRow as any).system?.dfid ??
-			(tableRow as any).flags?.['foundry-ironsworn'].dataforged?.dfid ??
+			(tableRow as any).flags?.['foundry-ironsworn']?.dfid ??
 			tableRow.$id
 
-		if (_id != null) data._id = hashLookup(_id)
+		if (rawId != null) data._id = hashLookup(rawId)
 
 		return data
 	}

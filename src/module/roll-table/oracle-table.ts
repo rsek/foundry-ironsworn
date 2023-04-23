@@ -10,7 +10,8 @@ import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
 import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
-import { OracleTree, DataforgedNamespace } from './oracle-tree'
+import type { DataforgedNamespace } from './oracle-tree'
+import { OracleTree } from './oracle-tree'
 import type { IronFolder } from '../folder/folder'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
@@ -107,10 +108,9 @@ export class OracleTable extends RollTable {
 		const flags: ConfiguredFlags<'RollTable'> = {
 			'foundry-ironsworn': {
 				dfid: oracle.$id,
+				parentDfid: oracle['Member of'] ?? oracle.Category,
 				dataforged: pickDataforged(
 					oracle,
-					'Category',
-					'Member of',
 					'Source',
 					'Display',
 					'Usage',
@@ -118,8 +118,12 @@ export class OracleTable extends RollTable {
 				)
 			}
 		}
+
 		// remove some redundant flags
-		setProperty(flags, 'foundry-ironsworn.dataforged.Display.Title', undefined)
+		const flagsRemoved = ['Display.Title', 'Display.Table']
+		flagsRemoved.forEach((flg) =>
+			setProperty(flags, `foundry-ironsworn.dataforged.${flg}`, undefined)
+		)
 
 		let name = oracle.Display.Title
 
