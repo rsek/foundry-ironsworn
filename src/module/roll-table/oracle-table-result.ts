@@ -1,8 +1,14 @@
-import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
+import type {
+	TableResultDataConstructorData,
+	TableResultDataProperties,
+	TableResultDataSource
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { IRow, RequireKey } from 'dataforged'
 import { inRange } from 'lodash-es'
 import type { helpers } from '../../types/utils'
 import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
+import { OracleTree } from './oracle-tree'
+import { CompendiumCollection } from '../compendium/compendium'
 
 /** Extends FVTT's default TableResult with functionality specific to this system. */
 export class OracleTableResult extends TableResult {
@@ -137,6 +143,40 @@ export class OracleTableResult extends TableResult {
 			),
 			context
 		)
+	}
+
+	override toCompendium(
+		...[pack, options]: Parameters<TableResult['toCompendium']>
+	) {
+		let data = super.toCompendium(
+			pack,
+			options
+		) as TableResultDataConstructorData
+
+		if (options == null) return data
+
+		// Patch: FVTT v10 doesn't properly clear the ownership flag when clearPermissions is set.
+		if (options.clearOwnership ?? options.clearPermissions ?? false) {
+			delete (data as any).ownership
+		}
+		if (options.clearState) {
+			delete data.drawn
+		}
+		const canonicalPacks = Object.values(OracleTree.CANONICAL_PACKS).flat()
+
+		if (canonicalPacks.includes(pack?.collection as any)) {
+			// strip a bunch of keys that don't add meaningful data in our use case
+			// const keysToStrip: (keyof OracleTableResult)[] = [
+			// 	'type', // defaults to 0
+			// 	'img',
+			// 	'documentCollection',
+			// 	'documentId',
+			// 	'weight'
+			// ]
+
+			data = CompendiumCollection.stripOptionalKeys(this.schema, data)
+		}
+		return data as any
 	}
 }
 

@@ -13,6 +13,7 @@ import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
 import type { DataforgedNamespace } from './oracle-tree'
 import { OracleTree } from './oracle-tree'
 import type { IronFolder } from '../folder/folder'
+import { CompendiumCollection } from '../compendium/compendium'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 // @ts-expect-error
@@ -146,6 +147,43 @@ export class OracleTable extends RollTable {
 			),
 			flags
 		}
+		return data
+	}
+
+	override toCompendium(
+		...[pack, options]: Parameters<RollTable['toCompendium']>
+	) {
+		let data = super.toCompendium(pack, options)
+
+		if (options == null) return data
+
+		const canonicalPacks = Object.values(OracleTree.CANONICAL_PACKS).flat()
+
+		// Patch: FVTT v10 doesn't properly clear the ownership flag when clearPermissions is set.
+		if (options.clearOwnership ?? options.clearPermissions ?? false) {
+			delete (data as any).ownership
+		}
+		if (canonicalPacks.includes(pack?.collection as any)) {
+			// strip a bunch of keys that don't add meaningful data in our use case
+			// const keysToStrip: (keyof OracleTableResult)[] = [
+			// 	'type', // defaults to 0
+			// 	'img',
+			// 	'documentCollection',
+			// 	'documentId',
+			// 	'weight'
+			// ]
+
+			data = CompendiumCollection.stripOptionalKeys(this.schema, data)
+			data.results = data.results.map((result) =>
+				CompendiumCollection.stripOptionalKeys(
+					OracleTableResult.schema,
+					result,
+					'type',
+					'drawn'
+				)
+			)
+		}
+
 		return data
 	}
 

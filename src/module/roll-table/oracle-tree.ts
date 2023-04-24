@@ -16,6 +16,7 @@ import { compact, pickBy } from 'lodash-es'
 import type { helpers } from '../../types/utils'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
+import { CompendiumCollection } from '../compendium/compendium'
 
 export type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -162,8 +163,11 @@ export class OracleTree extends RollTables {
 			}
 	}
 
+	static readonly CANONICAL_PACKS =
+		CompendiumCollection.CANONICAL_PACKS.RollTable
+
 	static async emptySettingPack(setting: DataforgedNamespace) {
-		const packId = `foundry-ironsworn.${setting.toLowerCase()}oracles`
+		const packId = OracleTree.CANONICAL_PACKS[setting][0]
 		const pack = game.packs.get(packId)
 		if (pack == null) throw new Error(`Pack ${packId} not found`)
 

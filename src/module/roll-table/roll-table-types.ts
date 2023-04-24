@@ -119,7 +119,10 @@ declare global {
 		extends Omit<
 			TableResultData,
 			'_initialize' | 'toJSON' | 'update' | 'toObject' | 'collection'
-		> {}
+		> {
+		documentCollection?: string
+		documentId?: string
+	}
 	interface RollTable
 		extends Omit<
 			RollTableData,

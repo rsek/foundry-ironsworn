@@ -1,26 +1,35 @@
-import type { DocumentClassForCompendiumMetadata } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/client/data/collections/compendium'
+import type { AnyDocumentData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/abstract/data.mjs'
+import { isFunction } from 'lodash-es'
+import type { helpers } from '../../types/utils'
 
 export namespace CompendiumCollection {
 	export const CANONICAL_PACKS = {
-		Actor: ['foundry-ironsworn.foeactorssf', 'foundry-ironsworn.foeactorsis'],
-		Item: [
-			'foundry-ironsworn.starforgedassets',
-			'foundry-ironsworn.ironswornassets',
-			'foundry-ironsworn.starforgedmoves',
-			'foundry-ironsworn.ironswornmoves',
-			'foundry-ironsworn.starforgedencounters',
-			'foundry-ironsworn.ironswornfoes',
-			'foundry-ironsworn.ironsworndelvethemes',
-			'foundry-ironsworn.ironsworndelvedomains'
-		],
-		RollTable: [
-			'foundry-ironsworn.starforgedoracles',
-			'foundry-ironsworn.ironswornoracles'
-		],
-		JournalEntry: [
-			'foundry-ironsworn.starforgedtruths',
-			'foundry-ironsworn.ironsworntruths'
-		]
+		Actor: {
+			Ironsworn: ['foundry-ironsworn.foeactorsis'],
+			Starforged: ['foundry-ironsworn.foeactorssf']
+		},
+		RollTable: {
+			Ironsworn: ['foundry-ironsworn.ironswornoracles'],
+			Starforged: ['foundry-ironsworn.starforgedoracles']
+		},
+		Item: {
+			Ironsworn: [
+				'foundry-ironsworn.ironswornassets',
+				'foundry-ironsworn.ironswornmoves',
+				'foundry-ironsworn.ironswornfoes',
+				'foundry-ironsworn.ironsworndelvethemes',
+				'foundry-ironsworn.ironsworndelvedomains'
+			],
+			Starforged: [
+				'foundry-ironsworn.starforgedassets',
+				'foundry-ironsworn.starforgedmoves',
+				'foundry-ironsworn.starforgedencounters'
+			]
+		},
+		JournalEntry: {
+			Ironsworn: ['foundry-ironsworn.ironsworntruths'],
+			Starforged: ['foundry-ironsworn.starforgedtruths']
+		}
 	} as const
 
 	export function empty<T extends CompendiumCollection<any>>(pack: T) {
@@ -38,7 +47,37 @@ export namespace CompendiumCollection {
 		)
 	}
 
-	export function hasDfId(dfid: string) {
-		throw new Error('NYI')
+	/** Strips optional and nullable keys that use `null` or the default value. */
+	export function stripOptionalKeys<
+		TDoc extends AnyDocumentData,
+		TData extends helpers.ConstructorDataType<TDoc>
+	>(
+		schema: TDoc['schema'],
+		data: TData,
+		...keys: (keyof Expanded<TData>)[]
+	): TData {
+		const keysToStrip = [
+			...keys,
+			'ownership',
+			'flags.foundry-ironsworn.canonical'
+		]
+		for (const [key, field] of Object.entries(schema.fields)) {
+			const initial = isFunction(field?.initial)
+				? field?.initial()
+				: field?.initial
+			const canDelete = !field?.required || field?.nullable
+
+			// console.log('defaultValue', defaultValue)
+			// console.log('canDelete', canDelete)
+
+			if (canDelete && (initial === data[key] || data[key] === null))
+				keysToStrip.push(key)
+		}
+		for (const key of keysToStrip) {
+			setProperty(data as object, key, undefined)
+		}
+
+		// console.log('cleaned data', data)
+		return data
 	}
 }
