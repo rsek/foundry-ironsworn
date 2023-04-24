@@ -64,7 +64,7 @@ function clearSearch() {
 
 function isNodeVisible(node: OracleTree.Node) {
 	if (search.q.length === 0 || filteredTreeData.value == null) return true
-	return Boolean(filteredTreeData.value?.has(node))
+	return Boolean(filteredTreeData.value?.some((child) => child.id === node.id))
 }
 
 const filteredTreeData = computed(() => {
@@ -89,26 +89,6 @@ function collapseAll() {
 
 CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
 	clearSearch()
-	const dfOracle = OracleTree.find(dfid)
-	if (dfOracle == null) return
-
-	// Find the path in the data tree
-	const dfOraclePath = [...dfOracle.ancestors, dfOracle]
-
-	// Wait for children to be present
-	while (!children.value) {
-		await nextTick()
-	}
-
-	// Walk the component tree, expanding as we go
-	let children = children.value
-	for (const node of dfOraclePath) {
-		const child = children?.find((x: any) => x.dfid() === node.dfid)
-		if (!child) break
-		child.expand()
-		await nextTick()
-		children = child.$refs.children as any
-	}
 })
 </script>
 

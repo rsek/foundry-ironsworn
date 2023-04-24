@@ -30,14 +30,18 @@
 						ref="treeNodes"
 						class="nogrow"
 						:filter="isNodeVisible"
-						:folder="node.toObject()" />
+						:folder="node.toObject()"
+						@oracleclick="oracleclick"
+						@moveclick="moveclick" />
 					<OracleTableNode
 						v-else
 						v-show="isNodeVisible(node)"
 						:key="(node.id as any)"
 						ref="treeNodes"
 						class="nogrow"
-						:oracle-table="node.toObject()" />
+						:oracle-table="node.toObject()"
+						@oracleclick="oracleclick"
+						@moveclick="moveclick" />
 				</template>
 			</div>
 		</CollapseTransition>
@@ -55,6 +59,7 @@ import type { OracleTable } from '../../roll-table/oracle-table'
 import OracleTableNode from './oracle-table-node.vue'
 import type { helpers } from '../../../types/utils'
 import type { OracleTree } from '../../roll-table/oracle-tree'
+import { IronswornItem } from '../../item/item'
 
 const props = defineProps<{
 	folder: helpers.SourceDataType<IronFolder>
@@ -82,27 +87,16 @@ const state = reactive({
 	highlighted: false
 })
 
-function sortNode(a: any, b: any) {
-	return (
-		(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
-		(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
-	)
-}
-
-// const children = computed(() =>
-// 	[...$folder.value.getSubfolders(), ...$folder.value.contents].sort(
-// 		(a: any, b: any) =>
-// 			(b.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0) -
-// 			(a.getFlag('foundry-ironsworn', 'dataforged')?.Source?.Page ?? 0)
-// 	)
-// )
-
 const spacerSize = '18px'
 
 function toggleManually() {
 	state.manuallyExpanded = !state.manuallyExpanded
 }
 
+// Click on a move link: broadcast event
+function moveclick(item: IronswornItem) {
+	CONFIG.IRONSWORN.emitter.emit('highlightMove', item.uuid)
+}
 function oracleclick(dfid) {
 	CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
 }
@@ -121,6 +115,9 @@ function expand() {
 
 const $el = ref<HTMLElement>()
 CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
+	if (dfid.startsWith($folder.value.dfid as string))
+		// inference: target dfid is a descendent of this folder node
+		expand()
 	if ($folder.value.dfid === dfid) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({

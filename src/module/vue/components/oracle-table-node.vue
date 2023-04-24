@@ -1,5 +1,5 @@
 <template>
-	<article :class="$style.wrapper">
+	<article :class="$style.wrapper" ref="$el">
 		<h4 class="flexrow" :class="$style.toggleWrapper">
 			<BtnOracle
 				:draw="() => OracleTable.ask($oracleTable.dfid ?? oracleTable._id)"
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, reactive } from 'vue'
+import { computed, provide, reactive, ref } from 'vue'
 import type { helpers } from '../../../types/utils'
 import type { IronswornItem } from '../../item/item'
 import { OracleTable } from '../../roll-table/oracle-table'
@@ -79,6 +79,21 @@ function collapse() {
 function expand() {
 	state.manuallyExpanded = true
 }
+const $el = ref<HTMLElement>()
+
+CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
+	if ($oracleTable.value.dfid === dfid) {
+		expand()
+		state.highlighted = true
+		$el.value?.scrollIntoView({
+			behavior: 'smooth',
+			block: 'center'
+		})
+		setTimeout(() => {
+			state.highlighted = false
+		}, 2000)
+	}
+})
 
 defineExpose({
 	dfid: () => $oracleTable.value.dfid,

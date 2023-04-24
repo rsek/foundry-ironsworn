@@ -4,7 +4,7 @@ import type {
 	TableResultDataSource
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
 import type { IRow, RequireKey } from 'dataforged'
-import { inRange } from 'lodash-es'
+import { inRange, keyBy, snakeCase } from 'lodash-es'
 import type { helpers } from '../../types/utils'
 import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
 import { OracleTree } from './oracle-tree'
@@ -53,30 +53,57 @@ export class OracleTableResult extends TableResult {
 
 	/** Converts a Dataforged IRow object into OracleTableResult constructor data. */
 	static getConstructorData(
-		tableRow: OracleTableResult.IRollableRow
+		row: OracleTableResult.IRollableRow
 	): TableResultDataConstructorData {
 		let text: string
-		if (tableRow.Result && tableRow.Summary) {
-			text = `${tableRow.Result} (${tableRow.Summary})`
-		} else text = tableRow.Result ?? ''
+		if (row.Result && row.Summary) {
+			text = `${row.Result} (${row.Summary})`
+		} else text = row.Result ?? ''
+
+		let img: undefined | string
+		if (row.Display?.Icon)
+			img = row.Display.Icon.replace(
+				/^.*?\/Oracles\//,
+				'systems/foundry-ironsworn/assets/oracles/'
+			).toLowerCase()
+		if (!img) {
+			const attrs = Object.fromEntries(
+				(row.Attributes ?? []).map((attr) => Object.values(attr))
+			)
+
+			if (attrs.Location)
+				img = `systems/foundry-ironsworn/assets/oracles/location/${snakeCase(
+					attrs.Location
+				)}.svg`
+			if (attrs['Location Theme'])
+				img = `systems/foundry-ironsworn/assets/oracles/location_theme/${snakeCase(
+					attrs['Location Theme']
+				)}.svg`
+			if (attrs.Environment)
+				img = `systems/foundry-ironsworn/assets/oracles/creature/environment/${snakeCase(
+					attrs.Environment
+				)}.svg`
+		}
 
 		const data: TableResultDataConstructorData = {
-			range: [tableRow.Floor, tableRow.Ceiling],
-			text: tableRow.Result && renderLinksInStr(text),
+			range: [row.Floor, row.Ceiling],
+			text: row.Result && renderLinksInStr(text),
+			img,
 			flags: {
 				'foundry-ironsworn': {
-					dfid: tableRow.$id ?? undefined
+					dfid: row.$id ?? undefined
 				}
 			}
 		}
 
 		const dataforged = pickDataforged(
-			tableRow,
+			row,
 			'Attributes',
 			'Suggestions',
 			'Oracle rolls',
 			'Game objects'
 		)
+
 		// TODO: extract color + icon from IRow.Display
 		if (
 			Object.keys(dataforged).length > 0 &&
@@ -85,10 +112,10 @@ export class OracleTableResult extends TableResult {
 			data.flags['foundry-ironsworn'].dataforged = dataforged
 
 		const rawId =
-			tableRow.dfid ??
-			(tableRow as any).system?.dfid ??
-			(tableRow as any).flags?.['foundry-ironsworn']?.dfid ??
-			tableRow.$id
+			row.dfid ??
+			(row as any).system?.dfid ??
+			(row as any).flags?.['foundry-ironsworn']?.dfid ??
+			row.$id
 
 		if (rawId != null) data._id = hashLookup(rawId)
 
@@ -143,40 +170,6 @@ export class OracleTableResult extends TableResult {
 			),
 			context
 		)
-	}
-
-	override toCompendium(
-		...[pack, options]: Parameters<TableResult['toCompendium']>
-	) {
-		let data = super.toCompendium(
-			pack,
-			options
-		) as TableResultDataConstructorData
-
-		if (options == null) return data
-
-		// Patch: FVTT v10 doesn't properly clear the ownership flag when clearPermissions is set.
-		if (options.clearOwnership ?? options.clearPermissions ?? false) {
-			delete (data as any).ownership
-		}
-		if (options.clearState) {
-			delete data.drawn
-		}
-		const canonicalPacks = Object.values(OracleTree.CANONICAL_PACKS).flat()
-
-		if (canonicalPacks.includes(pack?.collection as any)) {
-			// strip a bunch of keys that don't add meaningful data in our use case
-			// const keysToStrip: (keyof OracleTableResult)[] = [
-			// 	'type', // defaults to 0
-			// 	'img',
-			// 	'documentCollection',
-			// 	'documentId',
-			// 	'weight'
-			// ]
-
-			data = CompendiumCollection.stripOptionalKeys(this.schema, data)
-		}
-		return data as any
 	}
 }
 

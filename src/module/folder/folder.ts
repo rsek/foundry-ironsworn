@@ -1,5 +1,6 @@
 import type { FolderData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs'
-import { DataforgedNamespace } from '../roll-table/oracle-tree'
+import { compact } from 'lodash-es'
+import type { DataforgedNamespace } from '../roll-table/oracle-tree'
 import type { FolderableDocument } from './folder-types'
 
 // @ts-expect-error IDFK you want from me, typescript. IronFolder<T> should be a valid narrowing of Folder
@@ -7,17 +8,19 @@ export class IronFolder<
 	T extends FolderableDocument = FolderableDocument
 > extends Folder {
 	get ancestors() {
-		const ancestors: IronFolder<T>[] = []
+		const ancestors: (IronFolder<T> | null)[] = []
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		// if (this.parentFolder == null) return ancestors
 
-		while (
-			ancestors.length >= CONST.FOLDER_MAX_DEPTH &&
-			ancestors[0]?.parentFolder != null
-		)
-			ancestors.unshift(ancestors[0].parentFolder)
+		ancestors.push(this.folder)
+		while (ancestors.length <= CONST.FOLDER_MAX_DEPTH && ancestors[0] != null)
+			ancestors.unshift(ancestors[0].folder)
 
-		return ancestors
+		return compact(ancestors)
+	}
+
+	get img() {
+		return this.dataforged?.Display?.Icon
 	}
 
 	get setting() {

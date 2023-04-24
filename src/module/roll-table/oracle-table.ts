@@ -1,7 +1,7 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import type { IOracle, IRow } from 'dataforged'
-import { max } from 'lodash-es'
+import { max, snakeCase } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
 import { hashLookup, pickDataforged, renderLinksInStr } from '../dataforged'
@@ -31,7 +31,7 @@ export class OracleTable extends RollTable {
 	/** An array of the OracleTable's ancestor folders, if any. */
 	get ancestors() {
 		if (this.folder == null) return []
-		return [this.folder, ...this.folder.ancestors]
+		return [...this.folder.ancestors, this.folder]
 	}
 
 	get canonical() {
@@ -128,16 +128,31 @@ export class OracleTable extends RollTable {
 
 		let name = oracle.Display.Title
 
+		// strip "Oracle XX: " from some ironsworn titles
 		if (name.includes(':') && oracle.$id.startsWith('Ironsworn'))
 			name = name.replace(/^.*?: /, '')
 
+		let img: undefined | string
+		if (oracle.Display.Icon)
+			img = oracle.Display.Icon.replace(
+				/^.*?\/Oracles\//,
+				'systems/foundry-ironsworn/assets/oracles/'
+			).toLowerCase()
+
+		if (!img) {
+			if (['Orbital', 'Planetside', 'Deep Space'].includes(name))
+				img = `systems/foundry-ironsworn/assets/oracles/location/${snakeCase(
+					name
+				)}.svg`
+		}
+
 		const data: RollTableDataConstructorData = {
 			_id: hashLookup(oracle.$id),
-			// strip "Oracle XX: " from some ironsworn titles
 			name,
+			img,
 			sort: oracle.Source.Page,
 			description,
-			formula: `d${maxRoll as number}`,
+			formula: `1d${maxRoll as number}`,
 			replacement: true,
 			displayRoll: true,
 			results: oracle.Table?.filter((x) => x.Floor !== null).map((tableRow) =>
@@ -153,7 +168,7 @@ export class OracleTable extends RollTable {
 	override toCompendium(
 		...[pack, options]: Parameters<RollTable['toCompendium']>
 	) {
-		let data = super.toCompendium(pack, options)
+		const data = super.toCompendium(pack, options)
 
 		if (options == null) return data
 
@@ -164,24 +179,7 @@ export class OracleTable extends RollTable {
 			delete (data as any).ownership
 		}
 		if (canonicalPacks.includes(pack?.collection as any)) {
-			// strip a bunch of keys that don't add meaningful data in our use case
-			// const keysToStrip: (keyof OracleTableResult)[] = [
-			// 	'type', // defaults to 0
-			// 	'img',
-			// 	'documentCollection',
-			// 	'documentId',
-			// 	'weight'
-			// ]
-
-			data = CompendiumCollection.stripOptionalKeys(this.schema, data)
-			data.results = data.results.map((result) =>
-				CompendiumCollection.stripOptionalKeys(
-					OracleTableResult.schema,
-					result,
-					'type',
-					'drawn'
-				)
-			)
+			setProperty(data, 'flags.foundry-ironsworn.canonical', undefined)
 		}
 
 		return data
