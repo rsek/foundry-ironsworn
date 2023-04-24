@@ -225,7 +225,7 @@
 		"_id": "06986fcc791b64bc",
 		"name": "Moves",
 		"type": "RollTable",
-		"sort": 91,
+		"sort": 2091,
 		"flags": {
 			"foundry-ironsworn": {
 				"dfid": "Ironsworn/Oracles/Moves",

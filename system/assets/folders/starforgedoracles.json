@@ -73,7 +73,7 @@
 		"_id": "312c7e84afc43125",
 		"name": "Core Oracles",
 		"type": "RollTable",
-		"sort": 296,
+		"sort": 1,
 		"flags": {
 			"foundry-ironsworn": {
 				"dfid": "Starforged/Oracles/Core",
@@ -176,7 +176,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Access.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/access.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -211,7 +211,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Community.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/community.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -246,7 +246,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Engineering.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/engineering.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -281,7 +281,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Living.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/living.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -316,7 +316,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Medical.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/medical.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -351,7 +351,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Operations.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/operations.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -386,7 +386,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Production.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/production.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -421,7 +421,7 @@
 				"parentDfid": "Starforged/Oracles/Derelicts",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Derelicts/Research.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/derelicts/research.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -569,7 +569,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Chaotic.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/chaotic.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -605,7 +605,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Fortified.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/fortified.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -641,7 +641,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Haunted.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/haunted.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -677,7 +677,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Infested.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/infested.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -713,7 +713,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Inhabited.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/inhabited.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -749,7 +749,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Mechanical.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/mechanical.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -785,7 +785,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Ruined.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/ruined.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -821,7 +821,7 @@
 				"parentDfid": "Starforged/Oracles/Location_Themes",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Location_Theme/Sacred.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/location_theme/sacred.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -869,7 +869,7 @@
 		"_id": "adcc4cbc5484a254",
 		"name": "Moves",
 		"type": "RollTable",
-		"sort": 141,
+		"sort": 2141,
 		"flags": {
 			"foundry-ironsworn": {
 				"dfid": "Starforged/Oracles/Moves",
@@ -2062,14 +2062,14 @@
 		"name": "Interior",
 		"type": "RollTable",
 		"description": "If you enter the site, check the Inner First Look table for initial impressions of what lies within. If you explore further, use the Interior Feature table to define what you find or encounter. If you Undertake an Expedition within a vault, check this table if you want help setting the scene for a waypoint.",
-		"sort": 360,
+		"sort": 370,
 		"flags": {
 			"foundry-ironsworn": {
 				"dfid": "Starforged/Oracles/Vaults/Interior",
 				"parentDfid": "Starforged/Oracles/Vaults",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Vaults/Interior.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/vaults/interior.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
@@ -2087,14 +2087,14 @@
 		"name": "Sanctum",
 		"type": "RollTable",
 		"description": "As you delve deeper into a vault, the corruption and strangeness of the place takes hold. Use the Sanctum Feature table to represent the aberrant nature of a vault’s depths.",
-		"sort": 360,
+		"sort": 370,
 		"flags": {
 			"foundry-ironsworn": {
 				"dfid": "Starforged/Oracles/Vaults/Sanctum",
 				"parentDfid": "Starforged/Oracles/Vaults",
 				"dataforged": {
 					"Display": {
-						"Icon": "systems/foundry-ironsworn/assets/icons/Vaults/Sanctum.svg"
+						"Icon": "systems/foundry-ironsworn/assets/icons/vaults/sanctum.svg"
 					},
 					"Source": {
 						"Title": "Ironsworn: Starforged Rulebook",
