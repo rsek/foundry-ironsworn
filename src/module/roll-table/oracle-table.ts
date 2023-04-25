@@ -13,7 +13,6 @@ import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
 import type { DataforgedNamespace } from './oracle-tree'
 import { OracleTree } from './oracle-tree'
 import type { IronFolder } from '../folder/folder'
-import { CompendiumCollection } from '../compendium/compendium'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 // @ts-expect-error

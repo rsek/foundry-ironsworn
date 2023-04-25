@@ -1,32 +1,29 @@
 <template>
-	<article :class="$style.wrapper" ref="$el">
-		<h4 class="flexrow" :class="$style.toggleWrapper">
+	<OracleNode
+		:dfid="$oracleTable.dfid ?? $oracleTable.id"
+		:expanded="props.oracleTable.flags?.['foundry-ironsworn']?.forceExpanded">
+		<template #header="{ toggle }">
 			<BtnOracle
-				:draw="() => OracleTable.ask($oracleTable.dfid ?? oracleTable._id)"
+				:draw="() => OracleTable.ask($oracleTable.dfid ?? $oracleTable.id)"
 				:name="oracleTable.name"
 				:text="oracleTable.name">
 				<template #icon>
 					<IronIcon name="oracle" :size="spacerSize" />
 				</template>
 			</BtnOracle>
-			<IronBtn
-				nogrow
-				:class="$style.toggle"
-				icon="fa:eye"
-				@click="state.descriptionExpanded = !state.descriptionExpanded" />
-		</h4>
-		<CollapseTransition>
+			<IronBtn nogrow :class="$style.toggle" icon="fa:eye" @click="toggle" />
+		</template>
+		<template #default>
 			<RulesTextOracle
-				v-if="state.descriptionExpanded"
 				:class="$style.content"
 				@moveclick="moveclick"
 				@oracleclick="oracleclick" />
-		</CollapseTransition>
-	</article>
+		</template>
+	</OracleNode>
 </template>
 
 <script lang="ts" setup>
-import { computed, provide, reactive, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import type { helpers } from '../../../types/utils'
 import type { IronswornItem } from '../../item/item'
 import { OracleTable } from '../../roll-table/oracle-table'
@@ -34,8 +31,8 @@ import { $OracleKey, OracleKey } from '../provisions'
 import BtnOracle from './buttons/btn-oracle.vue'
 import IronBtn from './buttons/iron-btn.vue'
 import IronIcon from './icon/iron-icon.vue'
+import OracleNode from './oracle-node.vue'
 import RulesTextOracle from './rules-text/rules-text-oracle.vue'
-import CollapseTransition from './transition/collapse-transition.vue'
 
 const props = defineProps<{
 	oracleTable: helpers.SourceDataType<OracleTable>
@@ -56,13 +53,6 @@ provide($OracleKey, $oracleTable.value)
 
 const spacerSize = '18px'
 
-const state = reactive({
-	manuallyExpanded:
-		props.oracleTable.flags?.['foundry-ironsworn']?.forceExpanded ?? false,
-	descriptionExpanded: false,
-	highlighted: false
-})
-
 // Click on a move link: broadcast event
 function moveclick(item: IronswornItem) {
 	CONFIG.IRONSWORN.emitter.emit('highlightMove', item.uuid)
@@ -71,52 +61,9 @@ function moveclick(item: IronswornItem) {
 function oracleclick(dfid) {
 	CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
 }
-
-function collapse() {
-	state.manuallyExpanded = false
-	state.descriptionExpanded = false
-}
-function expand() {
-	state.manuallyExpanded = true
-}
-const $el = ref<HTMLElement>()
-
-CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if ($oracleTable.value.dfid === dfid) {
-		expand()
-		state.highlighted = true
-		$el.value?.scrollIntoView({
-			behavior: 'smooth',
-			block: 'center'
-		})
-		setTimeout(() => {
-			state.highlighted = false
-		}, 2000)
-	}
-})
-
-defineExpose({
-	dfid: () => $oracleTable.value.dfid,
-	expand,
-	collapse
-})
 </script>
 
 <style lang="scss" module>
-.wrapper {
-}
-
-.content {
-	margin: var(--ironsworn-spacer-sm);
-}
-
-.toggleWrapper {
-	margin: 0;
-	height: min-content;
-	line-height: 1;
-	text-transform: uppercase;
-}
-
 .toggle {
 	padding: 4px;
 }

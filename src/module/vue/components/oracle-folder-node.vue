@@ -1,6 +1,9 @@
 <template>
-	<article :class="$style.wrapper">
-		<h4 class="flexrow" :class="$style.toggleWrapper">
+	<OracleNode
+		:class="$style.wrapper"
+		:dfid="$folder.dfid ?? $folder.id"
+		:expanded="props.folder.flags?.['foundry-ironsworn']?.forceExpanded">
+		<template #header="{ toggle }">
 			<IronBtn
 				:text="folder.name"
 				:class="$style.toggle"
@@ -11,47 +14,42 @@
 						:class="$style.fontIcon"
 						name="caret-right"
 						:rotate="
-							state.manuallyExpanded ? FontAwesome.Rotate['90deg'] : undefined
+							state.expanded ? FontAwesome.Rotate['90deg'] : undefined
 						" />
 				</template>
 			</IronBtn>
-		</h4>
-
-		<CollapseTransition>
-			<div
-				v-show="state.manuallyExpanded"
-				class="flexcol nogrow"
-				:class="$style.indent">
-				<template v-for="node in childrenData">
-					<oracle-folder-node
-						v-if="node.documentName === 'Folder'"
-						v-show="isNodeVisible(node)"
-						:key="(node.id as string)"
-						ref="treeNodes"
-						class="nogrow"
-						:filter="isNodeVisible"
-						:folder="node.toObject()"
-						@oracleclick="oracleclick"
-						@moveclick="moveclick" />
-					<OracleTableNode
-						v-else
-						v-show="isNodeVisible(node)"
-						:key="(node.id as any)"
-						ref="treeNodes"
-						class="nogrow"
-						:oracle-table="node.toObject()"
-						@oracleclick="oracleclick"
-						@moveclick="moveclick" />
-				</template>
-			</div>
-		</CollapseTransition>
-	</article>
+		</template>
+		<template #default>
+			<template v-for="node in childrenData">
+				<oracle-folder-node
+					v-if="node.documentName === 'Folder'"
+					v-show="isNodeVisible(node)"
+					:key="(node.id as string)"
+					ref="children"
+					class="nogrow"
+					:filter="isNodeVisible"
+					:folder="node.toObject()"
+					@expand="expand"
+					@oracleclick="oracleclick"
+					@moveclick="moveclick" />
+				<OracleTableNode
+					v-else
+					v-show="isNodeVisible(node)"
+					:key="(node.id as any)"
+					ref="children"
+					class="nogrow"
+					:oracle-table="node.toObject()"
+					@expand="expand"
+					@oracleclick="oracleclick"
+					@moveclick="moveclick" />
+			</template>
+		</template>
+	</OracleNode>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import { FontAwesome } from './icon/icon-common'
-import CollapseTransition from './transition/collapse-transition.vue'
 import IronBtn from './buttons/iron-btn.vue'
 import FontIcon from './icon/font-icon.vue'
 import type { IronFolder } from '../../folder/folder'
@@ -59,7 +57,8 @@ import type { OracleTable } from '../../roll-table/oracle-table'
 import OracleTableNode from './oracle-table-node.vue'
 import type { helpers } from '../../../types/utils'
 import type { OracleTree } from '../../roll-table/oracle-tree'
-import { IronswornItem } from '../../item/item'
+import type { IronswornItem } from '../../item/item'
+import OracleNode from './oracle-node.vue'
 
 const props = defineProps<{
 	folder: helpers.SourceDataType<IronFolder>
@@ -82,7 +81,7 @@ const childrenData = computed(() =>
 )
 
 const state = reactive({
-	manuallyExpanded:
+	expanded:
 		$folder.value.getFlag('foundry-ironsworn', 'forceExpanded') ?? false,
 	highlighted: false
 })
@@ -90,7 +89,7 @@ const state = reactive({
 const spacerSize = '18px'
 
 function toggleManually() {
-	state.manuallyExpanded = !state.manuallyExpanded
+	state.expanded = !state.expanded
 }
 
 // Click on a move link: broadcast event
@@ -103,26 +102,34 @@ function oracleclick(dfid) {
 
 const children = ref([] as any[])
 
+const $emit = defineEmits<{
+	(event: 'expand'): void
+	(event: 'collapse'): void
+}>()
+
 function collapse() {
-	state.manuallyExpanded = false
+	$emit('collapse')
+	state.expanded = false
 	for (const child of children.value ?? []) {
 		child.collapse()
 	}
 }
+
 function expand() {
-	state.manuallyExpanded = true
+	$emit('expand')
+	state.expanded = true
 }
 
 const $el = ref<HTMLElement>()
-CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if (dfid.startsWith($folder.value.dfid as string))
-		// inference: target dfid is a descendent of this folder node
-		expand()
+
+CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
 	if ($folder.value.dfid === dfid) {
+		expand()
 		state.highlighted = true
+		await nextTick()
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',
-			block: 'center'
+			block: 'start'
 		})
 		setTimeout(() => {
 			state.highlighted = false

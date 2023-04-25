@@ -17,8 +17,6 @@ import type { helpers } from '../../types/utils'
 import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import { CompendiumCollection } from '../compendium/compendium'
-import { FolderableDocument } from '../folder/folder-types'
-import { table } from 'console'
 
 export type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -133,6 +131,7 @@ export class OracleTree extends RollTables {
 	 * Dataforged adaption
 	 *********************************/
 
+	/** Paths to the JSON files with folder data */
 	static readonly FOLDER_DATA_PATH = {
 		Starforged:
 			'systems/foundry-ironsworn/assets/folders/starforgedoracles.json',
@@ -245,7 +244,7 @@ export class OracleTree extends RollTables {
 			await tempFolder.delete()
 		}
 
-		ui.notifications?.info(`Finished updating  setting data for ${setting}`)
+		ui.notifications?.info(`Finished updating setting data for ${setting}`)
 	}
 
 	static async rebuildAllData() {
@@ -330,7 +329,7 @@ export class OracleTree extends RollTables {
 	}
 
 	/**
-	 * Loads the oracle category hierarchy as a tree of  {@link IronFolder}s.
+	 * Loads the oracle category hierarchy as a tree of {@link IronFolder}s.
 	 * @remarks Part of a workaround for folders not being available in v10 compendia.
 	 * @see OracleTree#saveFolderTree
 	 * @internal
@@ -398,11 +397,11 @@ export class OracleTree extends RollTables {
 	 * @remarks Default context/options will be overridden if the object or its parent provides conflicting data.
 	 *
 	 * @param branches The top-level category nodes of the Dataforged oracle tree.
-	 * @param folderOptions Default constructor options for {@link Folder}s
-	 * @param folderContext Default constructor context  for {@link Folder}s
+	 * @param folderOptions Default constructor options for {@link IronFolder}s
+	 * @param folderContext Default constructor context  for {@link IronFolder}s
 	 * @param tableOptions Default constructor options for {@link OracleTable}s
 	 * @param tableContext Default constructor context  for {@link OracleTable}s
-	 * @return A Promise containing every constructed {@link Folder}.
+	 * @return A Promise containing every constructed {@link IronFolder}.
 	 * @example
 	 * ```ts
 	 * // import starforged tables
@@ -670,6 +669,7 @@ export class OracleTree extends RollTables {
 	 * Type guards
 	 *********************************/
 
+	/** Does this Dataforged oracle node contain categories? */
 	static isCategoryBranch(
 		oracle: IOracleBase
 	): oracle is IOracleCategoryBranch {
