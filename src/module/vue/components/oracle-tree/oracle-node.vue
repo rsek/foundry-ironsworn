@@ -1,0 +1,98 @@
+<template>
+	<article
+		ref="$el"
+		:class="{
+			[$style.wrapper]: true,
+			highlighted: state.highlighted
+		}">
+		<h4 class="flexrow" :class="$style.header">
+			<slot
+				name="header"
+				v-bind="{
+					expanded: state.expanded,
+					toggle
+				}" />
+		</h4>
+		<CollapseTransition>
+			<section v-show="state.expanded" class="flexcol" :class="$style.content">
+				<slot
+					name="default"
+					v-bind="{
+						expanded: state.expanded
+					}" />
+			</section>
+		</CollapseTransition>
+	</article>
+</template>
+
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import CollapseTransition from './transition/collapse-transition.vue'
+
+// TODO: rewrite the highlight as a CSS animation rather than requiring a JS callback
+
+/** Handles features common to all kinds of oracle nodes */
+const props = withDefaults(
+	defineProps<{ expanded?: boolean; dfid: string }>(),
+	{ expanded: false }
+)
+
+const state = reactive({
+	expanded: props.expanded,
+	highlighted: false
+})
+
+function toggle() {
+	state.expanded ? collapse() : expand()
+}
+function collapse() {
+	if (!state.expanded) return
+	$emit('collapse')
+	state.expanded = false
+}
+function expand() {
+	if (state.expanded) return
+	$emit('expand')
+	state.expanded = true
+}
+
+const $emit = defineEmits<{
+	(e: 'expand'): void
+	(e: 'collapse'): void
+}>()
+
+const $el = ref<HTMLElement>()
+
+CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
+	if (props.dfid === dfid) {
+		state.highlighted = true
+		$el.value?.scrollIntoView({
+			behavior: 'smooth',
+			block: 'center'
+		})
+		setTimeout(() => {
+			state.highlighted = false
+		}, 2000)
+	}
+})
+
+defineExpose({
+	dfid: () => props.dfid,
+	expand,
+	collapse,
+	toggle
+})
+</script>
+
+<style lang="scss" module>
+.wrapper {
+}
+
+.header {
+	margin: 0;
+	height: min-content;
+	line-height: 1;
+}
+.content {
+}
+</style>

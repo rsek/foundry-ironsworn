@@ -1,5 +1,5 @@
 import type { TableResultDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/tableResultData'
-import type { IMove } from 'dataforged'
+import type { IMove, IOutcomeInfo } from 'dataforged'
 import type { ChallengeRank } from '../constants'
 
 interface ProgressBase {
@@ -176,8 +176,19 @@ export interface DelveDomainDataProperties {
 
 /// ////////////////////////////
 
+type IOutcomeInfoNoMatch = Omit<IOutcomeInfo, 'With a Match'>
+type IOutcomeInfoWithMatch = Omit<IOutcomeInfo, 'With a Match'> & {
+	'With a Match'?: IOutcomeInfoNoMatch
+}
+
 export interface SFMoveDataPropertiesData extends IMove {
 	dfid: string
+	Outcomes?: {
+		$id: string
+		'Strong Hit': IOutcomeInfoWithMatch
+		'Weak Hit': IOutcomeInfoNoMatch
+		Miss: IOutcomeInfoWithMatch
+	}
 }
 
 export interface SFMoveDataSource {

@@ -1,9 +1,10 @@
 <template>
-	<RulesText class="rules-text-oracle" :source="source" type="slot">
+	<RulesText
+		class="rules-text-oracle"
+		:source="oracleTable.flags['foundry-ironsworn']?.dataforged?.Source"
+		type="slot">
 		<template #default>
-			<OracleTable
-				:table-description="tableDescription"
-				:table-rows="tableRows" />
+			<OracleTable :oracle-table="oracleTable" />
 		</template>
 		<template #before-main>
 			<slot name="before-main"></slot>
@@ -20,12 +21,10 @@
 <script setup lang="ts">
 import RulesText from './rules-text.vue'
 import OracleTable from './oracle-table.vue'
-import type { ISource } from 'dataforged'
-import type { LegacyTableRow } from '../../../roll-table/roll-table-types'
+import type { RollTableDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
+import { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 
-const props = defineProps<{
-	tableRows: LegacyTableRow[]
-	tableDescription: string
-	source?: ISource
+defineProps<{
+	oracleTable: PropertiesToSource<RollTableDataProperties>
 }>()
 </script>

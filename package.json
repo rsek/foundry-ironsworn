@@ -73,5 +73,8 @@
 	},
 	"browserslist": [
 		"defaults"
-	]
+	],
+	"devDependencies": {
+		"type-fest": "^3.11.0"
+	}
 }

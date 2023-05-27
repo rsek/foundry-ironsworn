@@ -1,5 +1,6 @@
 import type {
 	COMPENDIUM_DOCUMENT_TYPES,
+	DOCUMENT_TYPES,
 	FOLDER_DOCUMENT_TYPES
 } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/constants.mjs'
 import type { ConfiguredDocumentClassForName } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
@@ -31,6 +32,8 @@ declare global {
 		 * Return the list of ancestors of this folder, starting with the parent.
 		 */
 		get ancestors(): Folder<T>[]
+
+		description: string
 	}
 	interface FlagConfig {
 		Folder: {

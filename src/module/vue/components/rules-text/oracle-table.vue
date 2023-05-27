@@ -1,8 +1,8 @@
 <template>
 	<table class="oracle-table">
 		<caption
-			v-if="!noCaption && tableDescription"
-			v-html="enrichMarkdown(tableDescription ?? '')" />
+			v-if="!noCaption && oracleTable.description"
+			v-html="enrichMarkdown(oracleTable.description ?? '')" />
 		<thead>
 			<tr>
 				<th scope="col" class="oracle-table-column-roll-range">
@@ -14,8 +14,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(row, i) in tableRows" :key="`row${i}`">
-				<td class="oracle-table-column-roll-range">{{ rangeString(row) }}</td>
+			<tr v-for="(row, i) in oracleTable.results" :key="`row${i}`">
+				<td class="oracle-table-column-roll-range">
+					{{ rangeString(...(row.range as [number, number])) }}
+				</td>
 				<td
 					class="oracle-table-column-result-text"
 					v-html="$enrichHtml(row.text)"></td>
@@ -25,16 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import type { LegacyTableRow } from '../../../roll-table/roll-table-types'
+import type { RollTableDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
+import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import { enrichMarkdown } from '../../vue-plugin.js'
 
-const props = defineProps<{
-	tableRows: LegacyTableRow[]
-	tableDescription: string
+defineProps<{
+	oracleTable: PropertiesToSource<RollTableDataProperties>
 	noCaption?: boolean
 }>()
 
-function rangeString({ low, high }: LegacyTableRow) {
+function rangeString(low: number, high: number) {
 	if (low === high) {
 		return low.toString()
 	}

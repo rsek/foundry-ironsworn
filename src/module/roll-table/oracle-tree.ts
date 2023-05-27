@@ -26,37 +26,10 @@ import type {
 	FolderableDocument,
 	PackableDocument
 } from '../folder/folder-types'
+import { IndexEntry } from '../../types/compendium'
+import { Simplify } from 'type-fest'
 
 export type DataforgedNamespace = 'Starforged' | 'Ironsworn'
-
-export interface CompendiumTreeNode<
-	TContents extends PackableDocument & FolderableDocument
-> {
-	children: CompendiumTreeNode<TContents>[]
-	depth: number
-	/** The index entries */
-	entries: PartialDeep<TContents>[]
-	root: boolean
-	/** The folder that represents this node. `null` if `root` is `true` */
-	folder: IronFolder<TContents>
-	visible: boolean
-}
-
-export interface OracleIndexEntry
-	extends Pick<
-		RollTableDataProperties,
-		| 'description'
-		| 'flags'
-		| 'folder'
-		| 'formula'
-		| 'img'
-		| 'name'
-		| 'sort'
-		| '_id'
-	> {
-	/** e.g. "Compendium.foundry-ironsworn.delve-oracles.RollTable.aedcfc2f2a96a454" */
-	uuid: string
-}
 
 /**
  * Extends FVTT's {@link RollTables} to manage the Dataforged oracle tree.
