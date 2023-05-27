@@ -1,17 +1,16 @@
 <template>
 	<OracleNode
 		ref="$el"
-		:dfid="node.folder?.dfid ?? node.folder!.uuid"
-		:class="$style.wrapper"
-		@collapse="collapseChildren">
+		:dfid="node.folder?.flags?.['foundry-ironsworn']?.dfid"
+		:uuid="node.folder!.uuid"
+		:class="$style.wrapper">
 		<template #header="{ expanded, toggle }">
 			<IronBtn
 				:class="$style.btn"
 				:text="(node.folder!.name as string)"
-				:tooltip="node.folder!.description"
 				@click="toggle">
 				<template #icon>
-					<FontIconStack
+					<FontIcon
 						nogrow
 						:class="$style.fontIcon"
 						name="caret-right"
@@ -20,20 +19,23 @@
 			</IronBtn>
 		</template>
 		<template #default>
-			<template v-for="member in contents">
+			<template v-if="node.folder?.description">
+				<p>{{ node.folder?.description }}</p>
+			</template>
+			<template v-for="child in childNodes">
 				<OracleTreeLeaf
-					v-if="'formula' in member"
-					:key="member.uuid"
+					v-if="'_id' in child"
+					:key="child.flags?.['foundry-ironsworn']?.dfid ?? child.uuid"
 					ref="children"
 					:class="$style.indent"
-					:node="member"
+					:node="child"
 					@expand="handleChildExpand" />
 				<oracle-tree-branch
 					v-else
-					:key="member.folder!.uuid"
+					:key="child.folder!.uuid"
 					ref="children"
 					:class="$style.indent"
-					:node="member"
+					:node="child"
 					@expand="handleChildExpand" />
 			</template>
 		</template>
@@ -41,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, Ref, ref } from 'vue'
 import { FontAwesome } from '../icon/icon-common'
 import OracleNode from './oracle-node.vue'
 import { IronFolder } from '../../../folder/folder'
@@ -50,6 +52,7 @@ import FontIconStack from '../icon/font-icon-stack.vue'
 import type { OracleTable } from '../../../roll-table/oracle-table'
 import OracleTreeLeaf from './oracle-tree-leaf.vue'
 import type { IndexEntry } from '../../../../types/directory-collection'
+import FontIcon from '../icon/font-icon.vue'
 
 const props = defineProps<{
 	node: DirectoryCollectionMixin.Tree<OracleTable, OracleIndexEntry>
@@ -57,17 +60,20 @@ const props = defineProps<{
 
 const spacerSize = '18px'
 
-const contents = computed(() =>
-	[...props.node.children, ...props.node.entries].sort((a, b) => {
-		const [sortA, sortB] = [a, b].map((node) => {
-			if (node.folder instanceof IronFolder) return node.folder.sort
-			else return (node as IndexEntry<OracleTable>).sort
-		})
-		return sortA - sortB
-	})
-)
+const childNodes = computed(() =>
+	[...props.node.entries, ...props.node.children].sort((a, b) =>
+		CompendiumCollection._sortStandard(
+			{
+				sort: '_id' in a ? a.sort : a.folder?.sort ?? 0
+			},
+			{
+				sort: '_id' in b ? b.sort : b.folder?.sort ?? 0
+			}
+		)
+	)
+) as Ref<(IronFolder<OracleTable> | OracleIndexEntry)[]>
 
-const $el = ref<InstanceType<typeof OracleNode>>()
+let $el = ref<InstanceType<typeof OracleNode>>()
 
 const children = ref<InstanceType<typeof OracleNode>[]>([])
 
@@ -80,6 +86,13 @@ function collapseChildren() {
 		child.collapse()
 	}
 }
+
+defineExpose({
+	collapse: $el.value?.collapse,
+	expand: $el.value?.expand,
+	toggle: $el.value?.toggle,
+	collapseChildren
+})
 </script>
 
 <style lang="scss" module>

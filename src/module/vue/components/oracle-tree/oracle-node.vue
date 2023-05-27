@@ -1,6 +1,8 @@
 <template>
 	<article
 		ref="$el"
+		:data-dfid="dfid"
+		:data-uuid="uuid"
 		:class="{
 			[$style.wrapper]: true,
 			highlighted: state.highlighted
@@ -27,14 +29,14 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import CollapseTransition from './transition/collapse-transition.vue'
+import CollapseTransition from '../transition/collapse-transition.vue'
 
 // TODO: rewrite the highlight as a CSS animation rather than requiring a JS callback
 
 /** Handles features common to all kinds of oracle nodes */
 const props = withDefaults(
-	defineProps<{ expanded?: boolean; dfid: string }>(),
-	{ expanded: false }
+	defineProps<{ expanded?: boolean; dfid?: string; uuid: string }>(),
+	{ expanded: false, dfid: undefined }
 )
 
 const state = reactive({
@@ -63,8 +65,8 @@ const $emit = defineEmits<{
 
 const $el = ref<HTMLElement>()
 
-CONFIG.IRONSWORN.emitter.on('highlightOracle', (dfid) => {
-	if (props.dfid === dfid) {
+CONFIG.IRONSWORN.emitter.on('highlightOracle', (id) => {
+	if (props.dfid === id || props.uuid === id) {
 		state.highlighted = true
 		$el.value?.scrollIntoView({
 			behavior: 'smooth',

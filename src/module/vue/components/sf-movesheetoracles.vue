@@ -21,14 +21,15 @@
 				style="padding: 6px"
 				@click="collapseAll" />
 		</div>
+		<OracleTree class="item-list scrollable flexcol" :packs="packs" />
 
-		<div class="item-list scrollable flexcol" :class="$style.list">
+		<!-- <div class="item-list scrollable flexcol" :class="$style.list">
 			<OracleTreeNode
 				v-for="node in treeRoot.children"
 				:key="node.displayName"
 				ref="oracles"
 				:node="node" />
-		</div>
+		</div> -->
 	</div>
 </template>
 
@@ -39,9 +40,24 @@ import { getOracleTreeWithCustomOracles } from '../../features/customoracles'
 import { OracleTable } from '../../roll-table/oracle-table'
 import IronBtn from './buttons/iron-btn.vue'
 import OracleTreeNode from './oracle-tree-node.vue'
+import OracleTree from './oracle-tree/oracle-tree.vue'
 
 const props = defineProps<{ toolset: 'ironsworn' | 'starforged' }>()
 provide('toolset', props.toolset)
+
+const packIDs: Record<(typeof props)['toolset'], string[]> = {
+	ironsworn: [
+		'foundry-ironsworn.ironswornoracles',
+		'foundry-ironsworn.delve-oracles'
+	],
+	starforged: ['foundry-ironsworn.starforgedoracles']
+}
+
+const packs = packIDs[props.toolset].map((id) =>
+	game.packs.get(id)
+) as CompendiumCollection<
+	CompendiumCollection.Metadata & { type: 'RollTable' }
+>[]
 
 const tempTreeRoot = await getOracleTreeWithCustomOracles(props.toolset)
 

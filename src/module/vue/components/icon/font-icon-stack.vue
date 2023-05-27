@@ -6,16 +6,15 @@
 		:role="label ? 'img' : 'presentational'"
 		:aria-hidden="label ? false : true">
 		<slot>
-			<Icon class="fa-stack-2x" v-bind="bgOptions" />
-			<Icon class="fa-stack-1x" v-bind="fgOptions" />
+			<FontIcon class="fa-stack-2x" v-bind="bgOptions" />
+			<FontIcon class="fa-stack-1x" v-bind="fgOptions" />
 		</slot>
 	</component>
 </template>
 
 <script lang="ts" setup>
 import type { ExtractPropTypes } from 'vue'
-import type FontIcon from './font-icon.vue'
-import Icon from './icon-helpers.vue'
+import FontIcon from './font-icon.vue'
 
 interface IconStackLayerOptions
 	extends Omit<ExtractPropTypes<typeof FontIcon>, 'size' | 'label'> {}

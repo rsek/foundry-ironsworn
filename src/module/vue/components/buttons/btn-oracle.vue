@@ -18,7 +18,7 @@ import IronBtn from './iron-btn.vue'
 const props = defineProps<{
 	/** The table name/label, to be included in the tooltip */
 	name: string
-	/** A table ID, DFID, or UUID, to be passed to {@link OracleTable.ask} */
+	/** A DFID or UUID, to be passed to {@link OracleTable.ask} */
 	oracleId: string
 	overrideClick?: boolean
 	// Hack: if we declare `click` in the emits, there's no $attrs['onClick']

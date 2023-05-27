@@ -1,11 +1,16 @@
 <template>
 	<OracleNode
-		:dfid="node.flags['foundry-ironsworn']?.dfid ?? node.uuid"
+		ref="$el"
+		:dfid="node.flags['foundry-ironsworn']?.dfid"
+		:uuid="node.uuid"
 		:class="$style.wrapper"
 		@mouseenter="cacheOracle"
 		@focus="cacheOracle">
 		<template #header="{ toggle }">
-			<BtnOracle :name="node.name" :oracle-id="node.uuid" :text="node.name">
+			<BtnOracle
+				:name="node.name"
+				:oracle-id="node.flags['foundry-ironsworn']?.dfid ?? node.uuid"
+				:text="node.name">
 				<template #icon>
 					<IronIcon name="oracle" :size="spacerSize" />
 				</template>
@@ -31,7 +36,7 @@
 <script lang="ts" setup>
 import type { RollTableDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import { nextTick, reactive } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import type { IndexEntry } from '../../../../types/directory-collection'
 import type { IronswornItem } from '../../../item/item'
 import type { OracleTable } from '../../../roll-table/oracle-table'
@@ -76,7 +81,12 @@ function oracleclick(dfid) {
 	CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
 }
 
+let $el = ref<InstanceType<typeof OracleNode>>()
+
 defineExpose({
+	collapse: $el.value?.collapse,
+	expand: $el.value?.expand,
+	toggle: $el.value?.toggle,
 	cacheOracle
 })
 </script>

@@ -1,8 +1,11 @@
 <template>
 	<article :class="$style.wrapper">
 		<template v-for="node of nodes">
-			<OracleNodeLeaf v-if="'_id' in node" :key="node.uuid" :node="node" />
-			<OracleNodeBranch
+			<OracleTreeLeaf
+				v-if="'_id' in node"
+				:key="node.flags?.['foundry-ironsworn']?.dfid ?? node.uuid"
+				:node="node" />
+			<OracleTreeBranch
 				v-else-if="node.folder != null"
 				:key="node.folder.uuid"
 				:node="node" />
@@ -12,8 +15,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import OracleNodeBranch from './oracle-node-branch.vue'
-import OracleNodeLeaf from './oracle-node-leaf.vue'
+import OracleTreeBranch from './oracle-tree-branch.vue'
+import OracleTreeLeaf from './oracle-tree-leaf.vue'
 
 const props = defineProps<{
 	packs: CompendiumCollection<

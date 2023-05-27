@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/prefer-function-type */
 /* eslint-disable import/export */
-import type { SortingModes } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/folderData'
+import type {
+	FolderDataProperties,
+	FolderDataSource,
+	SortingModes
+} from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/folderData'
 import type { CONST } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/module.mjs'
 import type {
 	ConfiguredDocumentClassForName,
@@ -58,7 +62,7 @@ declare global {
 		export interface Tree<T extends PackableDocument, I extends IndexEntry<T>> {
 			root: boolean
 			folder:
-				| (IronFolder<T> & {
+				| (FolderDataSource & {
 						uuid: string
 				  })
 				| null

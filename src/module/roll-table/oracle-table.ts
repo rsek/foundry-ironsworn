@@ -78,7 +78,7 @@ export class OracleTable extends RollTable {
 					oracleTable = game.tables?.get(id)
 					break
 				case /^(RollTable|Compendium)\./.test(id): // A UUID
-					oracleTable = fromUuidSync(id) as OracleTable | undefined
+					oracleTable = (await fromUuid(id)) as OracleTable | undefined
 					break
 			}
 			if (oracleTable instanceof OracleTable) {
