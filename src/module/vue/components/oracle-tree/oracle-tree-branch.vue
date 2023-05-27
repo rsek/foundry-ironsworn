@@ -21,14 +21,14 @@
 		</template>
 		<template #default>
 			<template v-for="member in contents">
-				<OracleNodeLeaf
+				<OracleTreeLeaf
 					v-if="'formula' in member"
 					:key="member.uuid"
 					ref="children"
 					:class="$style.indent"
 					:node="member"
 					@expand="handleChildExpand" />
-				<oracle-node-branch
+				<oracle-tree-branch
 					v-else
 					:key="member.folder!.uuid"
 					ref="children"
@@ -45,11 +45,11 @@ import { computed, ref } from 'vue'
 import { FontAwesome } from '../icon/icon-common'
 import OracleNode from './oracle-node.vue'
 import { IronFolder } from '../../../folder/folder'
-import OracleNodeLeaf from './oracle-node-leaf.vue'
 import IronBtn from '../buttons/iron-btn.vue'
 import FontIconStack from '../icon/font-icon-stack.vue'
 import type { OracleTable } from '../../../roll-table/oracle-table'
-import type { IndexEntry } from '../../../../types/compendium'
+import OracleTreeLeaf from './oracle-tree-leaf.vue'
+import type { IndexEntry } from '../../../../types/directory-collection'
 
 const props = defineProps<{
 	node: DirectoryCollectionMixin.Tree<OracleTable, OracleIndexEntry>

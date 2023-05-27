@@ -5,7 +5,7 @@
 		@mouseenter="cacheOracle"
 		@focus="cacheOracle">
 		<template #header="{ toggle }">
-			<BtnOracle :name="node?.name" :oracle-id="node?.uuid" :text="node?.name">
+			<BtnOracle :name="node.name" :oracle-id="node.uuid" :text="node.name">
 				<template #icon>
 					<IronIcon name="oracle" :size="spacerSize" />
 				</template>
@@ -32,7 +32,7 @@
 import type { RollTableDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
 import { nextTick, reactive } from 'vue'
-import type { IndexEntry } from '../../../../types/compendium'
+import type { IndexEntry } from '../../../../types/directory-collection'
 import type { IronswornItem } from '../../../item/item'
 import type { OracleTable } from '../../../roll-table/oracle-table'
 import BtnOracle from '../buttons/btn-oracle.vue'
