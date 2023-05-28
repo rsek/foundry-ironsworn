@@ -3,9 +3,15 @@
 		ref="$el"
 		:dfid="node.folder?.flags?.['foundry-ironsworn']?.dfid"
 		:uuid="node.folder!.uuid"
-		:class="$style.wrapper">
+		:indent="iconSize"
+		:class="$style.wrapper"
+		:aria-labelledby="`label-${niceId}`"
+		:aria-describedby="
+			node.folder?.description ? `description-${niceId}` : undefined
+		">
 		<template #header="{ expanded, toggle }">
 			<IronBtn
+				:id="`label-${niceId}`"
 				:class="$style.btn"
 				:text="(node.folder!.name as string)"
 				@click="toggle">
@@ -18,24 +24,29 @@
 				</template>
 			</IronBtn>
 		</template>
-		<template #default>
+		<template #default="{ expanded }">
 			<template v-if="node.folder?.description">
-				<p>{{ node.folder?.description }}</p>
+				<section
+					:id="`description-${niceId}`"
+					:class="$style.indent"
+					v-html="$enrichMarkdown(node.folder?.description)" />
 			</template>
 			<template v-for="child in childNodes">
 				<OracleTreeLeaf
 					v-if="'_id' in child"
 					:key="child.flags?.['foundry-ironsworn']?.dfid ?? child.uuid"
 					ref="children"
-					:class="$style.indent"
 					:node="child"
+					:icon-size="iconSize"
+					:class="$style.indent"
 					@expand="handleChildExpand" />
 				<oracle-tree-branch
 					v-else
 					:key="child.folder!.uuid"
 					ref="children"
-					:class="$style.indent"
 					:node="child"
+					:icon-size="iconSize"
+					:class="$style.indent"
 					@expand="handleChildExpand" />
 			</template>
 		</template>
@@ -43,37 +54,48 @@
 </template>
 
 <script setup lang="ts">
-import { computed, Ref, ref } from 'vue'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { FontAwesome } from '../icon/icon-common'
 import OracleNode from './oracle-node.vue'
-import { IronFolder } from '../../../folder/folder'
+import type { IronFolder } from '../../../folder/folder'
 import IronBtn from '../buttons/iron-btn.vue'
-import FontIconStack from '../icon/font-icon-stack.vue'
 import type { OracleTable } from '../../../roll-table/oracle-table'
 import OracleTreeLeaf from './oracle-tree-leaf.vue'
-import type { IndexEntry } from '../../../../types/directory-collection'
 import FontIcon from '../icon/font-icon.vue'
 
-const props = defineProps<{
-	node: DirectoryCollectionMixin.Tree<OracleTable, OracleIndexEntry>
-}>()
+const props = withDefaults(
+	defineProps<{
+		node: DirectoryCollectionMixin.Tree<OracleTable, OracleIndexEntry>
+		iconSize?: string
+	}>(),
+	{ iconSize: '18px' }
+)
 
-const spacerSize = '18px'
+// FIXME: workaround because FVTT sometimes generates UUIDs with [object Object] in them
+// will prob break if user content gets involved
+const niceId = computed(() =>
+	props.node.folder?.uuid.includes('[object Object]')
+		? props.node.folder?.flags?.['foundry-ironsworn']?.dfid
+		: props.node.folder?.uuid
+)
 
-const childNodes = computed(() =>
-	[...props.node.entries, ...props.node.children].sort((a, b) =>
-		CompendiumCollection._sortStandard(
-			{
-				sort: '_id' in a ? a.sort : a.folder?.sort ?? 0
-			},
-			{
-				sort: '_id' in b ? b.sort : b.folder?.sort ?? 0
-			}
-		)
-	)
+const childNodes = computed(
+	() => [...props.node.entries, ...props.node.children]
+
+	// .sort((a, b) =>
+	// 	CompendiumCollection._sortStandard(
+	// 		{
+	// 			sort: '_id' in a ? a.sort : a.folder?.sort ?? 0
+	// 		},
+	// 		{
+	// 			sort: '_id' in b ? b.sort : b.folder?.sort ?? 0
+	// 		}
+	// 	)
+	// )
 ) as Ref<(IronFolder<OracleTable> | OracleIndexEntry)[]>
 
-let $el = ref<InstanceType<typeof OracleNode>>()
+const $el = ref<InstanceType<typeof OracleNode>>()
 
 const children = ref<InstanceType<typeof OracleNode>[]>([])
 
@@ -96,20 +118,20 @@ defineExpose({
 </script>
 
 <style lang="scss" module>
-.indent {
-	margin-left: v-bind(spacerSize);
+.fontIcon {
+	width: v-bind(iconSize);
+	height: v-bind(iconSize);
+	font-size: v-bind(iconSize);
+	transition: transform calc(var(--ironsworn-transition-duration) / 2);
 }
 
-.fontIcon {
-	width: v-bind(spacerSize);
-	height: v-bind(spacerSize);
-	font-size: v-bind(spacerSize);
+.indent {
+	margin-left: v-bind(iconSize);
 }
 
 .wrapper {
 }
 .btn {
-	height: min-content;
 	text-transform: uppercase;
 	line-height: 1;
 }

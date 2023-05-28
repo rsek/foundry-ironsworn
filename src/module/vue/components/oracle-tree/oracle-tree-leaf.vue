@@ -4,15 +4,18 @@
 		:dfid="node.flags['foundry-ironsworn']?.dfid"
 		:uuid="node.uuid"
 		:class="$style.wrapper"
+		:indent="iconSize"
+		:aria-labelledby="`label-${niceId}`"
 		@mouseenter="cacheOracle"
 		@focus="cacheOracle">
 		<template #header="{ toggle }">
 			<BtnOracle
+				:id="`label-${niceId}`"
 				:name="node.name"
 				:oracle-id="node.flags['foundry-ironsworn']?.dfid ?? node.uuid"
 				:text="node.name">
 				<template #icon>
-					<IronIcon name="oracle" :size="spacerSize" />
+					<IronIcon name="oracle" :size="iconSize" />
 				</template>
 			</BtnOracle>
 			<IronBtn
@@ -22,13 +25,14 @@
 				@click="cacheAndToggle(toggle)" />
 		</template>
 		<template #default="{ expanded }">
-			<template v-if="expanded">
+			<CollapseTransition>
 				<RulesTextOracle
+					v-if="expanded"
 					:oracle-table="state.oracleTable"
 					:class="$style.content"
 					@moveclick="moveclick"
 					@oracleclick="oracleclick" />
-			</template>
+			</CollapseTransition>
 		</template>
 	</OracleNode>
 </template>
@@ -36,7 +40,7 @@
 <script lang="ts" setup>
 import type { RollTableDataProperties } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { PropertiesToSource } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import { nextTick, reactive, ref } from 'vue'
+import { computed, nextTick, reactive, ref } from 'vue'
 import type { IndexEntry } from '../../../../types/directory-collection'
 import type { IronswornItem } from '../../../item/item'
 import type { OracleTable } from '../../../roll-table/oracle-table'
@@ -44,16 +48,20 @@ import BtnOracle from '../buttons/btn-oracle.vue'
 import IronBtn from '../buttons/iron-btn.vue'
 import IronIcon from '../icon/iron-icon.vue'
 import RulesTextOracle from '../rules-text/rules-text-oracle.vue'
+import CollapseTransition from '../transition/collapse-transition.vue'
 import OracleNode from './oracle-node.vue'
 
-const props = defineProps<{ node: IndexEntry<OracleTable> }>()
-const spacerSize = '18px'
+const props = withDefaults(
+	defineProps<{
+		node: IndexEntry<OracleTable>
+		iconSize?: string
+	}>(),
+	{ iconSize: '18px' }
+)
 
 const state = reactive<{
-	descriptionExpanded: boolean
 	oracleTable: PropertiesToSource<RollTableDataProperties>
 }>({
-	descriptionExpanded: false,
 	oracleTable: null as any
 })
 
@@ -66,6 +74,14 @@ async function cacheOracle() {
 	}
 	return state.oracleTable
 }
+
+// FIXME: workaround because FVTT sometimes generates UUIDs with [object Object] in them
+// will prob break if user content gets involved
+const niceId = computed(() =>
+	props.node.uuid.includes('[object Object]')
+		? props.node.flags?.['foundry-ironsworn']?.dfid
+		: props.node.uuid
+)
 
 async function cacheAndToggle(toggleFn: () => void) {
 	await cacheOracle()
@@ -81,7 +97,7 @@ function oracleclick(dfid) {
 	CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
 }
 
-let $el = ref<InstanceType<typeof OracleNode>>()
+const $el = ref<InstanceType<typeof OracleNode>>()
 
 defineExpose({
 	collapse: $el.value?.collapse,
@@ -93,5 +109,8 @@ defineExpose({
 
 <style lang="scss" module>
 .wrapper {
+}
+.content {
+	padding: 0 var(--ironsworn-spacer-md);
 }
 </style>

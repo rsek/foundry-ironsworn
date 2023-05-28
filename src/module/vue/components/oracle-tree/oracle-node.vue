@@ -7,14 +7,14 @@
 			[$style.wrapper]: true,
 			highlighted: state.highlighted
 		}">
-		<h4 class="flexrow" :class="$style.header">
+		<header class="flexrow" :class="$style.header">
 			<slot
 				name="header"
 				v-bind="{
 					expanded: state.expanded,
 					toggle
 				}" />
-		</h4>
+		</header>
 		<CollapseTransition>
 			<section v-show="state.expanded" class="flexcol" :class="$style.content">
 				<slot
@@ -35,8 +35,19 @@ import CollapseTransition from '../transition/collapse-transition.vue'
 
 /** Handles features common to all kinds of oracle nodes */
 const props = withDefaults(
-	defineProps<{ expanded?: boolean; dfid?: string; uuid: string }>(),
-	{ expanded: false, dfid: undefined }
+	defineProps<{
+		expanded?: boolean
+		dfid?: string
+		indent?: string
+		uuid: string
+		collapsedHeight?: string
+	}>(),
+	{
+		expanded: false,
+		dfid: undefined,
+		indent: '18px',
+		collapsedHeight: '25px'
+	}
 )
 
 const state = reactive({
@@ -94,6 +105,7 @@ defineExpose({
 	margin: 0;
 	height: min-content;
 	line-height: 1;
+	height: v-bind(collapsedHeight);
 }
 .content {
 }

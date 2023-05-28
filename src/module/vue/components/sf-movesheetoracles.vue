@@ -21,7 +21,11 @@
 				style="padding: 6px"
 				@click="collapseAll" />
 		</div>
-		<OracleTree class="item-list scrollable flexcol" :packs="packs" />
+
+		<OracleTree
+			class="item-list scrollable flexcol"
+			:packs="packs"
+			:nodeClass="{ nogrow: true }" />
 
 		<!-- <div class="item-list scrollable flexcol" :class="$style.list">
 			<OracleTreeNode
@@ -122,8 +126,6 @@ CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
 	clearSearch()
 
 	// Find the path in the data tree
-	const dfOraclePath = OracleTable.findOracleWithIntermediateNodes(dfid)
-
 	// Wait for children to be present
 	while (!oracles.value) {
 		await nextTick()

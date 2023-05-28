@@ -147,6 +147,7 @@ defineExpose({
 .btn {
 	display: flex;
 	flex-wrap: nowrap;
+	box-sizing: border-box;
 	gap: var(--ironsworn-spacer-sm);
 	margin: 0;
 	border-width: 0;
@@ -195,10 +196,9 @@ defineExpose({
 	align-content: center;
 	justify-content: center;
 	padding: var(--ironsworn-spacer-xs);
-	width: 1em;
-	height: 1em;
 	line-height: 1;
 	aspect-ratio: 1;
+	width: auto;
 }
 
 .noBlock {
