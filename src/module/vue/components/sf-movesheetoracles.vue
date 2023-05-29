@@ -19,11 +19,12 @@
 				class="nogrow"
 				:class="$style.btn"
 				style="padding: 6px"
-				@click="collapseAll" />
+				@click="$tree?.collapseAll()" />
 		</div>
 
 		<OracleTree
 			class="item-list scrollable flexcol"
+			ref="$tree"
 			:packs="packs"
 			:nodeClass="{ nogrow: true }" />
 
@@ -63,11 +64,6 @@ const packs = packIDs[props.toolset].map((id) =>
 	CompendiumCollection.Metadata & { type: 'RollTable' }
 >[]
 
-const tempTreeRoot = await getOracleTreeWithCustomOracles(props.toolset)
-
-const treeRoot = reactive<IOracleTreeNode>(tempTreeRoot)
-type ReactiveNode = typeof treeRoot
-
 const search = reactive({ q: '' })
 watch(search, ({ q }) => {
 	// If it's not a real regex, cancel the search
@@ -100,46 +96,24 @@ watch(search, ({ q }) => {
 			// Pass match up to ancestors
 			return thisMatch || childMatch
 		}
-		searchWalk(treeRoot, false)
+		// searchWalk(treeRoot, false)
 	} else {
 		// Walk the tree setting all force flags to false
-		function resetflags(node) {
-			node.forceExpanded = node.forceHidden = false
-			for (const child of node.children) resetflags(child)
-		}
-		resetflags(treeRoot)
+		// function resetflags(node) {
+		// 	node.forceExpanded = node.forceHidden = false
+		// 	for (const child of node.children) resetflags(child)
+		// }
+		// resetflags(treeRoot)
 	}
 })
 function clearSearch() {
 	search.q = ''
 }
 
-const oracles = ref<InstanceType<typeof OracleTreeNode>[]>([])
-
-function collapseAll() {
-	for (const node of oracles.value) {
-		node.collapse()
-	}
-}
+let $tree = ref<InstanceType<typeof OracleTree>>()
 
 CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
 	clearSearch()
-
-	// Find the path in the data tree
-	// Wait for children to be present
-	while (!oracles.value) {
-		await nextTick()
-	}
-
-	// Walk the component tree, expanding as we go
-	let children = oracles.value
-	for (const dataNode of dfOraclePath) {
-		const child = children?.find((x: any) => x.dfid() === dataNode.$id)
-		if (!child) break
-		child.expand()
-		await nextTick()
-		children = child.$refs.children as any
-	}
 })
 </script>
 

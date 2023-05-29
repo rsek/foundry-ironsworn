@@ -1,6 +1,6 @@
 <template>
 	<OracleNode
-		ref="$el"
+		ref="$node"
 		:dfid="node.flags['foundry-ironsworn']?.dfid"
 		:uuid="node.uuid"
 		:class="$style.wrapper"
@@ -84,6 +84,8 @@ const niceId = computed(() =>
 )
 
 async function cacheAndToggle(toggleFn: () => void) {
+	console.log($node.value)
+
 	await cacheOracle()
 	toggleFn()
 }
@@ -97,12 +99,10 @@ function oracleclick(dfid) {
 	CONFIG.IRONSWORN.emitter.emit('highlightOracle', dfid)
 }
 
-const $el = ref<InstanceType<typeof OracleNode>>()
+const $node = ref<InstanceType<typeof OracleNode>>()
 
 defineExpose({
-	collapse: $el.value?.collapse,
-	expand: $el.value?.expand,
-	toggle: $el.value?.toggle,
+	$node: $node.value,
 	cacheOracle
 })
 </script>

@@ -1,11 +1,12 @@
 <template>
 	<OracleNode
-		ref="$el"
+		ref="$node"
 		:dfid="node.folder?.flags?.['foundry-ironsworn']?.dfid"
 		:uuid="node.folder!.uuid"
 		:indent="iconSize"
 		:class="$style.wrapper"
 		:aria-labelledby="`label-${niceId}`"
+		@collapse="collapseChildren"
 		:aria-describedby="
 			node.folder?.description ? `description-${niceId}` : undefined
 		">
@@ -54,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
+import { onMounted, Ref } from 'vue'
 import { computed, ref } from 'vue'
 import { FontAwesome } from '../icon/icon-common'
 import OracleNode from './oracle-node.vue'
@@ -95,24 +96,27 @@ const childNodes = computed(
 	// )
 ) as Ref<(IronFolder<OracleTable> | OracleIndexEntry)[]>
 
-const $el = ref<InstanceType<typeof OracleNode>>()
+let $node = ref<InstanceType<typeof OracleNode>>()
 
 const children = ref<InstanceType<typeof OracleNode>[]>([])
 
 function handleChildExpand() {
-	$el.value?.expand()
+	$node.value?.expand()
 }
 
 function collapseChildren() {
+	console.log('OracleTreeBranch#collapseChildren')
+	console.log(children.value)
+
 	for (const child of children.value ?? []) {
 		child.collapse()
 	}
 }
 
+onMounted(() => console.log('$node', $node.value))
+
 defineExpose({
-	collapse: $el.value?.collapse,
-	expand: $el.value?.expand,
-	toggle: $el.value?.toggle,
+	$node: $node.value,
 	collapseChildren
 })
 </script>

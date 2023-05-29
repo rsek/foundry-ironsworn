@@ -60,11 +60,13 @@ function toggle() {
 }
 function collapse() {
 	if (!state.expanded) return
+	console.log('collapse')
 	$emit('collapse')
 	state.expanded = false
 }
 function expand() {
 	if (state.expanded) return
+	console.log('expand')
 	$emit('expand')
 	state.expanded = true
 }

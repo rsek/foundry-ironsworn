@@ -5,18 +5,20 @@
 				v-if="'_id' in node"
 				:class="nodeClass"
 				:key="node.flags?.['foundry-ironsworn']?.dfid ?? node.uuid"
-				:node="node" />
+				:node="node"
+				ref="children" />
 			<OracleTreeBranch
 				v-else-if="node.folder != null"
 				:class="nodeClass"
 				:key="node.folder.uuid"
-				:node="node" />
+				:node="node"
+				ref="children" />
 		</template>
 	</article>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import OracleTreeBranch from './oracle-tree-branch.vue'
 import OracleTreeLeaf from './oracle-tree-leaf.vue'
 
@@ -41,6 +43,26 @@ const nodes = computed(
 	// 	)
 	// )
 )
+
+const children =
+	ref<
+		(
+			| InstanceType<typeof OracleTreeLeaf>
+			| InstanceType<typeof OracleTreeBranch>
+		)[]
+	>()
+
+defineExpose({
+	collapseAll: () => {
+		// if (children.value == null) return
+		console.log('collapseAll')
+
+		for (const child of children.value ?? []) {
+			console.log(child)
+			child?.$node?.collapse?.()
+		}
+	}
+})
 </script>
 
 <style lang="scss" module>
