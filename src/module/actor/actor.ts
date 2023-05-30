@@ -5,7 +5,7 @@ import type {
 } from './actortypes'
 import type { SFCharacterMoveSheet } from './sheets/sf-charactermovesheet'
 import { OracleTable } from '../roll-table/oracle-table'
-import { Oracles } from '../roll-table/oracle-tree'
+import { Oracles } from '../roll-table/oracles'
 
 let CREATE_DIALOG: CreateActorDialog
 

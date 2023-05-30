@@ -45,7 +45,7 @@ import type {
 	DocumentSubTypes,
 	DocumentType
 } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import { Oracles } from './module/roll-table/oracle-tree'
+import { Oracles } from './module/roll-table/oracles'
 
 declare global {
 	interface LenientGlobalVariableTypes {

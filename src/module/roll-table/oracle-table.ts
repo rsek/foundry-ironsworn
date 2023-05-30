@@ -1,6 +1,6 @@
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
-import type { IOracle, IRow } from 'dataforged'
+import type { IOracle, IOracleCategory, IRow } from 'dataforged'
 import { max, snakeCase } from 'lodash-es'
 import { marked } from 'marked'
 import type { IronswornActor } from '../actor/actor'
@@ -10,14 +10,60 @@ import type { IronswornJournalPage } from '../journal/journal-entry-page'
 
 import { OracleTableResult } from './oracle-table-result'
 import type { ComputedTableType, IOracleLeaf } from './roll-table-types'
-import type { DataforgedNamespace } from './oracle-tree'
-import { Oracles } from './oracle-tree'
+import type { DataforgedNamespace } from './oracles'
+import { Oracles } from './oracles'
 import type { IronFolder } from '../folder/folder'
+import { ISOracleCategories, SFOracleCategories } from '../dataforged/data'
 
 /** Extends FVTT's default RollTable with functionality specific to this system. */
 // @ts-expect-error
 export class OracleTable extends RollTable {
 	// missing from the LoFD types package
+
+	static getDFOracleByDfId(
+		dfid: string
+	): IOracle | IOracleCategory | undefined {
+		const nodes = OracleTable.findOracleWithIntermediateNodes(dfid)
+		return nodes[nodes.length - 1]
+	}
+
+	static findOracleWithIntermediateNodes(
+		dfid: string
+	): Array<IOracle | IOracleCategory> {
+		const ret: Array<IOracle | IOracleCategory> = []
+
+		function walkCategory(cat: IOracleCategory): boolean {
+			ret.push(cat)
+
+			if (cat.$id === dfid) return true
+			for (const oracle of cat.Oracles ?? []) {
+				if (walkOracle(oracle)) return true
+			}
+			for (const childCat of cat.Categories ?? []) {
+				if (walkCategory(childCat)) return true
+			}
+
+			ret.pop()
+			return false
+		}
+
+		function walkOracle(oracle: IOracle): boolean {
+			ret.push(oracle)
+
+			if (oracle.$id === dfid) return true
+			for (const childOracle of oracle.Oracles ?? []) {
+				if (walkOracle(childOracle)) return true
+			}
+
+			ret.pop()
+			return false
+		}
+
+		for (const cat of [...SFOracleCategories, ...ISOracleCategories]) {
+			walkCategory(cat)
+		}
+		return ret
+	}
 
 	/** Rolls on the table and returns the text of the first result. */
 	async drawText(options: RollTable.DrawOptions = {}) {
@@ -40,10 +86,6 @@ export class OracleTable extends RollTable {
 	get parentDfid() {
 		if (!this.dfid) return
 		return this.dfid.split('/').slice(0, -1).join('/')
-	}
-
-	get dataforged() {
-		return this.getFlag('foundry-ironsworn', 'dataforged')
 	}
 
 	get setting() {
@@ -107,22 +149,20 @@ export class OracleTable extends RollTable {
 		)
 		const maxRoll = max(oracle.Table.map((x) => x.Ceiling ?? 0))
 		const flags: ConfiguredFlags<'RollTable'> = {
-			'foundry-ironsworn': {
-				dfid: oracle.$id,
-				dataforged: pickDataforged(
-					oracle,
-					'Source',
-					'Display',
-					'Usage',
-					'Aliases'
-				)
-			}
+			'foundry-ironsworn': pickDataforged(
+				oracle,
+				'$id',
+				'Source',
+				'Display',
+				'Usage',
+				'Aliases'
+			)
 		}
 
 		// remove some redundant flags
 		const flagsRemoved = ['Display.Title', 'Display.Table']
 		flagsRemoved.forEach((flg) =>
-			setProperty(flags, `foundry-ironsworn.dataforged.${flg}`, undefined)
+			setProperty(flags, `foundry-ironsworn.${flg}`, undefined)
 		)
 
 		let name = oracle.Display.Title
@@ -337,7 +377,7 @@ export class OracleTable extends RollTable {
 		let table: OracleTable | undefined
 		switch (type) {
 			case 'delve-site-dangers':
-				table = (source as IronswornActor).dangers
+				table = await (source as IronswornActor).getDangers()
 				break
 			case 'delve-site-denizens':
 				table = (source as IronswornActor).denizens

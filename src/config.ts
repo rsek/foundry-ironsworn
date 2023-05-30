@@ -20,7 +20,7 @@ import {
 	registerOracleTree
 } from './module/features/customoracles'
 import { OracleTable } from './module/roll-table/oracle-table'
-import { Oracles } from './module/roll-table/oracle-tree'
+import { Oracles } from './module/roll-table/oracles'
 
 export interface EmitterEvents extends Record<EventType, unknown> {
 	highlightMove: string // Foundry UUID

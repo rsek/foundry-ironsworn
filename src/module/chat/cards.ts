@@ -4,7 +4,7 @@ import type { IronswornItem } from '../item/item'
 import { IronswornRollMessage } from '../rolls'
 import { ChallengeResolutionDialog } from '../rolls/challenge-resolution-dialog'
 import { OracleTable } from '../roll-table/oracle-table'
-import { Oracles } from '../roll-table/oracle-tree'
+import { Oracles } from '../roll-table/oracles'
 
 export class IronswornChatCard {
 	id?: string | null

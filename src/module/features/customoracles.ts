@@ -6,8 +6,7 @@ import type {
 } from 'dataforged'
 import { starforged, ironsworn } from 'dataforged'
 import { cloneDeep, compact } from 'lodash-es'
-import { OracleTable } from '../roll-table/oracle-table'
-import { Oracles } from '../roll-table/oracle-tree'
+import { Oracles } from '../roll-table/oracles'
 import { cachedDocumentsForPack } from './pack-cache'
 
 export interface IOracleTreeNode {
