@@ -503,7 +503,7 @@ const canRandomizeName = computed(() => {
 	if (subtype === 'planet') {
 		const kc = capitalize(klass)
 		const json = Oracles.findSync(`Starforged/Oracles/Planets/${kc}`)
-		if (json) return true
+		if (json != null) return true
 	} else if (subtype === 'settlement') {
 		return true
 	}
