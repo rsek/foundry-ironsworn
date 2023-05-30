@@ -44,11 +44,11 @@
 				:class="$style.summary"
 				@moveclick="moveClick">
 				<template #after-footer>
-					<OracleTreeNode
-						v-for="node of data.oracles"
-						:key="node.displayName"
+					<OracleTreeLeaf
+						v-for="oracle of oracles"
+						:key="oracle.uuid"
 						:class="$style.oracle"
-						:node="node" />
+						:node="oracle" />
 				</template>
 			</RulesTextMove>
 		</template>
@@ -60,20 +60,18 @@ import type { ExtractPropTypes } from 'vue'
 import { computed, provide, reactive, ref } from 'vue'
 import type { Move } from '../../features/custommoves'
 import type { IOracleTreeNode } from '../../features/customoracles'
-import { walkOracle } from '../../features/customoracles'
 import type { IronswornItem } from '../../item/item'
 import { moveHasRollableOptions } from '../../rolls/preroll-dialog'
 import BtnRollmove from './buttons/btn-rollmove.vue'
 import BtnSendmovetochat from './buttons/btn-sendmovetochat.vue'
-import OracleTreeNode from './oracle-tree-node.vue'
 import RulesTextMove from './rules-text/rules-text-move.vue'
 import Collapsible from './collapsible/collapsible.vue'
 import BtnOracle from './buttons/btn-oracle.vue'
 import { ItemKey, $ItemKey } from '../provisions.js'
 import { enrichMarkdown } from '../vue-plugin.js'
 import type { SFMoveDataPropertiesData } from '../../item/itemtypes'
-import { uniq } from 'lodash-es'
-import { OracleTable } from '../../roll-table/oracle-table'
+import OracleTreeLeaf from './oracle-tree/oracle-tree-leaf.vue'
+import { Oracles } from '../../roll-table/oracles'
 
 const props = withDefaults(
 	defineProps<{
@@ -150,15 +148,11 @@ const toggleTooltip = computed(() =>
 
 const moveId = computed(() => props.move.moveItem().id)
 
-const oracleIds = uniq([
-	...($itemSystem.value?.Oracles ?? []),
-	...(props.move.dataforgedMove?.Oracles ?? [])
-])
-Promise.all(oracleIds.map(OracleTable.getDFOracleByDfId)).then(
-	async (dfOracles) => {
-		const nodes = await Promise.all(dfOracles.map(walkOracle))
-		data.oracles.push(...nodes)
-	}
+const oracles = computed(() =>
+	new Set([
+		...($itemSystem.value?.Oracles ?? []),
+		...(props.move.dataforgedMove?.Oracles ?? [])
+	]).map(Oracles.findSync)
 )
 
 // Outbound link clicks: broadcast events

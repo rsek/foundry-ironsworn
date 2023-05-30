@@ -37,7 +37,6 @@ import { registerTours } from './module/features/tours'
 import { CompactPCSheet } from './module/actor/sheets/compact-pc-sheet'
 
 import 'virtual:svg-icons-register'
-import { registerDefaultOracleTrees } from './module/features/customoracles'
 import { OracleTable } from './module/roll-table/oracle-table'
 import { OracleTableResult } from './module/roll-table/oracle-table-result'
 import { IronswornJournalEntry } from './module/journal/journal-entry'
@@ -258,8 +257,6 @@ Hooks.once('ready', async () => {
 
 	registerDragAndDropHooks()
 	registerChatAlertHooks()
-
-	await registerDefaultOracleTrees()
 
 	await FirstStartDialog.maybeShow()
 	await registerTours()

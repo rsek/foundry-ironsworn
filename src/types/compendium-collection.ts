@@ -1,4 +1,5 @@
 import type { ConfiguredDocumentClassForName } from '@league-of-foundry-developers/foundry-vtt-types/src/types/helperTypes'
+import { PackableDocument } from '../module/folder/folder-types'
 import type {
 	IndexEntry,
 	DirectoryCollectionMixin
@@ -16,3 +17,7 @@ declare global {
 		export const _sortStandard: typeof DirectoryCollectionMixin._sortStandard
 	}
 }
+
+/** An alias for {@link CompendiumCollection} with more intutive generic parameters. */
+export type Pack<T extends PackableDocument['documentName']> =
+	CompendiumCollection<CompendiumCollection.Metadata & { type: T }>

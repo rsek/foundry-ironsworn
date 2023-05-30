@@ -1,7 +1,7 @@
 <template>
 	<RulesText
 		class="rules-text-oracle"
-		:source="oracleTable.flags['foundry-ironsworn']?.dataforged?.Source"
+		:source="oracleTable.flags['foundry-ironsworn']?.Source"
 		type="slot">
 		<template #default>
 			<OracleTable :oracle-table="oracleTable" />

@@ -15,10 +15,6 @@ import { FirstStartDialog } from './module/applications/firstStartDialog'
 import { SFSettingTruthsDialogVue } from './module/applications/vueSfSettingTruthsDialog'
 import { WorldTruthsDialog } from './module/applications/worldTruthsDialog'
 import { OracleWindow } from './module/applications/oracle-window'
-import {
-	getOracleTree,
-	registerOracleTree
-} from './module/features/customoracles'
 import { OracleTable } from './module/roll-table/oracle-table'
 import { Oracles } from './module/roll-table/oracles'
 
@@ -57,9 +53,6 @@ export interface IronswornConfig {
 
 	emitter: IronswornEmitter
 
-	registerOracleTree: typeof registerOracleTree
-	getOracleTree: typeof getOracleTree
-
 	// Patch for v10 + v11 compat
 	parseUuid: typeof _parseUuid
 }
@@ -87,9 +80,6 @@ export const IRONSWORN: IronswornConfig = {
 	dataforgedHelpers,
 
 	emitter: Mitt<EmitterEvents>(),
-
-	registerOracleTree,
-	getOracleTree,
 
 	parseUuid: typeof parseUuid === 'function' ? parseUuid : _parseUuid
 }

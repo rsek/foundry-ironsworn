@@ -23,29 +23,18 @@
 		</div>
 
 		<OracleTree
-			class="item-list scrollable flexcol"
 			ref="$tree"
+			class="item-list scrollable flexcol"
+			:class="$style.list"
 			:packs="packs"
-			:nodeClass="{ nogrow: true }" />
-
-		<!-- <div class="item-list scrollable flexcol" :class="$style.list">
-			<OracleTreeNode
-				v-for="node in treeRoot.children"
-				:key="node.displayName"
-				ref="oracles"
-				:node="node" />
-		</div> -->
+			:node-class="{ nogrow: true }" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, provide, reactive, ref, watch } from 'vue'
-import type { IOracleTreeNode } from '../../features/customoracles'
-import { getOracleTreeWithCustomOracles } from '../../features/customoracles'
-import { OracleTable } from '../../roll-table/oracle-table'
-import { Oracles } from '../../roll-table/oracles'
+import { provide, reactive, ref, watch } from 'vue'
+import type { Pack } from '../../../types/compendium-collection'
 import IronBtn from './buttons/iron-btn.vue'
-import OracleTreeNode from './oracle-tree-node.vue'
 import OracleTree from './oracle-tree/oracle-tree.vue'
 
 const props = defineProps<{ toolset: 'ironsworn' | 'starforged' }>()
@@ -61,9 +50,9 @@ const packIDs: Record<(typeof props)['toolset'], string[]> = {
 
 const packs = packIDs[props.toolset].map((id) =>
 	game.packs.get(id)
-) as CompendiumCollection<
-	CompendiumCollection.Metadata & { type: 'RollTable' }
->[]
+) as Pack<'RollTable'>[]
+
+packs[0].sear
 
 const search = reactive({ q: '' })
 watch(search, ({ q }) => {
@@ -111,9 +100,9 @@ function clearSearch() {
 	search.q = ''
 }
 
-let $tree = ref<InstanceType<typeof OracleTree>>()
+const $tree = ref<InstanceType<typeof OracleTree>>()
 
-CONFIG.IRONSWORN.emitter.on('highlightOracle', async (dfid) => {
+CONFIG.IRONSWORN.emitter.on('highlightOracle', async (_) => {
 	clearSearch()
 })
 </script>

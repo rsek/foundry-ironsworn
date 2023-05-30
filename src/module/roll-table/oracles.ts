@@ -18,6 +18,7 @@ import type { ConfiguredFlags } from '@league-of-foundry-developers/foundry-vtt-
 import type { FolderDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/folderData'
 import type { RollTableDataConstructorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs/rollTableData'
 import { importFromDataforgedDialog } from '../dataforged/pack'
+import type { Pack } from '../../types/compendium-collection'
 
 export type DataforgedNamespace = 'Starforged' | 'Ironsworn'
 
@@ -99,7 +100,7 @@ export class Oracles extends RollTables {
 
 		const oraclePacks = game.packs.filter(
 			(pack) => pack.documentName === 'RollTable'
-		)
+		) as Pack<'RollTable'>[]
 		if (oraclePacks.length === 0) return undefined
 
 		for (const pack of oraclePacks) {
@@ -108,7 +109,7 @@ export class Oracles extends RollTables {
 					(tbl.flags as ConfiguredFlags<'RollTable'>)?.['foundry-ironsworn']
 						?.dfid === dfid
 			)
-			if (indexEntry != null) return indexEntry
+			if (indexEntry != null) return indexEntry as OracleIndexEntry
 		}
 		return undefined
 	}

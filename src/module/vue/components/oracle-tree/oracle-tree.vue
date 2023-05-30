@@ -3,22 +3,27 @@
 		<template v-for="node of nodes">
 			<OracleTreeLeaf
 				v-if="'_id' in node"
-				:class="nodeClass"
+				v-show="node.visible"
 				:key="node.flags?.['foundry-ironsworn']?.dfid ?? node.uuid"
-				:node="node"
-				ref="children" />
+				ref="children"
+				:class="nodeClass"
+				:node="node" />
 			<OracleTreeBranch
 				v-else-if="node.folder != null"
+				v-show="node.visible"
+				:key="
+					node.folder.flags?.['foundry-ironsworn']?.dfid ?? node.folder.uuid
+				"
+				ref="children"
 				:class="nodeClass"
-				:key="node.folder.uuid"
-				:node="node"
-				ref="children" />
+				:node="node" />
 		</template>
 	</article>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, Ref, ref } from 'vue'
+import { IronFolder } from '../../../folder/folder'
 import OracleTreeBranch from './oracle-tree-branch.vue'
 import OracleTreeLeaf from './oracle-tree-leaf.vue'
 
@@ -42,7 +47,7 @@ const nodes = computed(
 	// 		}
 	// 	)
 	// )
-)
+) as Ref<(OracleIndexEntry | IronFolder)[]>
 
 const children =
 	ref<
