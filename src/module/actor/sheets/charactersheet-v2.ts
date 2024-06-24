@@ -6,7 +6,7 @@ import { SFCharacterMoveSheet } from './sf-charactermovesheet'
 
 export class IronswornCharacterSheetV2 extends VueActorSheet {
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			width: 700,
 			height: 800,
 			left: 50,
@@ -51,15 +51,13 @@ export class IronswornCharacterSheetV2 extends VueActorSheet {
 	}
 
 	_openMoveSheet(_e?: JQuery.ClickEvent) {
-		if (this.actor.moveSheet == null) {
-			this.actor.moveSheet ||= new SFCharacterMoveSheet(
-				this.actor,
-				IronswornSettings.get('toolbox') === 'starforged'
-					? 'starforged'
-					: 'ironsworn',
-				{ left: 755 }
-			)
-		}
-		this.actor.moveSheet.render(true, { focus: true })
+		this.actor.moveSheet ||= new SFCharacterMoveSheet(
+			this.actor,
+			this.actor.toolset,
+			{
+				left: 755
+			}
+		)
+		void this.actor.moveSheet.render(true, { focus: true })
 	}
 }

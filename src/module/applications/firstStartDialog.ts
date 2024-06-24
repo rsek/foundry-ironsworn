@@ -8,13 +8,13 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 	}
 
 	static get defaultOptions(): FormApplicationOptions {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			title: game.i18n.localize('IRONSWORN.First Start.Welcome'),
 			template: 'systems/foundry-ironsworn/templates/first-start.hbs',
 			id: 'first-start-dialog',
 			resizable: false,
 			classes: ['ironsworn', 'sheet', 'first-start'],
-			width: 600,
+			width: 650,
 			height: 360
 		} as FormApplicationOptions)
 	}
@@ -31,6 +31,16 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		html.find('#select-starforged').on('click', async (ev) => {
 			await this._selectStarforged.call(this, ev)
 		})
+		html.find('#select-sunderedisles').on('click', async (ev) => {
+			await this._selectSunderedIsles.call(this, ev)
+		})
+	}
+
+	async getData(_options?: unknown) {
+		return {
+			...(await super.getData()),
+			sunderedislesBeta: IronswornSettings.get('sundered-isles-beta')
+		}
 	}
 
 	async _selectIronsworn(ev) {
@@ -62,6 +72,23 @@ export class FirstStartDialog extends FormApplication<FormApplicationOptions> {
 		// Truths
 		new SFSettingTruthsDialogVue().render(true)
 		game.settings.set('foundry-ironsworn', 'prompt-world-truths', false)
+		this.close()
+	}
+
+	async _selectSunderedIsles(ev) {
+		ev.preventDefault()
+
+		// Use the Starforged character sheet
+		const setting = game.settings.get('core', 'sheetClasses')
+		foundry.utils.mergeObject(setting, {
+			'Actor.character': 'ironsworn.StarforgedCharacterSheet'
+		})
+		await game.settings.set('core', 'sheetClasses', setting)
+
+		// TODO: Sundered Isles Truths
+		// new SFSettingTruthsDialogVue().render(true)
+		// game.settings.set('foundry-ironsworn', 'prompt-world-truths', false)
+
 		this.close()
 	}
 

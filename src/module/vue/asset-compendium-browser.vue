@@ -2,44 +2,48 @@
 	<section
 		v-for="category in data.categories"
 		:key="category.title"
-		class="nogrow asset-category">
+		class="nogrow asset-category"
+	>
 		<h2 class="flexrow">
 			<IronBtn
 				:aria-controls="category.title"
 				:text="category.title"
 				:icon="category.expanded ? 'fa:caret-down' : 'fa:caret-right'"
-				@click="category.expanded = !category.expanded" />
+				@click="category.expanded = !category.expanded"
+			/>
 		</h2>
 
 		<CollapseTransition>
-			<div v-if="category.expanded">
-				<section
-					:id="category.title"
-					class="asset-category-contents"
-					:aria-expanded="category.expanded">
-					<WithRolllisteners
-						v-if="category.description"
-						element="div"
-						class="category-description"
-						@moveclick="moveClick"
-						v-html="
-							category.description && $enrichMarkdown(category.description)
-						" />
+			<Suspense>
+				<div v-if="category.expanded">
+					<section
+						:id="category.title"
+						class="asset-category-contents"
+						:aria-expanded="category.expanded"
+					>
+						<RenderedText
+							v-if="category.description"
+							element="div"
+							class="category-description"
+							:content="category.description"
+							:markdown="true"
+						/>
 
-					<AssetBrowserCard
-						v-for="(asset, i) in category.assets"
-						:key="asset.foundryItem()?.id ?? i"
-						:asset="asset.foundryItem"
-						class="nogrow movesheet-row" />
-				</section>
-			</div>
+						<AssetBrowserCard
+							v-for="(asset, i) in category.assets"
+							:key="asset.foundryItem()?.id ?? i"
+							:asset="asset.foundryItem"
+							class="nogrow movesheet-row"
+						/>
+					</section>
+				</div>
+			</Suspense>
 		</CollapseTransition>
 	</section>
 </template>
 
 <script setup lang="ts">
 import { provide, reactive } from 'vue'
-import WithRolllisteners from 'component:with-rolllisteners.vue'
 import AssetBrowserCard from 'component:asset/asset-browser-card.vue'
 import CollapseTransition from 'component:transition/collapse-transition.vue'
 import {
@@ -47,20 +51,21 @@ import {
 	createStarforgedAssetTree
 } from '../features/customassets'
 import IronBtn from 'component:buttons/iron-btn.vue'
+import RenderedText from 'component:rendered-text.vue'
 
-const props = defineProps<{ data: { toolset: 'starforged' | 'ironsworn' } }>()
+const props = defineProps<{
+	data: { toolset: 'starforged' | 'ironsworn' | 'sunderedisles' }
+}>()
 
 provide('toolset', props.data.toolset)
 
 const categories = await (props.data.toolset === 'ironsworn'
 	? createIronswornAssetTree()
-	: createStarforgedAssetTree())
+	: props.data.toolset === 'starforged'
+	? createStarforgedAssetTree()
+	: []) // TODO: sundered isles
 
 const data = reactive({ categories })
-
-function moveClick(item) {
-	CONFIG.IRONSWORN.emitter.emit('highlightMove', item.uuid)
-}
 </script>
 
 <style lang="scss" scoped>

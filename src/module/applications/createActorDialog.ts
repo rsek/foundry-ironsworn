@@ -18,7 +18,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 	}
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			title: game.i18n.format('DOCUMENT.Create', {
 				type: game.i18n.localize('DOCUMENT.Actor')
 			}),
@@ -33,7 +33,9 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 
 	getData(_options?: Application.RenderOptions): any {
 		return {
-			sfenabled: IronswornSettings.starforgedToolsEnabled
+			ironswornToolbox: IronswornSettings.defaultToolbox === 'ironsworn',
+			starforgedToolbox: IronswornSettings.defaultToolbox === 'starforged',
+			sunderedIslesToolbox: IronswornSettings.defaultToolbox === 'sunderedisles'
 		}
 	}
 
@@ -72,7 +74,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		const drawResult = await table?.draw({ displayChat: false })
 
 		this._createWithFolder(
-			drawResult?.results[0]?.data.text ||
+			drawResult?.results[0]?.text ||
 				game.i18n.localize(CONFIG.Actor.typeLabels.character),
 			'character',
 			ev.currentTarget.dataset.img || undefined
@@ -147,7 +149,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 			name,
 			img,
 			type,
-			token: { actorLink: true },
+			prototypeToken: { actorLink: true },
 			folder: this.options.folder || undefined
 		}
 		if (sheetClass) {

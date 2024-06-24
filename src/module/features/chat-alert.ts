@@ -113,7 +113,8 @@ export function registerChatAlertHooks() {
 
 const ACTOR_TYPE_HANDLERS: ActorTypeHandlers = {
 	character: (actor, data) => {
-		const gameIsStarforged = IronswornSettings.starforgedToolsEnabled
+		// TODO: Sundered Isles
+		const gameIsStarforged = IronswornSettings.defaultToolbox !== 'ironsworn'
 
 		// Ironsworn XP
 		if (data.system?.xp !== undefined) {
@@ -151,7 +152,8 @@ const ACTOR_TYPE_HANDLERS: ActorTypeHandlers = {
 			'momentum',
 			'health',
 			'spirit',
-			'supply'
+			'supply',
+			'hold'
 		] as const) {
 			const newValue = get(data.system, resource)?.value
 			if (newValue !== undefined) {

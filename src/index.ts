@@ -46,6 +46,8 @@ import ActorConfig from './module/actor/config'
 import ItemConfig from './module/item/config'
 import { registerIconHooks } from './module/icon/module-compat'
 
+import './module/features/dice' // register dice hooks
+
 declare global {
 	interface LenientGlobalVariableTypes {
 		game: never // the type doesn't matter
@@ -76,8 +78,8 @@ Hooks.once('init', async () => {
 
 	CONFIG.IRONSWORN = IRONSWORN
 
-	mergeObject(CONFIG.Actor, ActorConfig)
-	mergeObject(CONFIG.Item, ItemConfig)
+	foundry.utils.mergeObject(CONFIG.Actor, ActorConfig)
+	foundry.utils.mergeObject(CONFIG.Item, ItemConfig)
 
 	// Define custom Entity classes
 
@@ -191,14 +193,14 @@ Hooks.once('init', async () => {
 		}
 	)
 
-	CONFIG.JournalEntryPage.typeLabels = mergeObject(
+	CONFIG.JournalEntryPage.typeLabels = foundry.utils.mergeObject(
 		CONFIG.JournalEntryPage.typeLabels,
 		{
 			truth: 'IRONSWORN.JOURNALENTRYPAGE.TypeTruth',
 			progress: 'IRONSWORN.JOURNALENTRYPAGE.TypeProgressTrack'
 		}
 	)
-	CONFIG.JournalEntryPage.typeIcons = mergeObject(
+	CONFIG.JournalEntryPage.typeIcons = foundry.utils.mergeObject(
 		CONFIG.JournalEntryPage.typeIcons,
 		{
 			truth: 'fa-solid fa-books',

@@ -2,6 +2,7 @@
 	"IRONSWORN": {
 		"Ironsworn": "Ironsworn",
 		"Starforged": "Starforged",
+		"SunderedIsles": "Sundered Isles",
 		"YourWorldTruths": "Your World: Truths",
 		"TruthsAreOptional": "Creating truths is an optional step. You can always come back to this later in the settings.",
 		"TruthQuestStarter": "Quest Starter:",
@@ -26,6 +27,8 @@
 		"On_a_miss": "On a miss",
 		"MarkProgress": "Mark Progress",
 		"ProgressMove": "Progress Move",
+		"Cinder": "Cinder",
+		"Wraith": "Wraith",
 		"PROGRESS": {
 			"Current": "{score} progress ({ticks} ticks)",
 			"Ticks": "{ticks} ticks",
@@ -89,6 +92,7 @@
 		"Health": "health",
 		"Spirit": "spirit",
 		"Supply": "supply",
+		"Hold": "hold",
 		"Edge": "edge",
 		"Heart": "heart",
 		"Iron": "iron",
@@ -228,12 +232,16 @@
 		"Fifth": "fifth",
 		"StarforgedTools": "Starforged Tools",
 		"IronswornTools": "Ironsworn Tools",
+		"SunderedIslesTools": "Sundered Isles Tools",
 		"Region": "Region",
 		"RegionTip": "This sets the default region for locations in this scene. It affects the outcomes of some location oracles.",
 		"REGION": {
 			"Terminus": "Terminus",
 			"Outlands": "Outlands",
-			"Expanse": "Expanse"
+			"Expanse": "Expanse",
+			"Myriads": "Myriads",
+			"Margins": "Margins",
+			"Reaches": "Reaches"
 		},
 		"RotateCCW": "Rotate counter-clockwise",
 		"RotateCW": "Rotate clockwise",
@@ -288,13 +296,15 @@
 				"Name": "Appearance: Theme",
 				"Hint": "Sets the game theme, which affects the appearance of some UI elements and the default font. Requires a reload.",
 				"Ironsworn": "Ironsworn Classic",
-				"Starforged": "Starforged"
+				"Starforged": "Starforged",
+				"SunderedIsles": "Sundered Isles (Beta)"
 			},
 			"ColorScheme": {
 				"Name": "Appearance: Color scheme",
 				"Hint": "Each user can set their own color scheme.",
 				"Zinc": "Zinc",
-				"Phosphor": "Phosphor"
+				"Phosphor": "Phosphor",
+				"Oceanic": "Oceanic"
 			},
 			"Tools": {
 				"Name": "Character Tools",
@@ -332,13 +342,17 @@
 				"Name": "Starforged Truths",
 				"Hint": "Open the dialog to generate your Starforged setting truths."
 			},
-			"SFBeta": {
-				"Name": "Show Starforged beta content",
-				"Hint": "Enables in-progress Starforged features."
+			"SunderedIslesBeta": {
+				"Name": "Sundered Isles (beta)",
+				"Hint": "Enables in-progress Sundered Isles features. This currently means you'll have an empty move/oracle window for characters, so you probably don't want it."
 			},
-			"DataforgedIronswornMoves": {
-				"Name": "(Beta) New Ironsworn move-sheet UI",
-				"Hint": "If on, uses the Starforged-style UI for the Ironsworn move/oracle sheet, and allows custom entries and hooks for customization."
+			"CharacterHold": {
+				"Name": "'Hold' Stat",
+				"Hint": "Show the 'Hold' tracker for Starforged characters and shared sheets."
+			},
+			"RollCinderAndWraith": {
+				"Name": "Cinder and Wraith",
+				"Hint": "Roll challenge dice as Cinder and Wraith. This will override your Dice-So-Nice color theme for challenge-die rolls, and include which die represents which moon in the tooltips."
 			},
 			"ProgressMarkAnimation": {
 				"Name": "Enable progress mark animation",
@@ -676,7 +690,8 @@
 			"TypeOracle": "Oracles"
 		},
 		"SCENE": {
-			"TypeSector": "Sector"
+			"TypeSector": "Sector",
+			"TypeChart": "Chart"
 		},
 		"SCENES": {
 			"TypeSector": "Sectors"

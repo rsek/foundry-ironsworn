@@ -7,10 +7,6 @@ import { WorldTruthsDialog } from '../applications/worldTruthsDialog.js'
 import * as IronColor from '../features/ironcolor'
 import * as IronTheme from '../features/irontheme'
 
-function reload() {
-	window.location.reload()
-}
-
 async function closeAllMoveSheets() {
 	for (const actor of game.actors?.contents ?? []) {
 		await actor.moveSheet?.close()
@@ -23,10 +19,14 @@ declare global {
 	namespace ClientSettings {
 		/** Settings added here will be automatically typed throughout the game system. */
 		interface Values {
-			'foundry-ironsworn.toolbox': 'ironsworn' | 'starforged' | 'sheet'
+			'foundry-ironsworn.toolbox':
+				| 'ironsworn'
+				| 'starforged'
+				| 'sunderedisles'
+				| 'sheet'
 
 			'foundry-ironsworn.theme': keyof typeof IronTheme.THEMES
-			'foundry-ironsworn.color-scheme': 'zinc' | 'phosphor'
+			'foundry-ironsworn.color-scheme': 'zinc' | 'phosphor' | 'oceanic'
 			'foundry-ironsworn.progress-mark-animation': boolean
 
 			'foundry-ironsworn.log-changes': boolean
@@ -35,6 +35,10 @@ declare global {
 			'foundry-ironsworn.shared-supply': boolean
 
 			'foundry-ironsworn.advanced-rolling-default-open': boolean
+
+			'foundry-ironsworn.sundered-isles-beta': boolean
+			'foundry-ironsworn.character-hold': boolean
+			'foundry-ironsworn.dsn-cinder-wraith': boolean
 
 			// Internal only
 			'foundry-ironsworn.first-run-tips-shown': boolean
@@ -69,75 +73,6 @@ export class IronswornSettings {
 	}
 
 	static registerSettings() {
-		// Toolbox/ruleset. this goes at the top because it's a "showstopper" if folks need it but can't find it.
-		game.settings.register('foundry-ironsworn', 'toolbox', {
-			name: 'IRONSWORN.Settings.Tools.Name',
-			hint: 'IRONSWORN.Settings.Tools.Hint',
-			scope: 'world',
-			config: true,
-			type: String,
-			choices: {
-				sheet: 'IRONSWORN.Settings.Tools.Sheet',
-				ironsworn: 'IRONSWORN.Ironsworn',
-				starforged: 'IRONSWORN.Starforged'
-			},
-			default: 'sheet',
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			onChange: closeAllMoveSheets
-		})
-
-		// Appearance settings. They're impactful and not especially esoteric/technical, so they come next.
-		game.settings.register('foundry-ironsworn', 'theme', {
-			name: 'IRONSWORN.Settings.Theme.Name',
-			hint: 'IRONSWORN.Settings.Theme.Hint',
-			scope: 'world',
-			config: true,
-			type: String,
-			choices: mapValues(IronTheme.THEMES, (v) => v.labelKey),
-			default: 'ironsworn',
-			onChange: reload
-		})
-		game.settings.register('foundry-ironsworn', 'color-scheme', {
-			name: 'IRONSWORN.Settings.ColorScheme.Name',
-			hint: 'IRONSWORN.Settings.ColorScheme.Hint',
-			scope: 'client',
-			config: true,
-			type: String,
-			choices: {
-				zinc: 'IRONSWORN.Settings.ColorScheme.Zinc',
-				phosphor: 'IRONSWORN.Settings.ColorScheme.Phosphor'
-			},
-			default: 'zinc',
-			onChange: IronColor.updateColorScheme
-			// TODO: special behaviour for e.g. PopOut module?
-		})
-		game.settings.register('foundry-ironsworn', 'progress-mark-animation', {
-			name: 'IRONSWORN.Settings.ProgressMarkAnimation.Name',
-			hint: 'IRONSWORN.Settings.ProgressMarkAnimation.Hint',
-			scope: 'client',
-			type: Boolean,
-			default: true,
-			config: true,
-			onChange: reload
-		})
-
-		// Log verbosity and missed prompts come next.
-		game.settings.register('foundry-ironsworn', 'log-changes', {
-			name: 'IRONSWORN.Settings.LogChanges.Name',
-			hint: 'IRONSWORN.Settings.LogChanges.Hint',
-			scope: 'world',
-			config: true,
-			type: Boolean,
-			default: true
-		})
-		game.settings.register('foundry-ironsworn', 'prompt-world-truths', {
-			name: 'IRONSWORN.Settings.PromptTruths.Name',
-			hint: 'IRONSWORN.Settings.PromptTruths.Hint',
-			scope: 'world',
-			config: true,
-			type: Boolean,
-			default: true
-		})
 		game.settings.registerMenu('foundry-ironsworn', 'first-start-dialog', {
 			name: 'IRONSWORN.Settings.ConfigurationDialog.Name',
 			label: 'IRONSWORN.Settings.ConfigurationDialog.Label',
@@ -163,6 +98,78 @@ export class IronswornSettings {
 			restricted: true
 		})
 
+		// Toolbox/ruleset. this goes at the top because it's a "showstopper" if folks need it but can't find it.
+		game.settings.register('foundry-ironsworn', 'toolbox', {
+			name: 'IRONSWORN.Settings.Tools.Name',
+			hint: 'IRONSWORN.Settings.Tools.Hint',
+			scope: 'world',
+			config: true,
+			type: String,
+			choices: {
+				sheet: 'IRONSWORN.Settings.Tools.Sheet',
+				ironsworn: 'IRONSWORN.Ironsworn',
+				starforged: 'IRONSWORN.Starforged',
+				sunderedisles: 'IRONSWORN.SunderedIsles'
+			},
+			default: 'sheet',
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
+			onChange: closeAllMoveSheets
+		})
+
+		// Appearance settings. They're impactful and not especially esoteric/technical, so they come next.
+		game.settings.register('foundry-ironsworn', 'theme', {
+			name: 'IRONSWORN.Settings.Theme.Name',
+			hint: 'IRONSWORN.Settings.Theme.Hint',
+			scope: 'world',
+			config: true,
+			type: String,
+			choices: mapValues(IronTheme.THEMES, (v) => v.labelKey),
+			default: 'ironsworn',
+			requiresReload: true
+		})
+		game.settings.register('foundry-ironsworn', 'color-scheme', {
+			name: 'IRONSWORN.Settings.ColorScheme.Name',
+			hint: 'IRONSWORN.Settings.ColorScheme.Hint',
+			scope: 'client',
+			config: true,
+			type: String,
+			choices: {
+				zinc: 'IRONSWORN.Settings.ColorScheme.Zinc',
+				phosphor: 'IRONSWORN.Settings.ColorScheme.Phosphor',
+				oceanic: 'IRONSWORN.Settings.ColorScheme.Oceanic'
+			},
+			default: 'zinc',
+			onChange: IronColor.updateColorScheme
+			// TODO: special behaviour for e.g. PopOut module?
+		})
+		game.settings.register('foundry-ironsworn', 'progress-mark-animation', {
+			name: 'IRONSWORN.Settings.ProgressMarkAnimation.Name',
+			hint: 'IRONSWORN.Settings.ProgressMarkAnimation.Hint',
+			scope: 'client',
+			type: Boolean,
+			default: true,
+			config: true,
+			requiresReload: true
+		})
+
+		// Log verbosity and missed prompts come next.
+		game.settings.register('foundry-ironsworn', 'log-changes', {
+			name: 'IRONSWORN.Settings.LogChanges.Name',
+			hint: 'IRONSWORN.Settings.LogChanges.Hint',
+			scope: 'world',
+			config: true,
+			type: Boolean,
+			default: true
+		})
+		game.settings.register('foundry-ironsworn', 'prompt-world-truths', {
+			name: 'IRONSWORN.Settings.PromptTruths.Name',
+			hint: 'IRONSWORN.Settings.PromptTruths.Hint',
+			scope: 'world',
+			config: true,
+			type: Boolean,
+			default: true
+		})
+
 		// Changing the supply rule represents a divergence from the ruleset; as 'advanced' behavior it can tolerate living at the end of the list.
 		game.settings.register('foundry-ironsworn', 'shared-supply', {
 			name: 'IRONSWORN.Settings.SharedSupply.Name',
@@ -171,7 +178,7 @@ export class IronswornSettings {
 			config: true,
 			type: Boolean,
 			default: true,
-			onChange: reload
+			requiresReload: true
 		})
 
 		// Default the "advanced" part of the pre-roll dialog to open.
@@ -187,6 +194,34 @@ export class IronswornSettings {
 				default: false
 			}
 		)
+
+		game.settings.register('foundry-ironsworn', 'sundered-isles-beta', {
+			name: 'IRONSWORN.Settings.SunderedIslesBeta.Name',
+			hint: 'IRONSWORN.Settings.SunderedIslesBeta.Hint',
+			scope: 'world',
+			config: true,
+			type: Boolean,
+			default: false,
+			requiresReload: true
+		})
+
+		game.settings.register('foundry-ironsworn', 'character-hold', {
+			name: 'IRONSWORN.Settings.CharacterHold.Name',
+			hint: 'IRONSWORN.Settings.CharacterHold.Hint',
+			scope: 'world',
+			config: true,
+			type: Boolean,
+			default: false
+		})
+
+		game.settings.register('foundry-ironsworn', 'dsn-cinder-wraith', {
+			name: 'IRONSWORN.Settings.RollCinderAndWraith.Name',
+			hint: 'IRONSWORN.Settings.RollCinderAndWraith.Hint',
+			scope: 'world',
+			config: true,
+			type: Boolean,
+			default: false
+		})
 
 		game.settings.register('foundry-ironsworn', 'data-version', {
 			scope: 'world',
@@ -213,15 +248,21 @@ export class IronswornSettings {
 		return game.settings.get('foundry-ironsworn', key)
 	}
 
-	static get starforgedToolsEnabled(): boolean {
-		if (this.get('toolbox') === 'ironsworn') return false
-		if (this.get('toolbox') === 'starforged') return true
-
-		// Set to "match sheet, so check the sheet"
-		const sheetClasses = game.settings.get('core', 'sheetClasses') as any
-		return (
-			sheetClasses.Actor?.character === 'ironsworn.StarforgedCharacterSheet'
-		)
+	static get defaultToolbox(): 'ironsworn' | 'starforged' | 'sunderedisles' {
+		const setting = this.get('toolbox')
+		if (setting === 'sheet') {
+			const sheetClasses = game.settings.get('core', 'sheetClasses')
+			const defaultCharacterSheet = sheetClasses.Actor?.character
+			// TODO: sundered isles
+			if (defaultCharacterSheet === 'ironsworn.SunderedIslesCharacterSheet') {
+				return 'sunderedisles'
+			}
+			if (defaultCharacterSheet === 'ironsworn.IronswornCharacterSheetV2') {
+				return 'ironsworn'
+			}
+			return 'starforged'
+		}
+		return setting
 	}
 
 	/**

@@ -3,14 +3,14 @@ import { VueAppMixin } from '../vue/vueapp.js'
 
 export class AssetCompendiumBrowser extends VueAppMixin(Application) {
 	constructor(
-		protected toolset: 'starforged' | 'ironsworn',
+		protected toolset: 'starforged' | 'ironsworn' | 'sunderedisles',
 		options?: Partial<ApplicationOptions>
 	) {
 		super(options)
 	}
 
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			title: game.i18n.localize('IRONSWORN.ITEMS.TypeAsset'),
 			width: 400,
 			height: 600,

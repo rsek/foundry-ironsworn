@@ -2,6 +2,44 @@
 
 ## Next Release
 
+## 1.23.6
+
+- Fix DSN cinder/wraith dice coloring in Foundry v11
+
+## 1.23.5
+
+- Allow changing of portrait art even when Tokenizer is installed but disabled
+- Optionally colorize challenge dice as Cinder and Wraith ([#1002](https://github.com/ben/foundry-ironsworn/pull/1002))
+
+## 1.23.4
+
+- Don't let the beta setting break the world
+- Don't show tokenizer if shift key is held
+
+## 1.23.3
+
+- Add a "hold" resource to PC and shared sheets ([#998](https://github.com/ben/foundry-ironsworn/pull/998))
+- Update the SF "sector" dialog to include SI region terms, and make it available via scene-nav right-click ([#996](https://github.com/ben/foundry-ironsworn/pull/996))
+- Add the beginnings of an "Oceanic" color theme ([#997](https://github.com/ben/foundry-ironsworn/pull/997))
+- Add a new `ds` dice term for the cursed die ([#1000](https://github.com/ben/foundry-ironsworn/pull/1000))
+- Add a scene button to roll Cinder and Wraith ([#1001](https://github.com/ben/foundry-ironsworn/pull/1001))
+- Trigger Tokenizer for actors if it's installed
+
+## 1.23.2
+
+- v12: new PCs' tokens are now linked to their actor when created
+- Move links in oracle descriptions now work properly
+- Add Sundered Isles scenes with artwork by AugustBebel on Discord ([#993](https://github.com/ben/foundry-ironsworn/pull/993))
+- Add Sundered Isles structure in preparation for dataforged content. This is in very early stages, and is behind a beta setting. ([#992](https://github.com/ben/foundry-ironsworn/pull/992))
+
+## 1.23.1
+
+- Fix a v12 bug with the layer controls
+
+## 1.23.0
+
+- Compatibility with Foundry v12 ([#983](https://github.com/ben/foundry-ironsworn/pull/983))
+
 ## 1.22.13
 
 - Extend the new setting into a "manual rolling mode" ([#961](https://github.com/ben/foundry-ironsworn/pull/961))

@@ -5,7 +5,7 @@ import { SFCharacterMoveSheet } from './sf-charactermovesheet'
 
 export class CompactPCSheet extends VueActorSheet {
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			width: 560,
 			height: 210,
 			resizable: true,
@@ -32,10 +32,8 @@ export class CompactPCSheet extends VueActorSheet {
 
 		this.actor.moveSheet ||= new SFCharacterMoveSheet(
 			this.actor,
-			IronswornSettings.get('toolbox') === 'starforged'
-				? 'starforged'
-				: 'ironsworn'
+			this.actor.toolset
 		)
-		this.actor.moveSheet.render(true, { focus: true })
+		void this.actor.moveSheet.render(true, { focus: true })
 	}
 }
