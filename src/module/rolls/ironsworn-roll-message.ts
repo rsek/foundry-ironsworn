@@ -1,8 +1,7 @@
-import type { IOutcomeInfo, RollMethod } from 'dataforged'
+import type { DFIOutcomeInfo, DFRollMethod } from '../item/types'
 import { compact, fromPairs, isUndefined, kebabCase } from 'lodash-es'
 import { IronswornRoll } from '.'
 import { IronswornActor } from '../actor/actor'
-import { IronswornItem } from '../item/item'
 import { OracleTable } from '../roll-table/oracle-table'
 import { enrichMarkdown } from '../vue/vue-plugin'
 import { DfRollOutcome, RollOutcome } from './ironsworn-roll'
@@ -40,7 +39,7 @@ export function formatRollPlusStat(stat: string, initialCaps = false) {
  * @example formatRollMethod("Highest", ["Spirit", "Heart", "Wits"])
  * // returns "roll highest of spirit, heart, wits" for en.json
  */
-export function formatRollMethod(rollMethod: RollMethod, stats: string[]) {
+export function formatRollMethod(rollMethod: DFRollMethod, stats: string[]) {
 	// skip if there's no choice to be made
 	if (stats.length === 1) {
 		return formatRollPlusStat(stats[0])
@@ -258,7 +257,7 @@ export class IronswornRollMessage {
 
 		const key = DfRollOutcome[theOutcome]
 		const moveSystem = move.system
-		let moveOutcome = moveSystem.Outcomes?.[key] as IOutcomeInfo | undefined
+		let moveOutcome = moveSystem.Outcomes?.[key] as DFIOutcomeInfo | undefined
 		if (this.roll.isMatch && moveOutcome?.['With a Match']?.Text)
 			moveOutcome = moveOutcome['With a Match']
 		if (moveOutcome) {
@@ -267,7 +266,7 @@ export class IronswornRollMessage {
 			// If no oracles, that table is probably important to the move
 			// (i.e. SF's "Repair" move), so we leave it in.
 			ret.moveOutcome = await enrichMarkdown(moveOutcome.Text)
-			if (moveSystem.Oracles?.length > 0) {
+			if (moveSystem.dsOracleIds?.length > 0) {
 				ret.moveOutcome = ret.moveOutcome.replace(
 					/<table>[\s\S]*<\/table>/gm,
 					''
@@ -324,9 +323,9 @@ export class IronswornRollMessage {
 		if (move?.type !== 'sfmove') return {}
 
 		const system = move.system
-		const dfids = system.Oracles ?? []
+		const dsids = system.dsOracleIds ?? []
 		const nextOracles = compact(
-			await Promise.all(dfids.map(OracleTable.getByDfId))
+			await Promise.all(dsids.map((x) => OracleTable.getByDsId(x)))
 		)
 		return { nextOracles }
 	}

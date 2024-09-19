@@ -1,18 +1,22 @@
 <template>
 	<label class="nogrow flexrow">
 		<input
-			ref="topRadio"
+			:checked="selected"
 			type="radio"
 			class="nogrow"
 			:name="radioGroup"
 			@change="emitValue"
 		/>
 		<div class="flexcol">
-			<p>
-				<strong>{{ page.name }}</strong>
+			<p v-if="pageSystem.Summary">
+				<strong>{{ pageSystem.Summary }}</strong>
 			</p>
 
-			<RenderedText element="div" :markdown="true" :content="pageSystem.Description" />
+			<RenderedText
+				element="div"
+				:markdown="true"
+				:content="pageSystem.Description"
+			/>
 
 			<section v-if="page.subtable">
 				<label
@@ -24,7 +28,7 @@
 						ref="suboptions"
 						type="radio"
 						class="nogrow"
-						:name="pageSystem.dfid"
+						:name="pageSystem.dsid"
 						@change="subtableSelect(entry)"
 					/>
 					<p v-html="entry.text" />
@@ -33,13 +37,18 @@
 				<!-- TODO: custom input -->
 			</section>
 
-			<RenderedText class="quest" element="div" :markdown="true" :content="pageSystem.Quest" />
+			<RenderedText
+				class="quest"
+				element="div"
+				:markdown="true"
+				:content="pageSystem.Quest"
+			/>
 		</div>
 	</label>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import type { IronswornJournalPage } from '../../../journal/journal-entry-page'
 import type { TruthOptionDataPropertiesData } from '../../../journal/journal-entry-page-types'
 import { OracleTableResult } from '../../../roll-table/oracle-table-result'
@@ -51,11 +60,12 @@ const props = defineProps<{
 }>()
 const pageSystem = props.page.system as TruthOptionDataPropertiesData
 
-const topRadio = ref<HTMLElement>()
-const state = reactive({ suboption: undefined as string | undefined })
+const selected = ref(false)
+
+const suboption = ref<string | undefined>()
 function subtableSelect(entry: OracleTableResult) {
-	state.suboption = entry.text
-	topRadio.value?.click()
+	suboption.value = entry.text
+	selected.value = true
 	emitValue()
 }
 
@@ -63,26 +73,33 @@ const $emit = defineEmits<{
 	change: [string, string] // title, text
 }>()
 function emitValue() {
-	let text = `${pageSystem.Description} ${state.suboption ?? ''}\n\n_${
+	// Some pages (i.e. Classic) don't have a title
+	let title = props.page.name ?? ''
+	if (title?.startsWith('truth.option')) {
+		title = ''
+	}
+
+	let text = `${pageSystem.Description} ${suboption.value ?? ''}\n\n_${
 		pageSystem.Quest
 	}_`
+
 	const template = pageSystem['Roll template']
-	if (state.suboption && template?.Description) {
+	if (suboption.value && template?.Description) {
 		text =
-			template.Description.replace(/\${{.*?}}/, state.suboption) +
+			template.Description.replace(/{{table>.*?}}/, `> ${suboption.value}`) +
 			`\n\n_${pageSystem.Quest}_`
 	}
-	$emit('change', props.page.name ?? '???', text.trim())
+	$emit('change', title, text.trim())
 }
 
 const suboptions = ref<HTMLElement[]>([])
 
 async function selectAndRandomize() {
-	topRadio.value?.click()
+	selected.value = true
 
 	if (
 		props.page.subtable &&
-		((props.page.subtable?.results as any)?.length ?? 0) > 0
+		((props.page.subtable?.results as any)?.size ?? 0) > 0
 	) {
 		const { roll } = await props.page.subtable.draw()
 
@@ -93,6 +110,8 @@ async function selectAndRandomize() {
 		)
 		suboptions.value[selectedIndex]?.click()
 	}
+
+	emitValue()
 }
 
 defineExpose({ selectAndRandomize })

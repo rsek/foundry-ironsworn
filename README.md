@@ -3,7 +3,7 @@
 ![Download count of latest release](https://img.shields.io/github/downloads/ben/foundry-ironsworn/latest/ironsworn.zip?style=for-the-badge)
 [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ffoundry-ironsworn&style=for-the-badge)](https://forge-vtt.com/bazaar/package/foundry-ironsworn)
 
-This is a Foundry VTT implementation of the [**Ironsworn**](https://www.ironswornrpg.com/products-ironsworn), [**Ironsworn: Delve**](https://www.ironswornrpg.com/product-ironsworn-delve), and [**Ironsworn: Starforged**](https://getstarforged.com) games by Shawn Tomkin.
+This is a Foundry VTT implementation of the [**Ironsworn**](https://tomkinpress.com/pages/ironsworn), [**Ironsworn: Delve**](https://tomkinpress.com/pages/ironsworn-delve), [**Ironsworn: Starforged**](https://tomkinpress.com/pages/ironsworn-starforged), and [**Sundered Isles**](https://tomkinpress.com/pages/sundered-isles) games by Shawn Tomkin.
 
 To install it, just search for "ironsworn" in the system-installation UI, or use this URL:
 
@@ -15,9 +15,13 @@ For information on how to play a game, check out [the wiki](https://github.com/b
 
 # System Development
 
+> [!IMPORTANT]
+> Currently you **must** have [Datasworn](https://github.com/rsek/datasworn/tree/v0.1.0) checked out to the `v0.1.0` branch in the same directory as this repo in order for the build to succeed.
+> I don't like it either, and as soon as there's an NPM release, I'll fix it and remove this note.
+
 Here's what you'll need to make changes to this system:
 
-1. Install Foundry 10 or later, and start it up.
+1. Install Foundry 11 or later, and start it up.
 2. Install the main `foundry-ironsworn` system, and create a world that uses it.
 3. Clone this repo somewhere you can find it, and run `npm install`.
 4. Run `npm start` from this repository.
@@ -35,7 +39,10 @@ Some things to remember:
 
 # Credits
 
-This work is based on Ironsworn (found at https://www.ironswornrpg.com), created by Shawn Tomkin, and licensed for our use under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license (creativecommons.org/licenses/by-nc-sa/4.0/).
+
+This work is based on several works created by Shawn Tomkin, and are licensed under the [CC-BY-NC-SA](http://creativecommons.org/licenses/by-nc-sa/4.0/) license, as detailed at https://tomkinpress.com/pages/licensing.
+
+Data courtesy of [Datasworn](https://github.com/rsek/datasworn), which is used here under its MIT license.
 
 Hand-drawn map scene courtesy of [McSekcer](https://www.reddit.com/user/McSekcer/).
 

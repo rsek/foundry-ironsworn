@@ -1,14 +1,10 @@
 import type {
-	PlayerConditionMeter,
-	ProgressTypeIronsworn,
-	RollableStat,
-	RollMethod,
-	RollType,
-	Stat
-} from 'dataforged'
+	DFProgressTypeIronsworn,
+	DFRollMethod,
+	DFRollType
+} from '../item/types'
 import { cloneDeep, maxBy, minBy, sortBy } from 'lodash-es'
 import { IronswornActor } from '../actor/actor'
-import { getFoundryMoveByDfId } from '../dataforged'
 import { IronswornItem } from '../item/item'
 import type {
 	PreRollOptions,
@@ -27,6 +23,7 @@ import type { AssetConditionMeter } from '../item/subtypes/asset'
 import { AssetConditionMeterField } from '../item/subtypes/asset'
 import { IronswornSettings } from '../helpers/settings'
 import { IronswornHandlebarsHelpers } from '../helpers/handlebars'
+import { getFoundryMoveByDsId } from '../datasworn2'
 
 interface showForMoveOpts {
 	actor?: IronswornActor
@@ -61,10 +58,8 @@ function rollableOptions(trigger: SFMoveTrigger) {
 	)
 }
 
-export function moveHasRollableOptions(move: IronswornItem<'sfmove'>) {
-	if (!move.assert('sfmove')) return false
-	const options = rollableOptions(move.system.Trigger)
-	return options.length > 0
+export function moveTriggerIsRollable(trigger?: SFMoveTrigger) : boolean {
+	return !!trigger && rollableOptions(trigger).length > 0
 }
 
 export function getStatData(
@@ -113,7 +108,7 @@ export function getStatData(
 }
 
 function chooseStatToRoll(
-	mode: RollMethod,
+	mode: DFRollMethod,
 	stats: string[],
 	actor: IronswornActor<'character'> | IronswornActor<'starship'>
 ): SourcedValue | undefined {
@@ -279,14 +274,14 @@ export class IronswornPrerollDialog extends Dialog<
 		name: string,
 		value: number,
 		actor?: IronswornActor<any>,
-		moveDfId?: string
+		moveDsId?: string
 	) {
 		const rollText = game.i18n.localize('IRONSWORN.ProgressRoll')
 		let title = `${rollText}: ${name}`
 
 		let move: IronswornItem<'sfmove'> | undefined
-		if (moveDfId != null) {
-			move = await getFoundryMoveByDfId(moveDfId)
+		if (moveDsId != null) {
+			move = await getFoundryMoveByDsId(moveDsId)
 			if (move?.name != null) {
 				title = `${move.name}: ${name}`
 			}
@@ -299,7 +294,7 @@ export class IronswornPrerollDialog extends Dialog<
 			},
 
 			actorId: actor?.id ?? undefined,
-			moveDfId
+			moveDsId
 		}
 
 		const content = await this.renderContent({ prerollOptions, move })
@@ -322,15 +317,15 @@ export class IronswornPrerollDialog extends Dialog<
 		}).render(true)
 	}
 
-	static async showForOfficialMove(moveDfId: string, opts?: showForMoveOpts) {
-		const moveItem = await getFoundryMoveByDfId(moveDfId)
+	static async showForOfficialMove(moveDsId: string, opts?: showForMoveOpts) {
+		const moveItem = await getFoundryMoveByDsId(moveDsId)
 		if (moveItem == null) {
-			throw new Error(`Couldn't find item for move '${moveDfId}'`)
+			throw new Error(`Couldn't find item for move '${moveDsId}'`)
 		}
 
 		return await this.showForMoveItem(
 			moveItem,
-			{ moveDfId, progress: opts?.progress },
+			{ moveDsId, progress: opts?.progress },
 			opts
 		)
 	}
@@ -372,9 +367,9 @@ export class IronswornPrerollDialog extends Dialog<
 			// Add this so it generates a button, but it won't be passed to
 			// the IronswornRoll object as a stat
 			options.push({
-				'Roll type': 'Progress roll' as RollType,
-				Method: 'Any' as RollMethod,
-				Using: ['Progress' as ProgressTypeIronsworn]
+				'Roll type': 'Progress roll' as DFRollType,
+				Method: 'Any' as DFRollMethod,
+				Using: ['Progress' as DFProgressTypeIronsworn]
 			})
 		}
 
@@ -401,7 +396,7 @@ export class IronswornPrerollDialog extends Dialog<
 			action: true
 		})
 		const buttons = {}
-		const addButton = (i: number, mode: RollMethod, stats: string[]) => {
+		const addButton = (i: number, mode: DFRollMethod, stats: string[]) => {
 			const localizedStats = stats.map((s) =>
 				game.i18n.localize(`IRONSWORN.${s.capitalize()}`)
 			)

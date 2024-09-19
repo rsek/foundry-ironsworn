@@ -1,17 +1,13 @@
-import type {
-	IMove,
-	IMoveReroll,
-	IMoveTrigger,
-	IMoveTriggerOptionAction,
-	IMoveTriggerOptionProgress,
-	IOutcomeInfo
-} from 'dataforged'
 import { DataforgedIDField } from '../../fields/DataforgedIDField'
-import type { Display } from '../../fields/DisplayField'
-import { DisplayField } from '../../fields/DisplayField'
 import { SourceField } from '../../fields/SourceField'
-import type { DataSchema } from '../../fields/utils'
 import type { IronswornItem } from '../item'
+import type {
+	DFIMove,
+	DFIMoveTrigger,
+	DFIMoveTriggerOptionAction,
+	DFIMoveTriggerOptionProgress,
+	DFIOutcomeInfo
+} from '../types'
 
 export class SFMoveModel extends foundry.abstract.TypeDataModel<
 	SFMoveDataSourceData,
@@ -99,9 +95,9 @@ export class SFMoveModel extends foundry.abstract.TypeDataModel<
 			Category: new DataforgedIDField(),
 			Source: new SourceField(),
 			'Progress Move': new fields.BooleanField(),
-			Display: new DisplayField(),
 			Text: new fields.HTMLField(),
 			Oracles: new fields.ArrayField(new DataforgedIDField()),
+			dsOracleIds: new fields.ArrayField(new fields.StringField()),
 			Trigger: new SFMoveTriggerField(),
 			Outcomes: new fields.SchemaField(
 				{
@@ -116,7 +112,7 @@ export class SFMoveModel extends foundry.abstract.TypeDataModel<
 }
 
 export interface SFMoveOutcome
-	extends Omit<IOutcomeInfo, 'With a Match' | '$id'> {}
+	extends Omit<DFIOutcomeInfo, 'With a Match' | '$id'> {}
 export interface SFMoveOutcomeMatchable extends SFMoveOutcome {
 	'With a Match'?: SFMoveOutcome
 }
@@ -184,24 +180,24 @@ export interface SFMoveModel extends SFMoveDataSourceData {}
 
 export interface SFMoveDataSourceData
 	extends Required<
-		Pick<IMove, 'Category' | 'Source' | 'Text' | 'Oracles' | 'Progress Move'>
+		Pick<DFIMove, 'Category' | 'Source' | 'Text' | 'Oracles' | 'Progress Move'>
 	> {
 	dfid: string
 	Trigger: SFMoveTrigger
-	Display: Display
 	Outcomes?: {
 		'Strong Hit': SFMoveOutcomeMatchable
 		'Weak Hit': SFMoveOutcome
 		Miss: SFMoveOutcomeMatchable
 	}
+	dsOracleIds: string[]
 }
 
-export interface SFMoveTrigger extends Pick<IMoveTrigger, 'Text'> {
+export interface SFMoveTrigger extends Pick<DFIMoveTrigger, 'Text'> {
 	Options: SFMoveTriggerOption[]
 }
 
 type SFMoveTriggerOption = Omit<
-	IMoveTriggerOptionAction | IMoveTriggerOptionProgress,
+	DFIMoveTriggerOptionAction | DFIMoveTriggerOptionProgress,
 	'$id' | 'Custom stat'
 >
 

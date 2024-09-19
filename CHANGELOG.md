@@ -2,6 +2,51 @@
 
 ## Next Release
 
+- Fix an issue where new Ironsworn characters would have a blank sheet the first time they were opened ([#1030](https://github.com/ben/foundry-ironsworn/pull/1030))
+
+## 1.24.3
+
+- Cursed die support when rolling oracles ([#1026](https://github.com/ben/foundry-ironsworn/pull/1026))
+- Fix an issue with the truths dialog resulting in blank outputs ([#1027](https://github.com/ben/foundry-ironsworn/pull/1027))
+- Fix a move data issue that was preventing SI "Set A Course" from being rollable
+
+## 1.24.2
+
+- Some moves had been imported wrongly, and weren't rollable as they should be, e.g. _Endure Stress_ ([#1025](https://github.com/ben/foundry-ironsworn/pull/1025))
+
+## 1.24.1
+
+- Avoided doing a full load of moves when showing the move sheet, resulting in better performance ([#1023](https://github.com/ben/foundry-ironsworn/pull/1023))
+- Brought back support for the "Custom Moves" folder (also [#1023](https://github.com/ben/foundry-ironsworn/pull/1023))
+- First-start dialog: prevent a situation where an expansion is enabled but not the ruleset it builds on (you shouldn't be able to enable Delve without Ironsworn)
+- Truths dialog: fix some bugs around randomization, journal output, and closing it when done ([#1024](https://github.com/ben/foundry-ironsworn/pull/1024))
+
+## 1.24.0
+
+This is a major update that includes Sundered Isles content, but also brings along a host of changes:
+
+- Selection of content happens in the first-start dialog, which will show the first time you open your world after this update. The checkboxes you select will affect everything in the world, so you can give every character access to both Delve and Sundered Isles moves and oracles.
+- For module/macro authors:
+  - Registration of custom oracle/move content has a few changes:
+    - The `'ironsworn'` tree is now called `'classic'`
+    - Delve content is now under the `'delve'` tree
+    - There's a new `'sundered_isles'` tree
+    - Category names have changed, e.g. the `'Adventure'` move category is now called `'Adventure Moves'`
+  - The string you pass to `CONFIG.IRONSWORN.applications.IronswornPrerollDialog.showForOfficialMove` is now a Datasworn ID. Dataforged IDs will no longer work.
+  - Embedded links to oracle categories are changing format. See below for the before-and-after, and see [these files](https://github.com/rsek/datasworn/tree/v0.1.0/src/legacy_ids/dataforged) if you need to make a change.
+
+```html
+<!-- Oracle-category link changes: -->
+<!-- BEFORE: Dataforged-style ID -->
+<a class="entity-link oracle-category-link" data-dfid="Starforged/Oracles/Location_Themes/Chaotic">
+  <i class="fa fa-caret-right"></i> Chaotic
+</a>
+<!-- AFTER: Datasworn 2 ID -->
+<a class="entity-link oracle-category-link" data-dsid="oracle_collection:starforged/location_theme/chaotic">
+  <i class="fa fa-caret-right"></i> Chaotic
+</a>
+```
+
 ## 1.23.7
 
 - Fix Cinder and Wraith dice with dice-so-nice 5 ([#1009](https://github.com/ben/foundry-ironsworn/pull/1009))

@@ -4,7 +4,8 @@
 		:tooltip="$t('IRONSWORN.SendToChat', { move: move.displayName })"
 		icon="fa:comment"
 		v-bind="($props, $attrs)"
-		@click="sendToChat">
+		@click="sendToChat"
+	>
 		<template v-for="(_, slot) of $slots" #[slot]="scope">
 			<slot :name="slot" v-bind="scope" />
 		</template>
@@ -12,22 +13,22 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue'
 import { createSfMoveChatMessage } from '../../../chat/sf-move-chat-message'
-import type { Move } from '../../../features/custommoves'
-import { $ItemKey } from '../../provisions.js'
+import type { DisplayMove } from '../../../features/custommoves'
 import IronBtn from './iron-btn.vue'
+import { IronswornItem } from '../../../item/item'
 
 interface Props
 	extends /* @vue-ignore */ Omit<PropsOf<typeof IronBtn>, 'tooltip'> {
-	move: Move
+	move: DisplayMove
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
-const $item = inject($ItemKey)
-
-function sendToChat(e) {
-	if ($item) createSfMoveChatMessage($item)
+async function sendToChat(e) {
+	const foundryMove = (await fromUuid(
+		props.move.uuid
+	)) as IronswornItem<'sfmove'>
+	if (foundryMove) createSfMoveChatMessage(foundryMove)
 }
 </script>

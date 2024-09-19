@@ -33,6 +33,7 @@
 				ref="categoryComponents"
 				:key="(truth.je()._id as string)"
 				:je="truth.je"
+				v-model="categoryModels[truth.je()._id]"
 			/>
 		</section>
 	</div>
@@ -40,7 +41,7 @@
 
 <script setup lang="ts">
 import { inject, ref } from 'vue'
-import type { ISettingTruth } from 'dataforged'
+import type { Truth } from '@datasworn/core/dist/Datasworn'
 import { $LocalEmitterKey } from './provisions'
 import IronBtn from './components/buttons/iron-btn.vue'
 import TruthCategory from './components/truth/truth-category.vue'
@@ -50,13 +51,20 @@ import { IronswornJournalPage } from '../journal/journal-entry-page'
 const props = defineProps<{
 	data: {
 		truths: {
-			df: ISettingTruth
+			ds: Truth
 			je: () => IronswornJournalEntry
 		}[]
 	}
 }>()
 
 const categoryComponents = ref<(typeof TruthCategory)[]>([])
+const categoryModels = ref<
+	Record<string, { title?: string; html?: string; valid: boolean }>
+>(
+	Object.fromEntries(
+		props.data.truths.map((x) => [x.je()._id, { valid: false }])
+	)
+)
 
 function scrollToCategory(i: number) {
 	categoryComponents.value[i]?.scrollIntoView()
@@ -65,19 +73,17 @@ function scrollToCategory(i: number) {
 const $localEmitter = inject($LocalEmitterKey)
 async function saveTruths() {
 	// Fetch values from the category components
-	const allValues = await Promise.all(
-		categoryComponents.value.map((x) => x.selectedValue())
-	)
-	const values = allValues.filter((x) => x.valid)
+	const contentSections: string[] = []
+	for (const t of props.data.truths) {
+		const model = categoryModels.value[t.je()._id]
+		if (model.valid)
+			contentSections.push(
+				`<h2>${model.title}</h2>
+				${model.html}`
+			)
+	}
 
-	const content = values
-		.map(
-			({ title, html }) => `
-        <h2>${title}</h2>
-        ${html}
-      `
-		)
-		.join('\n\n')
+	const content = contentSections.join('\n\n')
 
 	const title = game.i18n.localize('IRONSWORN.JOURNALENTRYPAGES.TypeTruth')
 	const journal = await IronswornJournalEntry.create({
