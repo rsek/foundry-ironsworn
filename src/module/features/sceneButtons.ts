@@ -328,7 +328,7 @@ function sunderedIslifyControl(control: SceneControl) {
 }
 
 // @ts-expect-error
-class IronswornCanvasLayer extends InteractionLayer {
+class IronswornCanvasLayer extends foundry.canvas.layers.InteractionLayer {
 	static get layerOptions() {
 		return foundry.utils.mergeObject(super.layerOptions, {
 			zIndex: 180,

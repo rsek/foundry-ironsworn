@@ -39,7 +39,7 @@ export class V11TableResultField extends foundry.data.fields
 		sourceData: unknown,
 		fieldData: TableResultDataConstructorData
 	) {
-		if (hasProperty(sourceData as object, 'low')) {
+		if (foundry.utils.hasProperty(sourceData as object, 'low')) {
 			const legacyRowData = sourceData as LegacyTableRow
 			fieldData.range = [legacyRowData.low, legacyRowData.high]
 			fieldData.text = legacyRowData.text ?? legacyRowData.description

@@ -25,7 +25,7 @@ export class IronswornJournalPage<
 	): Promise<void> {
 		// FIXME: JEPs aren't initialized with proper defaults, so we DIY it.
 		// https://github.com/foundryvtt/foundryvtt/issues/8628
-		const defaults = game.system.template.JournalEntryPage?.[
+		const defaults = game.system.documentTypes.JournalEntryPage?.[
 			data.type
 		] as JournalEntryPageDataSource
 		if (defaults != null) {

@@ -20,14 +20,14 @@ export async function createSiMoonsChatMessage(cinder: Roll, wraith: Roll) {
 		wraith,
 		wraithEmoji: MOON_EMOJI[wraith.total ?? 1]
 	}
-	const content = await renderTemplate(
+	const content = await foundry.applications.handlebars.renderTemplate(
 		'systems/foundry-ironsworn/templates/rolls/si-moons-roll-message.hbs',
 		params
 	)
 	await ChatMessage.create({
 		speaker: ChatMessage.getSpeaker(),
 		content,
-		type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+		style: CONST.CHAT_MESSAGE_STYLES.ROLL,
 		rolls: [cinder, wraith]
 	})
 }

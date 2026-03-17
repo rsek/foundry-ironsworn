@@ -3,7 +3,7 @@ import type { IronswornItem } from '../item/item'
 import { $ActorKey } from './provisions'
 import { VueAppMixin } from './vueapp.js'
 
-export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
+export abstract class VueActorSheet extends VueAppMixin(foundry.appv1.sheets.ActorSheet) {
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'actor']
@@ -48,7 +48,7 @@ export abstract class VueActorSheet extends VueAppMixin(ActorSheet) {
 	}
 
 	protected async _onDrop(event: DragEvent) {
-		const data = (TextEditor as any).getDragEventData(event)
+		const data = (foundry.applications.ux.TextEditor.implementation as any).getDragEventData(event)
 
 		if (['AssetBrowserData', 'FoeBrowserData'].includes(data.type)) {
 			const document = (await fromUuid(data.uuid)) as

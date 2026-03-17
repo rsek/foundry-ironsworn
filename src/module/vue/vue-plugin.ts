@@ -13,7 +13,7 @@ declare module '@vue/runtime-core' {
 }
 
 export async function enrichHtml(text) {
-	const rendered = await TextEditor.enrichHTML(text, { async: true } as any)
+	const rendered = await foundry.applications.ux.TextEditor.implementation.enrichHTML(text, { async: true } as any)
 	return rendered.replace(
 		/\(\(rollplus (.*?)\)\)/g,
 		(_, stat) => `

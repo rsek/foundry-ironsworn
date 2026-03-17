@@ -1,6 +1,6 @@
 export function patchZIndex() {
-	const original = Token.prototype.refresh
-	Token.prototype.refresh = function (...args) {
+	const original = foundry.canvas.placeables.Token.prototype.refresh
+	foundry.canvas.placeables.Token.prototype.refresh = function (...args) {
 		const ret = original.call(this, ...args)
 		if (
 			this.actor?.type === 'location' &&

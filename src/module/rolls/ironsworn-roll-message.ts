@@ -184,7 +184,7 @@ export class IronswornRollMessage {
 			...(await this.momentumData()),
 			...(await this.oraclesData())
 		}
-		const content = await renderTemplate(
+		const content = await foundry.applications.handlebars.renderTemplate(
 			'systems/foundry-ironsworn/templates/rolls/ironsworn-roll-message.hbs',
 			renderData
 		)
@@ -201,7 +201,7 @@ export class IronswornRollMessage {
 			const messageData = {
 				speaker,
 				content,
-				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+				style: CONST.CHAT_MESSAGE_STYLES.ROLL,
 				roll: this.roll.roll,
 				rolls: [this.roll.roll]
 			}

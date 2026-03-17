@@ -31,7 +31,7 @@
 						:name="pageSystem.dsid"
 						@change="subtableSelect(entry)"
 					/>
-					<p v-html="entry.text" />
+					<p v-html="entry.description" />
 				</label>
 
 				<!-- TODO: custom input -->
@@ -64,7 +64,7 @@ const selected = ref(false)
 
 const suboption = ref<string | undefined>()
 function subtableSelect(entry: OracleTableResult) {
-	suboption.value = entry.text
+	suboption.value = entry.description
 	selected.value = true
 	emitValue()
 }

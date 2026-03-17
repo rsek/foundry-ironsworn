@@ -200,13 +200,13 @@ export class OracleTable extends RollTable {
 		return {
 			// NB: with these options, this is async in v10
 			// eslint-disable-next-line @typescript-eslint/await-thenable
-			description: await TextEditor.enrichHTML(this.description, {
+			description: await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.description, {
 				documents: true,
 				// @ts-expect-error exists in v10
 				async: true
 			}),
 			result: foundry.utils.mergeObject(result.toObject(false), {
-				text: result.getChatText(),
+				description: await result.getHTML(),
 				icon: result.icon,
 				displayRows: result.displayRows.map((row) => row?.toObject())
 			}),
@@ -290,12 +290,12 @@ export class OracleTable extends RollTable {
 		// Construct chat data
 		messageData = foundry.utils.mergeObject(
 			{
-				user: game.user?.id,
+				author: game.user?.id,
 				speaker,
-				type:
+				style:
 					roll != null
-						? CONST.CHAT_MESSAGE_TYPES.ROLL
-						: CONST.CHAT_MESSAGE_TYPES.OTHER,
+						? CONST.CHAT_MESSAGE_STYLES.ROLL
+						: CONST.CHAT_MESSAGE_STYLES.OTHER,
 				roll,
 				rolls: compact([roll, cursedDie]),
 				sound: roll != null ? CONFIG.sounds.dice : null,
@@ -312,7 +312,7 @@ export class OracleTable extends RollTable {
 		)
 
 		// Render the chat card which combines the dice roll with the drawn results
-		messageData.content = await renderTemplate(
+		messageData.content = await foundry.applications.handlebars.renderTemplate(
 			OracleTable.resultTemplate,
 			templateData
 		)
@@ -395,7 +395,7 @@ export class OracleTable extends RollTable {
 		} else void AudioHelper.play({ src: CONFIG.sounds.dice })
 
 		return await msg.update({
-			content: await renderTemplate(OracleTable.resultTemplate, templateData),
+			content: await foundry.applications.handlebars.renderTemplate(OracleTable.resultTemplate, templateData),
 			flags
 		})
 	}

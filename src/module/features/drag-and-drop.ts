@@ -7,7 +7,7 @@ function getIndexEntry(el: HTMLElement) {
 
 export function registerDragAndDropHooks() {
 	Hooks.on('renderCompendium', (_app, html) => {
-		html
+		$(html)
 			.find('.directory-item')
 			.on(
 				'dragstart',

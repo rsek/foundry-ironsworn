@@ -8,7 +8,7 @@ declare global {
 	}
 }
 
-export class IronswornTour extends Tour {
+export class IronswornTour extends foundry.nue.Tour {
 	/** @override */
 	protected async _preStep(): Promise<void> {
 		await super._preStep()

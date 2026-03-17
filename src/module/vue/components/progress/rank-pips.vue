@@ -97,7 +97,7 @@ function setRank(rank: number) {
 	if (props.readonly) return
 	$emit(
 		'change',
-		Math.clamped(
+		Math.clamp(
 			rank,
 			ChallengeRank.MIN,
 			ChallengeRank.MAX

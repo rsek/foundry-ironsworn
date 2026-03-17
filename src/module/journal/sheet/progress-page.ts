@@ -3,7 +3,7 @@ import { RANK_INCREMENTS } from '../../constants'
 import { ChallengeRank } from '../../fields/ChallengeRank'
 import { IronswornPrerollDialog } from '../../rolls'
 
-export class JournalProgressPageSheet extends JournalPageSheet {
+export class JournalProgressPageSheet extends foundry.appv1.sheets.JournalPageSheet {
 	static get defaultOptions() {
 		const options = super.defaultOptions
 		options.height = 300

@@ -76,7 +76,7 @@ const mceConfig: RawEditorOptions = {
 			{ passive: false }
 		)
 		window.addEventListener('drop', (ev) =>
-			(TextEditor as any)._onDropEditorData(ev, editor)
+			(foundry.applications.ux.TextEditor.implementation as any)._onDropEditorData(ev, editor)
 		)
 	}
 }

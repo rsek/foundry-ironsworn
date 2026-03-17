@@ -15,7 +15,7 @@ export async function createSfMoveChatMessage(move: IronswornItem<'sfmove'>) {
 	)
 
 	const params = { move, nextOracles, renderedText }
-	const content = await renderTemplate(
+	const content = await foundry.applications.handlebars.renderTemplate(
 		'systems/foundry-ironsworn/templates/chat/sf-move.hbs',
 		params
 	)

@@ -408,7 +408,7 @@ async function sendToChat(speaker: IronswornActor, msg: string) {
 	const messageData: ChatMessageDataConstructorData = {
 		whisper,
 		content: `<em>${msg}</em>`,
-		type: CONST.CHAT_MESSAGE_TYPES.EMOTE,
+		style: CONST.CHAT_MESSAGE_STYLES.EMOTE,
 		speaker: { actor: speaker.id }
 	}
 
