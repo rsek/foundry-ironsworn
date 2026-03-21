@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Maze of icy tunnels"
+        "description": "Maze of icy tunnels"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Glistening cave"
+        "description": "Glistening cave"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Vast chamber"
+        "description": "Vast chamber"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Frigid waterway"
+        "description": "Frigid waterway"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Icy pools"
+        "description": "Icy pools"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Magnificent ice formations"
+        "description": "Magnificent ice formations"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Frozen waterfall"
+        "description": "Frozen waterfall"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Deep crevasses"
+        "description": "Deep crevasses"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Discovery locked in the ice"
+        "description": "Discovery locked in the ice"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Denizen lairs here"
+        "description": "Denizen lairs here"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Fracturing ice"
+        "description": "Fracturing ice"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Crumbling chasm"
+        "description": "Crumbling chasm"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Bitter chill"
+        "description": "Bitter chill"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Disorienting reflections"
+        "description": "Disorienting reflections"
       }
     ]
   },

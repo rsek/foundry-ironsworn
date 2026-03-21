@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Watery tunnels"
+        "description": "Watery tunnels"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Eroded chamber"
+        "description": "Eroded chamber"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Flooded chamber"
+        "description": "Flooded chamber"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Vast chamber"
+        "description": "Vast chamber"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Dry passages"
+        "description": "Dry passages"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Freshwater inlet"
+        "description": "Freshwater inlet"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Rocky island"
+        "description": "Rocky island"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Waterborne debris"
+        "description": "Waterborne debris"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Shipwreck or boat"
+        "description": "Shipwreck or boat"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Denizen strikes without warning"
+        "description": "Denizen strikes without warning"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Denizen lurks below"
+        "description": "Denizen lurks below"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Flooding"
+        "description": "Flooding"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Rushing current"
+        "description": "Rushing current"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Claustrophobic squeeze"
+        "description": "Claustrophobic squeeze"
       }
     ]
   },

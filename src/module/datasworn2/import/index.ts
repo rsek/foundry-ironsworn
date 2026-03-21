@@ -507,7 +507,7 @@ for (const theme of Object.values(delve?.site_themes ?? {})) {
 					(f) =>
 						f.roll && {
 							range: [f.roll?.min, f.roll?.max],
-							text: f.text
+							description: f.text
 						}
 				)
 			),
@@ -516,7 +516,7 @@ for (const theme of Object.values(delve?.site_themes ?? {})) {
 					(d) =>
 						d.roll && {
 							range: [d.roll?.min, d.roll?.max],
-							text: d.text
+							description: d.text
 						}
 				)
 			)
@@ -556,7 +556,7 @@ for (const domain of Object.values(delve?.site_domains ?? {})) {
 					(f) =>
 						f.roll && {
 							range: [f.roll?.min, f.roll?.max],
-							text: f.text
+							description: f.text
 						}
 				)
 			),
@@ -565,7 +565,7 @@ for (const domain of Object.values(delve?.site_domains ?? {})) {
 					(d) =>
 						d.roll && {
 							range: [d.roll?.min, d.roll?.max],
-							text: d.text
+							description: d.text
 						}
 				)
 			)

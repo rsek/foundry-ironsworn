@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Plains of ice and snow"
+        "description": "Plains of ice and snow"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Seawater channel"
+        "description": "Seawater channel"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Icy highlands"
+        "description": "Icy highlands"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Crevasse"
+        "description": "Crevasse"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Ice floes"
+        "description": "Ice floes"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Ship trapped in ice"
+        "description": "Ship trapped in ice"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Animal herd or habitat"
+        "description": "Animal herd or habitat"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Frozen carcass"
+        "description": "Frozen carcass"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Camp or outpost"
+        "description": "Camp or outpost"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Denizen hunts"
+        "description": "Denizen hunts"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Fragile ice above watery depths"
+        "description": "Fragile ice above watery depths"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Perilous climb or descent"
+        "description": "Perilous climb or descent"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Avalanche or icefall"
+        "description": "Avalanche or icefall"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Foul weather"
+        "description": "Foul weather"
       }
     ]
   },

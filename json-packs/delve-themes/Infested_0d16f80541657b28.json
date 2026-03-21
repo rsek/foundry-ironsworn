@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Inhabited nest"
+        "description": "Inhabited nest"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Abandoned nest"
+        "description": "Abandoned nest"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Ravaged terrain or architecture"
+        "description": "Ravaged terrain or architecture"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Remains or carrion"
+        "description": "Remains or carrion"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Hoarded food"
+        "description": "Hoarded food"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Denizens swarm and attack"
+        "description": "Denizens swarm and attack"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Toxic or sickening environment"
+        "description": "Toxic or sickening environment"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Denizen stalks you"
+        "description": "Denizen stalks you"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Denizen takes or destroys something"
+        "description": "Denizen takes or destroys something"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Denizen reveals surprising cleverness"
+        "description": "Denizen reveals surprising cleverness"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Denizen guided by a greater threat"
+        "description": "Denizen guided by a greater threat"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "Denizen blocks the path"
+        "description": "Denizen blocks the path"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Denizen funnels you down a new path"
+        "description": "Denizen funnels you down a new path"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "Denizen undermines the path"
+        "description": "Denizen undermines the path"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Denizen lays in wait"
+        "description": "Denizen lays in wait"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "Trap or snare"
+        "description": "Trap or snare"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Victim’s horrible fate is revealed"
+        "description": "Victim’s horrible fate is revealed"
       }
     ]
   },

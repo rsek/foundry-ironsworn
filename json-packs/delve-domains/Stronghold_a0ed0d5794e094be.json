@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Connecting passageways"
+        "description": "Connecting passageways"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Barracks or common quarters"
+        "description": "Barracks or common quarters"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Large hall"
+        "description": "Large hall"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Workshop or library"
+        "description": "Workshop or library"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Command center or leadership"
+        "description": "Command center or leadership"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Ladder or stairwell"
+        "description": "Ladder or stairwell"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Storage"
+        "description": "Storage"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Kitchen or larder"
+        "description": "Kitchen or larder"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Courtyard"
+        "description": "Courtyard"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Blocked or guarded path"
+        "description": "Blocked or guarded path"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Caught in the open"
+        "description": "Caught in the open"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Chokepoint"
+        "description": "Chokepoint"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Trap"
+        "description": "Trap"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Alarm trigger"
+        "description": "Alarm trigger"
       }
     ]
   },
