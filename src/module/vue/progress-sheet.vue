@@ -121,7 +121,7 @@
 
 		<hr class="nogrow" />
 		<!-- DESCRIPTION -->
-		<MceEditor v-model="data.item.system.description" @save="saveDescription" />
+		<RichEditor v-model="data.item.system.description" @save="saveDescription" />
 		<BtnDocDelete
 			nogrow
 			block
@@ -136,7 +136,7 @@ import { computed, inject, provide } from 'vue'
 import { $ItemKey, ItemKey } from './provisions'
 import RankPips from './components/progress/rank-pips.vue'
 import Clock from './components/clock.vue'
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import SheetHeaderBasic from './sheet-header-basic.vue'
 import ProgressTrack from './components/progress/progress-track.vue'
 import CollapseTransition from './components/transition/collapse-transition.vue'

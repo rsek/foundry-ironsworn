@@ -35,7 +35,7 @@
 				data-tooltip-direction="RIGHT" />
 		</div>
 
-		<MceEditor v-model="item.system.description" @save="saveDescription" />
+		<RichEditor v-model="item.system.description" @save="saveDescription" />
 	</div>
 </template>
 
@@ -46,7 +46,7 @@ import { $ActorKey, $ItemKey, ActorKey } from '../../provisions'
 
 import IronBtn from 'component:buttons/iron-btn.vue'
 import RankPips from 'component:progress/rank-pips.vue'
-import MceEditor from 'component:mce-editor.vue'
+import RichEditor from 'component:rich-editor.vue'
 import ProgressTrack from 'component:progress/progress-track.vue'
 import BtnRollprogress from 'component:buttons/btn-rollprogress.vue'
 import type { IronswornItem } from '../../../item/item'

@@ -18,7 +18,7 @@
 	</div>
 
 	<hr class="nogrow" />
-	<MceEditor
+	<RichEditor
 		v-model="item.system.description"
 		:editing="true"
 		style="flex: 1; height: 100%"
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import MceEditor from '../mce-editor.vue'
+import RichEditor from '../rich-editor.vue'
 
 import type { ComputedRef } from 'vue'
 import { inject } from 'vue'

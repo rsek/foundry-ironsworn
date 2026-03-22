@@ -8,7 +8,7 @@
 			type="text"
 			:placeholder="$t('IRONSWORN.Summary')"
 			@blur="save" />
-		<MceEditor
+		<RichEditor
 			v-model="data.item.system.description"
 			style="flex-basis: 8rem" />
 
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { inject, provide, computed } from 'vue'
 import type { IronswornItem } from '../item/item'
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import { $ItemKey, ItemKey } from './provisions'
 import SheetHeaderBasic from './sheet-header-basic.vue'
 

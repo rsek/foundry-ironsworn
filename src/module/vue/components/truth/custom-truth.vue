@@ -7,7 +7,7 @@
 			class="nogrow"
 			@change="select"
 		/>
-		<MceEditor
+		<RichEditor
 			ref="editor"
 			v-model="state.html"
 			:style="{ height: state.height, 'min-height': state.height }"
@@ -18,14 +18,14 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, reactive, ref } from 'vue'
-import MceEditor from '../mce-editor.vue'
+import RichEditor from '../rich-editor.vue'
 
 defineProps<{
 	radioGroup: string
 }>()
 
 const radio = ref<HTMLElement>()
-const editor = ref<typeof MceEditor>()
+const editor = ref<typeof RichEditor>()
 
 const state = reactive({
 	html: '',
