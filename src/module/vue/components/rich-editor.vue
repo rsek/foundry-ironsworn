@@ -115,6 +115,27 @@ watch(
 	{ immediate: false }
 )
 
+// When modelValue changes externally while the editor is open, update the
+// ProseMirror document. We compare against the current serialized content to
+// avoid a feedback loop caused by our own save emissions.
+watch(
+	() => props.modelValue,
+	(newValue) => {
+		if (!editorInstance) return
+		const pm = (foundry as any).prosemirror
+		if (!pm?.dom?.parseString || !pm?.dom?.serializeString) return
+
+		const current = pm.dom.serializeString(editorInstance.view.state.doc.content)
+		if (current === newValue) return
+
+		const view = (editorInstance as any).view
+		const newDoc = pm.dom.parseString(newValue ?? '')
+		view.dispatch(
+			view.state.tr.replaceWith(0, view.state.doc.content.size, newDoc.content)
+		)
+	}
+)
+
 onUnmounted(() => {
 	if (editorInstance) {
 		saveOnly()
