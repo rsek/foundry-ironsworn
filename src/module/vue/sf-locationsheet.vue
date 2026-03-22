@@ -781,7 +781,7 @@ async function drawAndReturnResult(
 		results: [result]
 	} = await table.draw()
 
-	return result?.text
+	return result?.description
 }
 
 async function randomizeName() {
