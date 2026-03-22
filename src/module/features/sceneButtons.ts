@@ -69,13 +69,17 @@ async function dropToken(location: IronswornActor) {
 	// Snap to viewport
 	// @ts-expect-error - missing type for v11-v12 method
 	const td = await location.getTokenDocument({ x, y })
-	const hw = canvas.grid.w / 2
-	const hh = canvas.grid.h / 2
-	const pos = canvas.grid.getSnappedPosition(
-		td.x - td.width * hw,
-		td.y - td.height * hh
-	)
-	td.update(pos)
+	const hw = canvas.grid.sizeX / 2
+	const hh = canvas.grid.sizeY / 2
+	const pos = canvas.grid.getSnappedPoint(
+		{
+			x: td.x - td.width * hw,
+			y: td.y - td.height * hh
+		}, {
+		mode: CONST.GRID_SNAPPING_MODES.CENTER,
+	})
+	td.x = pos.x
+	td.y = pos.y
 
 	// TODO: avoid dropping this on top of another token
 
@@ -148,14 +152,8 @@ function theOracleWindow() {
 
 function addTool(control: SceneControl, tool: SceneControlTool) {
 	const anyCtrl = control as any
-	if ((game as any).version.startsWith('13')) {
-		anyCtrl.tools ||= {}
-		anyCtrl.tools[tool.name] = tool
-	} else {
-		// v12 and before
-		anyCtrl.tools ||= []
-		anyCtrl.tools.push(tool)
-	}
+	anyCtrl.tools ||= {}
+	anyCtrl.tools[tool.name] = tool
 }
 
 export function activateSceneButtonListeners() {
@@ -172,7 +170,7 @@ export function activateSceneButtonListeners() {
 			icon: 'isicon-oracle',
 			visible: true,
 			button: true,
-			onClick: async () => await theOracleWindow().render(true, { focus: true })
+			onChange: async () => await theOracleWindow().render(true, { focus: true })
 		}
 
 		if (controls.tokens) {
@@ -187,8 +185,7 @@ export function activateSceneButtonListeners() {
 			icon: 'isicon-logo-starforged-dk',
 			layer: 'ironsworn',
 			visible: true,
-			activeTool: 'select',
-			tools: [],
+			tools: {},
 		}
 		addTool(control, oracleButton)
 
@@ -229,13 +226,13 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.SCENE.TypeSector')
 			}),
 			button: true,
-			onClick: editSector
+			onChange: editSector
 		})
 		// { // TODO: maybe reenable this when we have a good way of doing it
 		//   name: 'sector',
 		//   icon: 'isicon-sector',
 		//   title: game.i18n.format('DOCUMENT.Create',{type: ('IRONSWORN.SCENE.TypeSector')}),
-		//   onClick: warn,
+		//   onChange: warn,
 		// }
 		addTool(control, {
 			name: 'star',
@@ -244,7 +241,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeStar')
 			}),
 			button: true,
-			onClick: newStar
+			onChange: newStar
 		})
 		addTool(control, {
 			name: 'planet',
@@ -253,7 +250,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypePlanet')
 			}),
 			button: true,
-			onClick: newPlanet
+			onChange: newPlanet
 		})
 		addTool(control, {
 			name: 'settlement',
@@ -262,7 +259,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
 			}),
 			button: true,
-			onClick: newSettlement
+			onChange: newSettlement
 		})
 		addTool(control, {
 			name: 'derelict',
@@ -271,7 +268,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeDerelict')
 			}),
 			button: true,
-			onClick: newDerelict
+			onChange: newDerelict
 		})
 		addTool(control, {
 			name: 'vault',
@@ -280,7 +277,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeVault')
 			}),
 			button: true,
-			onClick: newVault
+			onChange: newVault
 		})
 	}
 }
@@ -293,7 +290,7 @@ function sunderedIslifyControl(control: SceneControl) {
 		icon: 'fas fa-moon',
 		title: 'Roll the Moons',
 		button: true,
-		onClick: rollMoons
+		onChange: rollMoons
 	})
 
 	if (game.user?.isGM) {
@@ -304,7 +301,7 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.SCENE.TypeChart')
 			}),
 			button: true,
-			onClick: editSector
+			onChange: editSector
 		})
 		addTool(control, {
 			name: 'island',
@@ -313,7 +310,7 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeIsland')
 			}),
 			button: true,
-			onClick: newIsland
+			onChange: newIsland
 		})
 		addTool(control, {
 			name: 'sisettlement',
@@ -322,7 +319,7 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
 			}),
 			button: true,
-			onClick: newSiSettlement
+			onChange: newSiSettlement
 		})
 	}
 }
