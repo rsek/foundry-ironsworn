@@ -61,31 +61,35 @@ async function dropToken(location: IronswornActor) {
 
 	// Calculate coordinates in the center of the viewport
 	const { clientWidth, clientHeight } = document.documentElement
-	const [cx, cy] = [clientWidth / 2, clientHeight / 2] // Center of viewport
+	const [cx, cy] = [clientWidth / 2, clientHeight / 2]
 	const t = canvas.stage.worldTransform
 	const scale = canvas.stage.scale
 	const [x, y] = [(cx - t.tx) / scale.x, (cy - t.ty) / scale.y]
 
-	// Snap to viewport
-	// @ts-expect-error - missing type for v11-v12 method
-	const td = await location.getTokenDocument({ x, y })
-	const hw = canvas.grid.sizeX / 2
-	const hh = canvas.grid.sizeY / 2
-	const pos = canvas.grid.getSnappedPoint(
-		{
-			x: td.x - td.width * hw,
-			y: td.y - td.height * hh
-		}, {
-		mode: CONST.GRID_SNAPPING_MODES.CENTER,
-	})
-	td.x = pos.x
-	td.y = pos.y
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const td: any = await (location as any).getTokenDocument({ x, y }, { parent: canvas.scene })
+
+	// v14: _getDropActorPosition handles center→top-left conversion, snapping, level, and elevation
+	const tokenCls = CONFIG.Token.objectClass as any
+	if (typeof tokenCls._getDropActorPosition === 'function') {
+		const position = tokenCls._getDropActorPosition(td, { x, y }, { snap: true })
+		td.updateSource(position)
+	} else {
+		// v13 fallback
+		const grid = canvas.grid as any
+		const hw = grid.sizeX / 2
+		const hh = grid.sizeY / 2
+		const pos = grid.getSnappedPoint(
+			{ x: td.x - td.width * hw, y: td.y - td.height * hh },
+			{ mode: (CONST as any).GRID_SNAPPING_MODES.CENTER }
+		)
+		td.updateSource({ x: pos.x, y: pos.y })
+	}
 
 	// TODO: avoid dropping this on top of another token
 
-	// Create the token
-	const cls = getDocumentClass('Token')
-	await cls.create(td, { parent: canvas.scene })
+	canvas.tokens?.activate()
+	await td.constructor.create(td, { parent: canvas.scene })
 }
 
 async function newLocation(subtype: string, i18nKey: string, scale = 1) {
@@ -104,9 +108,8 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 			displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
 			disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,
 			actorLink: true,
-			scale, // v11
-			'texture.scaleX': scale, // v12
-			'texture.scaleY': scale // v12
+			'texture.scaleX': scale,
+			'texture.scaleY': scale
 		},
 		folder: parentFolder?.id
 	})
