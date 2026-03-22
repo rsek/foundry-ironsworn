@@ -2,6 +2,8 @@
 
 ## Next Release
 
+- Compatiblity with Foundry v14 ([#1073](https://github.com/ben/foundry-ironsworn/pull/1073))
+
 ## 1.26.0
 
 - Update the default icon for a starship actor to a spaceship ([#1065](https://github.com/ben/foundry-ironsworn/pull/1065), thanks [@jendave](https://github.com/jendave))
