@@ -895,7 +895,7 @@
 			"TypeLocation": "Location",
 			"TypeShared": "Shared sheet",
 			"TypeDelveSite": "Delve Site",
-			"TypeStarship": "Starship"
+			"TypeStarship": "Ship"
 		},
 		"ACTORS": {
 			"SubtypeDerelict": "Derelicts",
