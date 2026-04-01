@@ -1,6 +1,6 @@
 {
 	"Actor": {
-		"types": ["character", "shared", "foe", "site", "starship", "location"],
+		"types": ["character", "shared", "treasury", "foe", "site", "starship", "location"],
 		"character": {
 			"biography": "",
 			"notes": "",
@@ -50,6 +50,12 @@
 		"shared": {
 			"biography": "",
 			"supply": 5
+		},
+		"treasury": {
+			"biography": "",
+			"ship": "",
+			"commander": "",
+			"upkeep": ""
 		},
 		"foe": {
 			"dfid": ""
@@ -164,6 +170,7 @@
 		"types": [
 			"asset",
 			"progress",
+			"ledger-entry",
 			"bondset",
 			"sfmove",
 			"delve-theme",
@@ -185,6 +192,11 @@
 			"hasClock": false,
 			"clockTicks": 0,
 			"clockMax": 6
+		},
+		"ledger-entry": {
+			"completed": false,
+			"description": "",
+			"valueBoxes": [0, 0, 0, 0, 0]
 		},
 		"bondset": {
 			"bonds": []
