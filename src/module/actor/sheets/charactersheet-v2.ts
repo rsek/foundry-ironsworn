@@ -8,7 +8,7 @@ export class IronswornCharacterSheetV2 extends VueActorSheet {
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			width: 700,
-			height: 800,
+			height: 960,
 			left: 50,
 			rootComponent: characterSheetVue
 		}) as any
