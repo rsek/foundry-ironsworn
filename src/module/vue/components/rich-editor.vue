@@ -29,6 +29,7 @@ const $emit = defineEmits<{
 
 const editorTarget = ref<HTMLElement | null>(null)
 let editorInstance: { view: { state: { doc: { content: unknown } } }, destroy: () => void } | null = null
+let menuObserver: MutationObserver | null = null
 
 function getContent(): string {
 	if (!editorInstance) return props.modelValue
@@ -51,6 +52,8 @@ function saveOnly() {
 }
 
 function destroyEditor() {
+	menuObserver?.disconnect()
+	menuObserver = null
 	if (editorInstance) {
 		editorInstance.destroy()
 		editorInstance = null
@@ -102,6 +105,23 @@ watch(
 			props.modelValue,
 			{ plugins: extraPlugins }
 		)
+
+		// Inject a Save button into the right side of the ProseMirror menu bar.
+		const editorContainer = editorTarget.value.closest('.editor') as HTMLElement | null
+		if (editorContainer) {
+			const injectSaveButton = () => {
+				const currentMenu = editorContainer.querySelector('menu.editor-menu')
+				if (!currentMenu || currentMenu.querySelector('.save-document')) return
+				const saveBtn = document.createElement('li')
+				saveBtn.className = 'save-document right'
+				saveBtn.innerHTML = '<button type="button" data-tooltip="Save"><i class="fa-solid fa-floppy-disk fa-fw"></i></button>'
+				saveBtn.querySelector('button')!.addEventListener('click', saveAndClose)
+				currentMenu.appendChild(saveBtn)
+			}
+			injectSaveButton()
+			menuObserver = new MutationObserver(injectSaveButton)
+			menuObserver.observe(editorContainer, { childList: true, subtree: true })
+		}
 
 		// Prevent Ctrl+Wheel zoom inside the editor iframe/content area
 		editorTarget.value.addEventListener(
