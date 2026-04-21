@@ -131,7 +131,7 @@
 			</div>
 		</section>
 		<section class="flexcol">
-			<MceEditor
+			<RichEditor
 				v-model="data.actor.system.description"
 				@save="saveDescription"
 			/>
@@ -147,7 +147,7 @@ import { $ActorKey, ActorKey } from './provisions'
 import { OracleTable } from '../roll-table/oracle-table'
 import { IdParser } from '../datasworn2'
 
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import SheetBasic from './sheet-basic.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
 import { IronswornSettings } from '../helpers/settings'
@@ -781,7 +781,7 @@ async function drawAndReturnResult(
 		results: [result]
 	} = await table.draw()
 
-	return result?.text
+	return result?.description
 }
 
 async function randomizeName() {

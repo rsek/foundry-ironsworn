@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Tomb or burial site"
+        "description": "Tomb or burial site"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Blood was spilled here"
+        "description": "Blood was spilled here"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Unnatural mists or darkness"
+        "description": "Unnatural mists or darkness"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Messages from beyond the grave"
+        "description": "Messages from beyond the grave"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Apparitions of a person or event"
+        "description": "Apparitions of a person or event"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Denizen haunts this area"
+        "description": "Denizen haunts this area"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Unsettling sounds or foreboding signs"
+        "description": "Unsettling sounds or foreboding signs"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Denizen attacks without warning"
+        "description": "Denizen attacks without warning"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Denizen makes a costly demand"
+        "description": "Denizen makes a costly demand"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Denizen seizes your body or mind"
+        "description": "Denizen seizes your body or mind"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Denizen taunts or lures you"
+        "description": "Denizen taunts or lures you"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "A disturbing truth is revealed"
+        "description": "A disturbing truth is revealed"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Frightening visions"
+        "description": "Frightening visions"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "The environment is used against you"
+        "description": "The environment is used against you"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Trickery leads you astray"
+        "description": "Trickery leads you astray"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "True nature of this place is revealed"
+        "description": "True nature of this place is revealed"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Sudden, shocking manifestation"
+        "description": "Sudden, shocking manifestation"
       }
     ]
   },

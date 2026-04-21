@@ -14,6 +14,8 @@ import type {
 import { LocationModel } from './subtypes/location'
 import type { SharedDataProperties, SharedDataSource } from './subtypes/shared'
 import { SharedModel } from './subtypes/shared'
+import type { TreasuryDataProperties, TreasuryDataSource } from './subtypes/treasury'
+import { TreasuryModel } from './subtypes/treasury'
 import type { SiteDataProperties, SiteDataSource } from './subtypes/site'
 import { SiteModel } from './subtypes/site'
 import type {
@@ -30,6 +32,7 @@ const dataModels: Record<
 	foe: FoeModel,
 	location: LocationModel,
 	shared: SharedModel,
+	treasury: TreasuryModel,
 	site: SiteModel,
 	starship: StarshipModel
 }
@@ -55,6 +58,7 @@ const config: Partial<ActorConfig> = {
 		foe: 'IRONSWORN.ACTOR.TypeFoe',
 		location: 'IRONSWORN.ACTOR.TypeLocation',
 		shared: 'IRONSWORN.ACTOR.TypeShared',
+		treasury: 'IRONSWORN.ACTOR.TypeTreasury',
 		site: 'IRONSWORN.ACTOR.TypeDelveSite',
 		starship: 'IRONSWORN.ACTOR.TypeStarship'
 	},
@@ -63,6 +67,7 @@ const config: Partial<ActorConfig> = {
 		foe: 'fa-solid fa-masks-theater',
 		location: 'fa-solid fa-location-dot',
 		shared: 'fa-solid fa-people-group',
+		treasury: 'fa-solid fa-coins',
 		site: 'fa-solid fa-dungeon',
 		starship: 'fa-solid fa-starship-freighter'
 	},
@@ -74,6 +79,7 @@ const config: Partial<ActorConfig> = {
 		foe: { bar: [], value: [] },
 		location: { bar: [], value: [] },
 		shared: { bar: ['supply'], value: [] },
+		treasury: { bar: [], value: [] },
 		site: { bar: [], value: [] },
 		starship: { bar: [], value: [] }
 	}
@@ -93,6 +99,7 @@ export {
 export type ActorDataSource =
 	| CharacterDataSource
 	| SharedDataSource
+	| TreasuryDataSource
 	| FoeDataSource
 	| SiteDataSource
 	| StarshipDataSource
@@ -100,6 +107,7 @@ export type ActorDataSource =
 export type ActorDataProperties =
 	| CharacterDataProperties
 	| SharedDataProperties
+	| TreasuryDataProperties
 	| FoeDataProperties
 	| SiteDataProperties
 	| StarshipDataProperties

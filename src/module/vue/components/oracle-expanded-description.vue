@@ -35,7 +35,7 @@ const tables = await Promise.all(
 			rows: tableData.results.map((row: any) => ({
 				low: row.range[0],
 				high: row.range[1],
-				text: row.text,
+				text: row.description,
 				selected: false
 			})),
 			description: tableData.description

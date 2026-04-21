@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Evidence of lost knowledge"
+        "description": "Evidence of lost knowledge"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Inscrutable relics"
+        "description": "Inscrutable relics"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Ancient artistry or craft"
+        "description": "Ancient artistry or craft"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Preserved corpses or fossils"
+        "description": "Preserved corpses or fossils"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Visions of this place in another time"
+        "description": "Visions of this place in another time"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Ancient trap"
+        "description": "Ancient trap"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Hazardous architecture or terrain"
+        "description": "Hazardous architecture or terrain"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Blocked or broken path"
+        "description": "Blocked or broken path"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Denizen protects an ancient secret"
+        "description": "Denizen protects an ancient secret"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Denizen reveres an ancient power"
+        "description": "Denizen reveres an ancient power"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Living relics of a lost age"
+        "description": "Living relics of a lost age"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "Ancient evil resurgent"
+        "description": "Ancient evil resurgent"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Dire warnings of a long-buried danger"
+        "description": "Dire warnings of a long-buried danger"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "Ancient disease or contamination"
+        "description": "Ancient disease or contamination"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Artifact of terrible meaning or power"
+        "description": "Artifact of terrible meaning or power"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "Disturbing evidence of ancient wrongs"
+        "description": "Disturbing evidence of ancient wrongs"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Others seek power or knowledge"
+        "description": "Others seek power or knowledge"
       }
     ]
   },

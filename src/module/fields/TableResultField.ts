@@ -14,11 +14,10 @@ export class V11TableResultField extends foundry.data.fields
 		const fields = foundry.data.fields
 		// based on BaseTableResult#defineSchema
 		super({
-			type: new fields.NumberField({
-				choices: [0, 1, 2],
-				initial: 0,
-				validationError: 'must be a value in CONST.TABLE_RESULT_TYPES'
-			}),
+			type: new fields.StringField({
+				initial: CONST.TABLE_RESULT_TYPES.DOCUMENT as any,
+				validationError: 'must be a value in CONST.TABLE_RESULT_TYPES',
+			}) as any,
 			text: new fields.HTMLField({ required: false }),
 			img: new fields.FilePathField({ categories: ['IMAGE'] }),
 
@@ -39,10 +38,13 @@ export class V11TableResultField extends foundry.data.fields
 		sourceData: unknown,
 		fieldData: TableResultDataConstructorData
 	) {
-		if (hasProperty(sourceData as object, 'low')) {
+		if (foundry.utils.hasProperty(sourceData as object, 'low')) {
 			const legacyRowData = sourceData as LegacyTableRow
 			fieldData.range = [legacyRowData.low, legacyRowData.high]
 			fieldData.text = legacyRowData.text ?? legacyRowData.description
+		}
+		if ((fieldData?.type as unknown) === '0') {
+			fieldData.type = CONST.TABLE_RESULT_TYPES.DOCUMENT
 		}
 		return fieldData
 	}

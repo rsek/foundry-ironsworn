@@ -30,7 +30,7 @@ export class SFCharacterMoveSheet extends VueAppMixin(Application) {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			resizable: true,
 			width: 350,
-			height: 820,
+			height: 960,
 			left: 685,
 			rootComponent: CharacterMoveSheet
 		}) as any

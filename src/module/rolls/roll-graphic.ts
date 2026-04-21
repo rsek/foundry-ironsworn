@@ -90,5 +90,5 @@ export async function renderRollGraphic(opts: RollGraphicRenderOpts) {
 	}
 	const graphicTemplate =
 		'systems/foundry-ironsworn/templates/rolls/roll-graphic.hbs'
-	return await renderTemplate(graphicTemplate, renderData)
+	return await foundry.applications.handlebars.renderTemplate(graphicTemplate, renderData)
 }

@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { watch, ref } from 'vue'
-import { IronswornItem } from '../../item/item'
 import { enrichHtml } from '../vue-plugin.js'
 
 import WithRolllisteners from './with-rolllisteners.vue'

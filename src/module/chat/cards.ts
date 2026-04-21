@@ -32,14 +32,15 @@ export class IronswornChatCard {
 		const tables = compact(flatten(await Promise.all(maybeTablePromises)))
 		if (tables.length === 0) return
 
-		new ContextMenu(
-			html,
+		new foundry.applications.ux.ContextMenu.implementation(
+			html[0],
 			`.chat-message`,
 			tables.map((t) => ({
 				name: t.name ?? '',
 				icon: '<i class="isicon-oracle inline"></i>',
 				callback: async () => await t.draw()
-			}))
+			})),
+			{jQuery: false}
 		)
 	}
 
@@ -149,16 +150,17 @@ export class IronswornChatCard {
 		icon.removeClass('fa-check').addClass('fa-copy')
 	}
 
-	static async bind(message: ChatMessage, html: JQuery) {
+	static async bind(message: ChatMessage, html: HTMLElement) {
+		const jq = $(html)
 		const existing = message.ironswornCard
 		if (existing != null) {
-			void existing.updateBinding(message, html)
+			void existing.updateBinding(message, jq)
 		} else {
-			message.ironswornCard = new IronswornChatCard(message, html)
+			message.ironswornCard = new IronswornChatCard(message, jq)
 		}
 	}
 
 	static registerHooks() {
-		Hooks.on('renderChatMessage', IronswornChatCard.bind)
+		Hooks.on('renderChatMessageHTML', IronswornChatCard.bind)
 	}
 }

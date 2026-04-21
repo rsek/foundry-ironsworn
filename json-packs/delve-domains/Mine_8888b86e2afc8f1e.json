@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Cramped tunnels"
+        "description": "Cramped tunnels"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Mine works"
+        "description": "Mine works"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Excavated chamber"
+        "description": "Excavated chamber"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Mineshaft"
+        "description": "Mineshaft"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Collapsed tunnel"
+        "description": "Collapsed tunnel"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Cluttered storage"
+        "description": "Cluttered storage"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Housing or common areas"
+        "description": "Housing or common areas"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Flooded chamber"
+        "description": "Flooded chamber"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Unearthed secret"
+        "description": "Unearthed secret"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Cave-in"
+        "description": "Cave-in"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Flooding"
+        "description": "Flooding"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Unstable platforms or architecture"
+        "description": "Unstable platforms or architecture"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Hazardous gas pocket"
+        "description": "Hazardous gas pocket"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Weakened terrain"
+        "description": "Weakened terrain"
       }
     ]
   },

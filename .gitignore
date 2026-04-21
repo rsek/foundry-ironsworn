@@ -17,3 +17,5 @@ system/packs/**/*.log
 system/packs/**/LOG
 system/packs/**/LOG.old
 system/packs/**/LOCK
+
+datasworn/

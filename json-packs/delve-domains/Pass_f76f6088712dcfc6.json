@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Winding mountain path"
+        "description": "Winding mountain path"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Snowfield or glacial rocks"
+        "description": "Snowfield or glacial rocks"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "River gorge"
+        "description": "River gorge"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Crashing waterfall"
+        "description": "Crashing waterfall"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Highland lake"
+        "description": "Highland lake"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Forgotten cairn"
+        "description": "Forgotten cairn"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Bridge"
+        "description": "Bridge"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Overlook"
+        "description": "Overlook"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Camp or outpost"
+        "description": "Camp or outpost"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Denizen lairs here"
+        "description": "Denizen lairs here"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Denizen hunts"
+        "description": "Denizen hunts"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Perilous climb or descent"
+        "description": "Perilous climb or descent"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Avalanche or rockslide"
+        "description": "Avalanche or rockslide"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Foul weather"
+        "description": "Foul weather"
       }
     ]
   },

@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Camp or quarters"
+        "description": "Camp or quarters"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Guarded location"
+        "description": "Guarded location"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Storage or repository"
+        "description": "Storage or repository"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Work or training area"
+        "description": "Work or training area"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Command center or leadership"
+        "description": "Command center or leadership"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Denizen patrols the area"
+        "description": "Denizen patrols the area"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Denizen on guard"
+        "description": "Denizen on guard"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Denizen ready to sound the alarm"
+        "description": "Denizen ready to sound the alarm"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Denizen sets an ambush"
+        "description": "Denizen sets an ambush"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Denizen lures you into a trap"
+        "description": "Denizen lures you into a trap"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Denizens converge on this area"
+        "description": "Denizens converge on this area"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "Pets or underlings"
+        "description": "Pets or underlings"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Unexpected alliance revealed"
+        "description": "Unexpected alliance revealed"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "Nefarious plans revealed"
+        "description": "Nefarious plans revealed"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Unexpected leader revealed"
+        "description": "Unexpected leader revealed"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "Trap"
+        "description": "Trap"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Alarm trigger"
+        "description": "Alarm trigger"
       }
     ]
   },

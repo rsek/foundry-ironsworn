@@ -49,13 +49,13 @@ export abstract class MeterField<
 			: super._cast(value)
 	}
 
-	override migrateSource(sourceData: object, fieldData: any) {
+	override _migrate(sourceData: object, fieldData: any, _state: any) {
 		// migrate legacy asset condition meters
 		IronswornActor._addDataFieldMigration(fieldData, 'current', 'value')
 
 		// the _cast method above handles migrations from simple number values
 
-		return super.migrateSource(sourceData, fieldData)
+		return super._migrate(sourceData, fieldData, _state)
 	}
 }
 

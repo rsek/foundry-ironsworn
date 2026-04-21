@@ -7,16 +7,9 @@ import '../../styles/_ironcolor/phosphor.scss'
 import '../../styles/_ironcolor/oceanic.scss'
 
 export const PREFIX = 'ironcolor__'
-const tinyMceCssPath =
-	'/systems/foundry-ironsworn/styles/starforged-tinymce.css'
 
 export function colorSchemeSetup() {
 	$(document.body).addClass(IronswornSettings.classes.join(' '))
-
-	if (IronswornSettings.get('color-scheme') === 'phosphor') {
-		// TODO: figure out a way to automate this without specifying for every single color scheme.
-		;(<string[]>CONFIG.TinyMCE.content_css)?.push(tinyMceCssPath)
-	}
 }
 
 /**
@@ -46,17 +39,6 @@ export function updateColorScheme(
 			}
 		}
 	}
-	if (CONFIG.TinyMCE.content_css != null) {
-		if (newColorScheme === 'phosphor') {
-			;(<string[]>CONFIG.TinyMCE.content_css)?.push(tinyMceCssPath)
-		} else {
-			// TODO: figure out a way to automate this without specifying for every single color scheme.
-			CONFIG.TinyMCE.content_css = (
-				CONFIG.TinyMCE.content_css as string[]
-			).filter((str) => str !== tinyMceCssPath)
-		}
-	}
-
 	$(toUpdate)
 		.removeClass(classesToRemove.join(' '))
 		.addClass(`${PREFIX}${newColorScheme}`)

@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Dense thicket"
+        "description": "Dense thicket"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Overgrown path"
+        "description": "Overgrown path"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Waterway"
+        "description": "Waterway"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Clearing"
+        "description": "Clearing"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Elder tree"
+        "description": "Elder tree"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Brambles"
+        "description": "Brambles"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Overgrown structure"
+        "description": "Overgrown structure"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Rocky outcrop"
+        "description": "Rocky outcrop"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Camp or outpost"
+        "description": "Camp or outpost"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Denizen hunts"
+        "description": "Denizen hunts"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Denizen lairs here"
+        "description": "Denizen lairs here"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Trap or snare"
+        "description": "Trap or snare"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Path leads you astray"
+        "description": "Path leads you astray"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Entangling plant life"
+        "description": "Entangling plant life"
       }
     ]
   },

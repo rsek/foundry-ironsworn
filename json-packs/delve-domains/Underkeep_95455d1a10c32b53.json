@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Carved passages"
+        "description": "Carved passages"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Hall or chamber"
+        "description": "Hall or chamber"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Stairs into the depths"
+        "description": "Stairs into the depths"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Grand doorway or entrance"
+        "description": "Grand doorway or entrance"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Tomb or catacombs"
+        "description": "Tomb or catacombs"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Rough-hewn cave"
+        "description": "Rough-hewn cave"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Foundry or workshop"
+        "description": "Foundry or workshop"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Shrine or temple"
+        "description": "Shrine or temple"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Imposing architecture or artistry"
+        "description": "Imposing architecture or artistry"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Ancient mechanism or trap"
+        "description": "Ancient mechanism or trap"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Crumbling architecture"
+        "description": "Crumbling architecture"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Blocked or broken passage"
+        "description": "Blocked or broken passage"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Artifact with a hidden danger"
+        "description": "Artifact with a hidden danger"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Denizen lurks in darkness"
+        "description": "Denizen lurks in darkness"
       }
     ]
   },

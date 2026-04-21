@@ -61,27 +61,35 @@ async function dropToken(location: IronswornActor) {
 
 	// Calculate coordinates in the center of the viewport
 	const { clientWidth, clientHeight } = document.documentElement
-	const [cx, cy] = [clientWidth / 2, clientHeight / 2] // Center of viewport
+	const [cx, cy] = [clientWidth / 2, clientHeight / 2]
 	const t = canvas.stage.worldTransform
 	const scale = canvas.stage.scale
 	const [x, y] = [(cx - t.tx) / scale.x, (cy - t.ty) / scale.y]
 
-	// Snap to viewport
-	// @ts-expect-error - missing type for v11-v12 method
-	const td = await location.getTokenDocument({ x, y })
-	const hw = canvas.grid.w / 2
-	const hh = canvas.grid.h / 2
-	const pos = canvas.grid.getSnappedPosition(
-		td.x - td.width * hw,
-		td.y - td.height * hh
-	)
-	td.update(pos)
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const td: any = await (location as any).getTokenDocument({ x, y }, { parent: canvas.scene })
+
+	// v14: _getDropActorPosition handles center→top-left conversion, snapping, level, and elevation
+	const tokenCls = CONFIG.Token.objectClass as any
+	if (typeof tokenCls._getDropActorPosition === 'function') {
+		const position = tokenCls._getDropActorPosition(td, { x, y }, { snap: true })
+		td.updateSource(position)
+	} else {
+		// v13 fallback
+		const grid = canvas.grid as any
+		const hw = grid.sizeX / 2
+		const hh = grid.sizeY / 2
+		const pos = grid.getSnappedPoint(
+			{ x: td.x - td.width * hw, y: td.y - td.height * hh },
+			{ mode: (CONST as any).GRID_SNAPPING_MODES.CENTER }
+		)
+		td.updateSource({ x: pos.x, y: pos.y })
+	}
 
 	// TODO: avoid dropping this on top of another token
 
-	// Create the token
-	const cls = getDocumentClass('Token')
-	await cls.create(td, { parent: canvas.scene })
+	canvas.tokens?.activate()
+	await td.constructor.create(td, { parent: canvas.scene })
 }
 
 async function newLocation(subtype: string, i18nKey: string, scale = 1) {
@@ -100,9 +108,8 @@ async function newLocation(subtype: string, i18nKey: string, scale = 1) {
 			displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
 			disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,
 			actorLink: true,
-			scale, // v11
-			'texture.scaleX': scale, // v12
-			'texture.scaleY': scale // v12
+			'texture.scaleX': scale,
+			'texture.scaleY': scale
 		},
 		folder: parentFolder?.id
 	})
@@ -148,14 +155,8 @@ function theOracleWindow() {
 
 function addTool(control: SceneControl, tool: SceneControlTool) {
 	const anyCtrl = control as any
-	if ((game as any).version.startsWith('13')) {
-		anyCtrl.tools ||= {}
-		anyCtrl.tools[tool.name] = tool
-	} else {
-		// v12 and before
-		anyCtrl.tools ||= []
-		anyCtrl.tools.push(tool)
-	}
+	anyCtrl.tools ||= {}
+	anyCtrl.tools[tool.name] = tool
 }
 
 export function activateSceneButtonListeners() {
@@ -172,7 +173,7 @@ export function activateSceneButtonListeners() {
 			icon: 'isicon-oracle',
 			visible: true,
 			button: true,
-			onClick: async () => await theOracleWindow().render(true, { focus: true })
+			onChange: async () => await theOracleWindow().render(true, { focus: true })
 		}
 
 		if (controls.tokens) {
@@ -187,9 +188,8 @@ export function activateSceneButtonListeners() {
 			icon: 'isicon-logo-starforged-dk',
 			layer: 'ironsworn',
 			visible: true,
-			activeTool: 'select',
-			tools: [],
-		}
+			tools: {}
+		} as any
 		addTool(control, oracleButton)
 
 		// Apply updates in order for all enabled rulesets
@@ -229,13 +229,13 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.SCENE.TypeSector')
 			}),
 			button: true,
-			onClick: editSector
+			onChange: editSector
 		})
 		// { // TODO: maybe reenable this when we have a good way of doing it
 		//   name: 'sector',
 		//   icon: 'isicon-sector',
 		//   title: game.i18n.format('DOCUMENT.Create',{type: ('IRONSWORN.SCENE.TypeSector')}),
-		//   onClick: warn,
+		//   onChange: warn,
 		// }
 		addTool(control, {
 			name: 'star',
@@ -244,7 +244,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeStar')
 			}),
 			button: true,
-			onClick: newStar
+			onChange: newStar
 		})
 		addTool(control, {
 			name: 'planet',
@@ -253,7 +253,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypePlanet')
 			}),
 			button: true,
-			onClick: newPlanet
+			onChange: newPlanet
 		})
 		addTool(control, {
 			name: 'settlement',
@@ -262,7 +262,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
 			}),
 			button: true,
-			onClick: newSettlement
+			onChange: newSettlement
 		})
 		addTool(control, {
 			name: 'derelict',
@@ -271,7 +271,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeDerelict')
 			}),
 			button: true,
-			onClick: newDerelict
+			onChange: newDerelict
 		})
 		addTool(control, {
 			name: 'vault',
@@ -280,7 +280,7 @@ function starforgifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeVault')
 			}),
 			button: true,
-			onClick: newVault
+			onChange: newVault
 		})
 	}
 }
@@ -293,7 +293,7 @@ function sunderedIslifyControl(control: SceneControl) {
 		icon: 'fas fa-moon',
 		title: 'Roll the Moons',
 		button: true,
-		onClick: rollMoons
+		onChange: rollMoons
 	})
 
 	if (game.user?.isGM) {
@@ -304,7 +304,7 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.SCENE.TypeChart')
 			}),
 			button: true,
-			onClick: editSector
+			onChange: editSector
 		})
 		addTool(control, {
 			name: 'island',
@@ -313,7 +313,7 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeIsland')
 			}),
 			button: true,
-			onClick: newIsland
+			onChange: newIsland
 		})
 		addTool(control, {
 			name: 'sisettlement',
@@ -322,13 +322,12 @@ function sunderedIslifyControl(control: SceneControl) {
 				type: game.i18n.localize('IRONSWORN.ACTOR.SubtypeSettlement')
 			}),
 			button: true,
-			onClick: newSiSettlement
+			onChange: newSiSettlement
 		})
 	}
 }
 
-// @ts-expect-error
-class IronswornCanvasLayer extends InteractionLayer {
+class IronswornCanvasLayer extends foundry.canvas.layers.InteractionLayer {
 	static get layerOptions() {
 		return foundry.utils.mergeObject(super.layerOptions, {
 			zIndex: 180,

@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Temple or altar"
+        "description": "Temple or altar"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Offerings or atonements"
+        "description": "Offerings or atonements"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Religious relic or idol"
+        "description": "Religious relic or idol"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Consecrated ground"
+        "description": "Consecrated ground"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Dwellings or gathering place"
+        "description": "Dwellings or gathering place"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Denizen defends their sanctum"
+        "description": "Denizen defends their sanctum"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Denizen enacts the will of their god"
+        "description": "Denizen enacts the will of their god"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Denizen seeks martyrdom"
+        "description": "Denizen seeks martyrdom"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Secret of the faith is revealed"
+        "description": "Secret of the faith is revealed"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Greater purpose is revealed"
+        "description": "Greater purpose is revealed"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Unexpected disciples are revealed"
+        "description": "Unexpected disciples are revealed"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "Divine manifestations"
+        "description": "Divine manifestations"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Aspect of the faith beguiles you"
+        "description": "Aspect of the faith beguiles you"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "Unexpected leader is revealed"
+        "description": "Unexpected leader is revealed"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Embodiment of a god or myth"
+        "description": "Embodiment of a god or myth"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "Protective ward or barrier"
+        "description": "Protective ward or barrier"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Prophecies reveal a dark fate"
+        "description": "Prophecies reveal a dark fate"
       }
     ]
   },

@@ -24,6 +24,13 @@ const DIALOG_BUTTONS: DialogButton[] = [
 		starforged: true
 	},
 	{
+		kind: 'treasury',
+		labelKey: 'IRONSWORN.ACTOR.TypeTreasury',
+		img: 'icons/commodities/currency/coin-embossed-crown-gold.webp',
+		ironsworn: true,
+		starforged: true
+	},
+	{
 		kind: 'site',
 		labelKey: 'IRONSWORN.ACTOR.TypeDelveSite',
 		img: 'icons/environment/wilderness/cave-entrance-vulcano.webp',
@@ -116,6 +123,9 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		html.find('.ironsworn__shared__create').on('click', async (ev) => {
 			await this._sharedCreate.call(this, ev)
 		})
+		html.find('.ironsworn__treasury__create').on('click', async (ev) => {
+			await this._treasuryCreate.call(this, ev)
+		})
 		html.find('.ironsworn__site__create').on('click', async (ev) => {
 			await this._siteCreate.call(this, ev)
 		})
@@ -143,7 +153,7 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		const drawResult = await table?.draw({ displayChat: false })
 
 		this._createWithFolder(
-			drawResult?.results[0]?.text ||
+			drawResult?.results[0]?.description ||
 				game.i18n.localize(CONFIG.Actor.typeLabels.character),
 			'character',
 			ev.currentTarget.dataset.img || undefined,
@@ -156,6 +166,15 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 		this._createWithFolder(
 			game.i18n.localize(CONFIG.Actor.typeLabels.shared),
 			'shared',
+			ev.currentTarget.dataset.img || undefined
+		)
+	}
+
+	async _treasuryCreate(ev: JQuery.ClickEvent) {
+		ev.preventDefault()
+		this._createWithFolder(
+			game.i18n.localize(CONFIG.Actor.typeLabels.treasury),
+			'treasury',
 			ev.currentTarget.dataset.img || undefined
 		)
 	}
@@ -239,6 +258,6 @@ export class CreateActorDialog extends FormApplication<CreateActorDialogOptions>
 			],
 			{ displayChat: false }
 		)
-		return `${givenName?.results[0]?.text} ${familyName?.results[0]?.text}`
+		return `${givenName?.results[0]?.description} ${familyName?.results[0]?.description}`
 	}
 }

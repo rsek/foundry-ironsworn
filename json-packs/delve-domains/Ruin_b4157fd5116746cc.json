@@ -12,84 +12,84 @@
           21,
           43
         ],
-        "text": "Crumbling corridors and chambers"
+        "description": "Crumbling corridors and chambers"
       },
       {
         "range": [
           44,
           56
         ],
-        "text": "Collapsed architecture"
+        "description": "Collapsed architecture"
       },
       {
         "range": [
           57,
           64
         ],
-        "text": "Rubble-choked hall"
+        "description": "Rubble-choked hall"
       },
       {
         "range": [
           65,
           68
         ],
-        "text": "Courtyard"
+        "description": "Courtyard"
       },
       {
         "range": [
           69,
           72
         ],
-        "text": "Archive or library"
+        "description": "Archive or library"
       },
       {
         "range": [
           73,
           76
         ],
-        "text": "Broken statuary or fading murals"
+        "description": "Broken statuary or fading murals"
       },
       {
         "range": [
           77,
           80
         ],
-        "text": "Preserved vault"
+        "description": "Preserved vault"
       },
       {
         "range": [
           81,
           84
         ],
-        "text": "Temple to forgotten gods"
+        "description": "Temple to forgotten gods"
       },
       {
         "range": [
           85,
           88
         ],
-        "text": "Mausoleum"
+        "description": "Mausoleum"
       },
       {
         "range": [
           89,
           98
         ],
-        "text": "Something unusual or unexpected"
+        "description": "Something unusual or unexpected"
       },
       {
         "range": [
           99,
           99
         ],
-        "text": "You transition into a new theme"
+        "description": "You transition into a new theme"
       },
       {
         "range": [
           100,
           100
         ],
-        "text": "You transition into a new domain"
+        "description": "You transition into a new domain"
       }
     ],
     "dangers": [
@@ -98,35 +98,35 @@
           31,
           33
         ],
-        "text": "Ancient mechanism or trap"
+        "description": "Ancient mechanism or trap"
       },
       {
         "range": [
           34,
           36
         ],
-        "text": "Collapsing wall or ceiling"
+        "description": "Collapsing wall or ceiling"
       },
       {
         "range": [
           37,
           39
         ],
-        "text": "Blocked or broken passage"
+        "description": "Blocked or broken passage"
       },
       {
         "range": [
           40,
           42
         ],
-        "text": "Unstable floor above a new danger"
+        "description": "Unstable floor above a new danger"
       },
       {
         "range": [
           43,
           45
         ],
-        "text": "Ancient secrets best left buried"
+        "description": "Ancient secrets best left buried"
       }
     ]
   },

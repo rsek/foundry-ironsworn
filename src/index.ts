@@ -8,6 +8,7 @@ import { FoeSheet } from './module/actor/sheets/foesheet'
 import { StarforgedCharacterSheet } from './module/actor/sheets/sf-charactersheet'
 import { StarforgedLocationSheet } from './module/actor/sheets/sf-locationsheet'
 import { IronswornSharedSheetV2 } from './module/actor/sheets/sharedsheet-v2'
+import { TreasurySheet } from './module/actor/sheets/treasurysheet'
 import { IronswornSiteSheet } from './module/actor/sheets/sitesheet'
 import { StarshipSheet } from './module/actor/sheets/starshipsheet'
 import { FirstStartDialog } from './module/applications/firstStartDialog'
@@ -26,6 +27,7 @@ import { BondsetSheetV2 } from './module/item/bondset/bondsetsheet-v2'
 import { ThemeDomainSheet } from './module/item/delve-theme-domain/theme-domain-sheet'
 import { SFMoveSheet } from './module/item/move/sfmovesheet'
 import { ProgressSheetV2 } from './module/item/progress/progresssheet-v2'
+import { LedgerEntrySheet } from './module/item/ledger-entry/ledgerentrysheet'
 import { IronswornJournalPage } from './module/journal/journal-entry-page'
 import { JournalProgressPageSheet } from './module/journal/sheet/progress-page'
 import { TruthJournalPageSheet } from './module/journal/sheet/truth-page'
@@ -93,84 +95,96 @@ Hooks.once('init', async () => {
 	// 	'systems/foundry-ironsworn/templates/rolls/oracle-roll-message.hbs'
 
 	// Turn off Foundry defaults
-	Actors.unregisterSheet('core', ActorSheet)
-	Items.unregisterSheet('core', ItemSheet)
+	foundry.documents.collections.Actors.unregisterSheet('core', foundry.appv1.sheets.ActorSheet)
+	foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet)
 
 	// Register our own sheets
-	Actors.registerSheet('ironsworn', IronswornCharacterSheetV2, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', IronswornCharacterSheetV2, {
 		label: 'IRONSWORN.Ironsworn',
 		types: ['character'],
 		makeDefault: true
 	})
-	Actors.registerSheet('ironsworn', StarforgedCharacterSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', StarforgedCharacterSheet, {
 		label: 'IRONSWORN.Starforged',
 		types: ['character']
 	})
-	Actors.registerSheet('ironsworn', CompactPCSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', CompactPCSheet, {
 		label: 'IRONSWORN.ACTOR.SheetCompact',
 		types: ['character']
 	})
 
-	Actors.registerSheet('ironsworn', IronswornSharedSheetV2, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', IronswornSharedSheetV2, {
 		types: ['shared'],
 		label: 'IRONSWORN.ACTOR.TypeShared',
 		makeDefault: true
 	})
 
-	Actors.registerSheet('ironsworn', FoeSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', TreasurySheet, {
+		types: ['treasury'],
+		label: 'IRONSWORN.ACTOR.TypeTreasury',
+		makeDefault: true
+	})
+
+	foundry.documents.collections.Actors.registerSheet('ironsworn', FoeSheet, {
 		types: ['foe'],
 		label: 'IRONSWORN.ACTOR.SheetFoe',
 		makeDefault: true
 	})
 
-	Actors.registerSheet('ironsworn', StarshipSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', StarshipSheet, {
 		types: ['starship'],
 		label: 'IRONSWORN.ACTOR.TypeStarship',
 		makeDefault: true
 	})
 
-	Actors.registerSheet('ironsworn', StarforgedLocationSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', StarforgedLocationSheet, {
 		types: ['location'],
 		label: 'IRONSWORN.ACTOR.SheetStarforgedLocation',
 		makeDefault: true
 	})
 
-	Actors.registerSheet('ironsworn', IronswornSiteSheet, {
+	foundry.documents.collections.Actors.registerSheet('ironsworn', IronswornSiteSheet, {
 		types: ['site'],
 		label: 'IRONSWORN.ACTOR.TypeDelveSite',
 		makeDefault: true
 	})
 
-	Items.registerSheet('ironsworn', AssetSheetV2, {
+	foundry.documents.collections.Items.registerSheet('ironsworn', AssetSheetV2, {
 		types: ['asset'],
 		label: 'IRONSWORN.ITEM.TypeAsset',
 		makeDefault: true
 	})
 
-	Items.registerSheet('ironsworn', BondsetSheetV2, {
+	foundry.documents.collections.Items.registerSheet('ironsworn', BondsetSheetV2, {
 		types: ['bondset'],
 		label: 'IRONSWORN.ITEM.TypeBondset',
 		makeDefault: true
 	})
 
-	Items.registerSheet('ironsworn', SFMoveSheet, {
+	foundry.documents.collections.Items.registerSheet('ironsworn', SFMoveSheet, {
 		types: ['sfmove'],
 		label: 'IRONSWORN.ITEM.TypeMove'
 	})
 
-	Items.registerSheet('ironsworn', ThemeDomainSheet, {
+	foundry.documents.collections.Items.registerSheet('ironsworn', ThemeDomainSheet, {
 		types: ['delve-theme', 'delve-domain'],
 		label: 'IRONSWORN.ITEM.TypeDelveThemeOrDomain',
 		makeDefault: true
 	})
 
-	Items.registerSheet('ironsworn', ProgressSheetV2, {
+	foundry.documents.collections.Items.registerSheet('ironsworn', ProgressSheetV2, {
 		types: ['progress'],
 		label: 'IRONSWORN.ITEM.TypeProgressTrack',
 		makeDefault: true
 	})
 
-	DocumentSheetConfig.registerSheet(
+	foundry.documents.collections.Items.registerSheet('ironsworn', LedgerEntrySheet, {
+		types: ['ledger-entry'],
+		label: 'IRONSWORN.ITEM.TypeLedgerEntry',
+		makeDefault: true
+	})
+
+	foundry.applications.apps.DocumentSheetConfig.registerSheet(
 		JournalEntryPage,
 		'ironsworn',
 		JournalProgressPageSheet,
@@ -181,7 +195,7 @@ Hooks.once('init', async () => {
 		}
 	)
 
-	DocumentSheetConfig.registerSheet(
+	foundry.applications.apps.DocumentSheetConfig.registerSheet(
 		JournalEntryPage,
 		'ironsworn',
 		TruthJournalPageSheet,

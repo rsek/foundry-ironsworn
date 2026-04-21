@@ -41,12 +41,10 @@ const props = defineProps<{
 	 */
 	stripTables?: boolean
 }>()
-let content = props.content
-if (props.type === 'markdown') {
-	content = await enrichMarkdown(content)
-} else {
-	content = await enrichHtml(content)
-}
+let content =
+	props.type === 'markdown'
+		? await enrichMarkdown(props.content)
+		: await enrichHtml(props.content)
 if (props.stripTables) {
 	content = IronswornHandlebarsHelpers.stripTables(content)
 }

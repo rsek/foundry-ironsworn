@@ -25,7 +25,7 @@
 				<h1 class="nogrow">
 					<input v-model="data.currentBondName" type="text" @blur="save" />
 				</h1>
-				<MceEditor
+				<RichEditor
 					v-model="data.currentBondNotes"
 					:editing="true"
 					@save="save" />
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { computed, inject, provide, reactive } from 'vue'
 import { $ItemKey, ItemKey } from './provisions'
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import IronBtn from './components/buttons/iron-btn.vue'
 
 const props = defineProps<{ data: { item: ItemSource<'bondset'> } }>()

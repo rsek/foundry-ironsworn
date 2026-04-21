@@ -9,7 +9,7 @@
 
 			<section class="sheet-area flexcol">
 				<h4 class="nogrow">{{ $t('Notes') }}</h4>
-				<mce-editor v-model="data.actor.system.biography" @save="saveNotes" />
+				<rich-editor v-model="data.actor.system.biography" @save="saveNotes" />
 			</section>
 		</section>
 		<section class="condition-meters nogrow flexcol">
@@ -41,7 +41,7 @@
 import { provide, computed, inject } from 'vue'
 import { $ActorKey, ActorKey } from './provisions'
 import Bonds from './components/bonds.vue'
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import ActiveCompletedProgresses from 'component:progress/active-completed-progresses.vue'
 import SheetBasic from './sheet-basic.vue'
 import ConditionMeter from './components/resource-meter/condition-meter.vue'

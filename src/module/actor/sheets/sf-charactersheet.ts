@@ -8,7 +8,7 @@ export class StarforgedCharacterSheet extends VueActorSheet {
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			width: 630,
-			height: 820,
+			height: 960,
 			left: 50,
 			rootComponent: SfCharacterSheet
 		}) as any

@@ -3,7 +3,7 @@ import { RANK_INCREMENTS } from '../../constants'
 import { ChallengeRank } from '../../fields/ChallengeRank'
 import { IronswornPrerollDialog } from '../../rolls'
 
-export class JournalProgressPageSheet extends JournalPageSheet {
+export class JournalProgressPageSheet extends foundry.appv1.sheets.JournalPageSheet {
 	static get defaultOptions() {
 		const options = super.defaultOptions
 		options.height = 300
@@ -76,7 +76,6 @@ export class JournalProgressPageSheet extends JournalPageSheet {
 	activateListeners(html: JQuery<HTMLElement>): void {
 		html.find('.rank-pip').on('click', async (ev) => {
 			await this.object.update({
-				// @ts-expect-error
 				system: { rank: parseInt(ev.currentTarget.dataset.rank ?? '0') }
 			})
 			this.render()

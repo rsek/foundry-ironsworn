@@ -1,6 +1,6 @@
 <template>
 	<div class="flexcol">
-		<MceEditor v-model="actor.system.notes" @save="save" />
+		<RichEditor v-model="actor.system.notes" @save="save" />
 	</div>
 </template>
 
@@ -8,7 +8,7 @@
 import type { Ref } from 'vue'
 import { inject } from 'vue'
 import { $ActorKey, ActorKey } from '../../provisions'
-import MceEditor from '../mce-editor.vue'
+import RichEditor from '../rich-editor.vue'
 
 const actor = inject(ActorKey) as Ref
 const $actor = inject($ActorKey)

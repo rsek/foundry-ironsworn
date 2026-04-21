@@ -5,6 +5,11 @@ import { BondsetModel } from './subtypes/bondset'
 import { DelveDomainModel } from './subtypes/delve-domain'
 import { DelveThemeModel } from './subtypes/delve-theme'
 import { ProgressModel } from './subtypes/progress'
+import { LedgerEntryModel } from './subtypes/ledger-entry'
+import type {
+	LedgerEntryDataProperties,
+	LedgerEntryDataSource
+} from './subtypes/ledger-entry'
 import { SFMoveModel } from './subtypes/sfmove'
 import type { AssetDataProperties, AssetDataSource } from './subtypes/asset'
 import type {
@@ -36,6 +41,7 @@ const dataModels: Partial<
 	'delve-theme': DelveThemeModel,
 	'delve-domain': DelveDomainModel,
 	progress: ProgressModel,
+	'ledger-entry': LedgerEntryModel,
 	asset: AssetModel,
 	sfmove: SFMoveModel,
 	bondset: BondsetModel
@@ -62,6 +68,7 @@ const config: DFPartialDeep<ItemConfig> = {
 	typeLabels: {
 		asset: 'IRONSWORN.ITEM.TypeAsset',
 		progress: 'IRONSWORN.ITEM.TypeProgressTrack',
+		'ledger-entry': 'IRONSWORN.ITEM.TypeLedgerEntry',
 		bondset: 'IRONSWORN.ITEM.TypeBondset',
 		sfmove: 'IRONSWORN.ITEM.TypeMove',
 		'delve-domain': 'IRONSWORN.ITEM.TypeDelveDomain',
@@ -70,6 +77,7 @@ const config: DFPartialDeep<ItemConfig> = {
 	typeIcons: {
 		asset: 'fa-solid fa-cards-blank',
 		progress: 'fa-solid fa-asterisk',
+		'ledger-entry': 'fa-solid fa-scroll',
 		bondset: 'fa-solid fa-handshake',
 		sfmove: 'icon isicon-d10-tilt',
 		// FIXME ideally, these would be distinct from assets, but all three card types are abstract enough than an icon is tricky
@@ -90,6 +98,7 @@ export interface ProgressBase {
 export type ItemDataSource =
 	| AssetDataSource
 	| ProgressDataSource
+	| LedgerEntryDataSource
 	| BondsetDataSource
 	| SFMoveDataSource
 	| DelveThemeDataSource
@@ -97,6 +106,7 @@ export type ItemDataSource =
 export type ItemDataProperties =
 	| AssetDataProperties
 	| ProgressDataProperties
+	| LedgerEntryDataProperties
 	| BondsetDataProperties
 	| SFMoveDataProperties
 	| DelveThemeDataProperties

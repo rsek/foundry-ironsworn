@@ -493,7 +493,7 @@ export class IronswornPrerollDialog extends Dialog<
 		)
 		const template =
 			'systems/foundry-ironsworn/templates/rolls/preroll-dialog.hbs'
-		return await renderTemplate(template, {
+		return await foundry.applications.handlebars.renderTemplate(template, {
 			...data,
 			renderedTriggerText,
 			graphic,

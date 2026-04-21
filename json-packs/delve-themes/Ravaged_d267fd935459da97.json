@@ -12,35 +12,35 @@
           1,
           4
         ],
-        "text": "Path of destruction"
+        "description": "Path of destruction"
       },
       {
         "range": [
           5,
           8
         ],
-        "text": "Abandoned or ruined dwelling"
+        "description": "Abandoned or ruined dwelling"
       },
       {
         "range": [
           9,
           12
         ],
-        "text": "Untouched or preserved area"
+        "description": "Untouched or preserved area"
       },
       {
         "range": [
           13,
           16
         ],
-        "text": "Traces of what was lost"
+        "description": "Traces of what was lost"
       },
       {
         "range": [
           17,
           20
         ],
-        "text": "Ill-fated victims"
+        "description": "Ill-fated victims"
       }
     ],
     "dangers": [
@@ -49,84 +49,84 @@
           1,
           5
         ],
-        "text": "Precarious architecture or terrain"
+        "description": "Precarious architecture or terrain"
       },
       {
         "range": [
           6,
           10
         ],
-        "text": "Imminent collapse or destruction"
+        "description": "Imminent collapse or destruction"
       },
       {
         "range": [
           11,
           12
         ],
-        "text": "Path undermined"
+        "description": "Path undermined"
       },
       {
         "range": [
           13,
           14
         ],
-        "text": "Blocked or broken path"
+        "description": "Blocked or broken path"
       },
       {
         "range": [
           15,
           16
         ],
-        "text": "Vestiges of a destructive force"
+        "description": "Vestiges of a destructive force"
       },
       {
         "range": [
           17,
           18
         ],
-        "text": "Unexpected environmental threat"
+        "description": "Unexpected environmental threat"
       },
       {
         "range": [
           19,
           20
         ],
-        "text": "Echoes of a troubling past"
+        "description": "Echoes of a troubling past"
       },
       {
         "range": [
           21,
           22
         ],
-        "text": "Signs of a horrible fate"
+        "description": "Signs of a horrible fate"
       },
       {
         "range": [
           23,
           24
         ],
-        "text": "Denizen seeks retribution"
+        "description": "Denizen seeks retribution"
       },
       {
         "range": [
           25,
           26
         ],
-        "text": "Denizen leverages the environment"
+        "description": "Denizen leverages the environment"
       },
       {
         "range": [
           27,
           28
         ],
-        "text": "Denizen restores what was lost"
+        "description": "Denizen restores what was lost"
       },
       {
         "range": [
           29,
           30
         ],
-        "text": "Ravages return anew"
+        "description": "Ravages return anew"
       }
     ]
   },

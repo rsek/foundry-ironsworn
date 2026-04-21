@@ -1,6 +1,6 @@
 import { IronswornHandlebarsHelpers } from '../../helpers/handlebars'
 
-export class TruthJournalPageSheet extends JournalPageSheet {
+export class TruthJournalPageSheet extends foundry.appv1.sheets.JournalPageSheet {
 	// @ts-expect-error
 	isEditable: boolean
 

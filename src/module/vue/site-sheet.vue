@@ -113,7 +113,7 @@
 					@click="$actor?.system.features?.draw()"
 				/>
 			</div>
-			<MceEditor
+			<RichEditor
 				v-model="data.actor.system.description"
 				@save="saveDescription"
 			/>
@@ -129,7 +129,7 @@ import RankPips from './components/progress/rank-pips.vue'
 import BtnCompendium from './components/buttons/btn-compendium.vue'
 import SiteDroparea from './components/site/site-droparea.vue'
 import SiteDenizenbox from './components/site/site-denizenbox.vue'
-import MceEditor from './components/mce-editor.vue'
+import RichEditor from './components/rich-editor.vue'
 import { RANK_INCREMENTS } from '../constants'
 import ProgressTrack from './components/progress/progress-track.vue'
 import SiteMoves from './components/site/site-moves.vue'

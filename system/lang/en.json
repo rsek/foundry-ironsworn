@@ -220,6 +220,8 @@
 		"Enabled": "Enabled",
 		"ChallengeRank": "Challenge rank",
 		"Completed": "Completed",
+		"Spent": "Spent",
+		"NotSpent": "Not Spent",
 		"NotCompleted": "Not Completed",
 		"Foes": "Foes",
 		"Foe": "Foe",
@@ -894,8 +896,15 @@
 			"TypeFoe": "NPC",
 			"TypeLocation": "Location",
 			"TypeShared": "Shared sheet",
+			"TypeTreasury": "Treasury Ledger",
 			"TypeDelveSite": "Delve Site",
-			"TypeStarship": "Starship"
+			"TypeStarship": "Ship"
+		},
+		"TREASURY": {
+			"Ship": "Ship",
+			"Commander": "Commander",
+			"Upkeep": "Upkeep",
+			"ValueTrack": "Value Track"
 		},
 		"ACTORS": {
 			"SubtypeDerelict": "Derelicts",
@@ -920,7 +929,8 @@
 			"TypeDelveTheme": "Site theme",
 			"TypeDelveThemeOrDomain": "Site theme/domain",
 			"TypeMove": "Move",
-			"TypeProgressTrack": "Progress track"
+			"TypeProgressTrack": "Progress track",
+			"TypeLedgerEntry": "Ledger Entry"
 		},
 		"ITEMS": {
 			"SubtypeConnection": "Connections",

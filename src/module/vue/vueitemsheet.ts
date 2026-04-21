@@ -2,7 +2,7 @@ import type { App } from 'vue'
 import { $ItemKey } from './provisions'
 import { VueAppMixin } from './vueapp.js'
 
-export abstract class VueItemSheet extends VueAppMixin(ItemSheet) {
+export abstract class VueItemSheet extends VueAppMixin(foundry.appv1.sheets.ItemSheet) {
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['ironsworn', 'item'],

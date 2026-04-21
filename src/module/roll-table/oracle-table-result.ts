@@ -5,6 +5,9 @@ import { hashLookup } from '../helpers/util'
 
 /** Extends FVTT's default TableResult with functionality specific to this system. */
 export class OracleTableResult extends TableResult {
+	// missing from the LoFD types package
+	declare description: string
+
 	/** Does the number value fall within the range of this TableResult? */
 	hasInRange(value: number) {
 		const [low, high] = this.range
