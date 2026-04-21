@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 1.27.0
+
 - Compatiblity with Foundry v14 ([#1073](https://github.com/ben/foundry-ironsworn/pull/1073))
 - Change the name of the "starship" actor type to "ship" to make it more obvious that it's useful for Sundered Isles ([#1076](https://github.com/ben/foundry-ironsworn/pull/1076))
 - Make the PC sheet taller to accommodate "hold" and still show the impacts ([#1076](https://github.com/ben/foundry-ironsworn/pull/1076))
