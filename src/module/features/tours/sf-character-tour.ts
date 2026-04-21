@@ -4,7 +4,7 @@ import { IronswornTour } from './ironsworn_tour'
 
 export class SFCharacterTour extends IronswornTour {
 	constructor(actor: IronswornActor) {
-		const sheet = actor.sheet as StarforgedCharacterSheet
+		const sheet = actor.sheet as unknown as StarforgedCharacterSheet
 		const sheetSel = `.app[data-appid="${sheet?.appId}"]`
 
 		super({

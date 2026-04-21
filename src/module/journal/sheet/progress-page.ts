@@ -76,7 +76,6 @@ export class JournalProgressPageSheet extends foundry.appv1.sheets.JournalPageSh
 	activateListeners(html: JQuery<HTMLElement>): void {
 		html.find('.rank-pip').on('click', async (ev) => {
 			await this.object.update({
-				// @ts-expect-error
 				system: { rank: parseInt(ev.currentTarget.dataset.rank ?? '0') }
 			})
 			this.render()

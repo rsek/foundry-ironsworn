@@ -188,8 +188,8 @@ export function activateSceneButtonListeners() {
 			icon: 'isicon-logo-starforged-dk',
 			layer: 'ironsworn',
 			visible: true,
-			tools: {},
-		}
+			tools: {}
+		} as any
 		addTool(control, oracleButton)
 
 		// Apply updates in order for all enabled rulesets
@@ -327,7 +327,6 @@ function sunderedIslifyControl(control: SceneControl) {
 	}
 }
 
-// @ts-expect-error
 class IronswornCanvasLayer extends foundry.canvas.layers.InteractionLayer {
 	static get layerOptions() {
 		return foundry.utils.mergeObject(super.layerOptions, {

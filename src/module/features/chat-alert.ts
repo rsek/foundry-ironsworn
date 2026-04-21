@@ -405,7 +405,7 @@ async function sendToChat(speaker: IronswornActor, msg: string) {
 		speaker.getFlag('foundry-ironsworn', 'muteBroadcast') ?? (false as boolean)
 	const whisper = whisperToCurrentUser ? compact([game.user?.id]) : undefined
 
-	const messageData: ChatMessageDataConstructorData = {
+	const messageData: ChatMessageDataConstructorData & { style?: number } = {
 		whisper,
 		content: `<em>${msg}</em>`,
 		style: CONST.CHAT_MESSAGE_STYLES.EMOTE,

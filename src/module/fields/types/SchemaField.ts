@@ -86,6 +86,9 @@ declare global {
 					 * @param {any} fieldData       The value of this field within the source data
 					 */
 					migrateSource(sourceData, fieldData): void | SourceData // TODO
+
+					// Added in v10+; shimmed here so subclasses can access them via `super`.
+					_migrate(sourceData: object, fieldData: any, state: any): any
 				}
 				export interface SchemaField<
 					SourceData,

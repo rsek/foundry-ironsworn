@@ -202,11 +202,10 @@ export class OracleTable extends RollTable {
 			// eslint-disable-next-line @typescript-eslint/await-thenable
 			description: await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.description, {
 				documents: true,
-				// @ts-expect-error exists in v10
 				async: true
 			}),
 			result: foundry.utils.mergeObject(result.toObject(false), {
-				description: await result.getHTML(),
+				description: await (result as any).getHTML(),
 				icon: result.icon,
 				displayRows: result.displayRows.map((row) => row?.toObject())
 			}),
