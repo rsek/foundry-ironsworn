@@ -29,7 +29,6 @@
       "twitter": "@r_sek"
     }
   ],
-  "manifestPlusVersion": "1.2.0",
   "media": [
     {
       "type": "screenshot",
@@ -73,7 +72,6 @@
   "styles": [
     "ironsworn.css"
   ],
-  "dependencies": [],
   "relationships": {
     "requires": [],
     "recommends": [
