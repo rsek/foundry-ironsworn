@@ -2,6 +2,11 @@
 
 ## Next Release
 
+- Fixes by [@jendave](https://github.com/jendave):
+  - Remove warnings from system.json ([#1080](https://github.com/ben/foundry-ironsworn/pull/1080))
+  - Token HUD error ([#1082](https://github.com/ben/foundry-ironsworn/pull/1082))
+  - Fix for rerolls from chat card ([#1084](https://github.com/ben/foundry-ironsworn/pull/1084))
+
 ## 1.27.0
 
 - Compatiblity with Foundry v14 ([#1073](https://github.com/ben/foundry-ironsworn/pull/1073))
