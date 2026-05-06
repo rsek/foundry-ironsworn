@@ -391,7 +391,7 @@ export class OracleTable extends RollTable {
 		if (game.dice3d != null) {
 			void game.dice3d.showForRoll(roll, game.user)
 			if (cursedDie) void game.dice3d.showForRoll(cursedDie, game.user)
-		} else void AudioHelper.play({ src: CONFIG.sounds.dice })
+		} else void (foundry as any).audio.AudioHelper.play({ src: CONFIG.sounds.dice })
 
 		return await msg.update({
 			content: await foundry.applications.handlebars.renderTemplate(OracleTable.resultTemplate, templateData),
