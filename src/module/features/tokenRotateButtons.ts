@@ -28,8 +28,9 @@ function HUDCallback(_hud, html, token) {
 		rotateTokenBy(ev, token, 60)
 	})
 
-	html.find('div.left').prepend(leftButton)
-	html.find('div.right').prepend(rightButton)
+	const htmlEl: HTMLElement = html instanceof HTMLElement ? html : html[0]
+	htmlEl.querySelector('div.left')?.prepend(leftButton)
+	htmlEl.querySelector('div.right')?.prepend(rightButton)
 }
 
 export async function registerTokenHUDButtons() {
