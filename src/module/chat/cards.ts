@@ -142,8 +142,11 @@ export class IronswornChatCard {
 	}
 
 	async _oracleResultCopy(ev: JQuery.ClickEvent) {
-		const { result } = ev.currentTarget.dataset
-		await navigator.clipboard.writeText(result)
+		const { resultName, resultDescription } = ev.currentTarget.dataset
+		const result = resultName && resultDescription
+			? `${resultName}\n${resultDescription}`
+			: resultName || resultDescription
+		await navigator.clipboard.writeText(result ?? '')
 		const icon = $(ev.currentTarget).find('i.fas')
 		icon.removeClass('fa-copy').addClass('fa-check')
 		await new Promise((r) => setTimeout(r, 2000))

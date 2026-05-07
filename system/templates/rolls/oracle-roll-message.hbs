@@ -22,7 +22,8 @@
           <button
             type="button"
             class="oracle-result-control copy-result clickable text"
-            data-result="{{this.description}}"
+            data-result-name="{{this.name}}"
+            data-result-description="{{this.description}}"
             data-tooltip="{{localize 'IRONSWORN.CopyTextToClipboard'}}"
             data-tooltip-direction="LEFT"
           >
@@ -31,7 +32,13 @@
         </td>
 
         <td class="oracle-table-column-result-text">
-          {{{this.description}}}
+          {{#if (and this.name this.description)}}
+            <strong>{{this.name}}</strong><br>{{{this.description}}}
+          {{else if this.name}}
+            {{this.name}}
+          {{else}}
+            {{{this.description}}}
+          {{/if}}
         </td>
 
         <td class="oracle-table-column-roll-result" >
@@ -75,7 +82,8 @@
           <button
             type="button"
             class="oracle-result-control copy-result clickable text"
-            data-result="{{this.description}}"
+            data-result-name="{{this.name}}"
+            data-result-description="{{this.description}}"
             data-tooltip="{{localize 'IRONSWORN.CopyTextToClipboard'}}"
             data-tooltip-direction="LEFT"
           >
@@ -84,7 +92,13 @@
         </td>
 
         <td class="oracle-table-column-result-text">
-          {{{this.description}}}
+          {{#if (and this.name this.description)}}
+            <strong>{{this.name}}</strong><br>{{{this.description}}}
+          {{else if this.name}}
+            {{this.name}}
+          {{else}}
+            {{{this.description}}}
+          {{/if}}
         </td>
 
         <td class="oracle-table-column-roll-result" >
