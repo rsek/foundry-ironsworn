@@ -6,6 +6,7 @@
   - Remove warnings from system.json ([#1080](https://github.com/ben/foundry-ironsworn/pull/1080))
   - Token HUD error ([#1082](https://github.com/ben/foundry-ironsworn/pull/1082))
   - Fix for rerolls from chat card ([#1084](https://github.com/ben/foundry-ironsworn/pull/1084))
+- Better use of name and/or description in oracle roll cards ([#1085](https://github.com/ben/foundry-ironsworn/pull/1085))
 
 ## 1.27.0
 
